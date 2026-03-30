@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.2.0 (2026-03-30)
+
+### Features
+
+- add rendering layer, entity state, and SSE transport binding to AAP spec ([a23b6ce](https://github.com/urmzd/artifact-protocol/commit/a23b6ceeb3ea49c7a625385205e4ad079a3c6545))
+- rename Artifact Protocol to Agent-Artifact Protocol (AAP) ([fb7824e](https://github.com/urmzd/artifact-protocol/commit/fb7824ec4acf53763920fb54f25a47485642b2c3))
+
+### Refactoring
+
+- rename project from artifact-generator to aap ([238e1d4](https://github.com/urmzd/artifact-protocol/commit/238e1d45a40425a99ed0a9cca02513e3f498dc15))
+
+### Miscellaneous
+
+- update sr action from v2 to v3 ([92ebb82](https://github.com/urmzd/artifact-protocol/commit/92ebb82ad121fe9b03e26dd984d049cdb5f3f257))
+
+[Full Changelog](https://github.com/urmzd/artifact-protocol/compare/v0.1.0...v0.2.0)
+
+
 ## 0.1.0 (2026-03-29)
 
 ### Features
