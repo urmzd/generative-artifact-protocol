@@ -108,14 +108,15 @@ An artifact MAY be divided into named **sections** — addressable regions that 
 | `start_marker` | string | no | Format-specific start boundary |
 | `end_marker` | string | no | Format-specific end boundary |
 
-Section markers are format-specific:
+Section markers are format-specific. Implementations MUST derive markers from the envelope's `format` field using this table. If a `SectionDef` provides explicit `start_marker` and `end_marker`, those override the format-derived defaults.
 
-| Format | Start marker | End marker |
-|---|---|---|
-| HTML | `<!-- section:id -->` | `<!-- /section:id -->` |
-| Source code | `// #region id` | `// #endregion id` |
-| Markdown | `<!-- section:id -->` | `<!-- /section:id -->` |
-| JSON/YAML | N/A (use JSON Pointer paths) | N/A |
+| Format family | MIME types | Start marker | End marker |
+|---|---|---|---|
+| HTML / Markdown / SVG / XML | `text/html`, `text/markdown`, `image/svg+xml`, `*+xml` | `<!-- section:id -->` | `<!-- /section:id -->` |
+| C-style languages | `application/javascript`, `text/typescript`, `text/x-rust`, `text/x-go`, `text/x-java`, `text/x-c`, `text/css` | `// #region id` | `// #endregion id` |
+| Hash-comment languages | `text/x-python`, `text/x-ruby`, `application/x-sh`, `text/x-yaml`, `application/yaml` | `# region id` | `# endregion id` |
+| JSON | `application/json` | N/A (use JSON Pointer paths via `pointer` targeting in diff mode) | N/A |
+| Unknown `text/*` | Fallback | `<!-- section:id -->` | `<!-- /section:id -->` |
 
 **Example** (HTML with sections):
 
@@ -186,6 +187,14 @@ A target identifies where in the artifact the operation applies. Exactly one add
 | Line range | `{"lines": [start, end]}` | Target lines (1-indexed, inclusive) |
 | Offset range | `{"offsets": [start, end]}` | Target character offsets (0-indexed, exclusive end) |
 | Search | `{"search": "literal text"}` | Target first occurrence of literal text |
+| Pointer | `{"pointer": "/path/to/value"}` | Target a value by JSON Pointer (RFC 6901) — for `application/json` and `application/yaml` formats |
+
+**Pointer targeting semantics:**
+- `replace`: `content` MUST be a valid JSON value. Replaces the value at the pointer location.
+- `delete`: Removes the key from an object or the element from an array (shifting subsequent indices).
+- `insert_before` / `insert_after`: The pointer MUST reference an array element (last segment must be a non-negative integer). Inserts the new value before/after that index.
+- Non-existent paths MUST produce an error. Pointer operations do not auto-create intermediate paths.
+- Re-serialization may alter original formatting and comments.
 
 **Example** (update a stat card value):
 
@@ -556,47 +565,15 @@ The final envelope (or final chunk frame) MUST include `tokens_used` — the act
 
 ---
 
-## 8. Rendering Layer
+## 8. Scope: Text Artifacts
 
-Artifacts carry optional **rendering hints** — metadata that tells consumers how to display content without dictating a specific UI framework. All rendering fields are optional; consumers that do not support rendering hints MUST ignore them.
+AAP produces structured text artifacts — HTML, SVG, source code, configuration files, Markdown, and similar text-based formats. How those artifacts are displayed or rendered is **outside the protocol's scope** and is the responsibility of the consuming application.
 
-### 8.1 Envelope-Level Rendering Hints
+Consumers may render artifacts using browsers, PDF generators, terminal viewers, IDE panels, or any other tool appropriate to the artifact's MIME type. The `format` field communicates the artifact's content type to aid consumers in selecting an appropriate renderer, but the protocol does not prescribe rendering behavior.
 
-Add an optional `rendering` object to the envelope:
+> **Non-normative note:** For binary output formats (PDF, PPTX, DOCX, images), the recommended pattern is to produce the intermediate text representation (HTML, SVG, XML) as the AAP artifact, then use an external tool to convert to the final format. This keeps the protocol's diff, section, and template modes fully functional on the artifact content.
 
-| Field | Type | Required | Description |
-|---|---|---|---|
-| `display` | string | no | Display mode (see [Section 8.1.1](#811-display-registry)) |
-| `language` | string | no | Syntax highlighting language (e.g., `"python"`, `"javascript"`). Meaningful when `display` is `"code"` |
-| `theme` | string | no | Theme preference: `"light"`, `"dark"`, `"auto"` |
-| `line_numbers` | boolean | no | Show line numbers. Default: `false` |
-| `word_wrap` | boolean | no | Enable word wrapping. Default: `true` |
-| `max_height` | string | no | CSS-compatible max height (e.g., `"80vh"`, `"600px"`) |
-| `sandbox` | object | no | Sandbox policy for executable content (see [Section 8.3](#83-sandbox-policy)) |
-| `accessibility` | object | no | Accessibility metadata (see [Section 8.4](#84-accessibility-hints)) |
-| `progressive` | object | no | Progressive rendering control (see [Section 8.2](#82-progressive-rendering)) |
-
-**Example** (code artifact):
-
-```json
-{
-  "protocol": "aap/1.0",
-  "id": "utils-py",
-  "version": 1,
-  "format": "text/x-python",
-  "mode": "full",
-  "rendering": {
-    "display": "code",
-    "language": "python",
-    "theme": "dark",
-    "line_numbers": true,
-    "word_wrap": false
-  },
-  "content": "def fibonacci(n):\n    if n <= 1:\n        return n\n    return fibonacci(n-1) + fibonacci(n-2)\n"
-}
-```
-
-**Example** (live-preview HTML dashboard):
+---
 
 ```json
 {
@@ -604,114 +581,6 @@ Add an optional `rendering` object to the envelope:
   "id": "dashboard-001",
   "version": 1,
   "format": "text/html",
-  "mode": "full",
-  "rendering": {
-    "display": "preview",
-    "theme": "auto",
-    "max_height": "80vh",
-    "sandbox": {
-      "allow_scripts": true,
-      "allow_forms": false,
-      "allow_same_origin": false
-    },
-    "accessibility": {
-      "label": "Q4 Revenue Dashboard",
-      "description": "Interactive dashboard showing revenue, users, and order metrics"
-    }
-  },
-  "content": "<!DOCTYPE html><html>...</html>"
-}
-```
-
-#### 8.1.1 Display Registry
-
-Producers MUST use one of the following registered display values, or a custom value prefixed with `x-`:
-
-| Value | Description |
-|---|---|
-| `code` | Source code with syntax highlighting |
-| `preview` | Live rendered preview (HTML, SVG, etc.) |
-| `form` | Interactive form or input interface |
-| `dashboard` | Multi-panel data visualization |
-| `document` | Rich text document (Markdown, prose) |
-| `diagram` | Visual diagram (Mermaid, SVG, flowchart) |
-| `raw` | Plain text, no special rendering |
-
-Custom values (e.g., `x-terminal`, `x-spreadsheet`) are permitted. Consumers that encounter an unknown display value SHOULD fall back to `raw`.
-
-### 8.2 Progressive Rendering
-
-The `progressive` object controls how streaming content is displayed before the final chunk arrives.
-
-| Field | Type | Description |
-|---|---|---|
-| `min_bytes` | integer | Minimum accumulated bytes before first render. Default: `0` |
-| `skeleton_content` | string | Placeholder content shown while streaming (e.g., loading skeleton HTML) |
-| `reveal` | string | Reveal strategy: `"streaming"`, `"section"`, `"final"`. Default: `"streaming"` |
-
-**Reveal strategies:**
-
-| Strategy | Behavior |
-|---|---|
-| `streaming` | Append chunks as they arrive. Default |
-| `section` | Buffer until a `flush: true` chunk, then reveal the accumulated content |
-| `final` | Show `skeleton_content` (or nothing) until `final: true`, then reveal all at once |
-
-The `reveal` strategy interacts with the `flush` field on chunk frames ([Section 6.1](#61-chunk-frame)). When `reveal` is `"section"`, consumers render only at flush boundaries.
-
-### 8.3 Sandbox Policy
-
-The `sandbox` object constrains executable content. It maps to HTML `<iframe sandbox>` attributes but is expressed at the protocol level so non-browser consumers can enforce equivalent restrictions.
-
-| Field | Type | Default | Description |
-|---|---|---|---|
-| `allow_scripts` | boolean | `false` | Permit JavaScript execution |
-| `allow_forms` | boolean | `false` | Permit form submission |
-| `allow_same_origin` | boolean | `false` | Permit same-origin access |
-| `allow_popups` | boolean | `false` | Permit `window.open` / `target=_blank` |
-| `allow_modals` | boolean | `false` | Permit `alert` / `confirm` / `prompt` |
-| `csp` | string | none | Content Security Policy directive string |
-
-Producers SHOULD set `sandbox` on any artifact with `format: "text/html"` that contains `<script>` tags. Consumers MUST default to fully sandboxed (all `false`) when `sandbox` is absent on executable content.
-
-### 8.4 Accessibility Hints
-
-| Field | Type | Description |
-|---|---|---|
-| `label` | string | Short accessible label (maps to `aria-label`) |
-| `description` | string | Longer description (maps to `aria-description`) |
-| `role` | string | ARIA role hint: `"document"`, `"application"`, `"img"`, `"table"` |
-| `lang` | string | BCP 47 language tag for the content (e.g., `"en"`, `"ja"`) |
-
-### 8.5 Section-Level Rendering
-
-The `SectionDef` ([Section 3.2](#32-sections)) is extended with an optional `rendering` field that uses the same schema as the envelope-level rendering object. Section-level hints override envelope-level hints for that section.
-
-**Example** (mixed-content artifact):
-
-```json
-{
-  "protocol": "aap/1.0",
-  "id": "tutorial-page",
-  "version": 1,
-  "format": "text/html",
-  "mode": "full",
-  "rendering": {"display": "document", "theme": "light"},
-  "sections": [
-    {"id": "prose", "label": "Introduction"},
-    {"id": "code-sample", "label": "Example", "rendering": {"display": "code", "language": "python", "line_numbers": true}},
-    {"id": "live-demo", "label": "Try It", "rendering": {"display": "preview", "sandbox": {"allow_scripts": true}}}
-  ],
-  "content": "..."
-}
-```
-
-### 8.6 Chunk-Level Rendering
-
-The chunk frame ([Section 6.1](#61-chunk-frame)) is extended with an optional `rendering` field. This allows the producer to change rendering hints mid-stream (e.g., as different sections stream in).
-
----
-
 ## 9. Artifact Entity State
 
 Artifacts can optionally be treated as **managed entities** with lifecycle states, ownership, relationships, and expiration. All entity fields are optional — Level 0-3 consumers ignore them.
@@ -881,8 +750,6 @@ Implementations declare their conformance level. Each level is a superset of the
 ### Level 4 — Extended
 
 - Level 3, plus:
-- MUST support `rendering` hints on envelopes and pass them to the rendering layer ([Section 8](#8-rendering-layer))
-- MUST enforce `sandbox` policy for executable artifacts ([Section 8.3](#83-sandbox-policy))
 - MUST support SSE transport binding ([AAP-SSE](aap-sse.md))
 - MUST support `state` field and enforce state machine transitions ([Section 9.1](#91-state-machine))
 - MUST support `entity` metadata storage and retrieval ([Section 9.2](#92-entity-metadata))
@@ -892,11 +759,10 @@ Implementations declare their conformance level. Each level is a superset of the
 
 ## 11. Security Considerations
 
-- **Content injection**: consumers MUST sanitize artifact content before rendering in privileged contexts (e.g., web browsers)
+- **Content injection**: consumers MUST sanitize artifact content before displaying in privileged contexts (e.g., web browsers). Content display and sandboxing are consumer responsibilities outside the protocol scope
 - **URI resolution**: `composite` mode URIs MUST be validated against an allowlist; arbitrary URI fetch is a server-side request forgery (SSRF) risk
 - **Checksum verification**: consumers SHOULD verify `checksum` when present to detect tampering or corruption
 - **Token budget enforcement**: producers MUST NOT exceed declared budgets; consumers SHOULD reject payloads that claim to use fewer tokens than they actually contain
-- **Sandbox enforcement**: consumers rendering executable artifacts (HTML with scripts) MUST enforce the `sandbox` policy ([Section 8.3](#83-sandbox-policy)). When no sandbox is specified, consumers MUST default to fully restricted
 - **Entity permissions**: `permissions` in the `entity` object are metadata only — consumers MUST enforce access control at the platform level, not rely solely on envelope metadata
 
 ---
@@ -915,7 +781,6 @@ Machine-validatable schemas for all protocol structures are provided in the `sch
 - [`diff-operation.json`](schemas/diff-operation.json) — Diff operation schema
 - [`template-binding.json`](schemas/template-binding.json) — Template binding schema
 - [`chunk-frame.json`](schemas/chunk-frame.json) — Streaming chunk frame schema
-- [`rendering-hints.json`](schemas/rendering-hints.json) — Rendering hints schema
 - [`entity-metadata.json`](schemas/entity-metadata.json) — Entity metadata schema
 - [`relationship.json`](schemas/relationship.json) — Artifact relationship schema
 - [`sse-error.json`](schemas/sse-error.json) — SSE error event schema
