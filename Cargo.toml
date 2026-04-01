@@ -12,7 +12,6 @@ name = "aap"
 path = "src/main.rs"
 
 [dependencies]
-headless_chrome = "1"
 tokio         = { version = "1", features = ["full"] }
 tokio-stream  = { version = "0.1", features = ["sync"] }
 anyhow        = "1"
