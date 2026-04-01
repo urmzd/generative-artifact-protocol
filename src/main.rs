@@ -1,11 +1,9 @@
-use std::path::PathBuf;
-use std::sync::mpsc;
 use std::time::Duration;
 
 use aap::aap::Envelope;
 use aap::store::ArtifactStore;
 use aap::telemetry;
-use aap::{spawn_file_watcher, spawn_render_thread, RenderMsg};
+use aap::spawn_file_watcher;
 use tokio::sync::broadcast;
 use tracing::{info, warn};
 
@@ -17,108 +15,105 @@ async fn main() -> anyhow::Result<()> {
 
     if args.len() < 2 {
         eprintln!(
-            "Usage: {} <input.html> [--output output.pdf] [--protocol]",
+            "Usage: {} <input> [--watch] [--output <file>]",
             args[0]
         );
         std::process::exit(1);
     }
 
-    let html_path = PathBuf::from(&args[1]);
+    let input_path = args[1].clone();
 
-    let mut pdf_path: Option<PathBuf> = None;
-    let mut protocol_mode = false;
+    let mut output_path: Option<String> = None;
+    let mut watch_mode = false;
     let mut i = 2;
     while i < args.len() {
         match args[i].as_str() {
             "--output" if i + 1 < args.len() => {
-                pdf_path = Some(PathBuf::from(&args[i + 1]));
+                output_path = Some(args[i + 1].clone());
                 i += 2;
             }
-            "--protocol" => {
-                protocol_mode = true;
+            "--watch" => {
+                watch_mode = true;
                 i += 1;
             }
             _ => i += 1,
         }
     }
 
-    let pdf_path = pdf_path.unwrap_or_else(|| html_path.with_extension("pdf"));
+    if watch_mode {
+        info!(input = %input_path, "watching");
 
-    info!(html = %html_path.display(), pdf = %pdf_path.display(), protocol = protocol_mode, "watching");
+        let (tx, mut rx) = broadcast::channel::<String>(16);
+        spawn_file_watcher(tx, input_path.clone(), Duration::from_millis(100));
 
-    // Broadcast channel for file watcher -> main loop
-    let (tx, mut rx) = broadcast::channel::<String>(16);
-    spawn_file_watcher(tx, html_path.display().to_string(), Duration::from_millis(100));
+        let metrics = telemetry::Metrics::get();
 
-    // mpsc channel for main loop -> render thread
-    let (render_tx, render_rx) = mpsc::channel::<RenderMsg>();
-    let render_handle = spawn_render_thread(render_rx, html_path.clone(), pdf_path.clone());
-
-    let metrics = telemetry::Metrics::get();
-
-    // Main loop: forward broadcast events to the render thread
-    // In protocol mode, resolve envelopes and write resolved HTML before triggering render.
-    let watched_html = html_path.clone();
-    let forward = tokio::spawn(async move {
-        let mut store = ArtifactStore::new(10);
-        loop {
-            match rx.recv().await {
-                Ok(content) => {
-                    if protocol_mode && Envelope::is_envelope(&content) {
-                        match Envelope::from_json(&content) {
-                            Ok(envelope) => {
-                                info!(
-                                    id = %envelope.id,
-                                    version = envelope.version,
-                                    mode = ?envelope.mode,
-                                    "protocol envelope received"
-                                );
-                                match store.apply(&envelope) {
-                                    Ok(resolved) => {
-                                        // Write resolved HTML back to the watched file
-                                        // so the renderer picks it up
-                                        if let Err(e) =
-                                            tokio::fs::write(&watched_html, &resolved).await
-                                        {
-                                            tracing::error!("failed to write resolved HTML: {e}");
-                                        }
-                                    }
-                                    Err(e) => {
-                                        tracing::error!("envelope apply failed: {e:#}");
-                                    }
-                                }
-                            }
-                            Err(e) => {
-                                tracing::error!("envelope parse failed: {e}");
-                            }
-                        }
+        let forward = tokio::spawn(async move {
+            let mut store = ArtifactStore::new(10);
+            loop {
+                match rx.recv().await {
+                    Ok(content) => {
+                        let resolved = resolve_content(&content, &mut store);
+                        write_output(&resolved, output_path.as_deref()).await;
                     }
-                    if render_tx.send(RenderMsg::Trigger).is_err() {
-                        break;
+                    Err(broadcast::error::RecvError::Lagged(n)) => {
+                        warn!(lagged = n, "watcher lagged");
+                        metrics
+                            .broadcast_lag_count
+                            .fetch_add(n, std::sync::atomic::Ordering::Relaxed);
                     }
+                    Err(broadcast::error::RecvError::Closed) => break,
                 }
-                Err(broadcast::error::RecvError::Lagged(n)) => {
-                    warn!(lagged = n, "watcher lagged, rendering latest");
-                    metrics
-                        .broadcast_lag_count
-                        .fetch_add(n, std::sync::atomic::Ordering::Relaxed);
-                    if render_tx.send(RenderMsg::Trigger).is_err() {
-                        break;
-                    }
-                }
-                Err(broadcast::error::RecvError::Closed) => break,
             }
-        }
-    });
+        });
 
-    // Wait for Ctrl+C
-    tokio::signal::ctrl_c().await?;
-    info!("shutting down");
-
-    forward.abort();
-    let _ = render_handle.join();
+        tokio::signal::ctrl_c().await?;
+        info!("shutting down");
+        forward.abort();
+    } else {
+        // One-shot mode: read, resolve, output
+        let content = tokio::fs::read_to_string(&input_path).await?;
+        let mut store = ArtifactStore::new(10);
+        let resolved = resolve_content(&content, &mut store);
+        write_output(&resolved, output_path.as_deref()).await;
+    }
 
     guard.shutdown();
-
     Ok(())
+}
+
+fn resolve_content(content: &str, store: &mut ArtifactStore) -> String {
+    if Envelope::is_envelope(content) {
+        match Envelope::from_json(content) {
+            Ok(envelope) => {
+                info!(
+                    id = %envelope.id,
+                    version = envelope.version,
+                    mode = ?envelope.mode,
+                    "envelope received"
+                );
+                match store.apply(&envelope) {
+                    Ok(resolved) => return resolved,
+                    Err(e) => {
+                        tracing::error!("envelope apply failed: {e:#}");
+                    }
+                }
+            }
+            Err(e) => {
+                tracing::error!("envelope parse failed: {e}");
+            }
+        }
+    }
+    // Not an envelope or parse failed — return raw content
+    content.to_string()
+}
+
+async fn write_output(content: &str, output_path: Option<&str>) {
+    if let Some(path) = output_path {
+        if let Err(e) = tokio::fs::write(path, content).await {
+            tracing::error!("failed to write output: {e}");
+        }
+    } else {
+        print!("{content}");
+    }
 }
