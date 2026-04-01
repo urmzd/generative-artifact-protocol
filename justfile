@@ -7,33 +7,29 @@ install:
 run file="/tmp/artifact.html":
     cargo run -- {{file}}
 
-# Sanity test: stream pre-built HTML, verify PDF is produced
+# Resolve an envelope file once and print to stdout
+resolve file:
+    cargo run -- {{file}}
+
+# Watch and resolve on changes
+watch file="/tmp/artifact.html":
+    cargo run -- {{file}} --watch
+
+# Stream pre-built HTML via demo script
 demo file="/tmp/artifact.html": build
     #!/usr/bin/env bash
     set -e
     FILE="{{file}}"
-    ./target/debug/aap "$FILE" &
-    PID=$!
-    sleep 0.3
     uv run --project tools ag-demo "$FILE"
-    sleep 2  # let final render complete
-    kill $PID 2>/dev/null || true
-    PDF="${FILE%.html}.pdf"
-    echo "PDF written to $PDF"
+    ./target/debug/aap "$FILE"
 
 # Real LLM stream via ollama
 demo-llm file="/tmp/artifact.html" model="gemma3": build
     #!/usr/bin/env bash
     set -e
     FILE="{{file}}"
-    ./target/debug/aap "$FILE" &
-    PID=$!
-    sleep 0.3
     uv run --project tools ag-ollama "$FILE" "{{model}}"
-    sleep 2
-    kill $PID 2>/dev/null || true
-    PDF="${FILE%.html}.pdf"
-    echo "PDF written to $PDF"
+    ./target/debug/aap "$FILE"
 
 # Offline tokenizer benchmarks — no server needed
 bench:
@@ -53,30 +49,8 @@ demo-hf tokenizer="gpt2" file="/tmp/artifact.html": build
     #!/usr/bin/env bash
     set -e
     FILE="{{file}}"
-    ./target/debug/aap "$FILE" &
-    PID=$!
-    sleep 0.3
     uv run --project tools ag-hf-stream "$FILE" "{{tokenizer}}"
-    sleep 2
-    kill $PID 2>/dev/null || true
-    PDF="${FILE%.html}.pdf"
-    echo "PDF written to $PDF"
+    ./target/debug/aap "$FILE"
 
-test: build
-    #!/usr/bin/env bash
-    set -e
-    TEST_FILE=$(mktemp /tmp/artifact-test-XXXX.html)
-    echo "<h1>just test</h1>" > "$TEST_FILE"
-    PDF="${TEST_FILE%.html}.pdf"
-    ./target/debug/aap "$TEST_FILE" --output "$PDF" &
-    PID=$!
-    sleep 3  # give Chrome time to start and render
-    kill "$PID" 2>/dev/null || true
-    if [ -s "$PDF" ]; then
-        echo "PASS: PDF exists and is non-empty ($(wc -c < "$PDF") bytes)"
-    else
-        echo "FAIL: PDF not found or empty"
-        rm -f "$TEST_FILE" "$PDF"
-        exit 1
-    fi
-    rm -f "$TEST_FILE" "$PDF"
+test:
+    cargo test
