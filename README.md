@@ -1,25 +1,26 @@
 # aap
 
-An open standard for token-efficient artifact generation, updates, and streaming — the **[Agent-Artifact Protocol (AAP)](spec/aap.md)**. The protocol defines how LLMs can declare, diff, and reprovision artifacts with minimal token expenditure (90-99% savings on updates).
+An open standard for token-efficient artifact generation, updates, and streaming — the **[Agent-Artifact Protocol (AAP)](spec/aap.md)**. The protocol defines how LLMs can declare, diff, and reprovision text artifacts with minimal token expenditure (90-99% savings on updates).
 
-Includes a local dev tool that watches an HTML file on disk and continuously renders it to PDF using headless Chrome. Designed for streaming HTML artifacts token-by-token — useful for benchmarking tokenizers, LLM streaming, and any chunked-write workflow.
+Includes a Rust reference implementation with a versioned artifact store, apply engine, and CLI tool for resolving protocol envelopes.
 
 ## How it works
 
-1. The Rust binary watches a file on disk (polling every 100 ms).
-2. On every change it renders the HTML to PDF via headless Chrome.
-3. The PDF is overwritten in place on each render cycle.
+1. An LLM produces an artifact envelope (JSON) declaring content, diffs, section updates, templates, or composites.
+2. The apply engine resolves the envelope against a versioned store to produce the final text artifact.
+3. The resolved artifact (HTML, SVG, source code, config, etc.) can be consumed by any downstream tool — browsers, PDF generators, IDEs, etc.
 
 ```
-writer (Python) ──writes──▶ file.html ──render──▶ file.pdf
-                                        ▲
-                              aap (Rust + headless Chrome)
+LLM ──produces──▶ envelope.json ──resolve──▶ artifact content
+                                    ▲
+                              aap (Rust apply engine)
 ```
+
+> AAP produces text artifacts; rendering is a consumer responsibility.
 
 ## Requirements
 
 - [Rust](https://rustup.rs/) (stable)
-- [Google Chrome](https://www.google.com/chrome/) or Chromium (headless rendering)
 - [uv](https://github.com/astral-sh/uv) (Python package manager)
 - [just](https://github.com/casey/just) (optional, for recipes)
 
@@ -29,7 +30,13 @@ writer (Python) ──writes──▶ file.html ──render──▶ file.pdf
 # Build the binary
 just build
 
-# Stream a pre-built HTML dashboard and produce a PDF
+# Resolve an envelope file
+just resolve path/to/envelope.json
+
+# Watch a file and resolve on changes
+just watch path/to/artifact.html
+
+# Stream a pre-built HTML dashboard
 just demo
 
 # Stream via a real LLM (requires ollama)
@@ -38,27 +45,24 @@ just demo-llm
 # Stream via a HuggingFace tokenizer (gpt2 by default)
 just demo-hf
 
-# Stream with BERT tokenizer
-just demo-hf tokenizer=bert-base-uncased
-
 # Run offline tokenizer benchmarks (no server needed)
 just bench
 
-# Run Rust criterion benchmarks (file watcher, broadcast throughput)
+# Run Rust criterion benchmarks (watcher, broadcast throughput)
 just bench-rust
 ```
 
 ## CLI usage
 
 ```sh
-aap <input.html> [--output output.pdf] [--protocol]
+aap <input> [--watch] [--output <file>]
 ```
 
-- `<input.html>` — the HTML file to watch.
-- `--output` — optional PDF output path (defaults to `<input>.pdf`).
-- `--protocol` — enable [Agent-Artifact Protocol (AAP)](spec/aap.md) mode. When the watched file contains a protocol envelope (JSON with `"protocol": "aap/1.0"`), the binary resolves the envelope (applying diffs, section updates, or templates) and renders the resolved HTML.
+- `<input>` — the file to read (or watch).
+- `--watch` — keep watching and resolve on changes (runs until Ctrl+C).
+- `--output` — write resolved content to a file instead of stdout.
 
-The process runs until interrupted with Ctrl+C.
+When the input contains a protocol envelope (JSON with `"protocol": "aap/1.0"`), the binary resolves the envelope (applying diffs, section updates, templates, or composites) using the versioned artifact store. Plain files are passed through unchanged.
 
 ## Observability
 
@@ -78,21 +82,15 @@ RUST_LOG=aap=debug aap input.html
 | Span | Location |
 |---|---|
 | `file_watcher` | File polling loop |
-| `browser_launch` | Headless Chrome startup |
-| `render_cycle` | Full render (navigate + PDF + write) |
-| `navigate_and_load` | Chrome tab navigation |
-| `generate_pdf` | `print_to_pdf` call |
-| `write_pdf` | PDF file write |
 
 ### Metrics summary
 
-On Ctrl+C the binary prints a summary table to stderr:
+On Ctrl+C (watch mode) the binary prints a summary table to stderr:
 
 ```
 ── Metrics Summary ───────────────────────────────────
-render.count                  5
-render.duration_ms            avg=245.3      min=120.1      max=450.7
-render.pdf_size_bytes         avg=83412      min=81000      max=86200
+envelope.apply_count          5
+envelope.apply_duration_ms    avg=0.3        min=0.1        max=0.8
 watcher.changes_detected      5
 watcher.poll_duration_ms      avg=0.1        min=0.0        max=0.3
 broadcast.lag_count           0
@@ -106,13 +104,15 @@ broadcast.lag_count           0
 | `just build` | Compile the Rust binary |
 | `just install` | Install the binary via `cargo install` |
 | `just run [file]` | Compile and run the binary on a file |
-| `just demo` | Stream a pre-built HTML dashboard, produce PDF |
+| `just resolve <file>` | Resolve an envelope and print to stdout |
+| `just watch [file]` | Watch a file and resolve on changes |
+| `just demo` | Stream a pre-built HTML dashboard |
 | `just demo-llm [model]` | Live ollama LLM streaming (default: gemma3) |
 | `just demo-hf [tokenizer]` | HuggingFace tokenizer streaming |
 | `just bench` | Offline Python tokenizer benchmarks |
 | `just bench-rust` | Rust criterion benchmarks (watcher, broadcast) |
 | `just bench-protocol` | Regenerate AAP benchmark table and embed into README |
-| `just test` | Smoke test: verify PDF output is produced |
+| `just test` | Run Rust unit tests |
 
 ## Tools package
 
