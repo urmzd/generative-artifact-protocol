@@ -23,6 +23,7 @@ fn main() {
             lines: None,
             offsets: None,
             section: None,
+            pointer: None,
         },
         content: Some("27,103".into()),
     }];
@@ -30,22 +31,22 @@ fn main() {
     let diff_4 = vec![
         DiffOp {
             op: OpType::Replace,
-            target: Target { search: Some("24,891".into()), lines: None, offsets: None, section: None },
+            target: Target { search: Some("24,891".into()), lines: None, offsets: None, section: None, pointer: None },
             content: Some("31,205".into()),
         },
         DiffOp {
             op: OpType::Replace,
-            target: Target { search: Some("$182,430".into()), lines: None, offsets: None, section: None },
+            target: Target { search: Some("$182,430".into()), lines: None, offsets: None, section: None, pointer: None },
             content: Some("$210,880".into()),
         },
         DiffOp {
             op: OpType::Replace,
-            target: Target { search: Some("3,047".into()), lines: None, offsets: None, section: None },
+            target: Target { search: Some("3,047".into()), lines: None, offsets: None, section: None, pointer: None },
             content: Some("4,112".into()),
         },
         DiffOp {
             op: OpType::Replace,
-            target: Target { search: Some("99.97%".into()), lines: None, offsets: None, section: None },
+            target: Target { search: Some("99.97%".into()), lines: None, offsets: None, section: None, pointer: None },
             content: Some("99.99%".into()),
         },
     ];
@@ -173,24 +174,24 @@ fn main() {
 
     // ── Verify applies work ─────────────────────────────────────────────────
 
-    apply_diff(FULL_HTML, &diff_1).expect("diff_1 failed");
-    apply_diff(FULL_HTML, &diff_4).expect("diff_4 failed");
-    apply_section_update(FULL_HTML, &section_1).expect("section_1 failed");
-    apply_section_update(FULL_HTML, &section_2).expect("section_2 failed");
+    apply_diff(FULL_HTML, &diff_1, "text/html", None).expect("diff_1 failed");
+    apply_diff(FULL_HTML, &diff_4, "text/html", None).expect("diff_4 failed");
+    apply_section_update(FULL_HTML, &section_1, "text/html", None).expect("section_1 failed");
+    apply_section_update(FULL_HTML, &section_2, "text/html", None).expect("section_2 failed");
     fill_template(template, &bindings);
-    assemble_manifest(manifest_skeleton, &manifest_sections).expect("manifest failed");
+    assemble_manifest(manifest_skeleton, &manifest_sections, "text/html", None).expect("manifest failed");
 
     // ── Timing ──────────────────────────────────────────────────────────────
 
     let iters = 10_000u64;
 
     let time_full = bench_ns(iters, || { let _ = FULL_HTML.to_string(); });
-    let time_diff_1 = bench_ns(iters, || { let _ = apply_diff(FULL_HTML, &diff_1).unwrap(); });
-    let time_diff_4 = bench_ns(iters, || { let _ = apply_diff(FULL_HTML, &diff_4).unwrap(); });
-    let time_section_1 = bench_ns(iters, || { let _ = apply_section_update(FULL_HTML, &section_1).unwrap(); });
-    let time_section_2 = bench_ns(iters, || { let _ = apply_section_update(FULL_HTML, &section_2).unwrap(); });
+    let time_diff_1 = bench_ns(iters, || { let _ = apply_diff(FULL_HTML, &diff_1, "text/html", None).unwrap(); });
+    let time_diff_4 = bench_ns(iters, || { let _ = apply_diff(FULL_HTML, &diff_4, "text/html", None).unwrap(); });
+    let time_section_1 = bench_ns(iters, || { let _ = apply_section_update(FULL_HTML, &section_1, "text/html", None).unwrap(); });
+    let time_section_2 = bench_ns(iters, || { let _ = apply_section_update(FULL_HTML, &section_2, "text/html", None).unwrap(); });
     let time_template = bench_ns(iters, || { let _ = fill_template(template, &bindings); });
-    let time_manifest = bench_ns(iters, || { let _ = assemble_manifest(manifest_skeleton, &manifest_sections).unwrap(); });
+    let time_manifest = bench_ns(iters, || { let _ = assemble_manifest(manifest_skeleton, &manifest_sections, "text/html", None).unwrap(); });
 
     // ── Output Markdown ─────────────────────────────────────────────────────
 

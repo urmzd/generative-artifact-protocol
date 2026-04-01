@@ -104,11 +104,7 @@
             "type": "string",
             "description": "Format-specific end boundary"
           },
-          "rendering": {
-            "$ref": "rendering-hints.json",
-            "description": "Per-section rendering overrides"
-          }
-        }
+}
       },
       "description": "Section definitions"
     },
@@ -220,10 +216,6 @@
       "enum": ["gzip", "zstd"],
       "description": "Compression applied to content fields"
     },
-    "rendering": {
-      "$ref": "rendering-hints.json",
-      "description": "Rendering hints for the consumer (Section 8)"
-    },
     "state": {
       "type": "string",
       "enum": ["draft", "published", "archived"],
@@ -237,7 +229,7 @@
     },
     "entity": {
       "$ref": "entity-metadata.json",
-      "description": "Ownership and organizational metadata (Section 9)"
+      "description": "Ownership and organizational metadata"
     },
     "lock": {
       "type": "object",

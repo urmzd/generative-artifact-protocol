@@ -61,6 +61,17 @@
             }
           },
           "additionalProperties": false
+        },
+        {
+          "required": ["pointer"],
+          "properties": {
+            "pointer": {
+              "type": "string",
+              "pattern": "^(/[^/]*)*$",
+              "description": "JSON Pointer path (RFC 6901) targeting a value in JSON/YAML content"
+            }
+          },
+          "additionalProperties": false
         }
       ]
     },
