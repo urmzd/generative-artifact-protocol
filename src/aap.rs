@@ -8,85 +8,6 @@ use std::collections::HashMap;
 
 pub const PROTOCOL_VERSION: &str = "aap/1.0";
 
-/// Display mode for rendering hints.
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-#[serde(rename_all = "lowercase")]
-pub enum DisplayMode {
-    Code,
-    Preview,
-    Form,
-    Dashboard,
-    Document,
-    Diagram,
-    Raw,
-    #[serde(untagged)]
-    Custom(String),
-}
-
-/// Sandbox policy for executable content.
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
-pub struct SandboxPolicy {
-    #[serde(default, skip_serializing_if = "is_false")]
-    pub allow_scripts: bool,
-    #[serde(default, skip_serializing_if = "is_false")]
-    pub allow_forms: bool,
-    #[serde(default, skip_serializing_if = "is_false")]
-    pub allow_same_origin: bool,
-    #[serde(default, skip_serializing_if = "is_false")]
-    pub allow_popups: bool,
-    #[serde(default, skip_serializing_if = "is_false")]
-    pub allow_modals: bool,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub csp: Option<String>,
-}
-
-/// Accessibility hints for artifact rendering.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct AccessibilityHints {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub label: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub description: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub role: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub lang: Option<String>,
-}
-
-/// Progressive rendering control.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ProgressiveRendering {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub min_bytes: Option<u64>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub skeleton_content: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub reveal: Option<String>,
-}
-
-/// Rendering hints for artifact display.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct RenderingHints {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub display: Option<DisplayMode>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub language: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub theme: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub line_numbers: Option<bool>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub word_wrap: Option<bool>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub max_height: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub sandbox: Option<SandboxPolicy>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub accessibility: Option<AccessibilityHints>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub progressive: Option<ProgressiveRendering>,
-}
-
 /// Artifact lifecycle state.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
@@ -221,9 +142,6 @@ pub struct Envelope {
     pub content_encoding: Option<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub rendering: Option<RenderingHints>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub state: Option<ArtifactState>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -300,9 +218,6 @@ pub struct SectionDef {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub end_marker: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub rendering: Option<RenderingHints>,
 }
 
 /// A single diff operation.
@@ -339,6 +254,10 @@ pub struct Target {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub search: Option<String>,
+
+    /// JSON Pointer path (RFC 6901) for targeting values in JSON/YAML content.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pointer: Option<String>,
 }
 
 /// Section content replacement.
@@ -375,9 +294,6 @@ pub struct ChunkFrame {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub section_id: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub rendering: Option<RenderingHints>,
 
     #[serde(default, skip_serializing_if = "is_false")]
     pub flush: bool,

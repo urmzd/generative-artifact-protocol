@@ -9,13 +9,10 @@ use tracing_subscriber::EnvFilter;
 
 /// Metric instruments accessible from anywhere via `Metrics::get()`.
 pub struct Metrics {
-    pub render_count: AtomicU64,
-    render_duration_sum_us: AtomicU64,
-    render_duration_min_us: AtomicU64,
-    render_duration_max_us: AtomicU64,
-    render_pdf_size_sum: AtomicU64,
-    render_pdf_size_min: AtomicU64,
-    render_pdf_size_max: AtomicU64,
+    pub envelope_apply_count: AtomicU64,
+    envelope_apply_duration_sum_us: AtomicU64,
+    envelope_apply_duration_min_us: AtomicU64,
+    envelope_apply_duration_max_us: AtomicU64,
     pub watcher_changes_detected: AtomicU64,
     watcher_poll_count: AtomicU64,
     watcher_poll_sum_us: AtomicU64,
@@ -34,13 +31,10 @@ impl Metrics {
 
     fn new() -> Self {
         Self {
-            render_count: AtomicU64::new(0),
-            render_duration_sum_us: AtomicU64::new(0),
-            render_duration_min_us: AtomicU64::new(u64::MAX),
-            render_duration_max_us: AtomicU64::new(0),
-            render_pdf_size_sum: AtomicU64::new(0),
-            render_pdf_size_min: AtomicU64::new(u64::MAX),
-            render_pdf_size_max: AtomicU64::new(0),
+            envelope_apply_count: AtomicU64::new(0),
+            envelope_apply_duration_sum_us: AtomicU64::new(0),
+            envelope_apply_duration_min_us: AtomicU64::new(u64::MAX),
+            envelope_apply_duration_max_us: AtomicU64::new(0),
             watcher_changes_detected: AtomicU64::new(0),
             watcher_poll_count: AtomicU64::new(0),
             watcher_poll_sum_us: AtomicU64::new(0),
@@ -50,16 +44,13 @@ impl Metrics {
         }
     }
 
-    /// Record a completed render.
-    pub fn record_render(&self, duration_ms: f64, pdf_size: u64) {
-        self.render_count.fetch_add(1, Relaxed);
+    /// Record a completed envelope apply.
+    pub fn record_apply(&self, duration_ms: f64) {
+        self.envelope_apply_count.fetch_add(1, Relaxed);
         let us = (duration_ms * 1000.0) as u64;
-        self.render_duration_sum_us.fetch_add(us, Relaxed);
-        self.render_duration_min_us.fetch_min(us, Relaxed);
-        self.render_duration_max_us.fetch_max(us, Relaxed);
-        self.render_pdf_size_sum.fetch_add(pdf_size, Relaxed);
-        self.render_pdf_size_min.fetch_min(pdf_size, Relaxed);
-        self.render_pdf_size_max.fetch_max(pdf_size, Relaxed);
+        self.envelope_apply_duration_sum_us.fetch_add(us, Relaxed);
+        self.envelope_apply_duration_min_us.fetch_min(us, Relaxed);
+        self.envelope_apply_duration_max_us.fetch_max(us, Relaxed);
     }
 
     /// Record a watcher poll duration.
@@ -109,26 +100,17 @@ impl TelemetryGuard {
             "\u{2500}\u{2500} Metrics Summary \u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}\u{2500}"
         );
 
-        let rc = m.render_count.load(Relaxed);
-        eprintln!("{:<30}{}", "render.count", rc);
+        let ac = m.envelope_apply_count.load(Relaxed);
+        eprintln!("{:<30}{}", "envelope.apply_count", ac);
 
-        if rc > 0 {
-            let sum = m.render_duration_sum_us.load(Relaxed) as f64 / 1000.0;
-            let min = m.render_duration_min_us.load(Relaxed) as f64 / 1000.0;
-            let max = m.render_duration_max_us.load(Relaxed) as f64 / 1000.0;
-            let avg = sum / rc as f64;
+        if ac > 0 {
+            let sum = m.envelope_apply_duration_sum_us.load(Relaxed) as f64 / 1000.0;
+            let min = m.envelope_apply_duration_min_us.load(Relaxed) as f64 / 1000.0;
+            let max = m.envelope_apply_duration_max_us.load(Relaxed) as f64 / 1000.0;
+            let avg = sum / ac as f64;
             eprintln!(
                 "{:<30}avg={:<10.1} min={:<10.1} max={:.1}",
-                "render.duration_ms", avg, min, max
-            );
-
-            let sz_sum = m.render_pdf_size_sum.load(Relaxed);
-            let sz_min = m.render_pdf_size_min.load(Relaxed);
-            let sz_max = m.render_pdf_size_max.load(Relaxed);
-            let sz_avg = sz_sum / rc;
-            eprintln!(
-                "{:<30}avg={:<10} min={:<10} max={}",
-                "render.pdf_size_bytes", sz_avg, sz_min, sz_max
+                "envelope.apply_duration_ms", avg, min, max
             );
         }
 
