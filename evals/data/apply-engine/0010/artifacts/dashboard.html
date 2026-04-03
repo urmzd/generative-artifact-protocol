@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f9;
+            color: #333;
+        }
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        #dashboard-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+            gap: 20px;
+        }
+        .sidebar {
+            flex: 0 0 250px; /* Fixed width for navigation */
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            height: fit-content; 
+        }
+        .main-content {
+            flex-grow: 1;
+        }
+        .widget {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .stat-grid {
+            display: flex;
+            justify-content: space-around;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            flex-basis: 22%;
+            background-color: #e9f5ff;
+            border-left: 5px solid #007bff;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        .stat-card h3 {
+            margin: 0;
+            font-size: 1.8em;
+            color: #333;
+        }
+        .stat-card p {
+            margin: 5px 0 0;
+            color: #666;
+            font-size: 0.9em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: white;
+        }
+        .badge-high { background-color: #dc3545; }
+        .badge-medium { background-color: #ffc107; color: #333; }
+        .badge-low { background-color: #28a745; }
+
+        /* Section Specific Styling */
+        #nav .nav-item {
+            display: block;
+            padding: 12px 0;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+            font-weight: 500;
+            border-left: 3px solid transparent;
+        }
+        #nav .nav-item:hover {
+            background-color: #e6f0ff;
+            color: #007bff;
+            border-left: 3px solid #007bff;
+        }
+
+        footer {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Support Operations Dashboard</h1>
+        <p>Real-time overview for Customer Success Teams</p>
+    </header>
+
+    <div id="dashboard-container">
+
+        <aside>
+            <div class="sidebar">
+                <nav id="nav">
+                    <h2 style="font-size: 1.2em; color: #555;">Menu</h2>
+                    <a href="#" class="nav-item">Dashboard Overview</a>
+                    <a href="#" class="nav-item">Open Tickets (54)</a>
+                    <a href="#" class="nav-item">Knowledge Base</a>
+                    <a href="#" class="nav-item">Performance Reports</a>
+                    <a href="#" class="nav-item">User Management</a>
+                </nav>
+                <div style="margin-top: 30px; padding: 15px; background-color: #f0f0f0; border-radius: 5px;">
+                    <strong>Agent Status:</strong>
+                    <p style="margin: 8px 0;">Agent A: Online</p>
+                    <p style="margin: 8px 0;">Agent B: Busy</p>
+                    <p style="margin: 8px 0;">Agent C: Offline</p>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+
+            <section id="stats">
+                <div class="widget">
+                    <h2>Key Performance Indicators (Today)</h2>
+                    <div class="stat-grid">
+                        <div class="stat-card">
+                            <h3>124</h3>
+                            <p>Total Tickets Received</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>92%</h3>
+                            <p>First Response Rate (SLA)</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>3.1 hr</h3>
+                            <p>Avg. Resolution Time</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>7</h3>
+                            <p>High Priority Today</p>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <section id="content">
+                <div class="widget">
+                    <h2>Recent Ticket Activity</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ticket ID</th>
+                                <th>Subject</th>
+                                <th>Customer</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Opened</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>TKT-4001</td>
+                                <td>Login credentials reset for user.</td>
+                                <td>Alice Johnson</td>
+                                <td><span class="badge badge-medium">Medium</span></td>
+                                <td><span class="badge badge-high">Open</span></td>
+                                <td>2 min ago</td>
+                            </tr>
+                            <tr>
+                                <td>TKT-3998</td>
+                                <td>Billing discrepancy on invoice #9012.</td>
+                                <td>Robert Smith</td>
+                                <td><span class="badge badge-high">High</span></td>
+                                <td><span class="badge badge-medium">Pending Reply</span></td>
+                                <td>1 hour ago</td>
+                            </tr>
+                            <tr>
+                                <td>TKT-3995</td>
+                                <td>Feature request: Dark Mode integration.</td>
+                                <td>Emily Davis</td>
+                                <td><span class="badge badge-low">Low</span></td>
+                                <td><span class="badge badge-low">Closed</span></td>
+                                <td>4 hours ago</td>
+                            </tr>
+                            <tr>
+                                <td>TKT-3990</td>
+                                <td>Cannot upload profile picture.</td>
+                                <td>Michael Brown</td>
+                                <td><span class="badge badge-medium">Medium</span></td>
+                                <td><span class="badge badge-high">Open</span></td>
+                                <td>3 hours ago</td>
+                            </tr>
+                            <tr>
+                                <td>TKT-3988</td>
+                                <td>Account suspension details needed.</td>
+                                <td>Sarah Connor</td>
+                                <td><span class="badge badge-high">High</span></td>
+                                <td><span class="badge badge-medium">In Progress</span></td>
+                                <td>Yesterday</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="widget">
+                    <h2>Top Issue Categories</h2>
+                    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                        <div style="flex: 1 1 30%;">
+                            <h6>Login Issues</h6>
+                            <p style="font-size: 2em; color: #dc3545;">(35%)</p>
+                            <p>High volume; check SSO connection.</p>
+                        </div>
+                        <div style="flex: 1 1 30%;">
+                            <h6>Billing Queries</h6>
+                            <p style="font-size: 2em; color: #ffc107;">(25%)</p>
+                            <p>Need department review for recent price changes.</p>
+                        </div>
+                        <div style="flex: 1 1 30%;">
+                            <h6>Feature X Usage</h6>
+                            <p style="font-size: 2em; color: #28a745;">(20%)</p>
+                            <p>Documentation update recommended.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <footer id="footer">
+        &copy; 2024 Support Metrics Dashboard | Designed for Operational Excellence
+    </footer>
+    
+    <script>
+        // Simple client-side script logic placeholder
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Dashboard loaded successfully. Ready to monitor support metrics.");
+        });
+    </script>
+
+</body>
+</html>

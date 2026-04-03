@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Monitoring Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e293b;
+            color: #cbd5e1;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .dashboard-container {
+            display: flex;
+            flex: 1;
+            padding: 20px;
+        }
+        header {
+            background-color: #111827;
+            color: #94a3b8;
+            padding: 15px 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        /* Navigation Styling */
+        #nav {
+            background-color: #1e293b;
+            padding: 10px 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        #nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: space-around;
+        }
+        #nav li a {
+            color: #94a3b8;
+            text-decoration: none;
+            padding: 10px 15px;
+            display: block;
+            transition: background-color 0.3s, color 0.3s;
+            border-radius: 5px;
+        }
+        #nav li a:hover {
+            background-color: #334155;
+            color: #ffffff;
+        }
+        /* Main Content Area */
+        .dashboard-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: #1f2937;
+            border-left: 5px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .card h3 {
+            margin-top: 0;
+            color: #60a5fa;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        .card .metric {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .card .subtitle {
+            font-size: 0.9em;
+            color: #9ca3af;
+        }
+        /* Main Content Section Styling */
+        #content > div {
+            background-color: #1f2937;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+        .section-title {
+            color: #3b82f6;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+        }
+        th {
+            background-color: #334155;
+            color: #bfdbfe;
+            font-weight: 600;
+        }
+        tr:hover {
+            background-color: #2d3748;
+        }
+        /* Footer Styling */
+        footer {
+            background-color: #111827;
+            color: #6474b9;
+            padding: 15px;
+            text-align: center;
+            font-size: 0.9em;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Production Server Health Dashboard</h1>
+        <p>Real-time operational overview | Last Updated: 2024-10-27 10:30:15 UTC</p>
+    </header>
+
+    <div class="dashboard-container">
+
+        <nav id="nav">
+            <ul>
+                <li><a href="#home">Overview</a></li>
+                <li><a href="#metrics">Metrics</a></li>
+                <li><a href="#logs">Logs</a></li>
+                <li><a href="#users">Users</a></li>
+            </ul>
+        </nav>
+
+        <main class="dashboard-content">
+
+            <section id="stats">
+                <div class="stats-grid">
+                    <div class="card">
+                        <h3>CPU Load Average</h3>
+                        <div class="metric">12.3%</div>
+                        <div class="subtitle">Stable (Avg last 5 min)</div>
+                    </div>
+                    <div class="card" style="border-left-color: #ef4444;">
+                        <h3>Memory Utilization</h3>
+                        <div class="metric">78.1%</div>
+                        <div class="subtitle">Warning threshold approaching</div>
+                    </div>
+                    <div class="card" style="border-left-color: #10b981;">
+                        <h3>Network I/O (Current)</h3>
+                        <div class="metric">45.8 MB/s</div>
+                        <div class="subtitle">Throughput is nominal</div>
+                    </div>
+                     <div class="card">
+                        <h3>Active Connections</h3>
+                        <div class="metric">1,245</div>
+                        <div class="subtitle">Jumped +5% from previous hour</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="content">
+                <!-- System Metrics Chart Placeholder -->
+                <div>
+                    <h2 class="section-title">System Resource Trend Analysis (Last Hour)</h2>
+                    <p>Visual representation of critical resources over time.</p>
+                    <div style="height: 300px; background-color: #2d3748; border-radius: 6px; display: flex; justify-content: center; align-items: center; color: #94a3b8;">
+                        [Placeholder for Chart.js Graph (CPU/RAM Timeline)]
+                    </div>
+                </div>
+
+                <!-- Health Check Table -->
+                <div>
+                    <h2 class="section-title">Service Health Check</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Service Name</th>
+                                <th>Status</th>
+                                <th>Latency</th>
+                                <th>Last Check</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Authentication API</td>
+                                <td style="color: #10b981;">Operational</td>
+                                <td>45 ms</td>
+                                <td>2 minutes ago</td>
+                            </tr>
+                            <tr>
+                                <td>Database Gateway (Postgres)</td>
+                                <td style="color: #10b981;">Operational</td>
+                                <td>12 ms</td>
+                                <td>2 minutes ago</td>
+                            </tr>
+                            <tr>
+                                <td>File Storage Sync</td>
+                                <td style="color: #f59e0b;">Degraded</td>
+                                <td>N/A</td>
+                                <td>15 minutes ago</td>
+                            </tr>
+                            <tr>
+                                <td>Billing Microservice</td>
+                                <td style="color: #ef4444;">Failure</td>
+                                <td>Error</td>
+                                <td>Just now</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="metrics">
+                <h2 class="section-title">Top 5 Error Logs (Last 5 Minutes)</h2>
+                <div>
+                    <p>Review recent critical errors flagged by the monitoring system.</p>
+                    <ul>
+                        <li>[AUTH-001] Failed login attempt for user 'john.doe' from IP 203.0.113.4.</li>
+                        <li>[DB-TIMEOUT] Connection pool exhaustion on replica set 'R2'. Check connection limits.</li>
+                        <li>[API-WARN] Rate limit hit for endpoint /v2/reports by client 'AcmeCorp'.</li>
+                        <li>[CORE-ERROR] Garbage collection stalled exceeding 5 seconds threshold.</li>
+                        <li>[AUTH-001] Invalid token signature detected, source IP 192.168.1.25.</li>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+
+        <footer id="footer">
+            Dashboard generated by Prometheus & Grafana backend. Confidential Information. All rights reserved &copy; 2024 TechOps Solutions.
+        </footer>
+
+    </div>
+
+</body>
+</html>
