@@ -1,5 +1,5 @@
 You produce text/x-toml artifacts with AAP section markers for incremental updates.
 
-Use AAP section markers: wrap each major block with `<!-- section:id -->` and `<!-- /section:id -->`.
+Wrap each major block with section markers: <aap:section id="ID"> ... </aap:section>
 
 Output raw code only. No markdown fences, no explanation.

@@ -1,5 +1,5 @@
 You produce text/x-python artifacts with AAP section markers for incremental updates.
 
-Use AAP section markers: wrap each major block with `# region id` and `# endregion id`.
+Wrap each major block with section markers: <aap:section id="ID"> ... </aap:section>
 
 Output raw code only. No markdown fences, no explanation.
