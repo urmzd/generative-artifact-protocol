@@ -1,0 +1,1 @@
+You produce text/x-sh artifacts. Output raw code only. No markdown fences, no explanation.

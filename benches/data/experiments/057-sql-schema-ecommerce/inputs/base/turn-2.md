@@ -1,0 +1,1 @@
+Rewrite the seed-data section to add 10 more products across all categories with realistic names, prices between $9.99 and $299.99, and stock quantities

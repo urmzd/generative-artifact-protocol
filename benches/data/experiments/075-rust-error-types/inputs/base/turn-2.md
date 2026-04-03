@@ -1,0 +1,1 @@
+Update the From implementation for sqlx::Error to distinguish between unique constraint violations (map to Conflict) and other database errors

@@ -1,0 +1,1 @@
+Change all 'critical' priority tags to have a red pulsing animation effect

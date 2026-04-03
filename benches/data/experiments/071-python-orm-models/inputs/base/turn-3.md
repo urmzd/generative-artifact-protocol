@@ -1,0 +1,1 @@
+Add a new migration helper that adds a 'published_at' column to the articles table and backfills it from created_at for all articles with status='published'

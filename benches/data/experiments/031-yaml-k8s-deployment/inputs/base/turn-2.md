@@ -1,0 +1,1 @@
+Add a new Secret manifest containing database credentials and update the Deployment to mount it as environment variables

@@ -1,0 +1,1 @@
+Update the pagination component to show 'Showing X-Y of Z results' text and a jump-to-page input

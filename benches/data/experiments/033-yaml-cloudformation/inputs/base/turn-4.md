@@ -1,0 +1,1 @@
+Add an S3 bucket resource for static assets with CloudFront distribution and OAI access control

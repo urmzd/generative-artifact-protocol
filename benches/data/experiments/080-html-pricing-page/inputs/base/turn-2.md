@@ -1,0 +1,1 @@
+Rewrite the FAQ section to add 2 more questions about data export and SLA guarantees

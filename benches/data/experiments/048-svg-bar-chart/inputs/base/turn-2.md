@@ -1,0 +1,1 @@
+Add a second bar series in a lighter shade for 'Previous Year' revenue data alongside each month's current bar

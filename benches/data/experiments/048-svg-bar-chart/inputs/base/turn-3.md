@@ -1,0 +1,1 @@
+Change the chart title to 'Monthly Revenue 2024 vs 2023' and add a subtitle showing 'Total: $4.2M (+18% YoY)'

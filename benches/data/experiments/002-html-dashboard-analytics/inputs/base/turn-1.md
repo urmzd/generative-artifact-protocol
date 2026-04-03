@@ -1,0 +1,1 @@
+Update the Bounce Rate KPI card to show 34.2% with a -5.1% improvement trend

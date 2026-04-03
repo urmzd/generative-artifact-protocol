@@ -1,0 +1,1 @@
+Add a new useWebSocket<T> hook to the data-hooks section that manages a WebSocket connection with auto-reconnect, heartbeat, and typed message parsing

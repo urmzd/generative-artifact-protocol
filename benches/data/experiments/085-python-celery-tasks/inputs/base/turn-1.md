@@ -1,0 +1,1 @@
+Add a new 'send_invoice_email' task to the email-tasks section that accepts order_id, formats line items into an HTML table, and sends with a PDF attachment path

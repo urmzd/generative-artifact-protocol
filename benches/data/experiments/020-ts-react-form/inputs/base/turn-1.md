@@ -1,0 +1,1 @@
+Add a new ShippingOption interface with fields: id, name, price, estimated_days, and carrier

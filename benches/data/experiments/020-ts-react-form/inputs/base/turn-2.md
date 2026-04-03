@@ -1,0 +1,1 @@
+Rewrite the form-fields section to add a promo code input with a 'Apply' button that validates the code and shows a discount line in the summary

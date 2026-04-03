@@ -1,0 +1,1 @@
+Rewrite the authentication section to add a new 'Service Account' authentication flow using long-lived API tokens with scope restrictions

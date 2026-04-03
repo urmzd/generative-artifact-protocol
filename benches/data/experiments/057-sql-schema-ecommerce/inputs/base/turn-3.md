@@ -1,0 +1,1 @@
+Add a new materialized view 'monthly_sales_summary' that aggregates total revenue, order count, and average order value by month and year

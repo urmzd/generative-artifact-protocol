@@ -1,0 +1,1 @@
+Add 3 more products to the items table: Wireless Charger ($34.99, qty 1), USB-C Hub ($59.99, qty 1), and Monitor Stand ($89.99, qty 2)

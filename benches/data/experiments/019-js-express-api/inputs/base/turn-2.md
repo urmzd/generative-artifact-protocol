@@ -1,0 +1,1 @@
+Rewrite the auth token verification middleware to support both Bearer tokens and API key authentication via X-API-Key header

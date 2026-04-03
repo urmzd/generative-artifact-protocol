@@ -1,0 +1,1 @@
+Update the channel-info to change the blog name to 'CodeStream Weekly' and add an itunes:author and itunes:category element for podcast compatibility

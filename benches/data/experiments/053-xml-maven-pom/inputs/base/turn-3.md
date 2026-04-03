@@ -1,0 +1,1 @@
+Add the jib-maven-plugin to the build section for containerizing the application with a distroless base image

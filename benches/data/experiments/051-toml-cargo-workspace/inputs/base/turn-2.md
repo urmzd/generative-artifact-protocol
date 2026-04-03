@@ -1,0 +1,1 @@
+Update the release profile to enable codegen-units = 1 and add a bench profile with debug = true for profiling

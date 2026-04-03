@@ -1,0 +1,1 @@
+Rewrite the installation section to add Docker installation instructions with a docker run example

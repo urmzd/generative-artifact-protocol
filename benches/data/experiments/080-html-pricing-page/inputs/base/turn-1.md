@@ -1,0 +1,1 @@
+Update the Starter plan price to $19/mo and add a '14-day free trial' badge to all plans

@@ -1,0 +1,1 @@
+Update the environment name to 'production', region to 'us-west-2', and add a 'cost_center' tag with value 'engineering-platform'

@@ -1,0 +1,1 @@
+Rewrite the profiles section to add a 'test' profile with H2 in-memory database, Testcontainers disabled, and reduced logging

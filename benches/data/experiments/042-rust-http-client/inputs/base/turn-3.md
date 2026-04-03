@@ -1,0 +1,1 @@
+Add a caching layer to the client that stores responses in a HashMap with TTL expiration of 5 minutes

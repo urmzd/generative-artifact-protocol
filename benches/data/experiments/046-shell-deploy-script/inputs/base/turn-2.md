@@ -1,0 +1,1 @@
+Rewrite the deploy section to support deploying to multiple servers defined in a SERVERS array with parallel rsync uploads

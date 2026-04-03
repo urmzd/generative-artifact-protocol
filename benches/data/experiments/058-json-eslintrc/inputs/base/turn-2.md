@@ -1,0 +1,1 @@
+Change the parser from @typescript-eslint/parser to @babel/eslint-parser and update the parserOptions accordingly

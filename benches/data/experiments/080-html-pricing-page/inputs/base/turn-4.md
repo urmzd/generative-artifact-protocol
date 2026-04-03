@@ -1,0 +1,1 @@
+Change the annual discount from a percentage to show the exact savings: 'Save $58/year' on Starter and 'Save $158/year' on Professional

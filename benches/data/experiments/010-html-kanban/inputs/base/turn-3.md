@@ -1,0 +1,1 @@
+Add a new 'Cancelled' column after Done with 2 cancelled task cards

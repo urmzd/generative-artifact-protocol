@@ -1,0 +1,1 @@
+Update the Types section to add a 'NotificationPriority' enum with values: LOW, NORMAL, HIGH, URGENT and add it as a field on the Notification struct

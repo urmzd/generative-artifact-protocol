@@ -1,0 +1,1 @@
+Add a new Step 5 for 'Preferences' with fields for newsletter opt-in, preferred language dropdown, and communication channel radio buttons

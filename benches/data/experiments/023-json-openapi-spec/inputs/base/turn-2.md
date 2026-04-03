@@ -1,0 +1,1 @@
+Update the Book schema to include a 'format' enum field with values 'hardcover', 'paperback', 'ebook', 'audiobook'

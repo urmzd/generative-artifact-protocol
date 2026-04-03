@@ -1,0 +1,1 @@
+Update the ruff configuration to add the 'I' (isort) and 'UP' (pyupgrade) rule sets and set target-version to 'py312'

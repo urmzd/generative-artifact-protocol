@@ -1,0 +1,1 @@
+Rewrite the buttons component section to add a new 'danger' button variant with red color scheme and a 'loading' state with a spinner animation

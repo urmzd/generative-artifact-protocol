@@ -1,0 +1,1 @@
+Add a new 'breadcrumbs' component with separator chevrons, active state styling, and responsive truncation for long paths

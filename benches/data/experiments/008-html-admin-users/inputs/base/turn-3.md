@@ -1,0 +1,1 @@
+Add 20 more rows to the users table with users who have 'Viewer' and 'Editor' roles

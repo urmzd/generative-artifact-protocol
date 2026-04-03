@@ -1,0 +1,1 @@
+Rewrite the loading section to also output a summary CSV with one row per region containing total revenue, order count, and average order value

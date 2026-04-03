@@ -1,0 +1,1 @@
+Update the example to process a batch of 20 image resize operations instead of HTTP requests, with configurable width and height parameters

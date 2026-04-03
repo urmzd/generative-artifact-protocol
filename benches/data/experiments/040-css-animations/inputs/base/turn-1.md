@@ -1,0 +1,1 @@
+Add 3 new keyframe animations: 'typewriter' (text appears character by character), 'gradient-shift' (background gradient rotation), and 'float' (gentle up-down hover effect)

@@ -1,0 +1,1 @@
+Add a new ElastiCache Redis cluster resource in a private subnet with 2 cache nodes of type cache.t3.medium

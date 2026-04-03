@@ -1,0 +1,1 @@
+Add a new 'wishlists' table with columns: id, user_id (FK), product_id (FK), added_at, and a unique constraint on (user_id, product_id)
