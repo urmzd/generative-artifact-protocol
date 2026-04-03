@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.9.0 (2026-04-03)
+
+### Features
+
+- **cli**: add parallel provider execution and extract experiment runner ([b783b5b](https://github.com/urmzd/agent-artifact-protocol/commit/b783b5b00630835248cb6e4faf75cb9235e89b68))
+- **cli**: display streaming latency metrics in output ([655b91b](https://github.com/urmzd/agent-artifact-protocol/commit/655b91b8d1e212edd25a4f1c6b4c6fd12172da5d))
+- **models**: add streaming latency metrics to turn results ([6ed54b0](https://github.com/urmzd/agent-artifact-protocol/commit/6ed54b0e70123f08aaa194f308632b5a39664576))
+- **agents**: add groq provider and streaming latency collection ([8f1dbde](https://github.com/urmzd/agent-artifact-protocol/commit/8f1dbde288fc59bee0e0281f52ed432c72f65e54))
+
+### Refactoring
+
+- convert runner functions to async stream context managers ([9021ee5](https://github.com/urmzd/agent-artifact-protocol/commit/9021ee57cad9408e405f62bcc8d85464434db646))
+- convert eval functions to async and add concurrent judging ([22115db](https://github.com/urmzd/agent-artifact-protocol/commit/22115dbbe23657ca4817a3c132be6c96702fbce2))
+- convert agent functions to async/await for streaming operations ([6fea0d7](https://github.com/urmzd/agent-artifact-protocol/commit/6fea0d73b7d18146693de65b2c27ec957efa26b1))
+- **runner**: implement streaming API and latency collection ([48923e0](https://github.com/urmzd/agent-artifact-protocol/commit/48923e073ccc723dfbbe07e90faf1ba54ec91549))
+
+### Miscellaneous
+
+- **evals**: add experiment 028 (json-geojson-cities) partial results ([d620bdb](https://github.com/urmzd/agent-artifact-protocol/commit/d620bdbdb78e00ac045c05619563b79af802265f))
+- **evals**: add experiment 027 (json-i18n-translations) results ([79740b9](https://github.com/urmzd/agent-artifact-protocol/commit/79740b9c8907e88baea95f528d399db4e2b7f4c8))
+- **evals**: add experiment 026 (json-api-response-users) results ([5b6433c](https://github.com/urmzd/agent-artifact-protocol/commit/5b6433c35dd9cb0fb1005971a023ab071771af25))
+- **evals**: add experiment 025 (json-tsconfig) results ([ee29ab1](https://github.com/urmzd/agent-artifact-protocol/commit/ee29ab106c2becb319d827937c30ade3582dfee6))
+- **evals**: add experiment 024 (json-package-monorepo) results ([e429bc7](https://github.com/urmzd/agent-artifact-protocol/commit/e429bc727a99ae8f9ee3f31e56c88567b3931428))
+- **evals**: add experiment 023 (json-openapi-spec) results ([0750b06](https://github.com/urmzd/agent-artifact-protocol/commit/0750b067b357ed553c972990c1d2662c0b4ffca1))
+- **evals**: add evaluation experiment results for 002-023 ([6f8ebe1](https://github.com/urmzd/agent-artifact-protocol/commit/6f8ebe15a73aad86ce6444ba0812309c3270e12d))
+- **deps**: add groq provider and update dependencies ([1bfc0f5](https://github.com/urmzd/agent-artifact-protocol/commit/1bfc0f583e4694e4e79cc1405fd29d454898efa0))
+
+[Full Changelog](https://github.com/urmzd/agent-artifact-protocol/compare/v0.8.0...v0.9.0)
+
+
 ## 0.8.0 (2026-04-03)
 
 ### Features
