@@ -1,102 +1,174 @@
-//! Artifact resolution — applies diff, section, template, and composite modes
-//! to produce final artifact content.
+//! Stateless apply engine — pure function that transforms artifacts.
+//!
+//! `apply(artifact, operation) -> artifact`
+//!
+//! Takes an existing artifact (as a `name:"full"` envelope) and an operation
+//! envelope, returns the new artifact state as a `name:"full"` envelope.
+//! No state, no store, no side effects.
 
 use anyhow::{bail, Context, Result};
 use std::collections::HashMap;
 
 use crate::aap::{
-    DiffOp, Envelope, FullContentItem, Include, ManifestContentItem, Name, OpType, SectionDef,
-    SectionUpdate, TemplateContentItem,
+    DiffOp, Envelope, FullContentItem, Include, ManifestContentItem, Name, OpType, Operation,
+    SectionDef, SectionUpdate, TemplateContentItem, PROTOCOL_VERSION,
 };
-use crate::markers::{find_section_def, find_section_range, find_section_range_inclusive, resolve_markers};
+use crate::markers::{
+    find_section_def, find_section_range, resolve_markers,
+};
 
-/// Resolve an envelope to its final content string.
+/// Extract the body string from a `name:"full"` envelope.
+fn extract_body(envelope: &Envelope) -> Result<String> {
+    let item: FullContentItem = serde_json::from_value(
+        envelope
+            .content
+            .first()
+            .context("full envelope: empty content array")?
+            .clone(),
+    )
+    .context("full envelope: failed to parse content item")?;
+    Ok(item.body)
+}
+
+/// Extract sections from a `name:"full"` envelope (if present).
+fn extract_sections(envelope: &Envelope) -> Option<Vec<SectionDef>> {
+    envelope
+        .content
+        .first()
+        .and_then(|v| serde_json::from_value::<FullContentItem>(v.clone()).ok())
+        .and_then(|item| item.sections)
+}
+
+/// Build a `name:"full"` output envelope from resolved content.
+fn build_full_envelope(
+    id: &str,
+    version: u64,
+    format: Option<&str>,
+    body: String,
+    sections: Option<Vec<SectionDef>>,
+) -> Result<Envelope> {
+    let content_item = FullContentItem { body, sections };
+    Ok(Envelope {
+        protocol: PROTOCOL_VERSION.to_string(),
+        id: id.to_string(),
+        version,
+        name: Name::Full,
+        operation: Operation {
+            direction: "output".to_string(),
+            format: format.map(|s| s.to_string()),
+            encoding: None,
+            content_encoding: None,
+            section_id: None,
+            token_budget: None,
+            tokens_used: None,
+            checksum: None,
+            created_at: None,
+            updated_at: None,
+            state: None,
+            state_changed_at: None,
+        },
+        content: vec![
+            serde_json::to_value(content_item).context("failed to serialize content item")?
+        ],
+    })
+}
+
+/// Stateless apply: `f(artifact, operation) → artifact`.
 ///
-/// For `full` name, returns content body directly.
-/// For other names, requires the base content from the store.
-/// Control-plane operations (handle, projection, intent, result, audit) error.
-pub fn resolve(envelope: &Envelope, store: &HashMap<String, String>) -> Result<String> {
-    let format = envelope
+/// - `artifact`: current artifact state as a `name:"full"` envelope.
+///   `None` for operations that don't need a base (`full`, `template`, `manifest`).
+/// - `operation`: the operation envelope to apply.
+///
+/// Returns the new artifact state as a `name:"full"` envelope.
+pub fn apply(artifact: Option<&Envelope>, operation: &Envelope) -> Result<Envelope> {
+    let format = operation
         .operation
         .format
         .as_deref()
         .unwrap_or("text/html");
 
-    match envelope.name {
+    let (body, sections) = match operation.name {
         Name::Full => {
-            let item: FullContentItem = serde_json::from_value(
-                envelope
-                    .content
-                    .first()
-                    .context("full: empty content array")?
-                    .clone(),
-            )
-            .context("full: failed to parse content item")?;
-            Ok(item.body)
+            let body = extract_body(operation)?;
+            let sections = extract_sections(operation);
+            (body, sections)
         }
         Name::Diff => {
-            let base = store
-                .get(&envelope.id)
-                .context("no base content for diff")?;
-            let ops: Vec<DiffOp> = envelope
+            let art = artifact.context("diff requires a base artifact")?;
+            let base = extract_body(art)?;
+            let sections = extract_sections(art);
+            let ops: Vec<DiffOp> = operation
                 .content
                 .iter()
                 .map(|v| serde_json::from_value(v.clone()))
                 .collect::<std::result::Result<Vec<_>, _>>()
                 .context("diff: failed to parse content items")?;
-            // Extract sections from store if available (stored from prior full envelope)
-            apply_diff(base, &ops, format, None)
+            let body = apply_diff(&base, &ops, format, None)?;
+            (body, sections)
         }
         Name::Section => {
-            let base = store
-                .get(&envelope.id)
-                .context("no base content for section update")?;
-            let updates: Vec<SectionUpdate> = envelope
+            let art = artifact.context("section requires a base artifact")?;
+            let base = extract_body(art)?;
+            let sections = extract_sections(art);
+            let updates: Vec<SectionUpdate> = operation
                 .content
                 .iter()
                 .map(|v| serde_json::from_value(v.clone()))
                 .collect::<std::result::Result<Vec<_>, _>>()
                 .context("section: failed to parse content items")?;
-            apply_section_update(base, &updates, format, None)
+            let body = apply_section_update(&base, &updates, format, None)?;
+            (body, sections)
         }
         Name::Template => {
             let item: TemplateContentItem = serde_json::from_value(
-                envelope
+                operation
                     .content
                     .first()
                     .context("template: empty content array")?
                     .clone(),
             )
             .context("template: failed to parse content item")?;
-            Ok(fill_template(&item.template, &item.bindings))
+            let body = fill_template(&item.template, &item.bindings);
+            let sections = artifact.and_then(extract_sections);
+            (body, sections)
         }
         Name::Composite => {
-            let includes: Vec<Include> = envelope
+            let includes: Vec<Include> = operation
                 .content
                 .iter()
                 .map(|v| serde_json::from_value(v.clone()))
                 .collect::<std::result::Result<Vec<_>, _>>()
                 .context("composite: failed to parse content items")?;
-            resolve_composite(&includes, store, format, None)
+            let body = resolve_composite(&includes, format)?;
+            let sections = artifact.and_then(extract_sections);
+            (body, sections)
         }
         Name::Manifest => {
             let item: ManifestContentItem = serde_json::from_value(
-                envelope
+                operation
                     .content
                     .first()
                     .context("manifest: empty content array")?
                     .clone(),
             )
             .context("manifest: failed to parse content item")?;
-            Ok(item.skeleton)
+            (item.skeleton, None)
         }
         Name::Handle | Name::Projection | Name::Intent | Name::Result | Name::Audit => {
             bail!(
                 "control-plane operation '{:?}' does not produce artifact content",
-                envelope.name
+                operation.name
             )
         }
-    }
+    };
+
+    build_full_envelope(
+        &operation.id,
+        operation.version,
+        Some(format),
+        body,
+        sections,
+    )
 }
 
 /// Apply diff operations sequentially to base content.
@@ -173,8 +245,7 @@ fn apply_pointer_op(root: &mut serde_json::Value, pointer: &str, op: &DiffOp) ->
             *target = new_val;
         }
         OpType::Delete => {
-            let (parent_ptr, key) =
-                split_pointer(pointer).context("cannot delete root")?;
+            let (parent_ptr, key) = split_pointer(pointer).context("cannot delete root")?;
             let parent = root
                 .pointer_mut(&parent_ptr)
                 .with_context(|| format!("parent not found: {parent_ptr}"))?;
@@ -184,8 +255,7 @@ fn apply_pointer_op(root: &mut serde_json::Value, pointer: &str, op: &DiffOp) ->
             let content = op.content.as_deref().context("insert requires content")?;
             let new_val: serde_json::Value =
                 serde_json::from_str(content).context("content must be valid JSON")?;
-            let (parent_ptr, key) =
-                split_pointer(pointer).context("cannot insert at root")?;
+            let (parent_ptr, key) = split_pointer(pointer).context("cannot insert at root")?;
             let parent = root
                 .pointer_mut(&parent_ptr)
                 .with_context(|| format!("parent not found: {parent_ptr}"))?;
@@ -289,36 +359,20 @@ pub fn fill_template(template: &str, bindings: &HashMap<String, serde_json::Valu
     result
 }
 
-/// Assemble content from include references.
-pub fn resolve_composite(
-    includes: &[Include],
-    store: &HashMap<String, String>,
-    format: &str,
-    sections: Option<&[SectionDef]>,
-) -> Result<String> {
+/// Assemble content from inline include items.
+///
+/// Only inline `content` items are supported. References (`ref`, `uri`) must
+/// be pre-resolved by the caller before invoking the stateless apply engine.
+pub fn resolve_composite(includes: &[Include], _format: &str) -> Result<String> {
     let mut parts = Vec::new();
 
     for inc in includes {
         if let Some(content) = &inc.content {
             parts.push(content.clone());
-        } else if let Some(reference) = &inc.reference {
-            if let Some((artifact_id, section_id)) = reference.split_once(':') {
-                let content = store
-                    .get(artifact_id)
-                    .with_context(|| format!("referenced artifact not found: {artifact_id}"))?;
-                let section_def = find_section_def(sections, section_id);
-                let (start, end) =
-                    find_section_range_inclusive(content, section_id, format, section_def)
-                        .with_context(|| format!("section not found: {section_id}"))?;
-                parts.push(content[start..end].to_string());
-            } else {
-                let content = store
-                    .get(reference.as_str())
-                    .with_context(|| format!("referenced artifact not found: {reference}"))?;
-                parts.push(content.clone());
-            }
-        } else if let Some(uri) = &inc.uri {
-            parts.push(format!("<!-- unresolved: {uri} -->"));
+        } else if inc.reference.is_some() {
+            bail!("composite ref must be pre-resolved before calling apply — the apply engine is stateless");
+        } else if inc.uri.is_some() {
+            bail!("composite uri must be pre-resolved before calling apply — the apply engine is stateless");
         } else {
             bail!("include has no ref, uri, or content");
         }
@@ -397,6 +451,120 @@ fn find_target_range(
 mod tests {
     use super::*;
     use crate::aap::{DiffOp, OpType, Target};
+
+    fn make_operation(format: &str) -> Operation {
+        Operation {
+            direction: "output".to_string(),
+            format: Some(format.to_string()),
+            encoding: None,
+            content_encoding: None,
+            section_id: None,
+            token_budget: None,
+            tokens_used: None,
+            checksum: None,
+            created_at: None,
+            updated_at: None,
+            state: None,
+            state_changed_at: None,
+        }
+    }
+
+    fn full_envelope(id: &str, version: u64, body: &str) -> Envelope {
+        Envelope {
+            protocol: PROTOCOL_VERSION.to_string(),
+            id: id.to_string(),
+            version,
+            name: Name::Full,
+            operation: make_operation("text/html"),
+            content: vec![serde_json::json!({ "body": body })],
+        }
+    }
+
+    #[test]
+    fn test_apply_full() {
+        let op = full_envelope("test", 1, "<div>hello</div>");
+        let result = apply(None, &op).unwrap();
+        assert_eq!(result.name, Name::Full);
+        assert_eq!(extract_body(&result).unwrap(), "<div>hello</div>");
+    }
+
+    #[test]
+    fn test_apply_diff() {
+        let artifact = full_envelope("test", 1, "<div>old value</div>");
+        let op = Envelope {
+            protocol: PROTOCOL_VERSION.to_string(),
+            id: "test".to_string(),
+            version: 2,
+            name: Name::Diff,
+            operation: make_operation("text/html"),
+            content: vec![serde_json::to_value(DiffOp {
+                op: OpType::Replace,
+                target: Target {
+                    search: Some("old value".to_string()),
+                    lines: None,
+                    offsets: None,
+                    section: None,
+                    pointer: None,
+                },
+                content: Some("new value".to_string()),
+            })
+            .unwrap()],
+        };
+        let result = apply(Some(&artifact), &op).unwrap();
+        assert_eq!(result.name, Name::Full);
+        assert_eq!(extract_body(&result).unwrap(), "<div>new value</div>");
+    }
+
+    #[test]
+    fn test_apply_diff_preserves_sections() {
+        let artifact = Envelope {
+            protocol: PROTOCOL_VERSION.to_string(),
+            id: "test".to_string(),
+            version: 1,
+            name: Name::Full,
+            operation: make_operation("text/html"),
+            content: vec![serde_json::json!({
+                "body": "<div>old</div>",
+                "sections": [{"id": "main"}]
+            })],
+        };
+        let op = Envelope {
+            protocol: PROTOCOL_VERSION.to_string(),
+            id: "test".to_string(),
+            version: 2,
+            name: Name::Diff,
+            operation: make_operation("text/html"),
+            content: vec![serde_json::to_value(DiffOp {
+                op: OpType::Replace,
+                target: Target {
+                    search: Some("old".to_string()),
+                    lines: None,
+                    offsets: None,
+                    section: None,
+                    pointer: None,
+                },
+                content: Some("new".to_string()),
+            })
+            .unwrap()],
+        };
+        let result = apply(Some(&artifact), &op).unwrap();
+        let sections = extract_sections(&result).unwrap();
+        assert_eq!(sections.len(), 1);
+        assert_eq!(sections[0].id, "main");
+    }
+
+    #[test]
+    fn test_apply_diff_without_artifact_fails() {
+        let op = Envelope {
+            protocol: PROTOCOL_VERSION.to_string(),
+            id: "test".to_string(),
+            version: 2,
+            name: Name::Diff,
+            operation: make_operation("text/html"),
+            content: vec![],
+        };
+        assert!(apply(None, &op).is_err());
+    }
 
     #[test]
     fn test_apply_diff_search_replace() {
