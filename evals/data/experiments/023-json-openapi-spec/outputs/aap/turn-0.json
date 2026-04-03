@@ -1,0 +1,88 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "<aap:target id=\"api-title\">Bookstore API</aap:target>",
+    "version": "<aap:target id=\"api-version\">1.0.0</aap:target>",
+    "description": "API for managing a digital bookstore catalog and orders.",
+    "contact": {
+      "name": "API Support",
+      "email": "support@bookstore.example"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.bookstore.example/v1"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Book": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "author_id": { "type": "string" },
+          "price": { "type": "number" }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "integer" },
+          "message": { "type": "string" }
+        }
+      }
+    }
+  },
+  "security": [
+    { "BearerAuth": [] }
+  ],
+  "paths": {
+    "<aap:target id=\"path-books\">/books</aap:target>": {
+      "get": {
+        "summary": "List books",
+        "responses": {
+          "200": { "description": "Success" },
+          "500": { "description": "Internal server error" }
+        }
+      },
+      "post": {
+        "summary": "Create book",
+        "responses": {
+          "201": { "description": "Created" },
+          "400": { "description": "Invalid input" }
+        }
+      }
+    },
+    "<aap:target id=\"path-books-id\">/books/{id}</aap:target>": {
+      "get": {
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": { "description": "Success" },
+          "404": { "description": "Not found" }
+        }
+      },
+      "put": { "responses": { "200": { "description": "Updated" } } },
+      "delete": { "responses": { "204": { "description": "Deleted" } } }
+    },
+    "<aap:target id=\"path-authors\">/authors</aap:target>": {
+      "get": { "responses": { "200": { "description": "List authors" } } }
+    },
+    "<aap:target id=\"path-categories\">/categories</aap:target>": {
+      "get": { "responses": { "200": { "description": "List categories" } } }
+    },
+    "<aap:target id=\"path-orders\">/orders</aap:target>": {
+      "post": { "responses": { "201": { "description": "Order created" } } }
+    },
+    "<aap:target id=\"path-reviews\">/reviews</aap:target>": {
+      "post": { "responses": { "201": { "description": "Review submitted" } } }
+    }
+  }
+}

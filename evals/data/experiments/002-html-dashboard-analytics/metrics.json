@@ -1,0 +1,274 @@
+{
+  "experiment_id": "002-html-dashboard-analytics",
+  "model": "",
+  "provider": "google",
+  "timestamp": "2026-04-03T06:46:29.366805+00:00",
+  "format": "text/html",
+  "base_turn0": {
+    "input_tokens": 124,
+    "output_tokens": 1342,
+    "latency_ms": 6789,
+    "artifact_bytes": 4037
+  },
+  "aap_turn0": {
+    "input_tokens": 463,
+    "output_tokens": 920,
+    "latency_ms": 4060,
+    "artifact_bytes": 2747
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the Bounce Rate KPI card to show 34.2% with a -5.1% improvement trend",
+        "input_tokens": 1491,
+        "output_tokens": 1426,
+        "latency_ms": 5423,
+        "output_bytes": 4252,
+        "failed": false,
+        "failure_reason": ""
+      },
+      {
+        "turn": 2,
+        "edit": "Add 20 new rows to the traffic sources table with social media referral data fro",
+        "input_tokens": 2943,
+        "output_tokens": 1666,
+        "latency_ms": 6430,
+        "output_bytes": 4868,
+        "failed": false,
+        "failure_reason": ""
+      },
+      {
+        "turn": 3,
+        "edit": "Replace the top referrers list with a new list of 15 referrers focused on develo",
+        "input_tokens": 4633,
+        "output_tokens": 1733,
+        "latency_ms": 7088,
+        "output_bytes": 5099,
+        "failed": false,
+        "failure_reason": ""
+      },
+      {
+        "turn": 4,
+        "edit": "Add a new 'Conversion Funnel' section after the KPI cards showing 5 funnel stage",
+        "input_tokens": 6391,
+        "output_tokens": 2026,
+        "latency_ms": 8640,
+        "output_bytes": 5965,
+        "failed": false,
+        "failure_reason": ""
+      }
+    ],
+    "total_input_tokens": 15458,
+    "total_output_tokens": 6851,
+    "total_latency_ms": 27581
+  },
+  "aap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the Bounce Rate KPI card to show 34.2% with a -5.1% improvement trend",
+        "input_tokens": 2051,
+        "output_tokens": 179,
+        "latency_ms": 1650,
+        "output_bytes": 352,
+        "failed": false,
+        "failure_reason": "",
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "synthesize"
+      },
+      {
+        "turn": 2,
+        "edit": "Add 20 new rows to the traffic sources table with social media referral data fro",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 2701,
+        "output_bytes": 352,
+        "failed": true,
+        "failure_reason": "parse or apply failed",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Replace the top referrers list with a new list of 15 referrers focused on develo",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 2980,
+        "output_bytes": 352,
+        "failed": true,
+        "failure_reason": "parse or apply failed",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 4,
+        "edit": "Add a new 'Conversion Funnel' section after the KPI cards showing 5 funnel stage",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 3144,
+        "output_bytes": 352,
+        "failed": true,
+        "failure_reason": "parse or apply failed",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 2051,
+    "total_output_tokens": 179,
+    "total_latency_ms": 10475,
+    "envelope_parse_rate": 1.0,
+    "apply_success_rate": 0.25
+  },
+  "comparison": {
+    "output_token_savings_pct": 97.4,
+    "input_token_savings_pct": 86.7,
+    "latency_savings_pct": 62.0
+  },
+  "token_table": {
+    "turns": [
+      {
+        "turn": 0,
+        "base_input": 124,
+        "base_output": 1342,
+        "base_latency_ms": 6789,
+        "aap_input": 463,
+        "aap_output": 920,
+        "aap_latency_ms": 4060
+      },
+      {
+        "turn": 1,
+        "base_input": 1491,
+        "base_output": 1426,
+        "base_latency_ms": 5423,
+        "aap_input": 2051,
+        "aap_output": 179,
+        "aap_latency_ms": 1650,
+        "envelope_name": "synthesize",
+        "apply_ok": true
+      },
+      {
+        "turn": 2,
+        "base_input": 2943,
+        "base_output": 1666,
+        "base_latency_ms": 6430,
+        "aap_input": 0,
+        "aap_output": 0,
+        "aap_latency_ms": 2701,
+        "envelope_name": "edit",
+        "apply_ok": false
+      },
+      {
+        "turn": 3,
+        "base_input": 4633,
+        "base_output": 1733,
+        "base_latency_ms": 7088,
+        "aap_input": 0,
+        "aap_output": 0,
+        "aap_latency_ms": 2980,
+        "envelope_name": "edit",
+        "apply_ok": false
+      },
+      {
+        "turn": 4,
+        "base_input": 6391,
+        "base_output": 2026,
+        "base_latency_ms": 8640,
+        "aap_input": 0,
+        "aap_output": 0,
+        "aap_latency_ms": 3144,
+        "envelope_name": "edit",
+        "apply_ok": false
+      }
+    ],
+    "totals": {
+      "base_input": 15582,
+      "base_output": 8193,
+      "base_combined": 23775,
+      "aap_input": 2514,
+      "aap_output": 1099,
+      "aap_combined": 3613,
+      "base_latency_ms": 34370,
+      "aap_latency_ms": 14535,
+      "output_savings_pct": 86.6,
+      "input_delta_pct": -83.9,
+      "combined_savings_pct": 84.8,
+      "latency_savings_pct": 57.7
+    }
+  },
+  "quality": {
+    "per_turn": [
+      {
+        "turn": 0,
+        "sequence_similarity": 0.162,
+        "token_f1": 0.4644,
+        "base_char_count": 4037,
+        "aap_char_count": 2407,
+        "char_delta_pct": -40.4,
+        "lines_added": 51,
+        "lines_removed": 71,
+        "rouge_l": null,
+        "bleu": null
+      },
+      {
+        "turn": 1,
+        "sequence_similarity": 0.0169,
+        "token_f1": 0.03,
+        "base_char_count": 4250,
+        "aap_char_count": 352,
+        "char_delta_pct": -91.7,
+        "lines_added": 15,
+        "lines_removed": 82,
+        "rouge_l": null,
+        "bleu": null
+      },
+      {
+        "turn": 2,
+        "sequence_similarity": 0.0149,
+        "token_f1": 0.0265,
+        "base_char_count": 4866,
+        "aap_char_count": 352,
+        "char_delta_pct": -92.8,
+        "lines_added": 15,
+        "lines_removed": 91,
+        "rouge_l": null,
+        "bleu": null
+      },
+      {
+        "turn": 3,
+        "sequence_similarity": 0.0143,
+        "token_f1": 0.0257,
+        "base_char_count": 5097,
+        "aap_char_count": 352,
+        "char_delta_pct": -93.1,
+        "lines_added": 15,
+        "lines_removed": 91,
+        "rouge_l": null,
+        "bleu": null
+      },
+      {
+        "turn": 4,
+        "sequence_similarity": 0.0124,
+        "token_f1": 0.0224,
+        "base_char_count": 5963,
+        "aap_char_count": 352,
+        "char_delta_pct": -94.1,
+        "lines_added": 15,
+        "lines_removed": 101,
+        "rouge_l": null,
+        "bleu": null
+      }
+    ],
+    "mean_sequence_similarity": 0.0441,
+    "mean_token_f1": 0.1138,
+    "mean_rouge_l": null,
+    "mean_bleu": null,
+    "judge_comparisons": null,
+    "mean_base_judge": null,
+    "mean_aap_judge": null
+  }
+}

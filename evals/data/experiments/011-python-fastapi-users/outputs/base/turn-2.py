@@ -1,4 +1,4 @@
-def list_users(db: Session, skip: int = 0, limit: int = 10, role: Optional[str] = None, is_active: Optional[bool] = None):
+def list_users(db: Session, skip: int = 0, limit: int = 100, role: Optional[str] = None, is_active: Optional[bool] = None):
     query = db.query(User)
     
     if role:
@@ -8,11 +8,11 @@ def list_users(db: Session, skip: int = 0, limit: int = 10, role: Optional[str] 
         
     return query.offset(skip).limit(limit).all()
 
-# Updated Router Endpoint
-@router.get("/", response_model=List[UserResponse])
+# Updated Router endpoint
+@router.get("/users", response_model=List[UserResponse])
 def read_users(
     skip: int = 0, 
-    limit: int = 10, 
+    limit: int = 100, 
     role: Optional[str] = None, 
     is_active: Optional[bool] = None, 
     db: Session = Depends(get_db)

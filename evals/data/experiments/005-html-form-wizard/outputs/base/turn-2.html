@@ -1,86 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Wizard</title>
-    <style>
-        :root { --primary: #0d9488; --gray: #d1d5db; }
-        body { font-family: sans-serif; background: #f3f4f6; display: flex; justify-content: center; padding: 40px 20px; }
-        .wizard { background: white; width: 100%; max-width: 500px; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .progress-bar { display: flex; justify-content: space-between; margin-bottom: 2rem; }
-        .step-dot { height: 12px; width: 12px; background: var(--gray); border-radius: 50%; }
-        .step-dot.active { background: var(--primary); }
-        .form-step { display: none; }
-        .form-step.active { display: block; }
-        .input-group { margin-bottom: 1rem; }
-        label { display: block; margin-bottom: 0.25rem; font-weight: bold; font-size: 0.9rem; }
-        input[type="text"], input[type="email"], input[type="tel"], input[type="date"], select { width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .radio-group { display: flex; gap: 15px; margin-top: 5px; }
-        .buttons { display: flex; justify-content: space-between; margin-top: 1.5rem; }
-        button { padding: 0.5rem 1rem; cursor: pointer; border: none; border-radius: 4px; background: var(--primary); color: white; }
-        button:disabled { background: var(--gray); }
-        .review-item { margin-bottom: 0.5rem; border-bottom: 1px solid #eee; padding-bottom: 0.25rem; font-size: 0.9rem; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registration Wizard</title>
+<style>
+    :root { --primary: #0d9488; --gray: #e0e0e0; }
+    body { font-family: sans-serif; background: #f4f7f6; display: flex; justify-content: center; padding: 20px; }
+    .card { background: white; padding: 30px; border-radius: 8px; width: 100%; max-width: 500px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .progress-bar { display: flex; justify-content: space-between; margin-bottom: 30px; position: relative; }
+    .progress-step { width: 30px; height: 30px; border-radius: 50%; background: var(--gray); display: flex; align-items: center; justify-content: center; font-size: 14px; color: white; transition: background 0.3s; }
+    .progress-step.active { background: var(--primary); }
+    .step { display: none; }
+    .step.active { display: block; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input[type="text"], input[type="email"], input[type="tel"], input[type="date"], select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    .radio-group { display: flex; gap: 15px; }
+    .buttons { margin-top: 20px; display: flex; justify-content: space-between; }
+    button { padding: 10px 20px; cursor: pointer; border: none; border-radius: 4px; background: var(--primary); color: white; }
+    button:disabled { background: #ccc; }
+    .review-item { margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px; font-size: 0.9em; }
+</style>
 </head>
 <body>
 
-<div class="wizard">
-    <div class="progress-bar" id="progress">
-        <div class="step-dot active"></div>
-        <div class="step-dot"></div>
-        <div class="step-dot"></div>
-        <div class="step-dot"></div>
-        <div class="step-dot"></div>
+<div class="card">
+    <div class="progress-bar">
+        <div class="progress-step active" id="p1">1</div>
+        <div class="progress-step" id="p2">2</div>
+        <div class="progress-step" id="p3">3</div>
+        <div class="progress-step" id="p4">4</div>
+        <div class="progress-step" id="p5">5</div>
     </div>
 
     <form id="regForm">
-        <!-- Step 1 -->
-        <div class="form-step active" id="step1">
+        <div class="step active" id="step0">
             <h3>Personal Info</h3>
-            <div class="input-group"><label>Name</label><input type="text" id="i_name"></div>
-            <div class="input-group"><label>Email</label><input type="email" id="i_email"></div>
-            <div class="input-group"><label>Phone</label><input type="tel" id="i_phone"></div>
-            <div class="input-group"><label>DOB</label><input type="date" id="i_dob"></div>
+            <div class="form-group"><input type="text" id="name" placeholder="Full Name" required></div>
+            <div class="form-group"><input type="email" id="email" placeholder="Email" required></div>
+            <div class="form-group"><input type="tel" id="phone" placeholder="Phone"></div>
+            <div class="form-group"><input type="date" id="dob"></div>
         </div>
 
-        <!-- Step 2 -->
-        <div class="form-step" id="step2">
+        <div class="step" id="step1">
             <h3>Address</h3>
-            <div class="input-group"><label>Street</label><input type="text" id="i_street"></div>
-            <div class="input-group"><label>City</label><input type="text" id="i_city"></div>
-            <div class="input-group"><label>State</label><input type="text" id="i_state"></div>
-            <div class="input-group"><label>Country</label>
-                <select id="i_country"><option>USA</option><option>Canada</option><option>UK</option></select>
-            </div>
+            <div class="form-group"><input type="text" id="street" placeholder="Street"></div>
+            <div class="form-group"><input type="text" id="city" placeholder="City"></div>
+            <div class="form-group"><input type="text" id="zip" placeholder="Zip Code"></div>
+            <div class="form-group"><select id="country"><option>USA</option><option>Canada</option><option>UK</option></select></div>
         </div>
 
-        <!-- Step 3 -->
-        <div class="form-step" id="step3">
+        <div class="step" id="step2">
             <h3>Payment</h3>
-            <div class="input-group"><label>Card Number</label><input type="text" id="i_card"></div>
-            <div class="input-group"><label>Expiry</label><input type="text" placeholder="MM/YY" id="i_expiry"></div>
-            <div class="input-group"><label>CVV</label><input type="text" id="i_cvv"></div>
+            <div class="form-group"><input type="text" id="card" placeholder="Card Number"></div>
+            <div class="form-group"><input type="text" id="expiry" placeholder="MM/YY"></div>
+            <div class="form-group"><input type="text" id="cvv" placeholder="CVV"></div>
         </div>
 
-        <!-- Step 4 -->
-        <div class="form-step" id="step4">
+        <div class="step" id="step3">
             <h3>Preferences</h3>
-            <div class="input-group"><label><input type="checkbox" id="i_news"> Subscribe to newsletter</label></div>
-            <div class="input-group"><label>Language</label>
-                <select id="i_lang"><option>English</option><option>Spanish</option><option>French</option></select>
+            <div class="form-group"><label><input type="checkbox" id="newsletter"> Subscribe to newsletter</label></div>
+            <div class="form-group">
+                <label>Language</label>
+                <select id="lang"><option>English</option><option>Spanish</option><option>French</option></select>
             </div>
-            <label>Preferred Contact</label>
-            <div class="radio-group">
-                <label><input type="radio" name="contact" value="Email" checked> Email</label>
-                <label><input type="radio" name="contact" value="SMS"> SMS</label>
+            <div class="form-group">
+                <label>Contact Preference:</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="contact" value="Email" checked> Email</label>
+                    <label><input type="radio" name="contact" value="SMS"> SMS</label>
+                </div>
             </div>
         </div>
 
-        <!-- Step 5 -->
-        <div class="form-step" id="step5">
+        <div class="step" id="step4">
             <h3>Review</h3>
-            <div id="review-content"></div>
+            <div id="reviewContent"></div>
         </div>
 
         <div class="buttons">
@@ -92,36 +88,40 @@
 
 <script>
     let currentStep = 0;
-    const steps = document.querySelectorAll(".form-step");
-    const dots = document.querySelectorAll(".step-dot");
+    const steps = document.querySelectorAll(".step");
+    const progress = document.querySelectorAll(".progress-step");
 
     function changeStep(n) {
-        if (currentStep === 3 && n === 1) updateReview();
         steps[currentStep].classList.remove("active");
         currentStep += n;
+        
+        if (currentStep >= steps.length) {
+            alert("Form Submitted Successfully!");
+            return;
+        }
+
+        if (currentStep === 4) renderReview();
+
         steps[currentStep].classList.add("active");
-        
-        dots.forEach((dot, idx) => dot.classList.toggle("active", idx <= currentStep));
-        
-        document.getElementById("prevBtn").disabled = currentStep === 0;
-        document.getElementById("nextBtn").innerText = currentStep === 4 ? "Submit" : "Next";
-        
-        if (currentStep > 4) { alert("Registration Complete!"); location.reload(); }
+        updateUI();
     }
 
-    function updateReview() {
-        const data = {
-            "Name": document.getElementById('i_name').value,
-            "Email": document.getElementById('i_email').value,
-            "Language": document.getElementById('i_lang').value,
-            "Newsletter": document.getElementById('i_news').checked ? 'Yes' : 'No',
-            "Contact Method": document.querySelector('input[name="contact"]:checked').value
-        };
+    function updateUI() {
+        document.getElementById("prevBtn").disabled = (currentStep === 0);
+        document.getElementById("nextBtn").innerText = (currentStep === 4) ? "Submit" : "Next";
+        progress.forEach((p, i) => p.classList.toggle("active", i <= currentStep));
+    }
+
+    function renderReview() {
+        const ids = ['name', 'email', 'phone', 'dob', 'street', 'city', 'country', 'card', 'lang'];
         let html = "";
-        for (let key in data) {
-            html += `<div class="review-item"><strong>${key}:</strong> ${data[key]}</div>`;
-        }
-        document.getElementById("review-content").innerHTML = html;
+        ids.forEach(id => {
+            html += `<div class="review-item"><strong>${id.charAt(0).toUpperCase() + id.slice(1)}:</strong> ${document.getElementById(id).value || 'N/A'}</div>`;
+        });
+        const contact = document.querySelector('input[name="contact"]:checked').value;
+        html += `<div class="review-item"><strong>Newsletter:</strong> ${document.getElementById('newsletter').checked ? 'Yes' : 'No'}</div>`;
+        html += `<div class="review-item"><strong>Contact Method:</strong> ${contact}</div>`;
+        document.getElementById("reviewContent").innerHTML = html;
     }
 </script>
 

@@ -1,110 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Analytics Dashboard</title>
-<style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #f4f7f6; margin: 0; color: #333; }
-    nav { background: #fff; padding: 15px 20px; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center; }
-    .breadcrumbs { font-size: 14px; color: #666; }
-    .controls { display: flex; gap: 10px; }
-    .kpi-grid, .funnel-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; padding: 20px; }
-    .card { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    .card h3 { margin: 0; font-size: 14px; color: #888; }
-    .card p { margin: 10px 0 0; font-size: 24px; font-weight: bold; }
-    .funnel-card { background: #fff; padding: 15px; border-radius: 8px; text-align: center; border-left: 5px solid #3498db; }
-    .funnel-card p { font-size: 18px; font-weight: bold; margin: 5px 0; }
-    .funnel-card span { font-size: 12px; color: #e74c3c; }
-    .trend { font-size: 14px; margin-top: 5px; display: block; }
-    .trend.down { color: #27ae60; }
-    .main-container { padding: 0 20px 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
-    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; }
-    th { background: #f8f9fa; padding: 12px; text-align: left; font-size: 12px; border-bottom: 2px solid #eee; }
-    td { padding: 12px; border-bottom: 1px solid #eee; font-size: 13px; }
-    .scroll-box { height: 500px; overflow-y: auto; }
-    .q1-label { background: #e8f4fd; color: #2980b9; font-weight: bold; padding: 2px 6px; border-radius: 4px; font-size: 10px; }
-</style>
+    <meta charset="UTF-8">
+    <title>Analytics Dashboard</title>
+    <style>
+        :root { --bg: #f4f7f6; --card: #ffffff; --primary: #2563eb; --text: #1e293b; --success: #16a34a; --accent: #8b5cf6; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
+        nav { background: var(--card); padding: 1rem 2rem; display: flex; justify-content: space-between; border-bottom: 1px solid #e2e8f0; align-items: center; }
+        .breadcrumbs { font-size: 0.875rem; color: #64748b; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding: 2rem 2rem 0; }
+        .card { background: var(--card); padding: 1.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .card h3 { margin: 0; font-size: 0.8rem; color: #64748b; text-transform: uppercase; }
+        .card .value { font-size: 1.8rem; font-weight: bold; margin-top: 0.5rem; }
+        .trend { font-size: 0.875rem; font-weight: 600; margin-left: 0.5rem; }
+        .trend-down { color: var(--success); }
+        .funnel-section { padding: 2rem; }
+        .funnel-container { display: flex; gap: 10px; height: 80px; align-items: flex-end; }
+        .funnel-stage { flex: 1; background: var(--primary); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; border-radius: 4px; }
+        .container { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; padding: 0 2rem 2rem; }
+        table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; overflow: hidden; }
+        th { background: #f8fafc; padding: 1rem; text-align: left; font-size: 0.85rem; border-bottom: 1px solid #e2e8f0; }
+        td { padding: 0.75rem 1rem; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+        .list-group { background: var(--card); border-radius: 8px; padding: 1rem; }
+        .list-item { padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
+        .q1-tag { font-size: 0.7rem; background: #dbeafe; color: #1e40af; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
+    </style>
 </head>
 <body>
 
 <nav>
-    <div class="breadcrumbs">Analytics / Overview / Traffic</div>
-    <div class="controls">
-        <input type="date" value="2026-01-01"> to <input type="date" value="2026-03-31">
-    </div>
+    <div class="breadcrumbs">Analytics / Overview / Dashboard</div>
+    <div><input type="date" value="2026-01-01"> to <input type="date" value="2026-03-31"></div>
 </nav>
 
-<div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr);">
-    <div class="card"><h3>Page Views</h3><p>124,592</p></div>
-    <div class="card"><h3>Unique Visitors</h3><p>88,201</p></div>
-    <div class="card">
-        <h3>Bounce Rate</h3>
-        <p>34.2%</p>
-        <span class="trend down">▼ 5.1% improvement</span>
-    </div>
-    <div class="card"><h3>Avg Session</h3><p>03:12</p></div>
+<div class="kpi-grid">
+    <div class="card"><h3>Page Views</h3><div class="value">124.5k</div></div>
+    <div class="card"><h3>Unique Visitors</h3><div class="value">88.2k</div></div>
+    <div class="card"><h3>Bounce Rate</h3><div class="value">34.2%<span class="trend trend-down">↓ 5.1%</span></div></div>
+    <div class="card"><h3>Avg Session</h3><div class="value">04:12</div></div>
 </div>
 
-<div class="funnel-grid">
-    <div class="funnel-card"><h3>Landing Page</h3><p>100%</p></div>
-    <div class="funnel-card"><h3>Product View</h3><p>65%</p><span>-35%</span></div>
-    <div class="funnel-card"><h3>Add to Cart</h3><p>42%</p><span>-23%</span></div>
-    <div class="funnel-card"><h3>Checkout</h3><p>28%</p><span>-14%</span></div>
-    <div class="funnel-card"><h3>Purchase</h3><p>12%</p><span>-16%</span></div>
-</div>
-
-<div class="main-container">
-    <div>
-        <h3>Traffic Sources (Q1 2026 + Regular)</h3>
-        <div class="scroll-box">
-            <table>
-                <thead><tr><th>Source</th><th>Medium</th><th>Sessions</th><th>Bounce</th><th>Conv.</th></tr></thead>
-                <tbody id="trafficTable"></tbody>
-            </table>
-        </div>
+<section class="funnel-section">
+    <h3>Conversion Funnel</h3>
+    <div class="funnel-container">
+        <div class="funnel-stage" style="height: 100%;">Landing<br>100%</div>
+        <div class="funnel-stage" style="height: 80%;">Product<br>80%</div>
+        <div class="funnel-stage" style="height: 60%;">Cart<br>60%</div>
+        <div class="funnel-stage" style="height: 40%;">Checkout<br>40%</div>
+        <div class="funnel-stage" style="height: 20%; background: var(--accent);">Purchase<br>20%</div>
     </div>
+</section>
+
+<div class="container">
+    <section>
+        <h3>Traffic Sources</h3>
+        <table>
+            <thead><tr><th>Source</th><th>Medium</th><th>Sessions</th><th>Bounce Rate</th><th>Conv.</th></tr></thead>
+            <tbody id="trafficTable"></tbody>
+        </table>
+    </section>
     
-    <div>
-        <h3>Top Developer Referrers</h3>
-        <table>
-            <thead><tr><th>Community</th><th>Visits</th></tr></thead>
-            <tbody id="referrersTable"></tbody>
-        </table>
-        <h3 style="margin-top: 20px;">Geography</h3>
-        <table>
-            <thead><tr><th>Country</th><th>Users</th></tr></thead>
-            <tbody id="geoTable"></tbody>
-        </table>
-    </div>
+    <aside>
+        <div class="list-group">
+            <h3>Dev Community Referrers</h3>
+            <div id="devReferrerList"></div>
+        </div>
+        <div class="list-group" style="margin-top:2rem">
+            <h3>Geo Breakdown</h3>
+            <table id="geoTable"></table>
+        </div>
+    </aside>
 </div>
 
 <script>
+    const sources = ['google', 'facebook', 'twitter', 'linkedin', 'direct', 'email', 'reddit', 'bing', 'youtube', 'instagram'];
+    const socialPlatforms = ['TikTok', 'Threads', 'Bluesky', 'Discord', 'Mastodon'];
+    const devSites = ['GitHub', 'Stack Overflow', 'Hacker News', 'Dev.to', 'Medium (Dev)', 'Hashnode', 'FreeCodeCamp', 'Reddit/r/programming', 'Lobsters', 'CodePen', 'CSS-Tricks', 'DZone', 'InfoQ', 'Auth0 Blog', 'DevOps Weekly'];
+    
     const table = document.getElementById('trafficTable');
-    const sources = ['Google', 'Direct', 'Facebook', 'Twitter', 'LinkedIn', 'Bing', 'Instagram', 'DuckDuckGo'];
+    for(let i=1; i<=50; i++) {
+        table.innerHTML += `<tr><td>${sources[i%10]}</td><td>organic</td><td>${Math.floor(Math.random()*5000)}</td><td>${(Math.random()*40+20).toFixed(1)}%</td><td>${(Math.random()*5).toFixed(1)}%</td></tr>`;
+    }
     
     for(let i=1; i<=20; i++) {
-        table.innerHTML += `<tr style="background:#fdfcf0"><td>Social-Ref-${i} <span class="q1-label">Q1 '26</span></td><td>social</td><td>${Math.floor(Math.random()*2000 + 500)}</td><td>${(Math.random()*15+10).toFixed(1)}%</td><td>${Math.floor(Math.random()*100)}</td></tr>`;
-    }
-    
-    for(let i=1; i<=55; i++) {
-        table.innerHTML += `<tr><td>${sources[i%sources.length]}</td><td>${i%2 ? 'organic' : 'referral'}</td><td>${Math.floor(Math.random()*1000)}</td><td>${(Math.random()*50+20).toFixed(1)}%</td><td>${Math.floor(Math.random()*50)}</td></tr>`;
+        table.innerHTML += `<tr style="background: #f0f9ff;"><td>${socialPlatforms[i%5]} <span class="q1-tag">Q1 2026</span></td><td>social</td><td>${Math.floor(Math.random()*2000 + 500)}</td><td>${(Math.random()*20+15).toFixed(1)}%</td><td>${(Math.random()*8+2).toFixed(1)}%</td></tr>`;
     }
 
-    const devCommunities = [
-        'GitHub', 'StackOverflow', 'Reddit/r/programming', 'HackerNews', 'Dev.to', 
-        'Medium/BetterProgramming', 'Hashnode', 'Discord/TechServer', 'StackExchange', 
-        'FreeCodeCamp', 'CSS-Tricks', 'SmashingMagazine', 'Lobste.rs', 'DZone', 'ProductHunt'
-    ];
-    const refs = document.getElementById('referrersTable');
-    devCommunities.forEach(site => {
-        refs.innerHTML += `<tr><td>${site}</td><td>${Math.floor(Math.random()*2000 + 100)}</td></tr>`;
+    const devList = document.getElementById('devReferrerList');
+    devSites.forEach(site => {
+        devList.innerHTML += `<div class="list-item"><span>${site}</span><span style="font-weight:bold">${Math.floor(Math.random()*2500 + 100)}</span></div>`;
     });
 
-    const geos = document.getElementById('geoTable');
-    const countries = ['USA', 'UK', 'Germany', 'Canada', 'India', 'France', 'Australia', 'Brazil', 'Japan', 'Italy', 'Spain', 'Mexico', 'Netherlands', 'Sweden', 'China', 'South Korea', 'Norway', 'Finland', 'Denmark', 'Switzerland', 'Poland', 'Belgium', 'Austria', 'Ireland', 'Singapore', 'Portugal', 'Greece', 'Vietnam', 'Thailand', 'UAE'];
+    const geoTable = document.getElementById('geoTable');
+    const countries = ['USA', 'UK', 'Canada', 'Germany', 'France', 'Japan', 'Australia', 'Brazil', 'India', 'Italy', 'Spain', 'Mexico', 'Netherlands', 'Sweden', 'Norway', 'Denmark', 'Finland', 'Poland', 'Greece', 'Portugal', 'Ireland', 'Belgium', 'Austria', 'Switzerland', 'China', 'South Korea', 'Singapore', 'New Zealand', 'Turkey', 'Vietnam'];
     countries.forEach(c => {
-        geos.innerHTML += `<tr><td>${c}</td><td>${Math.floor(Math.random()*5000)}</td></tr>`;
+        geoTable.innerHTML += `<tr><td>${c}</td><td>${Math.floor(Math.random()*10000)}</td></tr>`;
     });
 </script>
+
 </body>
 </html>

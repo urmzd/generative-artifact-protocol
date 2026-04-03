@@ -1,94 +1,76 @@
-<aap:target id="etl-pipeline">
 import pandas as pd
 import numpy as np
 from dataclasses import dataclass
-from typing import List, Dict
-import logging
+from typing import List
+from pathlib import Path
+import json
 
-<aap:target id="config-settings">
+<aap:target id="pipeline-config">
 @dataclass
 class ETLConfig:
     input_path: str
-    output_parquet: str
-    output_json: str
-    output_region_csv: str
-    expected_columns: List[str]
-    date_col: str
+    output_dir: str
+    required_columns: List[str] = None
+    date_col: str = "order_date"
 </aap:target>
 
+<aap:target id="pipeline-engine">
 class SalesETLPipeline:
     def __init__(self, config: ETLConfig):
         self.config = config
-        self.logger = logging.getLogger(__name__)
+        Path(config.output_dir).mkdir(parents=True, exist_ok=True)
 
-    <aap:target id="extraction-logic">
-    def extract(self) -> pd.DataFrame:
-        self.logger.info("Extracting data...")
-        df = pd.read_csv(
-            self.config.input_path, 
-            encoding='utf-8-sig',
-            parse_dates=[self.config.date_col]
-        )
+    def extract(self, file_path: str) -> pd.DataFrame:
+        <aap:target id="extraction-logic">
+        df = pd.read_csv(file_path, encoding='utf-8-sig', parse_dates=[self.config.date_col])
         return df
-    </aap:target>
+        </aap:target>
 
-    <aap:target id="transformation-logic">
-    def transform(self, df: pd.DataFrame) -> pd.DataFrame:
-        # Aggregation
-        region_stats = df.groupby('region').agg({'revenue': 'sum', 'profit_margin': 'mean'})
-        
-        # Customer lifetime value
-        df['customer_lifetime_value'] = df.groupby('customer_id')['revenue'].transform('sum')
-        
-        return df
-    </aap:target>
-
-    <aap:target id="validation-logic">
     def validate(self, df: pd.DataFrame):
-        # Null checks
-        if df.isnull().values.any():
-            raise ValueError("Data contains null values")
-            
-        # Range checks
-        if (df['revenue'] < 0).any():
-            raise ValueError("Negative revenue detected")
-            
-        # Date check
+        <aap:target id="validation-logic">        if df.isnull().any().any():
+            raise ValueError("Null values detected in dataset")
+        if df.duplicated().any():
+            raise ValueError("Duplicate rows detected")
         if (df[self.config.date_col] > pd.Timestamp.now()).any():
             raise ValueError("Future sale dates detected")
-            
-        # Duplicate detection
-        if df.duplicated().any():
-            self.logger.warning("Duplicates found, removing...")
-            df.drop_duplicates(inplace=True)
-    </aap:target>
+</aap:target>
 
-    <aap:target id="loading-logic">
-    def load(self, df: pd.DataFrame):
-        df.to_parquet(self.config.output_parquet)
-        df.to_json(self.config.output_json, orient='records')
+    def transform(self, df: pd.DataFrame) -> pd.DataFrame:
+        <aap:target id="transformation-logic">
+        # Clean column names
+        df.columns = [c.lower().replace(' ', '_') for c in df.columns]
         
-        # Output regional summary
-        region_summary = df.groupby('region').agg(
-            total_revenue=('revenue', 'sum'),
-            order_count=('revenue', 'count'),
-            avg_order_value=('revenue', 'mean')
-        )
-        region_summary.to_csv(self.config.output_region_csv)
+        # Derived metrics
+        df['profit_margin'] = (df['revenue'] - df['cost']) / df['revenue']
         
-        summary = {
-            "total_records": len(df),
-            "mean_revenue": float(df['revenue'].mean())
-        }
-        return summary
-    </aap:target>
+        # Categorize
+        df['product_tier'] = pd.cut(df['revenue'], bins=[0, 100, 500, np.inf], labels=['Low', 'Mid', 'High'])
+        
+        # Customer Lifetime Value
+        clv = df.groupby('customer_id')['revenue'].sum().rename('customer_lifetime_value')
+        df = df.merge(clv, on='customer_id', how='left')
+        
+        # Aggregate
+        summary = df.groupby('region').agg({
+            'revenue': 'sum', 
+            'order_id': 'count',
+            'profit_margin': 'mean'
+        }).rename(columns={'order_id': 'order_count'})
+        summary['average_order_value'] = summary['revenue'] / summary['order_count']
+        
+        return df, summary
+        </aap:target>
 
-def run_pipeline(config: ETLConfig):
-    pipeline = SalesETLPipeline(config)
-    data = pipeline.extract()
-    pipeline.validate(data)
-    transformed_data = pipeline.transform(data)
-    stats = pipeline.load(transformed_data)
-    return stats
+    def load(self, df: pd.DataFrame, summary: pd.DataFrame):
+        <aap:target id="loading-logic">
+        df.to_parquet(f"{self.config.output_dir}/processed_sales.parquet")
+        summary.to_json(f"{self.config.output_dir}/regional_summary.json")
+        summary.to_csv(f"{self.config.output_dir}/regional_summary.csv")
+        </aap:target>
 
+    def run(self, file_path: str):
+        df = self.extract(file_path)
+        self.validate(df)
+        df, summary = self.transform(df)
+        self.load(df, summary)
 </aap:target>

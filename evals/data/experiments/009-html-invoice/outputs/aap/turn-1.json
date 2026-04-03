@@ -1,10 +1,9 @@
 {
   "protocol": "aap/0.1",
-  "id": "invoice-container-id-001",
-  "version": 1,
+  "id": "invoice-container",
+  "version": 2,
   "name": "edit",
-  "operation": {
-    "direction": "input",
+  "meta": {
     "format": "text/html",
     "tokens_used": null,
     "checksum": null,
@@ -17,7 +16,7 @@
         "type": "id",
         "value": "invoice-number"
       },
-      "content": "NovaTech Industries"
+      "content": null
     },
     {
       "op": "replace",
@@ -26,6 +25,22 @@
         "value": "invoice-number"
       },
       "content": "INV-2026-1203"
+    },
+    {
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "header"
+      },
+      "content": null
+    },
+    {
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "header"
+      },
+      "content": "<div style=\"display: flex; justify-content: space-between; align-items: start; margin-bottom: 30px;\">\n      <div>\n        <div style=\"width: 100px; height: 50px; background: #eee; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;\">LOGO</div>\n        <h1 style=\"margin: 0;\">NovaTech Industries</h1>\n      </div>\n      <div style=\"text-align: right;\">\n        <h2 style=\"margin: 0;\">INVOICE</h2>\n        <p style=\"margin: 5px 0;\"># <aap:target id=\"invoice-number\">INV-2026-1203</aap:target></p>\n      </div>\n    </div>"
     }
   ]
 }

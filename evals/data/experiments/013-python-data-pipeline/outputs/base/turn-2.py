@@ -1,22 +1,24 @@
-def validate(self):
-        # Null checks
-        if self.df[self.config.required_columns].isnull().any().any():
-            raise ValueError("Null values found in required columns")
+def validate(df: pd.DataFrame, config: PipelineConfig):
+    # Check required columns
+    missing = [c for c in config.required_cols if c not in df.columns]
+    if missing: raise ValueError(f"Missing columns: {missing}")
+    
+    # Null checks
+    if df[config.required_cols].isnull().any().any():
+        print("Warning: Nulls detected in critical columns")
         
-        # Duplicate detection
-        if self.df.duplicated().any():
-            self.df.drop_duplicates(inplace=True)
-            
-        # Range/Type checks
-        for col in self.config.numeric_columns:
-            if (self.df[col] < 0).any():
-                raise ValueError(f"Negative values found in {col}")
-
-        # New: Future date validation
-        current_date = pd.Timestamp.now()
-        for col in self.config.date_columns:
-            if (self.df[col] > current_date).any():
-                future_dates = self.df[self.df[col] > current_date]
-                raise ValueError(f"Future dates detected in {col}: \n{future_dates}")
+    # Range check: Sales cannot be negative
+    if (df['sales'] < 0).any():
+        raise ValueError("Negative sales detected")
         
-        print("Validation passed.")
+    # Future date check
+    today = pd.Timestamp.now()
+    if (df['date'] > today).any():
+        future_rows = df[df['date'] > today].shape[0]
+        raise ValueError(f"Validation failed: {future_rows} rows have a future date.")
+        
+    # Duplicate check
+    if df.duplicated().any():
+        df.drop_duplicates(inplace=True)
+        
+    return df

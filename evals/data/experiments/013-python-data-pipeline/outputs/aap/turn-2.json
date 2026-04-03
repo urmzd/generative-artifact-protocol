@@ -1,10 +1,9 @@
 {
   "protocol": "aap/0.1",
-  "id": "etl-pipeline",
+  "id": "pipeline-engine-v1",
   "version": 1,
   "name": "edit",
-  "operation": {
-    "direction": "output",
+  "meta": {
     "format": "text/html",
     "tokens_used": null,
     "checksum": null,
@@ -17,7 +16,7 @@
         "type": "id",
         "value": "validation-logic"
       },
-      "content": "    def validate(self, df: pd.DataFrame):\n        # Null checks\n        if df.isnull().values.any():\n            raise ValueError(\"Data contains null values\")\n            \n        # Range checks\n        if (df['revenue'] < 0).any():\n            raise ValueError(\"Negative revenue detected\")\n            \n        # Date check\n        if (df[self.config.date_col] > pd.Timestamp.now()).any():\n            raise ValueError(\"Future sale dates detected\")\n            \n        # Duplicate detection\n        if df.duplicated().any():\n            self.logger.warning(\"Duplicates found, removing...\")\n            df.drop_duplicates(inplace=True)"
+      "content": "        if df.isnull().any().any():\n            raise ValueError(\"Null values detected in dataset\")\n        if df.duplicated().any():\n            raise ValueError(\"Duplicate rows detected\")\n        if (df[self.config.date_col] > pd.Timestamp.now()).any():\n            raise ValueError(\"Future sale dates detected\")\n"
     }
   ]
 }

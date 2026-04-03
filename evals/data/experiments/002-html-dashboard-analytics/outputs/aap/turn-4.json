@@ -1,10 +1,9 @@
 {
   "protocol": "aap/0.1",
-  "id": "dashboard-analytics-001",
-  "version": 2,
+  "id": "dashboard-artifact",
+  "version": 3,
   "name": "edit",
-  "operation": {
-    "direction": "input",
+  "meta": {
     "format": "text/html",
     "tokens_used": null,
     "checksum": null,
@@ -12,12 +11,12 @@
   },
   "content": [
     {
-      "op": "replace",
+      "op": "insert_after",
       "target": {
         "type": "id",
-        "value": "kpi-dashboard"
+        "value": "kpi-cards-section"
       },
-      "content": "    <div class=\"card\"><h3>Avg Duration</h3><div class=\"value\"><aap:target id=\"avg-duration\">2m 14s</aap:target></div></div>\n    </div>\n  </aap:target>\n\n  <aap:target id=\"funnel-section\">\n    <div class=\"card\" style=\"margin-bottom: 2rem;\">\n      <h3>Conversion Funnel</h3>\n      <div style=\"display: flex; justify-content: space-between; align-items: center; padding-top: 1rem;\">\n        <div style=\"text-align: center;\"><strong>Landing</strong><br>100%</div>\n        <div>&rarr;</div>\n        <div style=\"text-align: center;\"><strong>Sign Up</strong><br>80%</div>\n        <div>&rarr;</div>\n        <div style=\"text-align: center;\"><strong>Email Verify</strong><br>65%</div>\n        <div>&rarr;</div>\n        <div style=\"text-align: center;\"><strong>Onboard</strong><br>40%</div>\n        <div>&rarr;</div>\n        <div style=\"text-align: center;\"><strong>Activated</strong><br>25%</div>\n      </div>\n    </div>\n  </aap:target>\n\n  <div class=\"data-section\">\n"
+      "content": "<section id=\"conversion-funnel\">\n  <h2>Conversion Funnel</h2>\n  <div style=\"display: flex; gap: 10px; align-items: center; margin-top: 15px;\">\n    <aap:target id=\"funnel-step-1\">\n      <div style=\"padding: 10px; background: #eee; flex: 1; text-align: center;\">View<br>100%</div>\n    </aap:target>\n    <div style=\"font-size: 20px;\">→</div>\n    <aap:target id=\"funnel-step-2\">\n      <div style=\"padding: 10px; background: #eee; flex: 1; text-align: center;\">Add to Cart<br>85%</div>\n    </aap:target>\n    <div style=\"font-size: 20px;\">→</div>\n    <aap:target id=\"funnel-step-3\">\n      <div style=\"padding: 10px; background: #eee; flex: 1; text-align: center;\">Checkout<br>60%</div>\n    </aap:target>\n    <div style=\"font-size: 20px;\">→</div>\n    <aap:target id=\"funnel-step-4\">\n      <div style=\"padding: 10px; background: #eee; flex: 1; text-align: center;\">Payment<br>45%</div>\n    </aap:target>\n    <div style=\"font-size: 20px;\">→</div>\n    <aap:target id=\"funnel-step-5\">\n      <div style=\"padding: 10px; background: #eee; flex: 1; text-align: center;\">Purchase<br>40%</div>\n    </aap:target>\n  </div>\n</section>"
     }
   ]
 }

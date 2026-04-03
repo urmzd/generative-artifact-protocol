@@ -1,9 +1,10 @@
-import uuid
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Type, TypeVar
+from uuid import UUID, uuid4
 
+T = TypeVar("T", bound="BaseModel")
 
 class Priority(Enum):
     LOW = "low"
@@ -11,108 +12,82 @@ class Priority(Enum):
     HIGH = "high"
     CRITICAL = "critical"
 
-
 class Status(Enum):
     TODO = "todo"
     IN_PROGRESS = "in_progress"
-    REVIEW = "review"
     DONE = "done"
-
+    ARCHIVED = "archived"
 
 @dataclass(frozen=True)
 class TimeEstimate:
     hours: int
-    minutes: int = 0
 
     def __post_init__(self):
-        if self.hours < 0 or self.minutes < 0:
-            raise ValueError("Time values cannot be negative")
-
+        if self.hours < 0:
+            raise ValueError("Estimate cannot be negative")
 
 @dataclass(frozen=True)
 class DateRange:
-    start_date: datetime
-    end_date: datetime
+    start: datetime
+    end: datetime
 
     def __post_init__(self):
-        if self.end_date < self.start_date:
-            raise ValueError("End date must be after start date")
-
-
-@dataclass
-class BaseEntity:
-    id: uuid.UUID = field(default_factory=uuid.uuid4)
-    created_at: datetime = field(default_factory=datetime.now)
-    updated_at: datetime = field(default_factory=datetime.now)
-
-    def touch(self):
-        self.updated_at = datetime.now()
-
+        if self.start > self.end:
+            raise ValueError("Start date must be before end date")
 
 @dataclass
-class User(BaseEntity):
+class BaseModel:
+    id: UUID = field(default_factory=uuid4)
+    created_at: datetime = field(default_factory=datetime.utcnow)
+    updated_at: datetime = field(default_factory=datetime.utcnow)
+
+    def touch(self) -> None:
+        self.updated_at = datetime.utcnow()
+
+@dataclass
+class User(BaseModel):
     username: str
     email: str
 
-
 @dataclass
-class Team(BaseEntity):
+class Team(BaseModel):
     name: str
-    member_ids: List[uuid.UUID] = field(default_factory=list)
-
+    member_ids: List[UUID] = field(default_factory=list)
 
 @dataclass
-class Project(BaseEntity):
+class Project(BaseModel):
     name: str
-    owner_id: uuid.UUID
-    team_ids: List[uuid.UUID] = field(default_factory=list)
-
+    owner_id: UUID
+    team_ids: List[UUID] = field(default_factory=list)
 
 @dataclass
-class Sprint(BaseEntity):
-    project_id: uuid.UUID
+class Sprint(BaseModel):
+    project_id: UUID
     name: str
     duration: DateRange
 
-
 @dataclass
-class Task(BaseEntity):
+class Task(BaseModel):
+    project_id: UUID
     title: str
-    description: str
-    project_id: uuid.UUID
-    sprint_id: Optional[uuid.UUID] = None
-    assignee_id: Optional[uuid.UUID] = None
-    priority: Priority = Priority.MEDIUM
     status: Status = Status.TODO
+    priority: Priority = Priority.MEDIUM
+    assignee_id: Optional[UUID] = None
+    sprint_id: Optional[UUID] = None
     estimate: Optional[TimeEstimate] = None
 
     @classmethod
-    def create(cls, title: str, project_id: uuid.UUID, **kwargs):
+    def create(cls: Type[T], title: str, project_id: UUID, **kwargs) -> T:
+        if not title:
+            raise ValueError("Title is required")
         return cls(title=title, project_id=project_id, **kwargs)
 
-
 @dataclass
-class Comment(BaseEntity):
-    task_id: uuid.UUID
-    author_id: uuid.UUID
+class Comment(BaseModel):
+    task_id: UUID
+    author_id: UUID
     content: str
 
     def __post_init__(self):
         if not self.content.strip():
             raise ValueError("Comment content cannot be empty")
-
-
-class ModelFactory:
-    """Factory to handle complex entity creation logic."""
-
-    @staticmethod
-    def create_task(title: str, project_id: uuid.UUID, **kwargs) -> Task:
-        return Task(
-            title=title,
-            project_id=project_id,
-            **kwargs
-        )
-
-    @staticmethod
-    def create_user(username: str, email: str) -> User:
-        return User(username=username, email=email)

@@ -1,10 +1,9 @@
 {
   "protocol": "aap/0.1",
-  "id": "portfolio-container",
+  "id": "portfolio-edit",
   "version": 1,
-  "name": "edit",
-  "operation": {
-    "direction": "input",
+  "name": "synthesize",
+  "meta": {
     "format": "text/html",
     "tokens_used": null,
     "checksum": null,
@@ -12,20 +11,7 @@
   },
   "content": [
     {
-      "op": "replace",
-      "target": {
-        "type": "id",
-        "value": "name"
-      },
-      "content": "Jordan Rivera"
-    },
-    {
-      "op": "replace",
-      "target": {
-        "type": "id",
-        "value": "title"
-      },
-      "content": "Cloud Infrastructure Engineer"
+      "body": "{\n  \"protocol\": \"aap/0.1\",\n  \"id\": \"portfolio-edit\",\n  \"version\": 1,\n  \"name\": \"edit\",\n  \"content\": [\n    {\n      \"op\": \"replace\",\n      \"target\": {\"type\": \"id\", \"value\": \"name\"},\n      \"content\": \"Jordan Rivera\"\n    },\n    {\n      \"op\": \"replace\",\n      \"target\": {\"type\": \"id\", \"value\": \"title\"},\n      \"content\": \"Cloud Infrastructure Engineer\"\n    }\n  ]\n}"
     }
   ]
 }

@@ -3,22 +3,17 @@
   "id": "user-module",
   "version": 2,
   "name": "edit",
-  "operation": {"direction": "input", "format": "text/html"},
+  "meta": {"format": "text/html"},
   "content": [
     {
-      "op": "insert_after",
-      "target": {"type": "id", "value": "router"},
-      "content": "
-
-@router.patch(\"/{id}/deactivate\", response_model=UserResponse)
-def deactivate(id: int, db: Session = Depends()):
-    user = get_user(db, id)
-    if not user:
-        raise HTTPException(status_code=404, detail=\"User not found\")
-    user.is_active = False
-    db.commit()
-    db.refresh(user)
-    return user"
+      "op": "replace",
+      "target": {"type": "id", "value": "schemas"},
+      "content": "class UserBase(BaseModel):\n    email: EmailStr\n    name: str\n\nclass UserCreate(UserBase):\n    password: str\n    role: str = \"viewer\"\n\nclass UserUpdate(BaseModel):\n    name: Optional[str] = None\n    is_active: Optional[bool] = None\n\nclass UserResponse(UserBase):\n    id: int\n    role: str\n    is_active: bool\n    created_at: datetime\n\n    class Config:\n        from_attributes = True"
+    },
+    {
+      "op": "replace",
+      "target": {"type": "id", "value": "crud"},
+      "content": "def get_user(db: Session, user_id: int):\n    user = db.query(User).filter(User.id == user_id).first()\n    if not user:\n        raise HTTPException(status_code=404, detail=\"User not found\")\n    return user\n\ndef create_user(db: Session, user: UserCreate):\n    db_user = User(email=user.email, name=user.name, hashed_password=user.password + \"_hashed\", role=user.role)\n    db.add(db_user)\n    db.commit()\n    db.refresh(db_user)\n    return db_user\n\ndef list_users(db: Session, skip: int = 0, limit: int = 100):\n    return db.query(User).offset(skip).limit(limit).all()\n\ndef update_user(db: Session, user_id: int, user_update: UserUpdate):\n    db_user = get_user(db, user_id)\n    update_data = user_update.model_dump(exclude_unset=True)\n    for key, value in update_data.items():\n        setattr(db_user, key, value)\n    db.commit()\n    db.refresh(db_user)\n    return db_user\n\ndef delete_user(db: Session, user_id: int):\n    db_user = get_user(db, user_id)\n    db.delete(db_user)\n    db.commit()\n    return {\"message\": \"User deleted\"}"
     }
   ]
 }

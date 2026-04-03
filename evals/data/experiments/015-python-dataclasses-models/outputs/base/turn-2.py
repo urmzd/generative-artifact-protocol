@@ -10,9 +10,9 @@ class Priority(Enum):
         """Returns the hex color code associated with the priority level."""
         colors = {
             Priority.LOW: "#808080",      # Gray
-            Priority.MEDIUM: "#008000",   # Green
-            Priority.HIGH: "#FFA500",     # Orange
-            Priority.URGENT: "#FF4500",   # OrangeRed
+            Priority.MEDIUM: "#FFA500",   # Orange
+            Priority.HIGH: "#FF8C00",     # Dark Orange
+            Priority.URGENT: "#FF4500",   # Orange Red
             Priority.CRITICAL: "#FF0000"  # Red
         }
-        return colors.get(self, "#000000")
+        return colors[self]

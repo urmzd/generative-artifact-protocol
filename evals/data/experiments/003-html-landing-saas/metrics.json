@@ -1,0 +1,228 @@
+{
+  "experiment_id": "003-html-landing-saas",
+  "model": "",
+  "provider": "google",
+  "timestamp": "2026-04-03T06:47:18.336043+00:00",
+  "format": "text/html",
+  "base_turn0": {
+    "input_tokens": 128,
+    "output_tokens": 1925,
+    "latency_ms": 8737,
+    "artifact_bytes": 5712
+  },
+  "aap_turn0": {
+    "input_tokens": 467,
+    "output_tokens": 1414,
+    "latency_ms": 6528,
+    "artifact_bytes": 4227
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the hero headline to 'Sync Everything. Everywhere.' and the subheadline t",
+        "input_tokens": 2081,
+        "output_tokens": 2951,
+        "latency_ms": 11238,
+        "output_bytes": 8936,
+        "failed": false,
+        "failure_reason": ""
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the pricing section to have 4 tiers instead of 3: Free, Starter $19/mo, ",
+        "input_tokens": 5066,
+        "output_tokens": 3063,
+        "latency_ms": 10802,
+        "output_bytes": 9275,
+        "failed": false,
+        "failure_reason": ""
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new 'Integrations' section between features and pricing showing a grid of ",
+        "input_tokens": 8153,
+        "output_tokens": 3307,
+        "latency_ms": 11751,
+        "output_bytes": 10023,
+        "failed": false,
+        "failure_reason": ""
+      }
+    ],
+    "total_input_tokens": 15300,
+    "total_output_tokens": 9321,
+    "total_latency_ms": 33791
+  },
+  "aap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the hero headline to 'Sync Everything. Everywhere.' and the subheadline t",
+        "input_tokens": 2548,
+        "output_tokens": 105,
+        "latency_ms": 1385,
+        "output_bytes": 4174,
+        "failed": false,
+        "failure_reason": "",
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the pricing section to have 4 tiers instead of 3: Free, Starter $19/mo, ",
+        "input_tokens": 2544,
+        "output_tokens": 438,
+        "latency_ms": 2538,
+        "output_bytes": 1098,
+        "failed": false,
+        "failure_reason": "",
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "synthesize"
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new 'Integrations' section between features and pricing showing a grid of ",
+        "input_tokens": 1527,
+        "output_tokens": 857,
+        "latency_ms": 3878,
+        "output_bytes": 2252,
+        "failed": false,
+        "failure_reason": "",
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "synthesize"
+      }
+    ],
+    "total_input_tokens": 6619,
+    "total_output_tokens": 1400,
+    "total_latency_ms": 7801,
+    "envelope_parse_rate": 1.0,
+    "apply_success_rate": 1.0
+  },
+  "comparison": {
+    "output_token_savings_pct": 85.0,
+    "input_token_savings_pct": 56.7,
+    "latency_savings_pct": 76.9
+  },
+  "token_table": {
+    "turns": [
+      {
+        "turn": 0,
+        "base_input": 128,
+        "base_output": 1925,
+        "base_latency_ms": 8737,
+        "aap_input": 467,
+        "aap_output": 1414,
+        "aap_latency_ms": 6528
+      },
+      {
+        "turn": 1,
+        "base_input": 2081,
+        "base_output": 2951,
+        "base_latency_ms": 11238,
+        "aap_input": 2548,
+        "aap_output": 105,
+        "aap_latency_ms": 1385,
+        "envelope_name": "edit",
+        "apply_ok": true
+      },
+      {
+        "turn": 2,
+        "base_input": 5066,
+        "base_output": 3063,
+        "base_latency_ms": 10802,
+        "aap_input": 2544,
+        "aap_output": 438,
+        "aap_latency_ms": 2538,
+        "envelope_name": "synthesize",
+        "apply_ok": true
+      },
+      {
+        "turn": 3,
+        "base_input": 8153,
+        "base_output": 3307,
+        "base_latency_ms": 11751,
+        "aap_input": 1527,
+        "aap_output": 857,
+        "aap_latency_ms": 3878,
+        "envelope_name": "synthesize",
+        "apply_ok": true
+      }
+    ],
+    "totals": {
+      "base_input": 15428,
+      "base_output": 11246,
+      "base_combined": 26674,
+      "aap_input": 7086,
+      "aap_output": 2814,
+      "aap_combined": 9900,
+      "base_latency_ms": 42528,
+      "aap_latency_ms": 14329,
+      "output_savings_pct": 75.0,
+      "input_delta_pct": -54.1,
+      "combined_savings_pct": 62.9,
+      "latency_savings_pct": 66.3
+    }
+  },
+  "quality": {
+    "per_turn": [
+      {
+        "turn": 0,
+        "sequence_similarity": 0.0539,
+        "token_f1": 0.3938,
+        "base_char_count": 5712,
+        "aap_char_count": 3489,
+        "char_delta_pct": -38.9,
+        "lines_added": 48,
+        "lines_removed": 79,
+        "rouge_l": null,
+        "bleu": null
+      },
+      {
+        "turn": 1,
+        "sequence_similarity": 0.0364,
+        "token_f1": 0.3307,
+        "base_char_count": 8936,
+        "aap_char_count": 3436,
+        "char_delta_pct": -61.5,
+        "lines_added": 48,
+        "lines_removed": 116,
+        "rouge_l": null,
+        "bleu": null
+      },
+      {
+        "turn": 2,
+        "sequence_similarity": 0.0188,
+        "token_f1": 0.0782,
+        "base_char_count": 9275,
+        "aap_char_count": 961,
+        "char_delta_pct": -89.6,
+        "lines_added": 16,
+        "lines_removed": 129,
+        "rouge_l": null,
+        "bleu": null
+      },
+      {
+        "turn": 3,
+        "sequence_similarity": 0.0294,
+        "token_f1": 0.2,
+        "base_char_count": 10023,
+        "aap_char_count": 2024,
+        "char_delta_pct": -79.8,
+        "lines_added": 31,
+        "lines_removed": 136,
+        "rouge_l": null,
+        "bleu": null
+      }
+    ],
+    "mean_sequence_similarity": 0.0346,
+    "mean_token_f1": 0.2507,
+    "mean_rouge_l": null,
+    "mean_bleu": null,
+    "judge_comparisons": null,
+    "mean_base_judge": null,
+    "mean_aap_judge": null
+  }
+}

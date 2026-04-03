@@ -1,10 +1,9 @@
 {
   "protocol": "aap/0.1",
-  "id": "board-12345",
-  "version": 1,
+  "id": "kanban-board-001",
+  "version": 3,
   "name": "edit",
-  "operation": {
-    "direction": "output",
+  "meta": {
     "format": "text/html",
     "tokens_used": null,
     "checksum": null,
@@ -17,7 +16,7 @@
         "type": "id",
         "value": "col-done"
       },
-      "content": "    <aap:target id=\"col-cancelled\">\n      <div class=\"column\">\n        <div class=\"col-header\">CANCELLED (2)</div>\n        <div class=\"card-list\">\n          <div class=\"card\"><div class=\"tag p-low\">Low</div><div class=\"card-title\">Legacy API Cleanup</div><div class=\"meta\"><span>Cancelled: Oct 18</span></div></div>\n          <div class=\"card\"><div class=\"tag p-medium\">Medium</div><div class=\"card-title\">External Tool Migration</div><div class=\"meta\"><span>Cancelled: Oct 19</span></div></div>\n        </div>\n      </div>\n    </aap:target>\n"
+      "content": "<div class=\"column\" style=\"border-top-color: #f44336\">\n        <div class=\"col-header\">Cancelled (2)</div>\n        <div class=\"cards\">\n          <div class=\"card\"><strong>Deprecated Module Removal</strong><br><small>Assignee: Alex | <span class=\"priority tag-low\">Low</span></small></div>\n          <div class=\"card\"><strong>Legacy IE Support</strong><br><small>Assignee: Casey | <span class=\"priority tag-critical\">Critical</span></small></div>\n        </div>\n      </div>"
     }
   ]
 }

@@ -1,41 +1,36 @@
-<div id="pricing-page">
-  <aap:target id="integrations">
-    <section style="max-width: 1100px; margin: 40px auto; padding: 20px;">
-      <h2>Integrations</h2>
-      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; text-align: center;">
-        <div style="padding: 20px; border: 1px solid #ddd; border-radius: 8px;">Logo 1<br>Name</div>
-        <div style="padding: 20px; border: 1px solid #ddd; border-radius: 8px;">Logo 2<br>Name</div>
-        <div style="padding: 20px; border: 1px solid #ddd; border-radius: 8px;">Logo 3<br>Name</div>
-        <div style="padding: 20px; border: 1px solid #ddd; border-radius: 8px;">Logo 4<br>Name</div>
-        <div style="padding: 20px; border: 1px solid #ddd; border-radius: 8px;">Logo 5<br>Name</div>
-        <div style="padding: 20px; border: 1px solid #ddd; border-radius: 8px;">Logo 6<br>Name</div>
-        <div style="padding: 20px; border: 1px solid #ddd; border-radius: 8px;">Logo 7<br>Name</div>
-        <div style="padding: 20px; border: 1px solid #ddd; border-radius: 8px;">Logo 8<br>Name</div>
-      </div>
-    </section>
-  </aap:target>
-  <aap:target id="pricing-tiers">
-    <div style="max-width: 1100px; margin: auto; display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
-      <div style="flex: 1; min-width: 200px; background: white; padding: 30px; border-radius: 8px; border: 1px solid #ddd;">
-        <h3>Free</h3>
-        <p style="font-size: 2rem; font-weight: bold;"><aap:target id="price-free">$0</aap:target></p>
-        <p>For individuals.</p>
-      </div>
-      <div style="flex: 1; min-width: 200px; background: white; padding: 30px; border-radius: 8px; border: 1px solid #ddd;">
-        <h3>Starter</h3>
-        <p style="font-size: 2rem; font-weight: bold;"><aap:target id="price-starter">$19</aap:target></p>
-        <p>For professionals.</p>
-      </div>
-      <div style="flex: 1; min-width: 200px; background: #764ba2; color: white; padding: 30px; border-radius: 8px;">
-        <h3>Pro</h3>
-        <p style="font-size: 2rem; font-weight: bold;"><aap:target id="price-pro">$49</aap:target></p>
-        <p>For growing teams.</p>
-      </div>
-      <div style="flex: 1; min-width: 200px; background: white; padding: 30px; border-radius: 8px; border: 1px solid #ddd;">
-        <h3>Enterprise</h3>
-        <p style="font-size: 2rem; font-weight: bold;"><aap:target id="price-enterprise">Custom</aap:target></p>
-        <p>For large organizations.</p>
-      </div>
+<aap:target id="integrations-section">
+  <div style="padding: 40px 0;">
+    <h2 style="text-align: center;">Integrations</h2>
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 20px; max-width: 800px; margin: 0 auto;">
+      <div style="text-align: center; border: 1px solid #eee; padding: 15px; border-radius: 8px;">Slack</div>
+      <div style="text-align: center; border: 1px solid #eee; padding: 15px; border-radius: 8px;">GitHub</div>
+      <div style="text-align: center; border: 1px solid #eee; padding: 15px; border-radius: 8px;">Jira</div>
+      <div style="text-align: center; border: 1px solid #eee; padding: 15px; border-radius: 8px;">Zapier</div>
+      <div style="text-align: center; border: 1px solid #eee; padding: 15px; border-radius: 8px;">Stripe</div>
+      <div style="text-align: center; border: 1px solid #eee; padding: 15px; border-radius: 8px;">Salesforce</div>
+      <div style="text-align: center; border: 1px solid #eee; padding: 15px; border-radius: 8px;">Notion</div>
+      <div style="text-align: center; border: 1px solid #eee; padding: 15px; border-radius: 8px;">Figma</div>
     </div>
-  </aap:target>
-</div>
+  </div>
+</aap:target>
+
+<aap:target id="pricing-section">
+  <div style="display: flex; gap: 20px; justify-content: center; padding: 30px;">
+    <div style="background: white; padding: 30px; border-radius: 8px; width: 200px; text-align: center; border: 1px solid #ddd;">
+      <h3>Free</h3>
+      <p><strong>$0</strong>/mo</p>
+    </div>
+    <div style="background: white; padding: 30px; border-radius: 8px; width: 200px; text-align: center; border: 1px solid #ddd;">
+      <h3>Starter</h3>
+      <p><strong><aap:target id="price-starter">$19</aap:target></strong>/mo</p>
+    </div>
+    <div style="background: white; padding: 30px; border-radius: 8px; width: 200px; text-align: center; border: 2px solid #764ba2;">
+      <h3>Pro</h3>
+      <p><strong><aap:target id="price-pro">$49</aap:target></strong>/mo</p>
+    </div>
+    <div style="background: white; padding: 30px; border-radius: 8px; width: 200px; text-align: center; border: 1px solid #ddd;">
+      <h3>Enterprise</h3>
+      <p><strong><aap:target id="price-enterprise">Custom</aap:target></strong></p>
+    </div>
+  </div>
+</aap:target>

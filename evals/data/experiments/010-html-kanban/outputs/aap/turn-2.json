@@ -1,10 +1,9 @@
 {
   "protocol": "aap/0.1",
-  "id": "board-id",
-  "version": 1,
-  "name": "edit",
-  "operation": {
-    "direction": "input",
+  "id": "kanban-board-001",
+  "version": 2,
+  "name": "synthesize",
+  "meta": {
     "format": "text/html",
     "tokens_used": null,
     "checksum": null,
@@ -12,28 +11,7 @@
   },
   "content": [
     {
-      "op": "replace",
-      "target": {
-        "type": "id",
-        "value": "col-backlog"
-      },
-      "content": "          <div class=\"card\"><div class=\"tag p-low\">Low</div><div class=\"card-title\">Update Readme Docs</div><div class=\"meta\"><span>Due: Oct 25</span><span>DOC</span></div></div>\n          <div class=\"card\"><div class=\"tag p-critical\">Critical</div><div class=\"card-title\">Fix Login Race Condition</div><div class=\"meta\"><span>Due: Oct 18</span><span>AUTH</span></div></div>\n          <div class=\"card\"><div class=\"tag p-medium\">Medium</div><div class=\"card-title\">Add User Export Feature</div><div class=\"meta\"><span>Due: Oct 28</span><span>FE</span></div></div>\n          <div class=\"card\"><div class=\"tag p-medium\">Medium</div><div class=\"card-title\">Refactor Auth Middleware</div><div class=\"meta\"><span>Due: Oct 29</span><span>BE</span></div></div>\n"
-    },
-    {
-      "op": "replace",
-      "target": {
-        "type": "id",
-        "value": "col-in-progress"
-      },
-      "content": "        <div class=\"col-header\">IN PROGRESS (6)</div>\n        <div class=\"card-list\">\n          <div class=\"card\"><div class=\"tag p-medium\">Medium</div><div class=\"card-title\">Setup CI/CD Pipeline</div><div class=\"meta\"><span>Due: Oct 20</span><span>JS</span></div></div>\n          <div class=\"card\"><div class=\"tag p-high\">High</div><div class=\"card-title\">Database Index Optimization</div><div class=\"meta\"><span>Due: Oct 22</span><span>DB</span></div></div>\n          <div class=\"card\"><div class=\"tag p-critical\">Critical</div><div class=\"card-title\">API Gateway Timeout Fix</div><div class=\"meta\"><span>Due: Oct 19</span><span>OPS</span></div></div>\n          <div class=\"card\"><div class=\"tag p-high\">High</div><div class=\"card-title\">Implement Dark Mode</div><div class=\"meta\"><span>Due: Oct 20</span><span>UI</span></div></div>\n          <div class=\"card\"><div class=\"tag p-medium\">Medium</div><div class=\"card-title\">Unit Testing Coverage</div><div class=\"meta\"><span>Due: Oct 21</span><span>QA</span></div></div>\n          <div class=\"card\"><div class=\"tag p-medium\">Medium</div><div class=\"card-title\">Cache Layer Configuration</div><div class=\"meta\"><span>Due: Oct 22</span><span>BE</span></div></div>\n        </div>\n"
-    },
-    {
-      "op": "replace",
-      "target": {
-        "type": "pointer",
-        "value": "/content/0/content/2/content/1/content/1/content/0/content/0"
-      },
-      "content": "          <div class=\"card\"><div class=\"tag p-high\" style=\"background:#000\">Blocked</div><div class=\"tag p-high\">High</div><div class=\"card-title\">Frontend Component Library</div><div class=\"meta\"><span>Due: Oct 19</span><span>FE</span></div></div>\n"
+      "body": "{\n  \"protocol\": \"aap/0.1\",\n  \"id\": \"kanban-board-001\",\n  \"version\": 2,\n  \"name\": \"edit\",\n  \"content\": [\n    {\n      \"op\": \"replace\",\n      \"target\": {\"type\": \"id\", \"value\": \"col-backlog\"},\n      \"content\": \"<div class=\\\"column\\\" style=\\\"border-top-color: #607d8b\\\">\\n        <div class=\\\"col-header\\\">Backlog (4)</div>\\n        <div class=\\\"cards\\\">\\n          <div class=\\\"card\\\"><strong>Refactor Auth</strong><br><small>Assignee: Jordan | <span class=\\\"priority tag-critical\\\">Critical</span></small></div>\\n          <div class=\\\"card\\\"><strong>Update Docs</strong><br><small>Assignee: Casey | <span class=\\\"priority tag-low\\\">Low</span></small></div>\\n          <div class=\\\"card\\\"><strong>S3 Bucket Config</strong><br><small>Assignee: Alex | <span class=\\\"priority tag-medium\\\">Medium</span></small></div>\\n          <div class=\\\"card\\\"><strong>User Profile UI</strong><br><small>Assignee: Taylor | <span class=\\\"priority tag-medium\\\">Medium</span></small></div>\\n        </div>\\n      </div>\"\n    },\n    {\n      \"op\": \"replace\",\n      \"target\": {\"type\": \"id\", \"value\": \"col-progress\"},\n      \"content\": \"<div class=\\\"column\\\" style=\\\"border-top-color: #2196f3\\\">\\n        <div class=\\\"col-header\\\">In Progress (6)</div>\\n        <div class=\\\"cards\\\">\\n          <div class=\\\"card\\\"><strong>API Rate Limiting</strong><br><small>Assignee: Alex | <span class=\\\"priority tag-high\\\">High</span></small></div>\\n          <div class=\\\"card\\\"><strong>Database Migration</strong><br><small>Assignee: Sam | <span class=\\\"priority tag-medium\\\">Medium</span></small></div>\\n          <div class=\\\"card\\\"><strong>OAuth 2.0 Integration</strong><br><small>Assignee: Alex | <span class=\\\"priority tag-critical\\\">Critical</span></small></div>\\n          <div class=\\\"card\\\"><strong>Dark Mode Switch</strong><br><small>Assignee: Taylor | <span class=\\\"priority tag-low\\\">Low</span></small></div>\\n          <div class=\\\"card\\\"><strong>Redis Cache Layer</strong><br><small>Assignee: Jordan | <span class=\\\"priority tag-high\\\">High</span></small></div>\\n          <div class=\\\"card\\\"><strong>Mobile Responsive Fix</strong><br><small>Assignee: Sam | <span class=\\\"priority tag-medium\\\">Medium</span></small></div>\\n        </div>\\n      </div>\"\n    },\n    {\n      \"op\": \"replace\",\n      \"target\": {\"type\": \"id\", \"value\": \"col-review\"},\n      \"content\": \"<div class=\\\"column\\\" style=\\\"border-top-color: #ff9800\\\">\\n        <div class=\\\"col-header\\\">In Review (3)</div>\\n        <div class=\\\"cards\\\">\\n          <div class=\\\"card\\\"><strong>Payment Gateway API</strong><br><small>Assignee: Jordan | <span class=\\\"priority tag-critical\\\">Critical</span> <span class=\\\"priority\\\" style=\\\"background:#000; color:#fff;\\\">BLOCKED</span></small></div>\\n          <div class=\\\"card\\\"><strong>Export CSV Feature</strong><br><small>Assignee: Casey | <span class=\\\"priority tag-low\\\">Low</span></small></div>\\n          <div class=\\\"card\\\"><strong>Unit Test Coverage</strong><br><small>Assignee: Alex | <span class=\\\"priority tag-medium\\\">Medium</span></small></div>\\n        </div>\\n      </div>\"\n    }\n  ]\n}"
     }
   ]
 }

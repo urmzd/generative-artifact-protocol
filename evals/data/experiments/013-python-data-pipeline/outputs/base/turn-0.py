@@ -2,94 +2,92 @@ import pandas as pd
 import numpy as np
 import json
 from dataclasses import dataclass
+from typing import List
 from pathlib import Path
-from typing import List, Dict, Any
 
 @dataclass
-class ETLConfig:
+class PipelineConfig:
     input_path: str
     output_dir: str
-    date_columns: List[str]
-    required_columns: List[str]
-    numeric_columns: List[str]
+    date_cols: List[str]
+    required_cols: List[str]
 
-class SalesPipeline:
-    def __init__(self, config: ETLConfig):
-        self.config = config
-        self.df = None
+def extract(config: PipelineConfig) -> pd.DataFrame:
+    df = pd.read_csv(
+        config.input_path, 
+        encoding='utf-8-sig', 
+        parse_dates=config.date_cols
+    )
+    return df
 
-    def extract(self):
-        try:
-            self.df = pd.read_csv(
-                self.config.input_path, 
-                encoding='utf-8-sig', 
-                parse_dates=self.config.date_columns
-            )
-            self.df.columns = [c.strip().lower().replace(' ', '_') for c in self.df.columns]
-        except Exception as e:
-            raise IOError(f"Extraction failed: {e}")
-
-    def validate(self):
-        # Null checks
-        if self.df[self.config.required_columns].isnull().any().any():
-            raise ValueError("Null values found in required columns")
+def validate(df: pd.DataFrame, config: PipelineConfig):
+    # Check required columns
+    missing = [c for c in config.required_cols if c not in df.columns]
+    if missing: raise ValueError(f"Missing columns: {missing}")
+    
+    # Null checks
+    if df[config.required_cols].isnull().any().any():
+        print("Warning: Nulls detected in critical columns")
         
-        # Duplicate detection
-        if self.df.duplicated().any():
-            self.df.drop_duplicates(inplace=True)
-            
-        # Range/Type checks
-        for col in self.config.numeric_columns:
-            if (self.df[col] < 0).any():
-                raise ValueError(f"Negative values found in {col}")
+    # Range check
+    if (df['sales'] < 0).any():
+        raise ValueError("Negative sales detected")
         
-        print("Validation passed.")
+    # Duplicate check
+    if df.duplicated().any():
+        df.drop_duplicates(inplace=True)
+        
+    return df
 
-    def transform(self):
-        # Profit Margin
-        self.df['profit_margin'] = (self.df['revenue'] - self.df['cost']) / self.df['revenue']
-        
-        # Category mapping
-        bins = [-float('inf'), 500, 2000, float('inf')]
-        labels = ['Low-Value', 'Mid-Value', 'High-Value']
-        self.df['product_tier'] = pd.cut(self.df['revenue'], bins=bins, labels=labels)
-        
-        # Aggregate by region
-        self.regional_summary = self.df.groupby('region').agg({
-            'revenue': 'sum',
-            'profit_margin': 'mean'
-        }).reset_index()
-
-    def load(self):
-        Path(self.config.output_dir).mkdir(parents=True, exist_ok=True)
-        
-        # Save Parquet
-        self.df.to_parquet(f"{self.config.output_dir}/processed_sales.parquet")
-        
-        # Save JSON Summary
-        summary = {
-            "total_records": int(len(self.df)),
-            "avg_revenue": float(self.df['revenue'].mean()),
-            "regional_performance": self.regional_summary.to_dict(orient='records')
-        }
-        with open(f"{self.config.output_dir}/summary.json", 'w') as f:
-            json.dump(summary, f, indent=4)
-
-    def run(self):
-        self.extract()
-        self.validate()
-        self.transform()
-        self.load()
-        print("Pipeline execution complete.")
-
-if __name__ == "__main__":
-    config = ETLConfig(
-        input_path="sales_data.csv",
-        output_dir="output",
-        date_columns=["sale_date"],
-        required_columns=["order_id", "revenue", "cost", "region"],
-        numeric_columns=["revenue", "cost"]
+def transform(df: pd.DataFrame) -> pd.DataFrame:
+    # Clean column names
+    df.columns = [c.lower().replace(' ', '_') for c in df.columns]
+    
+    # Derived metrics
+    df['profit'] = df['revenue'] - df['cost']
+    df['profit_margin'] = df['profit'] / df['revenue']
+    
+    # Categorization
+    df['product_tier'] = pd.cut(
+        df['revenue'], 
+        bins=[0, 1000, 5000, np.inf], 
+        labels=['Entry', 'Mid', 'Premium']
     )
     
-    pipeline = SalesPipeline(config)
-    pipeline.run()
+    # YoY Growth (Requires sorted data)
+    df = df.sort_values(['region', 'date'])
+    df['yoy_growth'] = df.groupby('region')['revenue'].pct_change(periods=1)
+    
+    return df
+
+def load(df: pd.DataFrame, output_dir: str):
+    path = Path(output_dir)
+    path.mkdir(parents=True, exist_ok=True)
+    
+    # Parquet
+    df.to_parquet(path / "sales_processed.parquet")
+    
+    # JSON Summary
+    summary = {
+        "total_revenue": float(df['revenue'].sum()),
+        "avg_margin": float(df['profit_margin'].mean()),
+        "region_sales": df.groupby('region')['revenue'].sum().to_dict()
+    }
+    with open(path / "summary.json", 'w') as f:
+        json.dump(summary, f, indent=4)
+
+def run_pipeline(config: PipelineConfig):
+    df = extract(config)
+    df = validate(df, config)
+    df = transform(df)
+    load(df, config.output_dir)
+    print("Pipeline completed successfully.")
+
+if __name__ == "__main__":
+    config = PipelineConfig(
+        input_path="sales_data.csv",
+        output_dir="./output",
+        date_cols=["date"],
+        required_cols=["date", "region", "revenue", "cost"]
+    )
+    # run_pipeline(config)

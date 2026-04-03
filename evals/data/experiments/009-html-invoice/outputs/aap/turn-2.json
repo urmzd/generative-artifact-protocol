@@ -1,10 +1,9 @@
 {
   "protocol": "aap/0.1",
-  "id": "invoice-artifact-id",
-  "version": 2,
+  "id": "invoice-container",
+  "version": 1,
   "name": "edit",
-  "operation": {
-    "direction": "input",
+  "meta": {
     "format": "text/html",
     "tokens_used": null,
     "checksum": null,
@@ -12,12 +11,12 @@
   },
   "content": [
     {
-      "op": "insert_after",
+      "op": "replace",
       "target": {
         "type": "id",
         "value": "line-items"
       },
-      "content": "          <tr style=\"border-bottom: 1px solid #eee;\">\n            <td style=\"padding: 10px;\">Cloud Hosting Setup</td>\n            <td style=\"padding: 10px; text-align: right;\">1</td>\n            <td style=\"padding: 10px; text-align: right;\">$2,400.00</td>\n            <td style=\"padding: 10px; text-align: right;\">$2,400.00</td>\n          </tr>\n          <tr style=\"border-bottom: 1px solid #eee;\">\n            <td style=\"padding: 10px;\">SSL Certificate</td>\n            <td style=\"padding: 10px; text-align: right;\">1</td>\n            <td style=\"padding: 10px; text-align: right;\">$199.00</td>\n            <td style=\"padding: 10px; text-align: right;\">$199.00</td>\n          </tr>\n          <tr style=\"border-bottom: 1px solid #eee;\">\n            <td style=\"padding: 10px;\">Data Migration</td>\n            <td style=\"padding: 10px; text-align: right;\">1</td>\n            <td style=\"padding: 10px; text-align: right;\">$3,500.00</td>\n            <td style=\"padding: 10px; text-align: right;\">$3,500.00</td>\n          </tr>\n          <tr style=\"border-bottom: 1px solid #eee;\">\n            <td style=\"padding: 10px;\">Training Session</td>\n            <td style=\"padding: 10px; text-align: right;\">1</td>\n            <td style=\"padding: 10px; text-align: right;\">$1,800.00</td>\n            <td style=\"padding: 10px; text-align: right;\">$1,800.00</td>\n          </tr>\n"
+      "content": "        <tr><td style=\"padding: 10px; border-bottom: 1px solid #eee;\">Security Audit</td><td style=\"text-align: center; padding: 10px; border-bottom: 1px solid #eee;\">1</td><td style=\"text-align: center; padding: 10px; border-bottom: 1px solid #eee;\">$750.00</td><td style=\"text-align: right; padding: 10px; border-bottom: 1px solid #eee;\">$750.00</td></tr>\n        <tr><td style=\"padding: 10px; border-bottom: 1px solid #eee;\">Cloud Hosting Setup</td><td style=\"text-align: center; padding: 10px; border-bottom: 1px solid #eee;\">1</td><td style=\"text-align: center; padding: 10px; border-bottom: 1px solid #eee;\">$2,400.00</td><td style=\"text-align: right; padding: 10px; border-bottom: 1px solid #eee;\">$2,400.00</td></tr>\n        <tr><td style=\"padding: 10px; border-bottom: 1px solid #eee;\">SSL Certificate</td><td style=\"text-align: center; padding: 10px; border-bottom: 1px solid #eee;\">1</td><td style=\"text-align: center; padding: 10px; border-bottom: 1px solid #eee;\">$199.00</td><td style=\"text-align: right; padding: 10px; border-bottom: 1px solid #eee;\">$199.00</td></tr>\n        <tr><td style=\"padding: 10px; border-bottom: 1px solid #eee;\">Data Migration</td><td style=\"text-align: center; padding: 10px; border-bottom: 1px solid #eee;\">1</td><td style=\"text-align: center; padding: 10px; border-bottom: 1px solid #eee;\">$3,500.00</td><td style=\"text-align: right; padding: 10px; border-bottom: 1px solid #eee;\">$3,500.00</td></tr>\n        <tr><td style=\"padding: 10px; border-bottom: 1px solid #eee;\">Training Session</td><td style=\"text-align: center; padding: 10px; border-bottom: 1px solid #eee;\">1</td><td style=\"text-align: center; padding: 10px; border-bottom: 1px solid #eee;\">$1,800.00</td><td style=\"text-align: right; padding: 10px; border-bottom: 1px solid #eee;\">$1,800.00</td></tr>\n"
     }
   ]
 }

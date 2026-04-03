@@ -1,10 +1,9 @@
 {
   "protocol": "aap/0.1",
-  "id": "order-confirmation-001",
+  "id": "artifact-id",
   "version": 1,
   "name": "edit",
-  "operation": {
-    "direction": "output",
+  "meta": {
     "format": "text/html",
     "tokens_used": null,
     "checksum": null,
@@ -12,12 +11,12 @@
   },
   "content": [
     {
-      "op": "insert_after",
+      "op": "replace",
       "target": {
         "type": "id",
         "value": "items-list"
       },
-      "content": "<tr><td>Wireless Charger</td><td>1</td><td>$34.99</td><td>$34.99</td></tr>\n                  <tr><td>USB-C Hub</td><td>1</td><td>$59.99</td><td>$59.99</td></tr>\n                  <tr><td>Monitor Stand</td><td>2</td><td>$89.99</td><td>$179.98</td></tr>"
+      "content": "                <tr><td>Wireless Mouse</td><td>1</td><td>$25.00</td><td>$25.00</td></tr>\n                <tr><td>Keyboard</td><td>1</td><td>$50.00</td><td>$50.00</td></tr>\n                <tr><td>USB-C Cable</td><td>2</td><td>$10.00</td><td>$20.00</td></tr>\n                <tr><td>Monitor Stand</td><td>1</td><td>$40.00</td><td>$40.00</td></tr>\n                <tr><td>Mouse Pad</td><td>1</td><td>$15.00</td><td>$15.00</td></tr>\n                <tr><td>Wireless Charger</td><td>1</td><td>$34.99</td><td>$34.99</td></tr>\n                <tr><td>USB-C Hub</td><td>1</td><td>$59.99</td><td>$59.99</td></tr>\n                <tr><td>Monitor Stand</td><td>2</td><td>$89.99</td><td>$179.98</td></tr>\n"
     }
   ]
 }

@@ -1,105 +1,42 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import List, Optional, Dict
-from uuid import UUID, uuid4
-
-<aap:target id="core-models">
-class Priority(Enum):
-    LOW = "low"
-    MEDIUM = "medium"
-    HIGH = "high"
-    URGENT = "urgent"
+from typing import List
+from uuid import UUID
 
 class Status(Enum):
-    TODO = "todo"
-    IN_PROGRESS = "in_progress"
-    REVIEW = "review"
-    DONE = "done"
+    TODO = "TODO"
+    IN_PROGRESS = "IN_PROGRESS"
+    DONE = "DONE"
 
-@dataclass(frozen=True)
-class TimeEstimate:
-    <aap:target id="time-estimate-value">hours: float</aap:target>
+<aap:target id="priority-enum">
+class Priority(Enum):
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+    URGENT = "URGENT"
 
-@dataclass(frozen=True)
-class DateRange:
-    <aap:target id="date-range-start">start: datetime</aap:target>
-    <aap:target id="date-range-end">end: datetime</aap:target>
-
-@dataclass
-class BaseEntity:
-    <aap:target id="base-fields">
-    id: UUID = field(default_factory=uuid4)
-    created_at: datetime = field(default_factory=datetime.utcnow)
-    updated_at: datetime = field(default_factory=datetime.utcnow)
-    </aap:target>
-
-@dataclass
-class Project(BaseEntity):
-    <aap:target id="project-fields">
-    name: str
-    owner_id: UUID
-    team_id: UUID
-    </aap:target>
-
-@dataclass
-class Sprint(BaseEntity):
-    <aap:target id="sprint-fields">
-    project_id: UUID
-    duration: DateRange
-    status: Status = Status.TODO
-    
-@dataclass
-class Milestone(BaseEntity):
-    <aap:target id="milestone-fields">
-    name: str
-    target_date: datetime
-    status: Status = Status.TODO
-    project_id: UUID
-    task_ids: List[UUID] = field(default_factory=list)
-    </aap:target>
+    @property
+    def color(self) -> str:
+        return {
+            Priority.LOW: "#00FF00",
+            Priority.MEDIUM: "#FFFF00",
+            Priority.HIGH: "#FF8C00",
+            Priority.URGENT: "#FF0000"
+        }[self]
 </aap:target>
 
 @dataclass
-class Task(BaseEntity):
-    <aap:target id="task-fields">
-    project_id: UUID
-    sprint_id: Optional[UUID]
-    assignee_id: Optional[UUID]
-    title: str
-    priority: Priority = Priority.MEDIUM
+class BaseEntity:
+    id: UUID = None
+    created_at: datetime = field(default_factory=datetime.now)
+
+<aap:target id="project-models">
+@dataclass
+class Milestone(BaseEntity):
+    name: str = ""
+    target_date: datetime = None
     status: Status = Status.TODO
-    estimate: Optional[TimeEstimate] = None
-    </aap:target>
-
-@dataclass
-class User(BaseEntity):
-    <aap:target id="user-fields">
-    username: str
-    email: str
-    </aap:target>
-
-@dataclass
-class Team(BaseEntity):
-    <aap:target id="team-fields">
-    name: str
-    member_ids: List[UUID] = field(default_factory=list)
-    </aap:target>
-
-@dataclass
-class Comment(BaseEntity):
-    <aap:target id="comment-fields">
-    task_id: UUID
-    author_id: UUID
-    text: str
-    </aap:target>
-
-class ModelFactory:
-    <aap:target id="factory-methods">
-    @staticmethod
-    def create_task(title: str, project_id: UUID) -> Task:
-        if not title:
-            raise ValueError("Task title cannot be empty")
-        return Task(title=title, project_id=project_id)
-    </aap:target>
+    project_id: UUID = None
+    task_ids: List[UUID] = field(default_factory=list)
 </aap:target>

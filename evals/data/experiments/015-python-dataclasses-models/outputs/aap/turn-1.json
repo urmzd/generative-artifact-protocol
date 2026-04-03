@@ -1,10 +1,9 @@
 {
   "protocol": "aap/0.1",
-  "id": "core-models",
+  "id": "project-models-edit-milestone",
   "version": 1,
-  "name": "edit",
-  "operation": {
-    "direction": "output",
+  "name": "synthesize",
+  "meta": {
     "format": "text/html",
     "tokens_used": null,
     "checksum": null,
@@ -12,12 +11,7 @@
   },
   "content": [
     {
-      "op": "insert_after",
-      "target": {
-        "type": "id",
-        "value": "sprint-fields"
-      },
-      "content": "\n@dataclass\nclass Milestone(BaseEntity):\n    <aap:target id=\"milestone-fields\">\n    name: str\n    target_date: datetime\n    status: Status = Status.TODO\n    project_id: UUID\n    task_ids: List[UUID] = field(default_factory=list)\n    </aap:target>\n"
+      "body": "{\n  \"protocol\": \"aap/0.1\",\n  \"id\": \"project-models\",\n  \"version\": 2,\n  \"name\": \"edit\",\n  \"content\": [\n    {\n      \"op\": \"insert_after\",\n      \"target\": {\n        \"type\": \"id\",\n        \"value\": \"project-models\"\n      },\n      \"content\": \"@dataclass\\nclass Milestone(BaseEntity):\\n    name: str = \\\"\\\"\\n    target_date: datetime = None\\n    status: Status = Status.TODO\\n    project_id: UUID = None\\n    task_ids: List[UUID] = field(default_factory=list)\\n\"\n    }\n  ]\n}"
     }
   ]
 }

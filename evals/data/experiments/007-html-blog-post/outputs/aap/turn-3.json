@@ -1,10 +1,9 @@
 {
   "protocol": "aap/0.1",
-  "id": "rust-scale-blog-post",
+  "id": "article-content",
   "version": 1,
   "name": "edit",
-  "operation": {
-    "direction": "input",
+  "meta": {
     "format": "text/html",
     "tokens_used": null,
     "checksum": null,
@@ -15,9 +14,9 @@
       "op": "insert_after",
       "target": {
         "type": "id",
-        "value": "author-bio"
+        "value": "comments-section"
       },
-      "content": "  <aap:target id=\"related-articles\">\n    <section style=\"margin-top: 40px;\">\n      <h3 style=\"margin-bottom: 20px;\">Related Articles</h3>\n      <div style=\"display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;\">\n        <div style=\"padding: 15px; border: 1px solid #eee; border-radius: 8px;\">\n          <h4 style=\"margin: 0 0 10px 0;\">Rust Async Patterns</h4>\n          <p style=\"font-size: 0.85rem; margin: 0; color: #666;\">Deep dive into task spawning and cancellation.</p>\n        </div>\n        <div style=\"padding: 15px; border: 1px solid #eee; border-radius: 8px;\">\n          <h4 style=\"margin: 0 0 10px 0;\">Mastering SQLx</h4>\n          <p style=\"font-size: 0.85rem; margin: 0; color: #666;\">Advanced query techniques and transaction handling.</p>\n        </div>\n        <div style=\"padding: 15px; border: 1px solid #eee; border-radius: 8px;\">\n          <h4 style=\"margin: 0 0 10px 0;\">Observability in K8s</h4>\n          <p style=\"font-size: 0.85rem; margin: 0; color: #666;\">Tracing distributed systems with Jaeger and Tonic.</p>\n        </div>\n      </div>\n    </section>\n  </aap:target>\n"
+      "content": "<section id=\"related-articles\">\n  <h2>Related Articles</h2>\n  <div class=\"related-grid\">\n    <div class=\"related-card\">\n      <h3>Mastering Kubernetes Deployment</h3>\n      <p>A comprehensive guide to managing your containerized services at scale.</p>\n    </div>\n    <div class=\"related-card\">\n      <h3>Introduction to Protocol Buffers</h3>\n      <p>Learn how to define efficient service interfaces for high-performance systems.</p>\n    </div>\n    <div class=\"related-card\">\n      <h3>Securing Go Microservices</h3>\n      <p>Best practices for authentication and authorization in a distributed Go environment.</p>\n    </div>\n  </div>\n</section>"
     }
   ]
 }

@@ -1,0 +1,104 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Bookstore API",
+    "description": "API for managing books, authors, categories, orders, and reviews.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "API Support",
+      "email": "support@bookstore.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.bookstore.com/v1"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/books": {
+      "get": {
+        "summary": "List books",
+        "parameters": [
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Success", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PaginatedBookResponse" } } } },
+          "500": { "$ref": "#/components/responses/Error500" }
+        }
+      },
+      "post": {
+        "summary": "Create book",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Book" } } } },
+        "responses": {
+          "200": { "description": "Created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Book" } } } },
+          "400": { "$ref": "#/components/responses/Error400" }
+        }
+      }
+    },
+    "/books/{id}": {
+      "get": {
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Book" } } } },
+          "404": { "$ref": "#/components/responses/Error404" }
+        }
+      },
+      "put": {
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Book" } } } },
+        "responses": { "200": { "description": "Updated" }, "404": { "$ref": "#/components/responses/Error404" } }
+      },
+      "delete": {
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "204": { "description": "Deleted" }, "404": { "$ref": "#/components/responses/Error404" } }
+      }
+    },
+    "/authors": {
+      "get": {
+        "responses": { "200": { "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Author" } } } } } }
+      }
+    },
+    "/categories": {
+      "get": {
+        "responses": { "200": { "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Category" } } } } } }
+      }
+    },
+    "/orders": {
+      "post": {
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Order" } } } },
+        "responses": { "201": { "description": "Order created" }, "400": { "$ref": "#/components/responses/Error400" } }
+      }
+    },
+    "/reviews": {
+      "post": {
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Review" } } } },
+        "responses": { "201": { "description": "Review created" }, "400": { "$ref": "#/components/responses/Error400" } }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" }
+    },
+    "schemas": {
+      "Book": { "type": "object", "properties": { "id": { "type": "string" }, "title": { "type": "string" }, "authorId": { "type": "string" } } },
+      "Author": { "type": "object", "properties": { "id": { "type": "string" }, "name": { "type": "string" } } },
+      "Category": { "type": "object", "properties": { "id": { "type": "string" }, "name": { "type": "string" } } },
+      "Order": { "type": "object", "properties": { "id": { "type": "string" }, "bookIds": { "type": "array", "items": { "type": "string" } } } },
+      "Review": { "type": "object", "properties": { "bookId": { "type": "string" }, "rating": { "type": "integer" }, "comment": { "type": "string" } } },
+      "PaginatedBookResponse": { "type": "object", "properties": { "data": { "type": "array", "items": { "$ref": "#/components/schemas/Book" } }, "total": { "type": "integer" } } },
+      "ErrorResponse": { "type": "object", "properties": { "message": { "type": "string" }, "code": { "type": "integer" } } }
+    },
+    "responses": {
+      "Error400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
+      "Error404": { "description": "Not Found", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
+      "Error500": { "description": "Internal Server Error", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } }
+    }
+  }
+}

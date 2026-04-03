@@ -1,0 +1,228 @@
+{
+  "experiment_id": "005-html-form-wizard",
+  "model": "",
+  "provider": "google",
+  "timestamp": "2026-04-03T06:48:42.292212+00:00",
+  "format": "text/html",
+  "base_turn0": {
+    "input_tokens": 145,
+    "output_tokens": 1488,
+    "latency_ms": 6197,
+    "artifact_bytes": 5059
+  },
+  "aap_turn0": {
+    "input_tokens": 484,
+    "output_tokens": 1239,
+    "latency_ms": 5216,
+    "artifact_bytes": 3888
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new Step 5 for 'Preferences' with fields for newsletter opt-in, preferred ",
+        "input_tokens": 1662,
+        "output_tokens": 1704,
+        "latency_ms": 7173,
+        "output_bytes": 5875,
+        "failed": false,
+        "failure_reason": ""
+      },
+      {
+        "turn": 2,
+        "edit": "Update the progress bar to show 5 steps instead of 4 and change its color from b",
+        "input_tokens": 3397,
+        "output_tokens": 1754,
+        "latency_ms": 6595,
+        "output_bytes": 6085,
+        "failed": false,
+        "failure_reason": ""
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite Step 3 (Payment) to include PayPal and Apple Pay options as radio button",
+        "input_tokens": 5174,
+        "output_tokens": 1673,
+        "latency_ms": 6494,
+        "output_bytes": 5732,
+        "failed": false,
+        "failure_reason": ""
+      }
+    ],
+    "total_input_tokens": 10233,
+    "total_output_tokens": 5131,
+    "total_latency_ms": 20262
+  },
+  "aap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new Step 5 for 'Preferences' with fields for newsletter opt-in, preferred ",
+        "input_tokens": 2374,
+        "output_tokens": 1559,
+        "latency_ms": 6146,
+        "output_bytes": 4906,
+        "failed": false,
+        "failure_reason": "",
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "synthesize"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the progress bar to show 5 steps instead of 4 and change its color from b",
+        "input_tokens": 2655,
+        "output_tokens": 1581,
+        "latency_ms": 6668,
+        "output_bytes": 4906,
+        "failed": false,
+        "failure_reason": "",
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "synthesize"
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite Step 3 (Payment) to include PayPal and Apple Pay options as radio button",
+        "input_tokens": 2647,
+        "output_tokens": 1658,
+        "latency_ms": 5834,
+        "output_bytes": 5286,
+        "failed": false,
+        "failure_reason": "",
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "synthesize"
+      }
+    ],
+    "total_input_tokens": 7676,
+    "total_output_tokens": 4798,
+    "total_latency_ms": 18648,
+    "envelope_parse_rate": 1.0,
+    "apply_success_rate": 1.0
+  },
+  "comparison": {
+    "output_token_savings_pct": 6.5,
+    "input_token_savings_pct": 25.0,
+    "latency_savings_pct": 8.0
+  },
+  "token_table": {
+    "turns": [
+      {
+        "turn": 0,
+        "base_input": 145,
+        "base_output": 1488,
+        "base_latency_ms": 6197,
+        "aap_input": 484,
+        "aap_output": 1239,
+        "aap_latency_ms": 5216
+      },
+      {
+        "turn": 1,
+        "base_input": 1662,
+        "base_output": 1704,
+        "base_latency_ms": 7173,
+        "aap_input": 2374,
+        "aap_output": 1559,
+        "aap_latency_ms": 6146,
+        "envelope_name": "synthesize",
+        "apply_ok": true
+      },
+      {
+        "turn": 2,
+        "base_input": 3397,
+        "base_output": 1754,
+        "base_latency_ms": 6595,
+        "aap_input": 2655,
+        "aap_output": 1581,
+        "aap_latency_ms": 6668,
+        "envelope_name": "synthesize",
+        "apply_ok": true
+      },
+      {
+        "turn": 3,
+        "base_input": 5174,
+        "base_output": 1673,
+        "base_latency_ms": 6494,
+        "aap_input": 2647,
+        "aap_output": 1658,
+        "aap_latency_ms": 5834,
+        "envelope_name": "synthesize",
+        "apply_ok": true
+      }
+    ],
+    "totals": {
+      "base_input": 10378,
+      "base_output": 6619,
+      "base_combined": 16997,
+      "aap_input": 8160,
+      "aap_output": 6037,
+      "aap_combined": 14197,
+      "base_latency_ms": 26459,
+      "aap_latency_ms": 23864,
+      "output_savings_pct": 8.8,
+      "input_delta_pct": -21.4,
+      "combined_savings_pct": 16.5,
+      "latency_savings_pct": 9.8
+    }
+  },
+  "quality": {
+    "per_turn": [
+      {
+        "turn": 0,
+        "sequence_similarity": 0.3583,
+        "token_f1": 0.5755,
+        "base_char_count": 5059,
+        "aap_char_count": 3605,
+        "char_delta_pct": -28.7,
+        "lines_added": 71,
+        "lines_removed": 97,
+        "rouge_l": null,
+        "bleu": null
+      },
+      {
+        "turn": 1,
+        "sequence_similarity": 0.3672,
+        "token_f1": 0.5764,
+        "base_char_count": 5875,
+        "aap_char_count": 4573,
+        "char_delta_pct": -22.2,
+        "lines_added": 96,
+        "lines_removed": 109,
+        "rouge_l": null,
+        "bleu": null
+      },
+      {
+        "turn": 2,
+        "sequence_similarity": 0.3569,
+        "token_f1": 0.5697,
+        "base_char_count": 6085,
+        "aap_char_count": 4573,
+        "char_delta_pct": -24.8,
+        "lines_added": 96,
+        "lines_removed": 111,
+        "rouge_l": null,
+        "bleu": null
+      },
+      {
+        "turn": 3,
+        "sequence_similarity": 0.2529,
+        "token_f1": 0.5502,
+        "base_char_count": 5732,
+        "aap_char_count": 4953,
+        "char_delta_pct": -13.6,
+        "lines_added": 101,
+        "lines_removed": 101,
+        "rouge_l": null,
+        "bleu": null
+      }
+    ],
+    "mean_sequence_similarity": 0.3338,
+    "mean_token_f1": 0.5679,
+    "mean_rouge_l": null,
+    "mean_bleu": null,
+    "judge_comparisons": null,
+    "mean_base_judge": null,
+    "mean_aap_judge": null
+  }
+}

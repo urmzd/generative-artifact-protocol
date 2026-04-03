@@ -1,76 +1,73 @@
 <style>
   body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #f4f5f7; margin: 0; padding: 20px; }
-  .board-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #fff; padding: 15px 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-  .board-columns { display: flex; gap: 20px; overflow-x: auto; align-items: flex-start; }
-  .column { background: #ebecf0; border-radius: 8px; width: 300px; min-width: 300px; display: flex; flex-direction: column; max-height: 90vh; }
-  .col-header { padding: 15px; font-weight: bold; color: #5e6c84; display: flex; justify-content: space-between; }
-  .card-list { padding: 0 10px 10px; overflow-y: auto; }
-  .card { background: #fff; border-radius: 4px; padding: 12px; margin-bottom: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); cursor: grab; }
-  .card:active { cursor: grabbing; }
-  .card-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
-  .tag { font-size: 10px; padding: 2px 6px; border-radius: 10px; color: white; display: inline-block; margin-bottom: 8px; }
-  .p-critical { background: #e3342f; } .p-high { background: #f6993f; } .p-medium { background: #38c172; } .p-low { background: #6574cd; }
-  .meta { display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 10px; }
+  .board { display: flex; gap: 20px; overflow-x: auto; align-items: flex-start; height: 90vh; }
+  header { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+  .column { background: #ebecf0; border-radius: 8px; width: 300px; min-width: 300px; display: flex; flex-direction: column; max-height: 100%; }
+  .col-header { padding: 15px; font-weight: bold; display: flex; justify-content: space-between; border-top: 4px solid #ccc; }
+  .cards { padding: 10px; overflow-y: auto; flex-grow: 1; }
+  .card { background: white; border-radius: 4px; padding: 12px; margin-bottom: 10px; cursor: grab; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .priority { font-size: 10px; text-transform: uppercase; padding: 2px 6px; border-radius: 3px; font-weight: bold; }
+  .tag-critical { background: #ffebee; color: #c62828; }
+  .tag-high { background: #fff3e0; color: #ef6c00; }
+  .tag-medium { background: #e3f2fd; color: #1565c0; }
+  .tag-low { background: #e8f5e9; color: #2e7d32; }
 </style>
 
-<aap:target id="board">
-  <div class="board-header">
-    <aap:target id="project-title"><h1>Sprint 24</h1></aap:target>
-    <div class="filters">
-      <button>All</button>
-      <button>My Tasks</button>
-    </div>
-  </div>
+<div class="container">
+  <header>
+    <h1><aap:target id="project-name">Sprint 24</aap:target></h1>
+    <div class="filters">Filters: <button>All</button> <button>My Tasks</button></div>
+  </header>
 
-  <div class="board-columns">
+  <div class="board">
     <aap:target id="col-backlog">
-      <div class="column">
-        <div class="col-header">BACKLOG (6)</div>
-        <div class="card-list">
-          <div class="card"><div class="tag p-medium">Medium</div><div class="card-title">Setup CI/CD Pipeline</div><div class="meta"><span>Due: Oct 20</span><span>JS</span></div></div>
-          <div class="card"><div class="tag p-high">High</div><div class="card-title">Database Index Optimization</div><div class="meta"><span>Due: Oct 22</span><span>DB</span></div></div>
-          <div class="card"><div class="tag p-low">Low</div><div class="card-title">Update Readme Docs</div><div class="meta"><span>Due: Oct 25</span><span>DOC</span></div></div>
-          <div class="card"><div class="tag p-critical">Critical</div><div class="card-title">Fix Login Race Condition</div><div class="meta"><span>Due: Oct 18</span><span>AUTH</span></div></div>
-          <div class="card"><div class="tag p-medium">Medium</div><div class="card-title">Add User Export Feature</div><div class="meta"><span>Due: Oct 28</span><span>FE</span></div></div>
-          <div class="card"><div class="tag p-medium">Medium</div><div class="card-title">Refactor Auth Middleware</div><div class="meta"><span>Due: Oct 29</span><span>BE</span></div></div>
+      <div class="column" style="border-top-color: #607d8b">
+        <div class="col-header">Backlog (6)</div>
+        <div class="cards">
+          <div class="card"><strong>API Rate Limiting</strong><br><small>Assignee: Alex | <span class="priority tag-high">High</span></small></div>
+          <div class="card"><strong>Database Migration</strong><br><small>Assignee: Sam | <span class="priority tag-medium">Medium</span></small></div>
+          <div class="card"><strong>Refactor Auth</strong><br><small>Assignee: Jordan | <span class="priority tag-critical">Critical</span></small></div>
+          <div class="card"><strong>Update Docs</strong><br><small>Assignee: Casey | <span class="priority tag-low">Low</span></small></div>
+          <div class="card"><strong>S3 Bucket Config</strong><br><small>Assignee: Alex | <span class="priority tag-medium">Medium</span></small></div>
+          <div class="card"><strong>User Profile UI</strong><br><small>Assignee: Taylor | <span class="priority tag-medium">Medium</span></small></div>
         </div>
       </div>
     </aap:target>
 
-    <aap:target id="col-in-progress">
-      <div class="column">
-        <div class="col-header">IN PROGRESS (4)</div>
-        <div class="card-list">
-          <div class="card"><div class="tag p-critical">Critical</div><div class="card-title">API Gateway Timeout Fix</div><div class="meta"><span>Due: Oct 19</span><span>OPS</span></div></div>
-          <div class="card"><div class="tag p-high">High</div><div class="card-title">Implement Dark Mode</div><div class="meta"><span>Due: Oct 20</span><span>UI</span></div></div>
-          <div class="card"><div class="tag p-medium">Medium</div><div class="card-title">Unit Testing Coverage</div><div class="meta"><span>Due: Oct 21</span><span>QA</span></div></div>
-          <div class="card"><div class="tag p-medium">Medium</div><div class="card-title">Cache Layer Configuration</div><div class="meta"><span>Due: Oct 22</span><span>BE</span></div></div>
+    <aap:target id="col-progress">
+      <div class="column" style="border-top-color: #2196f3">
+        <div class="col-header">In Progress (4)</div>
+        <div class="cards">
+          <div class="card"><strong>OAuth 2.0 Integration</strong><br><small>Assignee: Alex | <span class="priority tag-critical">Critical</span></small></div>
+          <div class="card"><strong>Dark Mode Switch</strong><br><small>Assignee: Taylor | <span class="priority tag-low">Low</span></small></div>
+          <div class="card"><strong>Redis Cache Layer</strong><br><small>Assignee: Jordan | <span class="priority tag-high">High</span></small></div>
+          <div class="card"><strong>Mobile Responsive Fix</strong><br><small>Assignee: Sam | <span class="priority tag-medium">Medium</span></small></div>
         </div>
       </div>
     </aap:target>
 
-    <aap:target id="col-in-review">
-      <div class="column">
-        <div class="col-header">IN REVIEW (3)</div>
-        <div class="card-list">
-          <div class="card"><div class="tag p-high">High</div><div class="card-title">Frontend Component Library</div><div class="meta"><span>Due: Oct 19</span><span>FE</span></div></div>
-          <div class="card"><div class="tag p-medium">Medium</div><div class="card-title">User Profile Avatar Upload</div><div class="meta"><span>Due: Oct 20</span><span>FE</span></div></div>
-          <div class="card"><div class="tag p-medium">Medium</div><div class="card-title">Payment Gateway API V2</div><div class="meta"><span>Due: Oct 21</span><span>FIN</span></div></div>
+    <aap:target id="col-review">
+      <div class="column" style="border-top-color: #ff9800">
+        <div class="col-header">In Review (3)</div>
+        <div class="cards">
+          <div class="card"><strong>Payment Gateway API</strong><br><small>Assignee: Jordan | <span class="priority tag-critical">Critical</span></small></div>
+          <div class="card"><strong>Export CSV Feature</strong><br><small>Assignee: Casey | <span class="priority tag-low">Low</span></small></div>
+          <div class="card"><strong>Unit Test Coverage</strong><br><small>Assignee: Alex | <span class="priority tag-medium">Medium</span></small></div>
         </div>
       </div>
     </aap:target>
 
     <aap:target id="col-done">
-      <div class="column">
-        <div class="col-header">DONE (5)</div>
-        <div class="card-list">
-          <div class="card"><div class="tag p-low">Low</div><div class="card-title">Initial Sprint Planning</div><div class="meta"><span>Done: Oct 15</span></div></div>
-          <div class="card"><div class="tag p-medium">Medium</div><div class="card-title">Project Kickoff Meeting</div><div class="meta"><span>Done: Oct 15</span></div></div>
-          <div class="card"><div class="tag p-medium">Medium</div><div class="card-title">Environment Setup</div><div class="meta"><span>Done: Oct 16</span></div></div>
-          <div class="card"><div class="tag p-high">High</div><div class="card-title">Security Audit Patch</div><div class="meta"><span>Done: Oct 17</span></div></div>
-          <div class="card"><div class="tag p-low">Low</div><div class="card-title">Team Feedback Survey</div><div class="meta"><span>Done: Oct 18</span></div></div>
+      <div class="column" style="border-top-color: #4caf50">
+        <div class="col-header">Done (5)</div>
+        <div class="cards">
+          <div class="card"><strong>Initial Setup</strong><br><small>Assignee: Team | <span class="priority tag-low">Low</span></small></div>
+          <div class="card"><strong>CI/CD Pipeline</strong><br><small>Assignee: Jordan | <span class="priority tag-high">High</span></small></div>
+          <div class="card"><strong>Logging Service</strong><br><small>Assignee: Sam | <span class="priority tag-medium">Medium</span></small></div>
+          <div class="card"><strong>Landing Page</strong><br><small>Assignee: Taylor | <span class="priority tag-low">Low</span></small></div>
+          <div class="card"><strong>Security Audit</strong><br><small>Assignee: Alex | <span class="priority tag-critical">Critical</span></small></div>
         </div>
       </div>
     </aap:target>
   </div>
-</aap:target>
+</div>

@@ -1,87 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>User Management Dashboard</title>
-<style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; color: #333; }
-    .container { padding: 20px; max-width: 1200px; margin: auto; }
-    .toolbar { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px; }
-    .filter-bar { display: flex; gap: 10px; background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e0e0e0; }
-    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-    th { background: #f8f9fa; padding: 15px; text-align: left; font-weight: 600; border-bottom: 2px solid #eee; }
-    td { padding: 12px 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
-    .avatar { width: 32px; height: 32px; border-radius: 50%; background: #ddd; display: inline-block; margin-right: 10px; vertical-align: middle; }
-    .badge { padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; }
-    .badge-active { background: #d4edda; color: #155724; }
-    .badge-inactive { background: #f8d7da; color: #721c24; }
-    .pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
-    button { padding: 8px 16px; border-radius: 4px; border: 1px solid #ccc; background: #fff; cursor: pointer; }
-    button.primary { background: #007bff; color: white; border: none; }
-    select, input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management Admin</title>
 </head>
-<body>
-<div class="container">
-    <div class="toolbar">
-        <div>
-            <button class="primary">+ Add User</button>
-            <select><option>Bulk Actions</option><option>Delete Selected</option></select>
+<body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; color: #333;">
+
+    <div style="max-width: 1200px; margin: 0 auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <!-- Toolbar -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 10px; flex-wrap: wrap;">
+            <div style="display: flex; gap: 10px;">
+                <button style="background: #2563eb; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">+ Add User</button>
+                <select style="padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    <option>Bulk Actions</option>
+                    <option>Delete Selected</option>
+                    <option>Change Status</option>
+                </select>
+            </div>
+            <input type="text" placeholder="Search users..." style="padding: 10px; width: 300px; border: 1px solid #ddd; border-radius: 5px;">
         </div>
-        <input type="text" placeholder="Search users...">
-    </div>
 
-    <div class="filter-bar">
-        <select><option>All Roles</option><option>Admin</option><option>Editor</option></select>
-        <select><option>All Status</option><option>Active</option><option>Inactive</option></select>
-        <input type="date">
-    </div>
+        <!-- Filter Bar -->
+        <div style="display: flex; gap: 15px; margin-bottom: 20px; padding: 15px; background: #f9fafb; border-radius: 5px;">
+            <select style="padding: 8px; border: 1px solid #ddd;"><option>All Roles</option><option>Admin</option><option>Editor</option></select>
+            <select style="padding: 8px; border: 1px solid #ddd;"><option>All Status</option><option>Active</option><option>Inactive</option></select>
+            <input type="date" style="padding: 8px; border: 1px solid #ddd;">
+            <button style="background: #64748b; color: white; border: none; padding: 8px 15px; border-radius: 5px;">Filter</button>
+        </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th><input type="checkbox"></th>
-                <th>User</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th>Last Login</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="userTableBody">
-            <!-- Rows injected by script -->
-        </tbody>
-    </table>
+        <!-- Table -->
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
+                    <tr>
+                        <th style="padding: 12px;"><input type="checkbox"></th>
+                        <th style="padding: 12px;">User</th>
+                        <th style="padding: 12px;">Email</th>
+                        <th style="padding: 12px;">Role</th>
+                        <th style="padding: 12px;">Status</th>
+                        <th style="padding: 12px;">Last Login</th>
+                        <th style="padding: 12px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <!-- Rows generated via script -->
+                </tbody>
+            </table>
+        </div>
 
-    <div class="pagination">
-        <span>Showing 1-10 of 85 users</span>
-        <div>
-            <select><option>10 per page</option><option>25 per page</option></select>
-            <button>&lt;</button> <button>1</button> <button>2</button> <button>3</button> <button>&gt;</button>
+        <!-- Pagination -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+            <select style="padding: 5px;"><option>10 per page</option><option>50 per page</option></select>
+            <div style="display: flex; gap: 5px;">
+                <button style="padding: 5px 10px; border: 1px solid #ddd;">Prev</button>
+                <button style="padding: 5px 10px; border: 1px solid #2563eb; background: #2563eb; color: white;">1</button>
+                <button style="padding: 5px 10px; border: 1px solid #ddd;">2</button>
+                <button style="padding: 5px 10px; border: 1px solid #ddd;">3</button>
+                <button style="padding: 5px 10px; border: 1px solid #ddd;">Next</button>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-    const tbody = document.getElementById('userTableBody');
-    const roles = ['Admin', 'Editor', 'Subscriber'];
-    const statuses = ['Active', 'Inactive'];
-    
-    for (let i = 1; i <= 85; i++) {
-        const row = document.createElement('tr');
-        const status = statuses[Math.floor(Math.random() * statuses.length)];
-        row.innerHTML = `
-            <td><input type="checkbox"></td>
-            <td><span class="avatar"></span> User ${i}</td>
-            <td>user${i}@example.com</td>
-            <td>${roles[Math.floor(Math.random() * roles.length)]}</td>
-            <td><span class="badge ${status === 'Active' ? 'badge-active' : 'badge-inactive'}">${status}</span></td>
-            <td>2023-10-${(i % 28) + 1}</td>
-            <td><select><option>Edit</option><option>Delete</option></select></td>
-        `;
-        tbody.appendChild(row);
-    }
-</script>
+    <script>
+        const tbody = document.getElementById('userTableBody');
+        const roles = ['Admin', 'Editor', 'Subscriber'];
+        const statuses = ['Active', 'Inactive'];
+
+        for(let i = 1; i <= 80; i++) {
+            const tr = document.createElement('tr');
+            tr.style.borderBottom = '1px solid #eee';
+            const status = statuses[Math.floor(Math.random() * 2)];
+            tr.innerHTML = `
+                <td style="padding: 12px;"><input type="checkbox"></td>
+                <td style="padding: 12px; display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 32px; height: 32px; background: #cbd5e1; border-radius: 50%;"></div>
+                    User ${i}
+                </td>
+                <td style="padding: 12px;">user${i}@example.com</td>
+                <td style="padding: 12px;">${roles[Math.floor(Math.random() * 3)]}</td>
+                <td style="padding: 12px;">
+                    <span style="padding: 4px 8px; border-radius: 12px; font-size: 12px; background: ${status === 'Active' ? '#dcfce7' : '#fee2e2'}; color: ${status === 'Active' ? '#166534' : '#991b1b'};">
+                        ${status}
+                    </span>
+                </td>
+                <td style="padding: 12px;">Oct ${i % 28 + 1}, 2023</td>
+                <td style="padding: 12px;"><select><option>Edit</option><option>Delete</option></select></td>
+            `;
+            tbody.appendChild(tr);
+        }
+    </script>
 </body>
 </html>

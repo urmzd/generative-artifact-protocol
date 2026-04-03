@@ -1,10 +1,9 @@
 {
   "protocol": "aap/0.1",
-  "id": "wizard-container",
-  "version": 2,
-  "name": "edit",
-  "operation": {
-    "direction": "input",
+  "id": "wizard-update-1",
+  "version": 1,
+  "name": "synthesize",
+  "meta": {
     "format": "text/html",
     "tokens_used": null,
     "checksum": null,
@@ -12,36 +11,7 @@
   },
   "content": [
     {
-      "op": "replace",
-      "target": {
-        "type": "id",
-        "value": "p1"
-      },
-      "content": "    .progress-step.active { background: #0d9488; }"
-    },
-    {
-      "op": "replace",
-      "target": {
-        "type": "id",
-        "value": "p1"
-      },
-      "content": "            <div class=\"progress-step active\" id=\"p1\"></div>\n            <div class=\"progress-step\" id=\"p2\"></div>\n            <div class=\"progress-step\" id=\"p3\"></div>\n            <div class=\"progress-step\" id=\"p4\"></div>\n            <div class=\"progress-step\" id=\"p5\"></div>"
-    },
-    {
-      "op": "insert_after",
-      "target": {
-        "type": "id",
-        "value": "step-4"
-      },
-      "content": "            <aap:target id=\"step-5\" class=\"step\">\n                <h3>Confirmation</h3>\n                <p>Thank you for your registration!</p>\n            </aap:target>"
-    },
-    {
-      "op": "replace",
-      "target": {
-        "type": "id",
-        "value": "p1"
-      },
-      "content": "    .progress-step { height: 10px; width: 18%; background: #ddd; border-radius: 5px; }"
+      "body": "<style>\n  :root { --primary: #0d9488; --bg: #f3f4f6; }\n  body { font-family: sans-serif; background: var(--bg); display: flex; justify-content: center; padding: 2rem; }\n  .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); width: 100%; max-width: 500px; }\n  .step { display: none; }\n  .step.active { display: block; }\n  .progress-bar { display: flex; justify-content: space-between; margin-bottom: 2rem; }\n  .step-dot { height: 10px; width: 10px; background: #ccc; border-radius: 50%; }\n  .step-dot.active { background: var(--primary); }\n  .form-group { margin-bottom: 1rem; }\n  label { display: block; margin-bottom: 0.25rem; font-size: 0.875rem; }\n  input, select { width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 4px; box-sizing: border-box; }\n  .buttons { margin-top: 2rem; display: flex; justify-content: space-between; }\n  button { padding: 0.5rem 1rem; border: none; border-radius: 4px; cursor: pointer; background: var(--primary); color: white; }\n  button:disabled { background: #9ca3af; }\n  .radio-group { display: flex; gap: 1rem; margin-top: 0.5rem; }\n</style>\n\n<div class=\"card\">\n  <aap:target id=\"wizard\">\n    <div class=\"progress-bar\">\n      <aap:target id=\"progress\">\n        <div class=\"step-dot active\"></div>\n        <div class=\"step-dot\"></div>\n        <div class=\"step-dot\"></div>\n        <div class=\"step-dot\"></div>\n        <div class=\"step-dot\"></div>\n      </aap:target>\n    </div>\n\n    <form id=\"regForm\">\n      <aap:target id=\"step-1\" class=\"step active\">\n        <h3>Personal Info</h3>\n        <div class=\"form-group\"><label>Name</label><input type=\"text\" id=\"name\"></div>\n        <div class=\"form-group\"><label>Email</label><input type=\"email\" id=\"email\"></div>\n        <div class=\"form-group\"><label>Phone</label><input type=\"tel\" id=\"phone\"></div>\n        <div class=\"form-group\"><label>DOB</label><input type=\"date\" id=\"dob\"></div>\n      </aap:target>\n\n      <aap:target id=\"step-2\" class=\"step\">\n        <h3>Address</h3>\n        <div class=\"form-group\"><label>Street</label><input type=\"text\" id=\"street\"></div>\n        <div class=\"form-group\"><label>City</label><input type=\"text\" id=\"city\"></div>\n        <div class=\"form-group\"><label>Zip</label><input type=\"text\" id=\"zip\"></div>\n      </aap:target>\n\n      <aap:target id=\"step-3\" class=\"step\">\n        <h3>Payment</h3>\n        <div class=\"form-group\"><label>Card Number</label><input type=\"text\" id=\"card\"></div>\n        <div class=\"form-group\"><label>Expiry</label><input type=\"text\" id=\"expiry\" placeholder=\"MM/YY\"></div>\n      </aap:target>\n\n      <aap:target id=\"step-5\" class=\"step\">\n        <h3>Preferences</h3>\n        <div class=\"form-group\">\n          <input type=\"checkbox\" id=\"newsletter\" style=\"width: auto;\"> <label style=\"display:inline\" for=\"newsletter\">Subscribe to newsletter</label>\n        </div>\n        <div class=\"form-group\">\n          <label>Language</label>\n          <select id=\"language\">\n            <option value=\"en\">English</option>\n            <option value=\"es\">Spanish</option>\n            <option value=\"fr\">French</option>\n          </select>\n        </div>\n        <div class=\"form-group\">\n          <label>Communication Channel</label>\n          <div class=\"radio-group\">\n            <label><input type=\"radio\" name=\"comm\" value=\"email\" style=\"width: auto;\"> Email</label>\n            <label><input type=\"radio\" name=\"comm\" value=\"sms\" style=\"width: auto;\"> SMS</label>\n          </div>\n        </div>\n      </aap:target>\n\n      <aap:target id=\"step-4\" class=\"step\">\n        <h3>Review</h3>\n        <div id=\"summary\">Please review your data.</div>\n      </aap:target>\n\n      <div class=\"buttons\">\n        <button type=\"button\" id=\"prevBtn\" onclick=\"changeStep(-1)\" disabled>Previous</button>\n        <button type=\"button\" id=\"nextBtn\" onclick=\"changeStep(1)\">Next</button>\n      </div>\n    </form>\n  </aap:target>\n</div>\n\n<script>\n  let currentStep = 0;\n  const steps = document.querySelectorAll('.step');\n  const dots = document.querySelectorAll('.step-dot');\n\n  function changeStep(n) {\n    steps[currentStep].classList.remove('active');\n    dots[currentStep].classList.remove('active');\n    currentStep += n;\n    \n    if (currentStep === steps.length - 1) updateSummary();\n    \n    steps[currentStep].classList.add('active');\n    dots[currentStep].classList.add('active');\n    document.getElementById('prevBtn').disabled = currentStep === 0;\n    document.getElementById('nextBtn').innerText = currentStep === steps.length - 1 ? 'Submit' : 'Next';\n  }\n\n  function updateSummary() {\n    const data = {\n      Name: document.getElementById('name').value,\n      Email: document.getElementById('email').value,\n      City: document.getElementById('city').value\n    };\n    document.getElementById('summary').innerHTML = Object.entries(data).map(([k,v]) => `<p><b>${k}:</b> ${v}</p>`).join('');\n  }\n</script>"
     }
   ]
 }

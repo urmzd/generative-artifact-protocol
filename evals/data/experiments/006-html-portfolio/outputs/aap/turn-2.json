@@ -1,10 +1,9 @@
 {
   "protocol": "aap/0.1",
-  "id": "portfolio-container",
-  "version": 1,
+  "id": "portfolio-edit",
+  "version": 2,
   "name": "edit",
-  "operation": {
-    "direction": "input",
+  "meta": {
     "format": "text/html",
     "tokens_used": null,
     "checksum": null,
@@ -15,9 +14,9 @@
       "op": "replace",
       "target": {
         "type": "id",
-        "value": "project-list"
+        "value": "projects-grid"
       },
-      "content": "<div style=\"padding: 1.5rem; border: 1px solid #333; border-radius: 8px;\"><h3>Project 1</h3><p>Description</p></div>\n          <div style=\"padding: 1.5rem; border: 1px solid #333; border-radius: 8px;\"><h3>Project 2</h3><p>Description</p></div>\n          <div style=\"padding: 1.5rem; border: 1px solid #333; border-radius: 8px;\"><h3>Project 3</h3><p>Description</p></div>\n          <div style=\"padding: 1.5rem; border: 1px solid #333; border-radius: 8px;\"><h3>Project 4</h3><p>Description</p></div>\n          <div style=\"padding: 1.5rem; border: 1px solid #333; border-radius: 8px;\"><h3>Project 5</h3><p>Description</p></div>\n          <div style=\"padding: 1.5rem; border: 1px solid #333; border-radius: 8px;\"><h3>Project 6</h3><p>Description</p></div>\n          <div style=\"padding: 1.5rem; border: 1px solid #333; border-radius: 8px;\"><h3>Kubernetes Autoscaler</h3><p>Tech: Go, Kubernetes, Prometheus</p></div>\n          <div style=\"padding: 1.5rem; border: 1px solid #333; border-radius: 8px;\"><h3>GraphQL Gateway</h3><p>Tech: Apollo, Node.js, Redis</p></div>"
+      "content": "<aap:target id=\"projects-grid\">\n  <div class=\"project-card\"><h3>Cloud Migration</h3><p>Tag: AWS, Terraform</p></div>\n  <div class=\"project-card\"><h3>CI/CD Pipeline</h3><p>Tag: Jenkins, Docker</p></div>\n  <div class=\"project-card\"><h3>Microservices Auth</h3><p>Tag: OAuth2, Go</p></div>\n  <div class=\"project-card\"><h3>Observability Stack</h3><p>Tag: Prometheus, Grafana</p></div>\n  <div class=\"project-card\"><h3>Serverless API</h3><p>Tag: AWS Lambda, Node.js</p></div>\n  <div class=\"project-card\"><h3>Data Lake</h3><p>Tag: S3, Spark</p></div>\n  <div class=\"project-card\"><h3>Kubernetes Autoscaler</h3><p>Tag: K8s, Python</p></div>\n  <div class=\"project-card\"><h3>GraphQL Gateway</h3><p>Tag: Apollo, TypeScript</p></div>\n</aap:target>"
     }
   ]
 }

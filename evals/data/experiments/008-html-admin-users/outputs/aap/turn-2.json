@@ -1,10 +1,9 @@
 {
   "protocol": "aap/0.1",
-  "id": "user-management-page-artifact-id",
+  "id": "user-management-page-001",
   "version": 1,
   "name": "edit",
-  "operation": {
-    "direction": "input",
+  "meta": {
     "format": "text/html",
     "tokens_used": null,
     "checksum": null,
@@ -17,15 +16,7 @@
         "type": "id",
         "value": "user-management-page"
       },
-      "content": "<option>Delete Selected</option>\n            <option>Deactivate Selected</option>"
-    },
-    {
-      "op": "replace",
-      "target": {
-        "type": "id",
-        "value": "user-management-page"
-      },
-      "content": "<button style=\"padding: 8px 16px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;\">Export CSV</button>\n          <button style=\"padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;\">Add User</button>"
+      "content": "<input type=\"text\" placeholder=\"Search users...\" style=\"padding: 8px; border: 1px solid #ccc; border-radius: 4px;\">\n          <button style=\"padding: 8px 16px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;\">Export CSV</button>\n          <select style=\"padding: 8px; border: 1px solid #ccc; border-radius: 4px;\">\n            <option>Bulk Actions</option>\n            <option>Delete Selected</option>\n            <option>Deactivate Selected</option>\n          </select>\n          <button style=\"padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;\">Add User</button>"
     }
   ]
 }

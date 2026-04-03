@@ -1,0 +1,228 @@
+{
+  "experiment_id": "006-html-portfolio",
+  "model": "",
+  "provider": "google",
+  "timestamp": "2026-04-03T06:49:32.676528+00:00",
+  "format": "text/html",
+  "base_turn0": {
+    "input_tokens": 128,
+    "output_tokens": 1775,
+    "latency_ms": 7215,
+    "artifact_bytes": 5296
+  },
+  "aap_turn0": {
+    "input_tokens": 467,
+    "output_tokens": 1216,
+    "latency_ms": 5947,
+    "artifact_bytes": 4271
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the developer name to 'Jordan Rivera' and title to 'Cloud Infrastructure ",
+        "input_tokens": 1922,
+        "output_tokens": 1813,
+        "latency_ms": 7326,
+        "output_bytes": 5590,
+        "failed": false,
+        "failure_reason": ""
+      },
+      {
+        "turn": 2,
+        "edit": "Replace the projects grid with 8 project cards instead of 6, adding 'Kubernetes ",
+        "input_tokens": 3769,
+        "output_tokens": 1927,
+        "latency_ms": 6832,
+        "output_bytes": 6031,
+        "failed": false,
+        "failure_reason": ""
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new 'Blog' section after projects showing the 3 most recent blog post prev",
+        "input_tokens": 5723,
+        "output_tokens": 2399,
+        "latency_ms": 9523,
+        "output_bytes": 7482,
+        "failed": false,
+        "failure_reason": ""
+      }
+    ],
+    "total_input_tokens": 11414,
+    "total_output_tokens": 6139,
+    "total_latency_ms": 23681
+  },
+  "aap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the developer name to 'Jordan Rivera' and title to 'Cloud Infrastructure ",
+        "input_tokens": 2341,
+        "output_tokens": 172,
+        "latency_ms": 1487,
+        "output_bytes": 359,
+        "failed": false,
+        "failure_reason": "",
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "synthesize"
+      },
+      {
+        "turn": 2,
+        "edit": "Replace the projects grid with 8 project cards instead of 6, adding 'Kubernetes ",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 2090,
+        "output_bytes": 359,
+        "failed": true,
+        "failure_reason": "parse or apply failed",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new 'Blog' section after projects showing the 3 most recent blog post prev",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 2387,
+        "output_bytes": 359,
+        "failed": true,
+        "failure_reason": "parse or apply failed",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 2341,
+    "total_output_tokens": 172,
+    "total_latency_ms": 5964,
+    "envelope_parse_rate": 1.0,
+    "apply_success_rate": 0.3333333333333333
+  },
+  "comparison": {
+    "output_token_savings_pct": 97.2,
+    "input_token_savings_pct": 79.5,
+    "latency_savings_pct": 74.8
+  },
+  "token_table": {
+    "turns": [
+      {
+        "turn": 0,
+        "base_input": 128,
+        "base_output": 1775,
+        "base_latency_ms": 7215,
+        "aap_input": 467,
+        "aap_output": 1216,
+        "aap_latency_ms": 5947
+      },
+      {
+        "turn": 1,
+        "base_input": 1922,
+        "base_output": 1813,
+        "base_latency_ms": 7326,
+        "aap_input": 2341,
+        "aap_output": 172,
+        "aap_latency_ms": 1487,
+        "envelope_name": "synthesize",
+        "apply_ok": true
+      },
+      {
+        "turn": 2,
+        "base_input": 3769,
+        "base_output": 1927,
+        "base_latency_ms": 6832,
+        "aap_input": 0,
+        "aap_output": 0,
+        "aap_latency_ms": 2090,
+        "envelope_name": "edit",
+        "apply_ok": false
+      },
+      {
+        "turn": 3,
+        "base_input": 5723,
+        "base_output": 2399,
+        "base_latency_ms": 9523,
+        "aap_input": 0,
+        "aap_output": 0,
+        "aap_latency_ms": 2387,
+        "envelope_name": "edit",
+        "apply_ok": false
+      }
+    ],
+    "totals": {
+      "base_input": 11542,
+      "base_output": 7914,
+      "base_combined": 19456,
+      "aap_input": 2808,
+      "aap_output": 1388,
+      "aap_combined": 4196,
+      "base_latency_ms": 30896,
+      "aap_latency_ms": 11911,
+      "output_savings_pct": 82.5,
+      "input_delta_pct": -75.7,
+      "combined_savings_pct": 78.4,
+      "latency_savings_pct": 61.4
+    }
+  },
+  "quality": {
+    "per_turn": [
+      {
+        "turn": 0,
+        "sequence_similarity": 0.0796,
+        "token_f1": 0.3141,
+        "base_char_count": 5294,
+        "aap_char_count": 3705,
+        "char_delta_pct": -30.0,
+        "lines_added": 65,
+        "lines_removed": 69,
+        "rouge_l": null,
+        "bleu": null
+      },
+      {
+        "turn": 1,
+        "sequence_similarity": 0.0037,
+        "token_f1": 0.0074,
+        "base_char_count": 5588,
+        "aap_char_count": 359,
+        "char_delta_pct": -93.6,
+        "lines_added": 18,
+        "lines_removed": 80,
+        "rouge_l": null,
+        "bleu": null
+      },
+      {
+        "turn": 2,
+        "sequence_similarity": 0.0041,
+        "token_f1": 0.0104,
+        "base_char_count": 6029,
+        "aap_char_count": 359,
+        "char_delta_pct": -94.0,
+        "lines_added": 18,
+        "lines_removed": 89,
+        "rouge_l": null,
+        "bleu": null
+      },
+      {
+        "turn": 3,
+        "sequence_similarity": 0.0033,
+        "token_f1": 0.0086,
+        "base_char_count": 7480,
+        "aap_char_count": 359,
+        "char_delta_pct": -95.2,
+        "lines_added": 18,
+        "lines_removed": 112,
+        "rouge_l": null,
+        "bleu": null
+      }
+    ],
+    "mean_sequence_similarity": 0.0227,
+    "mean_token_f1": 0.0851,
+    "mean_rouge_l": null,
+    "mean_bleu": null,
+    "judge_comparisons": null,
+    "mean_base_judge": null,
+    "mean_aap_judge": null
+  }
+}
