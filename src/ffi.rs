@@ -1,37 +1,43 @@
 //! PyO3 bindings for the AAP apply engine.
 //!
-//! Exposes `resolve_envelope` to Python, which takes an envelope JSON string
-//! and an optional base content string, and returns the resolved artifact.
+//! Exposes `resolve_envelope` to Python, which takes an operation envelope
+//! JSON string and an optional base artifact envelope JSON string, and
+//! returns the resolved artifact as a JSON envelope string.
 
 use pyo3::prelude::*;
-use std::collections::HashMap;
 
 use crate::aap::Envelope;
 use crate::apply;
 
-/// Resolve an AAP envelope against optional base content.
+/// Resolve an AAP operation against an optional base artifact.
 ///
 /// Args:
-///     envelope_json: JSON string of the envelope.
-///     base_content: Base artifact content (required for diff/section ops, ignored for full/template).
+///     operation_json: JSON string of the operation envelope.
+///     artifact_json: JSON string of the base artifact envelope (a `name:"full"` envelope).
+///         Required for diff/section ops, ignored for full/template.
 ///
 /// Returns:
-///     Resolved artifact content as a string.
+///     Resolved artifact as a JSON envelope string (`name:"full"`).
 ///
 /// Raises:
 ///     ValueError: If the envelope is malformed or the operation fails.
 #[pyfunction]
-fn resolve_envelope(envelope_json: &str, base_content: Option<&str>) -> PyResult<String> {
-    let envelope: Envelope = serde_json::from_str(envelope_json)
-        .map_err(|e| PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("invalid envelope JSON: {e}")))?;
+fn resolve_envelope(operation_json: &str, artifact_json: Option<&str>) -> PyResult<String> {
+    let operation: Envelope = serde_json::from_str(operation_json)
+        .map_err(|e| PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("invalid operation envelope JSON: {e}")))?;
 
-    let mut store = HashMap::new();
-    if let Some(base) = base_content {
-        store.insert(envelope.id.clone(), base.to_string());
-    }
+    let artifact = artifact_json
+        .map(|json| {
+            serde_json::from_str::<Envelope>(json)
+                .map_err(|e| PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("invalid artifact envelope JSON: {e}")))
+        })
+        .transpose()?;
 
-    apply::resolve(&envelope, &store)
-        .map_err(|e| PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("apply failed: {e}")))
+    let result = apply::apply(artifact.as_ref(), &operation)
+        .map_err(|e| PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("apply failed: {e}")))?;
+
+    serde_json::to_string(&result)
+        .map_err(|e| PyErr::new::<pyo3::exceptions::PyValueError, _>(format!("serialization failed: {e}")))
 }
 
 /// AAP apply engine Python module.
