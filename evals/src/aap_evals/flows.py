@@ -27,9 +27,12 @@ console = Console()
 def create_model(provider: str, model_name: str, host: str) -> OpenAIChatModel:
     """Create a Pydantic AI model for the given provider."""
     if provider == "ollama":
+        base = host.rstrip("/")
+        if not base.endswith("/v1"):
+            base += "/v1"
         return OpenAIChatModel(
             model_name=model_name or "qwen3.5:4b",
-            provider=OllamaProvider(base_url=host),
+            provider=OllamaProvider(base_url=base),
         )
     elif provider == "openai":
         return OpenAIChatModel(

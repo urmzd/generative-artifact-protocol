@@ -50,9 +50,13 @@ def clean_artifact(text: str) -> str:
 
 def create_generator(model_name: str, host: str) -> Agent[None, str]:
     """Create a pydantic-ai Agent for artifact generation."""
+    # OllamaProvider needs /v1 suffix for OpenAI-compatible endpoint
+    base = host.rstrip("/")
+    if not base.endswith("/v1"):
+        base += "/v1"
     model = OpenAIChatModel(
         model_name=model_name,
-        provider=OllamaProvider(base_url=host),
+        provider=OllamaProvider(base_url=base),
     )
     return Agent(
         model,

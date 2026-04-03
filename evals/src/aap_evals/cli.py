@@ -146,16 +146,23 @@ def generate_corpus(
     resume: Annotated[bool, typer.Option(help="Skip existing cases")] = False,
 ) -> None:
     """Generate apply-engine benchmark corpus — artifacts via Ollama + deterministic envelopes."""
+    from datetime import datetime, timezone
+
     from .categories import CATEGORIES
     from .envelopes import generate_all_envelopes
     from .markers import extract_section_content
-    from .ollama import clean_artifact, create_generator, generate_artifact
+    from .ollama import build_prompt, create_generator, generate_artifact
 
     agent = create_generator(model, host)
 
+    # Auto-increment: find highest existing case number
+    output.mkdir(parents=True, exist_ok=True)
+    existing = [int(d.name) for d in output.iterdir() if d.is_dir() and d.name.isdigit()]
+    start_num = max(existing, default=0) + 1
+
     # Build flat task list
     tasks: list[tuple] = []
-    case_num = 1
+    case_num = start_num
     for cat in CATEGORIES:
         for vi in range(cat.count):
             tasks.append((cat, vi, case_num))
@@ -166,21 +173,16 @@ def generate_corpus(
 
     total = len(tasks)
     console.print(f"Generating {total} test cases -> {output}/")
-    console.print(f"Model: [bold]{model}[/bold]\n")
+    console.print(f"Model: [bold]{model}[/bold] | Starting at case {start_num}\n")
 
-    output.mkdir(parents=True, exist_ok=True)
     succeeded = 0
     failed = 0
 
     for cat, vi, cn in tasks:
         case_dir = output / f"{cn:04d}"
-        meta_path = case_dir / "meta.json"
-
-        if resume and meta_path.exists():
-            succeeded += 1
-            continue
-
         artifact_id = f"artifact-{cn:04d}"
+        prompt_text = build_prompt(cat, vi)
+        system_prompt = "You are a code generator. Output only raw code/content. No markdown fences, no explanation."
 
         try:
             content = generate_artifact(agent, cat, vi)
@@ -205,24 +207,35 @@ def generate_corpus(
                 for env in envs:
                     f.write(json.dumps(env, separators=(",", ":")) + "\n")
 
-        # Metadata
+        # Check which sections were found
         valid_sections = [
             sid for sid in cat.sections
             if extract_section_content(content, sid, cat.fmt) is not None
         ]
-        meta = {
-            "case_num": cn,
-            "category": cat.name,
-            "format": cat.fmt,
-            "extension": cat.ext,
-            "filename": cat.filename,
-            "variant_index": vi,
-            "sections_expected": cat.sections,
-            "sections_found": valid_sections,
-            "envelope_files": sorted(all_envs.keys()),
-            "artifact_bytes": len(content.encode()),
-        }
-        meta_path.write_text(json.dumps(meta, indent=2) + "\n")
+
+        # Write metadata.yml
+        variant_desc = cat.variants[vi % len(cat.variants)]
+        metadata_lines = [
+            f"case_num: {cn}",
+            f"category: {cat.name}",
+            f"variant: {variant_desc}",
+            f"format: {cat.fmt}",
+            f"extension: {cat.ext}",
+            f"filename: {cat.filename}",
+            f"model: {model}",
+            f"host: {host}",
+            f"generated_at: {datetime.now(timezone.utc).isoformat()}",
+            f"artifact_bytes: {len(content.encode())}",
+            f"sections_expected: [{', '.join(cat.sections)}]",
+            f"sections_found: [{', '.join(valid_sections)}]",
+            f"envelope_files: [{', '.join(sorted(all_envs.keys()))}]",
+            f"system_prompt: |",
+            f"  {system_prompt}",
+            f"user_prompt: |",
+        ]
+        for line in prompt_text.split("\n"):
+            metadata_lines.append(f"  {line}")
+        (case_dir / "metadata.yml").write_text("\n".join(metadata_lines) + "\n")
 
         succeeded += 1
         if succeeded % 10 == 0 or succeeded == total:
