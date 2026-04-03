@@ -46,11 +46,13 @@ def _build_prompt(cat, variant_idx: int) -> str:
 @app.command()
 def generate(
     output: Annotated[Path, typer.Option(help="Output directory")] = DATA_DIR / "apply-engine",
-    model: Annotated[str, typer.Option(help="Ollama model")] = "gemma4",
+    provider: Annotated[str, typer.Option(help="LLM provider (google, openai, ollama)")] = "google",
+    model: Annotated[str, typer.Option(help="Model name (default per provider)")] = "",
     host: Annotated[str, typer.Option(help="Ollama host")] = "http://localhost:11434",
+    fallback: Annotated[str, typer.Option(help="Fallback provider on API error")] = "",
     count: Annotated[int, typer.Option(help="Number of test cases (0 = all)")] = 0,
 ) -> None:
-    """Generate benchmark corpus — artifacts via Ollama + deterministic envelopes."""
+    """Generate benchmark corpus — artifacts via LLM + deterministic envelopes."""
     from datetime import datetime, timezone
 
     from .agents import create_model, generate_artifact
@@ -58,7 +60,7 @@ def generate(
     from .envelopes import generate_all_envelopes
     from .markers import extract_section_content
 
-    llm = create_model("ollama", model, host)
+    llm = create_model(provider, model, host, fallback)
 
     # Auto-increment from highest existing case number
     output.mkdir(parents=True, exist_ok=True)
@@ -119,7 +121,7 @@ def generate(
         meta = "\n".join([
             f"case_num: {cn}", f"category: {cat.name}", f"variant: {variant_desc}",
             f"format: {cat.fmt}", f"extension: {cat.ext}", f"filename: {cat.filename}",
-            f"model: {model}", f"host: {host}",
+            f"provider: {provider}", f"model: {model}", f"host: {host}",
             f"generated_at: {datetime.now(timezone.utc).isoformat()}",
             f"artifact_bytes: {len(content.encode())}",
             f"sections_expected: [{', '.join(cat.sections)}]",
@@ -190,9 +192,10 @@ def _find_turn_files(input_dir: Path) -> list[Path]:
 @app.command(name="run")
 def run_experiments(
     experiments_dir: Annotated[Path, typer.Option(help="Experiments directory")] = DATA_DIR / "experiments",
-    provider: Annotated[str, typer.Option(help="LLM provider")] = "ollama",
-    model: Annotated[str, typer.Option(help="Model name")] = "gemma4",
+    provider: Annotated[str, typer.Option(help="LLM provider (google, openai, ollama)")] = "google",
+    model: Annotated[str, typer.Option(help="Model name (default per provider)")] = "",
     host: Annotated[str, typer.Option(help="Ollama host")] = "http://localhost:11434",
+    fallback: Annotated[str, typer.Option(help="Fallback provider on API error")] = "",
     count: Annotated[int, typer.Option(help="Max experiments (0 = all)")] = 0,
     experiment_id: Annotated[str, typer.Option("--id", help="Run single experiment by prefix")] = "",
 ) -> None:
@@ -206,7 +209,7 @@ def run_experiments(
     from .apply import apply_envelope
     from .schema import Envelope
 
-    llm = create_model(provider, model, host)
+    llm = create_model(provider, model, host, fallback)
 
     # Find experiment directories
     exp_dirs = sorted(
