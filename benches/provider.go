@@ -15,7 +15,13 @@ func createProvider(provider, model, host string) (types.Provider, error) {
 		}
 		client := ollama.NewClient(host, model, "")
 		return ollama.NewAdapter(client), nil
+	case "openai":
+		return nil, fmt.Errorf("provider %q requires OPENAI_API_KEY; not yet implemented", provider)
+	case "anthropic":
+		return nil, fmt.Errorf("provider %q requires ANTHROPIC_API_KEY; not yet implemented", provider)
+	case "google":
+		return nil, fmt.Errorf("provider %q requires GOOGLE_API_KEY; not yet implemented", provider)
 	default:
-		return nil, fmt.Errorf("provider %q not yet supported (add openai/anthropic/google as needed)", provider)
+		return nil, fmt.Errorf("unknown provider %q (supported: ollama, openai, anthropic, google)", provider)
 	}
 }
