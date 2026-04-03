@@ -4,10 +4,10 @@ version = "0.4.0"
 edition = "2021"
 description = "Agent-Artifact Protocol — token-efficient artifact generation, updates, and streaming for LLMs"
 license = "Apache-2.0"
-repository = "https://github.com/urmzd/artifact-protocol"
-homepage = "https://github.com/urmzd/artifact-protocol"
+repository = "https://github.com/urmzd/agent-artifact-protocol"
+homepage = "https://github.com/urmzd/agent-artifact-protocol"
 readme = "README.md"
-keywords = ["agent-artifact-protocol", "llm", "artifact", "streaming", "diff"]
+keywords = ["aap", "llm", "artifact", "streaming", "apply-engine"]
 categories = ["text-processing"]
 
 [lib]

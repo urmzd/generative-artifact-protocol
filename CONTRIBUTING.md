@@ -5,33 +5,42 @@ Contributions are welcome. Please follow these guidelines.
 ## Getting started
 
 ```sh
-git clone https://github.com/urmzd/aap
-cd aap
-just build   # compile the Rust binary
-just test    # run the smoke test
-just bench   # run offline tokenizer benchmarks
+git clone https://github.com/urmzd/agent-artifact-protocol
+cd agent-artifact-protocol
+just build   # compile the Rust library
+just test    # run unit tests
+just bench   # run criterion benchmarks
 ```
 
 ## Project structure
 
 ```
-aap/
+agent-artifact-protocol/
 ├── src/
-│   ├── main.rs               # CLI entry point, signal handling
-│   ├── lib.rs                 # File watcher
-│   └── telemetry.rs           # Tracing init, metrics collection, shutdown summary
-├── evals/                       # LLM evaluation framework
-│   ├── pyproject.toml           # Python dependencies (uv + maturin)
-│   └── src/aap_evals/           # Eval CLI and harness
-├── benches/watcher.rs         # Criterion benchmarks
+│   ├── lib.rs                 # crate root (re-exports modules)
+│   ├── aap.rs                 # envelope data model
+│   ├── apply.rs               # stateless apply engine
+│   ├── store.rs               # versioned artifact store
+│   ├── markers.rs             # section marker utilities
+│   ├── telemetry.rs           # tracing and metrics
+│   └── ffi.rs                 # Python bindings (optional, pyo3)
+├── evals/                     # LLM evaluation framework
+│   ├── pyproject.toml         # Python dependencies (uv + maturin)
+│   └── src/aap_evals/         # Eval CLI and harness
+├── spec/                      # Protocol specification
+│   ├── aap.md                 # Main spec (v0.1)
+│   ├── aap-sse.md             # SSE wire format binding
+│   ├── schemas/               # JSON Schema files
+│   └── examples/              # Example envelopes
+├── benches/                   # Criterion benchmarks
 ├── justfile                   # Task recipes
-└── .github/workflows/ci.yml   # CI (Rust build + test)
+└── .github/workflows/         # CI (build + test) and release
 ```
 
 ## Making changes
 
-- **Rust binary** (`src/`): file watcher, apply engine, telemetry. Keep dependencies light.
-- **Telemetry** (`src/telemetry.rs`): structured logging via `tracing`, metrics summary on shutdown.
+- **Apply engine** (`src/apply.rs`): stateless function that resolves envelopes. Keep it pure — no I/O, no side effects.
+- **Store** (`src/store.rs`): versioned artifact store with control-plane envelopes.
 - **Evals** (`evals/`): LLM evaluation framework for measuring token efficiency. See `evals/README.md`.
 - **New recipes**: add them to `justfile` with a comment describing what they do.
 
