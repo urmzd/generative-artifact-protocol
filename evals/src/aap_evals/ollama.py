@@ -1,17 +1,15 @@
-"""Async Ollama client for artifact generation."""
+"""Artifact generation via pydantic-ai + Ollama."""
 
 from __future__ import annotations
 
 import re
 
-import aiohttp
+from pydantic_ai import Agent
+from pydantic_ai.models.openai import OpenAIChatModel
+from pydantic_ai.providers.ollama import OllamaProvider
 
 from .categories import Category
 from .markers import marker_example
-
-OLLAMA_URL = "http://localhost:11434/api/generate"
-DEFAULT_MODEL = "gemma4"
-DEFAULT_TIMEOUT = 180
 
 
 def build_prompt(cat: Category, variant_idx: int) -> str:
@@ -50,41 +48,24 @@ def clean_artifact(text: str) -> str:
     return text
 
 
-async def generate_artifact(
-    session: aiohttp.ClientSession,
+def create_generator(model_name: str, host: str) -> Agent[None, str]:
+    """Create a pydantic-ai Agent for artifact generation."""
+    model = OpenAIChatModel(
+        model_name=model_name,
+        provider=OllamaProvider(base_url=host),
+    )
+    return Agent(
+        model,
+        system_prompt="You are a code generator. Output only raw code/content. No markdown fences, no explanation.",
+    )
+
+
+def generate_artifact(
+    agent: Agent[None, str],
     cat: Category,
     variant_idx: int,
-    sem: "asyncio.Semaphore",
-    model: str = DEFAULT_MODEL,
 ) -> str:
-    import asyncio
-
+    """Generate a single artifact using the pydantic-ai agent."""
     prompt = build_prompt(cat, variant_idx)
-
-    for attempt in range(3):
-        try:
-            async with sem:
-                async with session.post(
-                    OLLAMA_URL,
-                    json={
-                        "model": model,
-                        "prompt": prompt,
-                        "stream": False,
-                        "options": {"temperature": 0.7, "num_predict": 4096},
-                    },
-                    timeout=aiohttp.ClientTimeout(total=DEFAULT_TIMEOUT),
-                ) as resp:
-                    if resp.status != 200:
-                        body = await resp.text()
-                        raise RuntimeError(f"Ollama {resp.status}: {body[:200]}")
-                    data = await resp.json()
-                    text = clean_artifact(data.get("response", ""))
-                    if len(text) < 50:
-                        raise RuntimeError("artifact too short")
-                    return text
-        except Exception as e:
-            if attempt == 2:
-                raise
-            await asyncio.sleep(2**attempt)
-
-    raise RuntimeError("unreachable")
+    result = agent.run_sync(prompt)
+    return clean_artifact(result.output)
