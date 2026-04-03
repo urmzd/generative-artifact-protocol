@@ -16,89 +16,91 @@
   ],
   "security": [
     {
-      "bearerAuth": []
+      "BearerAuth": []
     }
   ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "Book": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "authorId": { "type": "string" },
+          "price": { "type": "number" }
+        }
+      },
+      "Author": {
+        "type": "object",
+        "properties": { "id": { "type": "string" }, "name": { "type": "string" } }
+      },
+      "Category": {
+        "type": "object",
+        "properties": { "id": { "type": "string" }, "name": { "type": "string" } }
+      },
+      "Order": {
+        "type": "object",
+        "properties": { "id": { "type": "string" }, "bookIds": { "type": "array", "items": { "type": "string" } } }
+      },
+      "Review": {
+        "type": "object",
+        "properties": { "id": { "type": "string" }, "bookId": { "type": "string" }, "rating": { "type": "integer" } }
+      },
+      "PaginatedResponse": {
+        "type": "object",
+        "properties": { "data": { "type": "array", "items": { "type": "object" } }, "total": { "type": "integer" } }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": { "message": { "type": "string" }, "code": { "type": "integer" } }
+      }
+    }
+  },
   "paths": {
     "/books": {
       "get": {
         "summary": "List books",
-        "parameters": [
-          { "name": "page", "in": "query", "schema": { "type": "integer" } },
-          { "name": "limit", "in": "query", "schema": { "type": "integer" } }
-        ],
-        "responses": {
-          "200": { "description": "Success", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PaginatedBookResponse" } } } },
-          "500": { "$ref": "#/components/responses/Error500" }
-        }
+        "responses": { "200": { "description": "Success", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/PaginatedResponse" } } } } }
       },
       "post": {
         "summary": "Create book",
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Book" } } } },
-        "responses": {
-          "200": { "description": "Created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Book" } } } },
-          "400": { "$ref": "#/components/responses/Error400" }
-        }
+        "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Book" } } } },
+        "responses": { "201": { "description": "Created" }, "400": { "description": "Bad Request" } }
       }
     },
     "/books/{id}": {
       "get": {
         "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "responses": {
-          "200": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Book" } } } },
-          "404": { "$ref": "#/components/responses/Error404" }
-        }
+        "responses": { "200": { "description": "Found", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Book" } } } }, "404": { "description": "Not Found" } }
       },
       "put": {
         "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Book" } } } },
-        "responses": { "200": { "description": "Updated" }, "404": { "$ref": "#/components/responses/Error404" } }
+        "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Book" } } } },
+        "responses": { "200": { "description": "Updated" }, "400": { "description": "Bad Request" } }
       },
       "delete": {
         "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-        "responses": { "204": { "description": "Deleted" }, "404": { "$ref": "#/components/responses/Error404" } }
+        "responses": { "204": { "description": "Deleted" }, "500": { "description": "Internal Server Error" } }
       }
     },
     "/authors": {
-      "get": {
-        "responses": { "200": { "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Author" } } } } } }
-      }
+      "get": { "responses": { "200": { "description": "Success" } } }
     },
     "/categories": {
-      "get": {
-        "responses": { "200": { "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Category" } } } } } }
-      }
+      "get": { "responses": { "200": { "description": "Success" } } }
     },
     "/orders": {
-      "post": {
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Order" } } } },
-        "responses": { "201": { "description": "Order created" }, "400": { "$ref": "#/components/responses/Error400" } }
-      }
+      "post": { "responses": { "201": { "description": "Created" } } }
     },
     "/reviews": {
-      "post": {
-        "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Review" } } } },
-        "responses": { "201": { "description": "Review created" }, "400": { "$ref": "#/components/responses/Error400" } }
-      }
-    }
-  },
-  "components": {
-    "securitySchemes": {
-      "bearerAuth": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" }
-    },
-    "schemas": {
-      "Book": { "type": "object", "properties": { "id": { "type": "string" }, "title": { "type": "string" }, "authorId": { "type": "string" } } },
-      "Author": { "type": "object", "properties": { "id": { "type": "string" }, "name": { "type": "string" } } },
-      "Category": { "type": "object", "properties": { "id": { "type": "string" }, "name": { "type": "string" } } },
-      "Order": { "type": "object", "properties": { "id": { "type": "string" }, "bookIds": { "type": "array", "items": { "type": "string" } } } },
-      "Review": { "type": "object", "properties": { "bookId": { "type": "string" }, "rating": { "type": "integer" }, "comment": { "type": "string" } } },
-      "PaginatedBookResponse": { "type": "object", "properties": { "data": { "type": "array", "items": { "$ref": "#/components/schemas/Book" } }, "total": { "type": "integer" } } },
-      "ErrorResponse": { "type": "object", "properties": { "message": { "type": "string" }, "code": { "type": "integer" } } }
-    },
-    "responses": {
-      "Error400": { "description": "Bad Request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-      "Error404": { "description": "Not Found", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
-      "Error500": { "description": "Internal Server Error", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } }
+      "post": { "responses": { "201": { "description": "Created" } } }
     }
   }
 }
