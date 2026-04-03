@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import os
 import re
 
 from pydantic_ai import Agent
 from pydantic_ai.models import Model
+from pydantic_ai.models.concurrency import ConcurrencyLimitedModel
 from pydantic_ai.models.fallback import FallbackModel
 from pydantic_ai.models.google import GoogleModel
 from pydantic_ai.models.openai import OpenAIChatModel
@@ -20,6 +22,7 @@ PROVIDER_DEFAULTS: dict[str, str] = {
     "google": "gemini-3.1-flash-lite-preview",
     "openai": "gpt-4o-mini",
     "ollama": "gemma4",
+    "github": "openai/gpt-4o-mini",
 }
 
 
@@ -28,14 +31,23 @@ PROVIDER_DEFAULTS: dict[str, str] = {
 
 def _build_model(provider: str, model_name: str, host: str) -> Model:
     if provider == "google":
-        return GoogleModel(
+        model: Model = GoogleModel(
             model_name=model_name or PROVIDER_DEFAULTS["google"],
             provider=GoogleProvider(),
         )
+        # Gemini free tier: 15 RPM — serialize requests
+        return ConcurrencyLimitedModel(model, limiter=1)
     elif provider == "openai":
         return OpenAIChatModel(
             model_name=model_name or PROVIDER_DEFAULTS["openai"],
             provider=OpenAIProvider(),
+        )
+    elif provider == "github":
+        from pydantic_ai.providers.github import GitHubProvider
+        token = os.environ.get("GITHUB_TOKEN") or os.popen("gh auth token").read().strip()
+        return OpenAIChatModel(
+            model_name=model_name or PROVIDER_DEFAULTS["github"],
+            provider=GitHubProvider(token=token),
         )
     elif provider == "ollama":
         base = host.rstrip("/")
