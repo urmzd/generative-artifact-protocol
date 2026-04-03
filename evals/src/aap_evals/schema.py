@@ -88,6 +88,14 @@ class EditEnvelope(BaseModel):
 # ── Handle ────────────────────────────────────────────────────────────────
 
 
+class TargetInfo(BaseModel):
+    """Target information included in handle envelopes."""
+
+    id: str
+    label: str | None = None
+    accepts: str | None = None
+
+
 class HandleContentItem(BaseModel):
     """Content item for name=handle — lightweight artifact reference."""
 
@@ -96,6 +104,7 @@ class HandleContentItem(BaseModel):
     token_count: int | None = None
     state: str | None = None
     content: str | None = None
+    targets: list[TargetInfo] | None = None
 
 
 class HandleEnvelope(BaseModel):

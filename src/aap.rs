@@ -112,6 +112,18 @@ pub struct EditOp {
 
 // ── Handle content ───────────────────────────────────────────────────────
 
+/// Target information included in handle envelopes.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TargetInfo {
+    pub id: String,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub label: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub accepts: Option<String>,
+}
+
 /// Content item for `name: "handle"` — lightweight artifact reference.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HandleContentItem {
@@ -126,4 +138,7 @@ pub struct HandleContentItem {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub content: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub targets: Option<Vec<TargetInfo>>,
 }
