@@ -1,5 +1,41 @@
 # Changelog
 
+## 0.9.1 (2026-04-03)
+
+### Bug Fixes
+
+- **groq**: use openai-compatible api instead of groq provider ([62ca174](https://github.com/urmzd/agent-artifact-protocol/commit/62ca174440b282030cbf32c10f797eed45a64eee))
+
+### Refactoring
+
+- **spec**: align SSE transport binding with new AAP envelope model ([ca4db90](https://github.com/urmzd/agent-artifact-protocol/commit/ca4db902a183abb6050f0cd4b0580409bef7e43b))
+
+### Miscellaneous
+
+- **evals**: add experiment 048 svg bar chart evaluation ([24d6cc2](https://github.com/urmzd/agent-artifact-protocol/commit/24d6cc232a8b3d6615c170891963a386adc32392))
+- **evals**: add experiment 086 typescript react hooks evaluation ([b052a6b](https://github.com/urmzd/agent-artifact-protocol/commit/b052a6b42785144eb67a9bc6f3adc5c6ad44549b))
+- **evals**: add experiment 053 xml maven pom evaluation ([77bdd06](https://github.com/urmzd/agent-artifact-protocol/commit/77bdd0650d760506fcba4b2824f787a46a9bcbf4))
+- **evals**: add experiment 052 toml pyproject evaluation ([732d39f](https://github.com/urmzd/agent-artifact-protocol/commit/732d39fabdb14f359db8ad36aaad8d370cc5a489))
+- **evals**: add experiment 051 toml cargo workspace evaluation ([696b911](https://github.com/urmzd/agent-artifact-protocol/commit/696b9119904ca90b4c14bfa3dab988d540d79d03))
+- **evals**: add experiment 050 svg architecture diagram evaluation ([c74005f](https://github.com/urmzd/agent-artifact-protocol/commit/c74005f9a08bdaddfb1ac460641e8ac51f068439))
+- **evals**: add experiment 049 svg dashboard icons evaluation data ([f45c0fc](https://github.com/urmzd/agent-artifact-protocol/commit/f45c0fc4504e3c722efbefa9d1c033130f74a5bf))
+- **evals**: add experiment 048 svg bar chart evaluation data ([663442e](https://github.com/urmzd/agent-artifact-protocol/commit/663442e0d37d3ac6623e08ebc993a37a9bd049ed))
+- **evals**: add experiment 047 shell setup dev evaluation data ([d4d03c2](https://github.com/urmzd/agent-artifact-protocol/commit/d4d03c2b389f846f054c208edcf33aa575b77b32))
+- **evals**: add experiment 046 shell deploy script evaluation data ([301f696](https://github.com/urmzd/agent-artifact-protocol/commit/301f696a61b93a6032e86af5a03b73d85e43d0d5))
+- **evals**: add experiment 045 go worker pool evaluation data ([98a249d](https://github.com/urmzd/agent-artifact-protocol/commit/98a249d6a884edf491293e1f0545d7b4a0641c09))
+- **evals**: add experiment 044 go http server evaluation data ([aad7f5f](https://github.com/urmzd/agent-artifact-protocol/commit/aad7f5fafa4cff7adfbad974b0c70d208a3033a5))
+- **evals**: add experiment 043 rust data structures evaluation data ([f21441b](https://github.com/urmzd/agent-artifact-protocol/commit/f21441bfa0a69d55482b22edbf63c6b97eeb5131))
+- **evals**: add experiment 042 rust http client evaluation data ([a64f591](https://github.com/urmzd/agent-artifact-protocol/commit/a64f591e28ff94a6752f9d0d0c4d1f4d64c9272d))
+- **evals**: add experiment 041 rust cli file processor evaluation data ([638c8d0](https://github.com/urmzd/agent-artifact-protocol/commit/638c8d061407a06766052ef7c96e2094180de04e))
+- **evals**: add experiment 038 markdown adr evaluation data ([eb95f1d](https://github.com/urmzd/agent-artifact-protocol/commit/eb95f1ddc344d06301c2a9750c025e12d797c245))
+- **evals**: add experiment 031 yaml kubernetes deployment evaluation data ([1f97807](https://github.com/urmzd/agent-artifact-protocol/commit/1f978076281945714d8a1487d6b48bc934bdbea3))
+- **evals**: add experiment 030 yaml github actions ci evaluation data ([e996d66](https://github.com/urmzd/agent-artifact-protocol/commit/e996d669b8a2d0cb7f37446b24cc4fbc37023ec1))
+- **evals**: add experiment 029 yaml docker compose microservices evaluation data ([e41ec25](https://github.com/urmzd/agent-artifact-protocol/commit/e41ec25603019ad2ca941d207647010bf79c0210))
+- **evals**: add experiment 028 json geojson cities evaluation data ([90b55ed](https://github.com/urmzd/agent-artifact-protocol/commit/90b55ed79f010aa9dfc478a01d1308fab071eeea))
+
+[Full Changelog](https://github.com/urmzd/agent-artifact-protocol/compare/v0.9.0...v0.9.1)
+
+
 ## 0.9.0 (2026-04-03)
 
 ### Features
