@@ -1,1 +1,0 @@
-Change all status badges to use pill-shaped styling with colors: green for active, red for suspended, gray for inactive

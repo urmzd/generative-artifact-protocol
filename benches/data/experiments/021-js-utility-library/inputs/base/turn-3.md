@@ -1,1 +1,0 @@
-Add a new 'object-utils' section with functions: deepClone, deepMerge, pick, omit, and isEqual

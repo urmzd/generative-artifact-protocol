@@ -1,1 +1,0 @@
-Add a new fixture 'mock_redis' that patches the Redis connection with fakeredis and yields the fake Redis client

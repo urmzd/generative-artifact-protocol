@@ -1,1 +1,0 @@
-Add a new 'Monitoring' subsection to the deploying section covering Prometheus metrics endpoint, health check routes, and structured logging with JSON format

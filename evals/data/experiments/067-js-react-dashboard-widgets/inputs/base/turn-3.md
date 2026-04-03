@@ -1,0 +1,1 @@
+Rewrite the QuickActions section to have 8 action buttons instead of 6, adding 'Schedule Meeting' and 'View Analytics' with their icons

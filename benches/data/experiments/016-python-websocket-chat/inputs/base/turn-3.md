@@ -1,1 +1,0 @@
-Add a new handler for 'pin_message' that allows users to pin a message in a room and notifies all room members

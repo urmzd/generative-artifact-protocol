@@ -1,1 +1,0 @@
-Update the total in the center to '$5,100' and change the Housing slice to 30% ($1,530) and Savings to 13% ($663)

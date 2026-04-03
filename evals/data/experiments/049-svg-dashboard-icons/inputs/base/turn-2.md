@@ -1,0 +1,1 @@
+Rewrite the navigation icons to use a filled style instead of stroke-based, with a consistent fill color of currentColor

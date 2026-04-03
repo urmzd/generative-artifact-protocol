@@ -1,0 +1,1 @@
+Change the target from ES2017 to ES2022 and enable the 'decorators' and 'verbatimModuleSyntax' compiler options

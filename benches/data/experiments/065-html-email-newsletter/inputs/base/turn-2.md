@@ -1,1 +1,0 @@
-Rewrite the featured article to be about 'AI-Powered Code Review: How We Cut Bug Rates by 40%' with a new excerpt

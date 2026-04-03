@@ -1,0 +1,1 @@
+Add a new 'social-icons' section with 4 icons: github, twitter, linkedin, and discord

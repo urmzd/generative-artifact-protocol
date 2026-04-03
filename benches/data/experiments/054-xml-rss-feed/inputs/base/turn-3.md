@@ -1,1 +1,0 @@
-Change the category of all AI/ML related items from 'Technology' to 'Artificial Intelligence'

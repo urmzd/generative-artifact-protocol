@@ -1,1 +1,0 @@
-Add the 'react-hooks/exhaustive-deps' rule set to 'warn' and add 'plugin:@tanstack/eslint-plugin-query/recommended' to extends

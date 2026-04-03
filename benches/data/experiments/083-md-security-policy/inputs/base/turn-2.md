@@ -1,1 +1,0 @@
-Add a 'Hall of Fame' section at the end listing 5 fictional security researchers who have responsibly disclosed vulnerabilities

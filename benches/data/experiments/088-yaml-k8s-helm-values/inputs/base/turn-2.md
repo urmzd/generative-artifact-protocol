@@ -1,1 +1,0 @@
-Add a new 'redis' section after database with architecture set to 'replication', 3 read replicas, and persistence enabled with 1Gi storage

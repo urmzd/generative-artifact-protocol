@@ -1,1 +1,0 @@
-Rewrite the cleanup-tasks section to add a new 'rotate_logs' task that compresses log files older than 7 days and deletes compressed files older than 30 days

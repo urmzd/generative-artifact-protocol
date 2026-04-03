@@ -1,1 +1,0 @@
-Rewrite the notifications section to also send a Discord webhook notification with an embed showing the release version, changelog, and download links

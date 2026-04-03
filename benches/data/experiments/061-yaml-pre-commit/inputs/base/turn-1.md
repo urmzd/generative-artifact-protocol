@@ -1,1 +1,0 @@
-Add a bandit hook for security linting with a severity level of medium and a confidence level of high

@@ -1,1 +1,0 @@
-Add a new POST /auth/change-password route that requires the current password and validates the new password against strength requirements

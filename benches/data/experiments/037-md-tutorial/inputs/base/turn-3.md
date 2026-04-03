@@ -1,1 +1,0 @@
-Rewrite the testing section to add a 'Load Testing' subsection using locust with a sample locustfile that tests the CRUD endpoints

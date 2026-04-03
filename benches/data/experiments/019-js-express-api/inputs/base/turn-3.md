@@ -1,1 +1,0 @@
-Add a new route POST /projects/:id/archive that marks a project as archived and moves all its pending tasks to cancelled status

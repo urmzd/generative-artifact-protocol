@@ -1,0 +1,1 @@
+Add a new /wishlist endpoint group with POST /wishlist (add item), GET /wishlist (list items), and DELETE /wishlist/{id} (remove item), including full request/response schemas

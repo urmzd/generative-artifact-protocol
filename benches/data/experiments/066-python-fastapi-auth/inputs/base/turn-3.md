@@ -1,1 +1,0 @@
-Rewrite the dependencies section to add an 'require_verified_email' dependency that checks the user's email_verified field and returns 403 if unverified

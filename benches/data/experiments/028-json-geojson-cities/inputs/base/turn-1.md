@@ -1,1 +1,0 @@
-Add 10 more cities from Africa and South America with accurate coordinates and populations

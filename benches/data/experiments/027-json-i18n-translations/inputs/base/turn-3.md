@@ -1,1 +1,0 @@
-Add a 'notifications' section with keys for email, push, and in-app notification preferences and delivery status messages

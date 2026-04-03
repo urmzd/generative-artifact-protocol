@@ -1,1 +1,0 @@
-Rewrite Step 3 (Payment) to include PayPal and Apple Pay options as radio button alternatives to credit card

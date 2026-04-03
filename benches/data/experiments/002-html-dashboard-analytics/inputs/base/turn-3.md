@@ -1,1 +1,0 @@
-Replace the top referrers list with a new list of 15 referrers focused on developer communities

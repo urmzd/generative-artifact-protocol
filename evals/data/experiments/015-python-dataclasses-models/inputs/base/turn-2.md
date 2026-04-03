@@ -1,0 +1,1 @@
+Update the Priority enum to include a 'URGENT' level above 'HIGH' and add a color property returning hex codes for each level

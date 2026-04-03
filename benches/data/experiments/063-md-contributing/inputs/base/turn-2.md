@@ -1,1 +1,0 @@
-Update the standards section to add a code review checklist with 8 items reviewers should verify before approving a PR

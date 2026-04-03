@@ -1,1 +1,0 @@
-Change the article title to 'Building Scalable Microservices with Go and gRPC'

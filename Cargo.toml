@@ -8,15 +8,12 @@ repository = "https://github.com/urmzd/artifact-protocol"
 homepage = "https://github.com/urmzd/artifact-protocol"
 readme = "README.md"
 keywords = ["agent-artifact-protocol", "llm", "artifact", "streaming", "diff"]
-categories = ["command-line-utilities", "text-processing"]
+categories = ["text-processing"]
 
 [lib]
 name = "aap"
 path = "src/lib.rs"
-
-[[bin]]
-name = "aap"
-path = "src/main.rs"
+crate-type = ["lib", "cdylib"]
 
 [dependencies]
 tokio         = { version = "1", features = ["full"] }
@@ -30,18 +27,15 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 tracing-opentelemetry = "0.29"
 opentelemetry      = "0.28"
 opentelemetry_sdk  = { version = "0.28", features = ["rt-tokio"] }
+pyo3              = { version = "0.24", features = ["extension-module"], optional = true }
+
+[features]
+default = []
+python = ["pyo3"]
 
 [dev-dependencies]
 criterion = { version = "0.5", features = ["async_tokio"] }
 tempfile = "3"
-
-[[bin]]
-name = "bench-table"
-path = "src/bin/bench_table.rs"
-
-[[bench]]
-name = "watcher"
-harness = false
 
 [[bench]]
 name = "aap"

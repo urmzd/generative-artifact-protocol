@@ -1,1 +1,0 @@
-Add a new 'teams' section with translation keys for team list, team detail, invite member, remove member, and role assignment

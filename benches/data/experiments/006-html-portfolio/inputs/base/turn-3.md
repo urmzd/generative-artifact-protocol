@@ -1,1 +1,0 @@
-Add a new 'Blog' section after projects showing the 3 most recent blog post previews with title, date, and excerpt

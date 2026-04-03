@@ -1,1 +1,0 @@
-Add a new transformation step that calculates a 'customer_lifetime_value' metric by aggregating total spend per customer

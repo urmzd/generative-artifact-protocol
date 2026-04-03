@@ -1,0 +1,1 @@
+Update the build matrix to add a musl target for Linux x86_64 that produces a statically linked binary

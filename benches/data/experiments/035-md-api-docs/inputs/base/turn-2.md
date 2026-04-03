@@ -1,1 +1,0 @@
-Update the errors section to add 5 new error codes: 409 Conflict, 413 Payload Too Large, 422 Unprocessable Entity, 503 Service Unavailable, 504 Gateway Timeout

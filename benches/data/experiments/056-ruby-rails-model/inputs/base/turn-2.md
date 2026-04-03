@@ -1,1 +1,0 @@
-Update the scopes section to add a 'by_payment_method' scope that accepts :credit_card, :paypal, or :bank_transfer and filters accordingly

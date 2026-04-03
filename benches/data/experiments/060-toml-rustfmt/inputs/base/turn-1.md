@@ -1,1 +1,0 @@
-Change max_width to 120 and add wrap_comments = true and format_code_in_doc_comments = true

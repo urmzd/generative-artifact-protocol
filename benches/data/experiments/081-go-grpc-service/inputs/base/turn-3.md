@@ -1,1 +1,0 @@
-Rewrite the interceptors to add a metrics interceptor that tracks request count, latency histogram, and error rate per handler using Prometheus-style metrics

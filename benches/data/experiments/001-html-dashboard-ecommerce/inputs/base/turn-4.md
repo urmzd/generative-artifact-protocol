@@ -1,1 +1,0 @@
-Add a new 'Recent Activity' section after the stats cards showing the last 10 user actions

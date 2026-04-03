@@ -1,0 +1,1 @@
+Update the config to use a dead letter queue named 'failed_tasks' and set the task_reject_on_worker_lost to True

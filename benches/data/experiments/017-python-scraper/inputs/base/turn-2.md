@@ -1,1 +1,0 @@
-Add a new parser field for 'discount_price' that extracts sale prices and calculates the discount percentage from the original price

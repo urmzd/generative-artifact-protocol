@@ -1,1 +1,0 @@
-Add a new 'Conflict' variant for HTTP 409 responses with a 'resource_id' field showing which resource caused the conflict

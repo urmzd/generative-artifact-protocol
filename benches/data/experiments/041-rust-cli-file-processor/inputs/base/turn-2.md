@@ -1,1 +1,0 @@
-Rewrite the output section to add a Markdown table formatter that generates GitHub-flavored Markdown tables

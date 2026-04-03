@@ -1,1 +1,0 @@
-Add a new 'environment' parameter with allowed values 'dev', 'staging', 'prod' and use it to conditionally enable multi-AZ on the RDS instance only for 'prod'

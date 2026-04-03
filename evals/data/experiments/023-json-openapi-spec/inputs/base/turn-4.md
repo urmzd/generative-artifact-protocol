@@ -1,0 +1,1 @@
+Add a new /search endpoint that accepts query, category, price_min, price_max, and sort_by parameters

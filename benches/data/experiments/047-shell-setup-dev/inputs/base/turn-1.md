@@ -1,1 +1,0 @@
-Add Rust installation via rustup to the install-deps section with the stable toolchain and cargo-watch

@@ -1,1 +1,0 @@
-Update the validation section to add a check that rejects rows where the sale date is in the future

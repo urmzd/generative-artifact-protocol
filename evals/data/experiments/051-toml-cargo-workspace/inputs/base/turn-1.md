@@ -1,0 +1,1 @@
+Add sqlx and sea-orm to the dependencies with features for PostgreSQL and runtime-tokio

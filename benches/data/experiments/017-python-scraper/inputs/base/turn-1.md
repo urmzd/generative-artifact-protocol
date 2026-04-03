@@ -1,1 +1,0 @@
-Update the config to set the rate limit to 2 requests per second and add a proxy_url field

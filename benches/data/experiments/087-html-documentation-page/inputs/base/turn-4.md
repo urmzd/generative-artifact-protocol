@@ -1,1 +1,0 @@
-Add a 'Migration Guide' section after the FAQ showing how to migrate from v1 to v2 with a comparison table of changed API methods

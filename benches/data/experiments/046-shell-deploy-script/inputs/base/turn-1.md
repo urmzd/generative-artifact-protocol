@@ -1,1 +1,0 @@
-Add a '--dry-run' flag to the script that prints every command without executing it

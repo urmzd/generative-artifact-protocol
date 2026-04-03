@@ -1,1 +1,0 @@
-Rewrite the v1.0.0 entry to expand it with a detailed 'Migration Guide from v0.x' subsection listing 5 breaking changes

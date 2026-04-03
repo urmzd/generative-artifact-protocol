@@ -1,1 +1,0 @@
-Add a new PATCH /users/{id}/deactivate endpoint that sets is_active to False and returns the updated user

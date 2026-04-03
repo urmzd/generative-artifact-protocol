@@ -1,1 +1,0 @@
-Update the validation to add a custom validator that checks the database DSN format matches 'postgres://user:pass@host:port/dbname'

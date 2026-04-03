@@ -1,0 +1,1 @@
+Rewrite the table formatter to use box-drawing characters for borders instead of plain ASCII dashes and pipes

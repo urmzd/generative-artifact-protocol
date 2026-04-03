@@ -1,0 +1,1 @@
+Add three new string utilities: maskEmail (show first 2 chars + ***@domain), pluralize (word, count), and wordCount

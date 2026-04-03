@@ -1,1 +1,0 @@
-Rewrite the services section to add response time history sparklines next to each service showing the last 24 hours of data

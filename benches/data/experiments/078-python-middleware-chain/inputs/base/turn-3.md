@@ -1,1 +1,0 @@
-Add a new 'MaintenanceMiddleware' section that returns 503 Service Unavailable with a JSON body when a MAINTENANCE_MODE environment variable is set to 'true'

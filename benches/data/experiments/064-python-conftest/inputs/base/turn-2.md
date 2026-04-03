@@ -1,1 +1,0 @@
-Rewrite the factories section to add a 'create_comment' factory with fields: task_id, author_id, content, and optional parent_comment_id for threading

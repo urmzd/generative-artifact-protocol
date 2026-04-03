@@ -1,1 +1,0 @@
-Rewrite the test-registration section to include tests for OAuth signup via Google and GitHub providers

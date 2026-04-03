@@ -1,0 +1,1 @@
+Add a packageRule that groups all @types/* packages into a single PR with automerge enabled

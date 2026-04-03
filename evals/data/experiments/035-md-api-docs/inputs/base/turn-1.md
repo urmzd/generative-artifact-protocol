@@ -1,0 +1,1 @@
+Add a new 'Teams' endpoint group after Projects with CRUD operations for teams plus POST /teams/{id}/members and DELETE /teams/{id}/members/{userId}

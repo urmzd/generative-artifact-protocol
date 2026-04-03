@@ -1,1 +1,0 @@
-Update the summary cards to show: Total Revenue $1,284,500, Avg Order Value $342, Top Product 'Enterprise License', Top Region 'North America'

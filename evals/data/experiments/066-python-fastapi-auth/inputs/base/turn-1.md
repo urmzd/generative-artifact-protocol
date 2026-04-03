@@ -1,0 +1,1 @@
+Update the config section to change the access token expiry to 15 minutes and the refresh token expiry to 7 days

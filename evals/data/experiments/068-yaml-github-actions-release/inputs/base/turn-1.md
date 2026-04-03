@@ -1,0 +1,1 @@
+Add a 'checksum' step after the build that generates SHA256 checksums for all binary artifacts and uploads a checksums.txt file

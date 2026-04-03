@@ -1,1 +1,0 @@
-Add path aliases for '@/components/*', '@/lib/*', and '@/hooks/*' pointing to their respective src subdirectories

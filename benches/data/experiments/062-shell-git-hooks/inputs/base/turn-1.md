@@ -1,1 +1,0 @@
-Add a check that prevents commits containing TODO or FIXME comments unless the --allow-todos flag is set

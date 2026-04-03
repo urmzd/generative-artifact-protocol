@@ -1,1 +1,0 @@
-Add a 'Subscribe to Updates' section at the bottom with email and SMS notification signup options

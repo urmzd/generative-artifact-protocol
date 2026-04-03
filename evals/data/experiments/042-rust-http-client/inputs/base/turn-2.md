@@ -1,0 +1,1 @@
+Update the error type to add a 'Timeout' variant and implement a retry_with_backoff method on the client that retries on HttpError and Timeout up to 3 times

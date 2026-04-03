@@ -1,1 +1,0 @@
-Rewrite the queries section to add a 'full_text_search' function that uses PostgreSQL tsvector to search across article titles and content

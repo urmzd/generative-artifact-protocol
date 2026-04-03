@@ -1,0 +1,15 @@
+Create a Go configuration loader that reads from file, environment, and flags.
+
+Include:
+- Config struct with nested sub-configs: Server (host, port, timeout), Database (DSN, pool size, migrations), Redis (addr, password, DB), Logging (level, format, output)
+- Loader: read YAML file, overlay with env vars (APP_ prefix), overlay with CLI flags
+- Validation: required fields, port ranges, valid log levels, DSN format
+- Defaults for all fields
+
+Use section IDs: types, loader, validation
+
+Use AAP section markers to delineate each major code block.
+Wrap each logical section with `// #region id` and `// #endregion id`.
+
+
+Output raw code only. No markdown fences, no explanation.

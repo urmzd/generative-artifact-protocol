@@ -1,0 +1,1 @@
+Update the argparse main function to add a --group-by flag that accepts 'hour', 'day', or 'week' for time-based grouping

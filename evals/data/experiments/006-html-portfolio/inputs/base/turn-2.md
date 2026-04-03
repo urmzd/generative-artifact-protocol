@@ -1,0 +1,1 @@
+Replace the projects grid with 8 project cards instead of 6, adding 'Kubernetes Autoscaler' and 'GraphQL Gateway' projects with relevant tech stack tags

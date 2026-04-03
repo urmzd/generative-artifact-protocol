@@ -1,0 +1,1 @@
+Update the getTaxAmount selector to accept a state tax rate parameter instead of using a hardcoded rate

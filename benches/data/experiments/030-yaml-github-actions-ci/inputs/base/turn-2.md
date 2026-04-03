@@ -1,1 +1,0 @@
-Update the deploy job to add a manual approval step before production deployment using environments and reviewers

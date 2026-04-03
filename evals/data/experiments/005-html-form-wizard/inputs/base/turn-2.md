@@ -1,0 +1,1 @@
+Update the progress bar to show 5 steps instead of 4 and change its color from blue to teal (#0d9488)

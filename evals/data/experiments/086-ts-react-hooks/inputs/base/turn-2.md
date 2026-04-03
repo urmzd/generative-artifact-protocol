@@ -1,0 +1,1 @@
+Update the useForm hook to support nested object fields using dot notation paths like 'address.city' and array fields like 'tags[0]'

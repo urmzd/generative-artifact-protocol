@@ -1,1 +1,0 @@
-Rewrite the chart area to show a grouped bar chart comparing revenue vs target for each month, with target bars in a lighter shade

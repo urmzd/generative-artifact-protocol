@@ -1,0 +1,1 @@
+Add a new 'count_prefix' method to the Trie that returns how many inserted words share the given prefix

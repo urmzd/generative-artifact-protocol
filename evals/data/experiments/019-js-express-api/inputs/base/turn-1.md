@@ -1,0 +1,1 @@
+Add a new 'labels' field to the Task model with an array of strings, and add a PUT /tasks/:id/labels endpoint

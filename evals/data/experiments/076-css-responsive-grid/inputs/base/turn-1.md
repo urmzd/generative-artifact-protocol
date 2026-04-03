@@ -1,0 +1,1 @@
+Add a new '.col-auto' class that sizes the column based on its content width and update the responsive variants to include auto

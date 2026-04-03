@@ -1,0 +1,1 @@
+Update the app section to set replicas to 5, change the image tag to 'v2.4.0', and add a new environment variable FEATURE_NEW_DASHBOARD=true

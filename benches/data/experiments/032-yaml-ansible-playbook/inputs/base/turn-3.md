@@ -1,1 +1,0 @@
-Rewrite the app-deploy section to use a blue-green deployment strategy with a symlink swap between 'current' and 'previous' release directories

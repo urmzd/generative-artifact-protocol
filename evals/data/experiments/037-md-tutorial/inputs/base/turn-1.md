@@ -1,0 +1,1 @@
+Update the setup section to use uv instead of pip for dependency management, with the corresponding pyproject.toml configuration

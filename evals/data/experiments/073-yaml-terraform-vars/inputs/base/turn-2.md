@@ -1,0 +1,1 @@
+Change the compute instance type to 'c6g.xlarge' (ARM-based) and update the AMI ID to an ARM64 Ubuntu 22.04 AMI

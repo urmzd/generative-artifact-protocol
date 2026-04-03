@@ -1,1 +1,0 @@
-Rewrite the pricing section to have 4 tiers instead of 3: Free, Starter $19/mo, Pro $49/mo, Enterprise custom

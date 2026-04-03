@@ -1,1 +1,0 @@
-Update the installation section to add a Deno import example and a 'Requirements' subsection listing minimum Node 18+ and browser compatibility

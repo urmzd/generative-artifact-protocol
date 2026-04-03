@@ -1,1 +1,0 @@
-Add a new /pets/{id}/medical-records endpoint group with GET (list records) and POST (add record) including a MedicalRecord schema with date, type, veterinarian, and notes fields

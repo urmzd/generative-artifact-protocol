@@ -1,0 +1,1 @@
+Add a new aggregation mode 'distinct' that counts unique values in a specified column and displays them sorted by frequency

@@ -1,0 +1,1 @@
+Update the ruff hook to pin version 0.9.0 and add the --fix flag to automatically fix fixable violations

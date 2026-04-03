@@ -1,1 +1,0 @@
-Add a new 'Milestone' type with fields: id, title, due_date, status, progress_percentage, and associated task_ids array

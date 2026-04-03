@@ -1,1 +1,0 @@
-Add a new 'monitoring' service using Prometheus with a scrape config targeting all other services on their /metrics endpoints

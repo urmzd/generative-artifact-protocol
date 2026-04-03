@@ -1,0 +1,1 @@
+Update the validation functions to show inline error messages below each field instead of a single error block at the top

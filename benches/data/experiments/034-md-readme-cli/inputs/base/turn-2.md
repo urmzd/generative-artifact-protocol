@@ -1,1 +1,0 @@
-Update the usage section to add examples for two new commands: 'dbmigrate squash' (squash multiple migrations) and 'dbmigrate diff' (show pending changes)

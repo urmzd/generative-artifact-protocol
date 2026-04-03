@@ -1,1 +1,0 @@
-Add a 'team_id' and 'team_name' field to each user object, with users grouped into 4 teams: Platform, Growth, Infrastructure, and Design

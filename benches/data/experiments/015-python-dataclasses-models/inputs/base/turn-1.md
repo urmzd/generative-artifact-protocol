@@ -1,1 +1,0 @@
-Add a new 'Milestone' entity with fields: id, name, target_date, status, project_id, and a list of associated task IDs

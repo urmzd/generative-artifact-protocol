@@ -1,1 +1,0 @@
-Change the developer name to 'Jordan Rivera' and title to 'Cloud Infrastructure Engineer'

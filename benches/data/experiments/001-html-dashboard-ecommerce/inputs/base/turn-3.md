@@ -1,1 +1,0 @@
-Change the primary accent color from blue to purple (#8b5cf6) across all elements

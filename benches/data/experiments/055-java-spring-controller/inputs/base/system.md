@@ -1,1 +1,0 @@
-You produce text/x-java artifacts. Output raw code only. No markdown fences, no explanation.

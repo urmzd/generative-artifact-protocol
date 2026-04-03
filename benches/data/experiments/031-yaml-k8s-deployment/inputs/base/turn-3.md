@@ -1,1 +1,0 @@
-Rewrite the Ingress to add a second host rule for api.example.com routing to a different service on port 8081

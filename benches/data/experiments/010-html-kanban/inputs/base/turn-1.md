@@ -1,1 +1,0 @@
-Change the project name from 'Sprint 24' to 'Sprint 27 — Q2 Launch' and update all member avatars to show 6 team members

@@ -1,1 +1,0 @@
-Update the vars section to add a 'backup_retention_days: 30' variable and add a new post-task that sets up a daily database backup cron job

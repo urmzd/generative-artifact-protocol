@@ -1,0 +1,1 @@
+Add a new 'ReactionMessage' model with fields: message_id, user_id, emoji, and timestamp

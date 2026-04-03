@@ -1,0 +1,1 @@
+Add a new 'air_quality' endpoint method that takes a Location and returns an AirQualityResponse with AQI index, PM2.5, PM10, and O3 readings

@@ -1,1 +1,0 @@
-Update the March bar to show $425,000 and the July bar to show $380,000 with their value labels adjusted

@@ -1,0 +1,1 @@
+Add a new 'Conversion Funnel' section after the KPI cards showing 5 funnel stages with drop-off percentages

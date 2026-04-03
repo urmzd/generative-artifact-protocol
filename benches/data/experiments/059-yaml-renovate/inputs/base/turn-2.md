@@ -1,1 +1,0 @@
-Update the schedule to run only on weekends and add a 'prConcurrentLimit' of 5

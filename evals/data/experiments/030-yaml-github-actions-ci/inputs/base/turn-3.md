@@ -1,0 +1,1 @@
+Rewrite the test job to also run Playwright e2e tests in a separate matrix entry with a PostgreSQL service container

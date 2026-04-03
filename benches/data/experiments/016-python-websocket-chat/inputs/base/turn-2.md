@@ -1,1 +1,0 @@
-Rewrite the broadcast method in ConnectionManager to support broadcasting only to users in a specific room

@@ -1,1 +1,0 @@
-Add a new 'SMTP' sub-config to the types section with fields: host, port, username, password, from_address, and tls_enabled

@@ -1,1 +1,0 @@
-Update the Pet schema to add 'vaccinated', 'neutered', and 'microchipped' boolean fields

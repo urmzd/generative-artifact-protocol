@@ -1,1 +1,0 @@
-Rewrite the list_users CRUD function to support filtering by role and is_active status

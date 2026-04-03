@@ -1,1 +1,0 @@
-Rewrite the useToast hook to support toast stacking with a max of 5 visible toasts, auto-dismiss after 5 seconds, and a pause-on-hover feature

@@ -1,0 +1,1 @@
+Add a new 'Revision' model that stores article version history with fields: id, article_id, content, editor_id, created_at, and a 'diff' text field

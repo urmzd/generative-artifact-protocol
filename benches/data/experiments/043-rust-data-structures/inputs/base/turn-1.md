@@ -1,1 +1,0 @@
-Add a 'get_or_insert' method to the LRU Cache that takes a key and a closure, returning the existing value or inserting the closure's result

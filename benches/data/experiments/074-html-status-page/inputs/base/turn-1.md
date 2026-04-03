@@ -1,1 +1,0 @@
-Change the overall status to 'Partial System Outage' with a yellow banner and mark the Payments and Search services as 'Degraded Performance'

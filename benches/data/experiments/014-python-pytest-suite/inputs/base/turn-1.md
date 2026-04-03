@@ -1,1 +1,0 @@
-Add a new fixture 'sample_superadmin' with elevated permissions and update the permission tests to verify superadmin can access all endpoints

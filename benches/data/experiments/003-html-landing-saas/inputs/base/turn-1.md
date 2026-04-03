@@ -1,1 +1,0 @@
-Change the hero headline to 'Sync Everything. Everywhere.' and the subheadline to 'CloudSync connects your tools in real time.'

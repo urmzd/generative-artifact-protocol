@@ -1,0 +1,1 @@
+Add polars and pyarrow to the dependencies and create a new optional dependency group 'perf' containing them

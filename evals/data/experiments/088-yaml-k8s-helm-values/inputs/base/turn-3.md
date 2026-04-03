@@ -1,0 +1,1 @@
+Rewrite the monitoring section to add custom Grafana dashboard JSON for request rate, error rate, and p99 latency panels

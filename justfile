@@ -24,4 +24,8 @@ bench-single n="1" model="qwen3.5:4b":
 bench model="qwen3.5:4b" count="0":
     cd benches && go run . run --model {{model}} $(if [ "{{count}}" != "0" ]; then echo "--count {{count}}"; fi)
 
+# Generate apply-engine benchmark corpus (artifacts + envelopes)
+bench-generate-apply count="0" model="gemma4":
+    python3 scripts/generate_apply_benchmarks.py --model {{model}} $(if [ "{{count}}" != "0" ]; then echo "--count {{count}}"; fi)
+
 bench-all: bench-rust bench-protocol

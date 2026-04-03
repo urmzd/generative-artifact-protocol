@@ -1,1 +1,0 @@
-Add a dark mode section using @media (prefers-color-scheme: dark) that inverts the color scheme for all components

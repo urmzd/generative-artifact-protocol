@@ -1,1 +1,0 @@
-Add a new 'has_many :refunds' association and a 'refund!' method that creates a refund record and updates the order status to 'refunded'

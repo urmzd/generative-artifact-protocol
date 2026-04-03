@@ -1,1 +1,0 @@
-Add a 'role' field to UserCreate schema with allowed values 'admin', 'editor', 'viewer' and default 'viewer'

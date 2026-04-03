@@ -1,1 +1,0 @@
-Rewrite the sidebar navigation to add a 'Plugins' section with 3 sub-items: Official Plugins, Community Plugins, and Writing a Plugin

@@ -1,1 +1,0 @@
-Add drizzle-orm and @auth/core to the dependencies with realistic version numbers

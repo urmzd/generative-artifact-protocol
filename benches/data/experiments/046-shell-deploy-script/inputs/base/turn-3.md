@@ -1,1 +1,0 @@
-Add a rollback function that restores the previous symlink and restarts PM2 if the health check fails within 60 seconds of deployment

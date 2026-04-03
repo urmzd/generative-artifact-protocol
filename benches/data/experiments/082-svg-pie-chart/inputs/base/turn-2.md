@@ -1,1 +1,0 @@
-Add an 'Insurance' slice at 5% by reducing Entertainment from 8% to 3%, and use a teal color (#0d9488) for the new slice

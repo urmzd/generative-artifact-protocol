@@ -1,1 +1,0 @@
-Add a 'Department' column to the users table between 'role' and 'status badge' with realistic department values

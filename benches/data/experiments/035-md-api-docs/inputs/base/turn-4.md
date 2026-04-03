@@ -1,1 +1,0 @@
-Add webhook documentation showing available events (project.created, task.updated, etc.) with payload examples

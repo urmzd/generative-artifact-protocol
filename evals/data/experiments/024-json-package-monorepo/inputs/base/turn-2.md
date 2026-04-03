@@ -1,0 +1,1 @@
+Update the scripts section to add 'db:migrate', 'db:seed', and 'db:studio' commands using drizzle-kit

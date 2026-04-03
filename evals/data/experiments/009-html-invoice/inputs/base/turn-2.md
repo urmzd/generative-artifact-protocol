@@ -1,0 +1,1 @@
+Add 4 more line items: Cloud Hosting Setup ($2,400), SSL Certificate ($199), Data Migration ($3,500), Training Session ($1,800)

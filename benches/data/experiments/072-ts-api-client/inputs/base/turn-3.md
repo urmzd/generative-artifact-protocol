@@ -1,1 +1,0 @@
-Add batch endpoint methods: batchUpdateTasks(updates: Array<{id: string, status: string}>) and batchAssignTasks(taskIds: string[], userId: string)

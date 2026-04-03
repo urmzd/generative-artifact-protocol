@@ -1,0 +1,1 @@
+Add a new pre-task that checks disk space and fails the playbook if less than 5GB is available on /var

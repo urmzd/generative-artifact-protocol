@@ -1,0 +1,1 @@
+Update the response timeline to commit to: initial response within 24 hours, status update within 72 hours, and fix within 90 days

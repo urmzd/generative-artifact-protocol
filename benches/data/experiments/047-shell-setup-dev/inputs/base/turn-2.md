@@ -1,1 +1,0 @@
-Update the verify section to output a formatted summary table showing each tool name, expected version, and installed version with pass/fail status

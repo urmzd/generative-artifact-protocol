@@ -1,1 +1,0 @@
-Add a new 'Integrations' section between features and pricing showing a grid of 8 integration logos with names

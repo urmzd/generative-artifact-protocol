@@ -1,1 +1,0 @@
-Add 3 more functions to the API reference: 'pipe', 'compose', and 'memoize' with full parameter tables and usage examples

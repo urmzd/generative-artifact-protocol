@@ -1,0 +1,1 @@
+Rewrite the logging-middleware to add request body logging for POST/PUT requests with automatic redaction of fields named 'password', 'token', or 'secret'

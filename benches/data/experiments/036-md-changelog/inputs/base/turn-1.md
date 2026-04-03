@@ -1,1 +1,0 @@
-Add a new v2.4.0 release at the top of the v2 section with 3 Added items about WebSocket support, GraphQL integration, and streaming responses

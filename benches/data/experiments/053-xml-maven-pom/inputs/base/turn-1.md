@@ -1,1 +1,0 @@
-Add spring-boot-starter-cache and caffeine dependencies for local caching support

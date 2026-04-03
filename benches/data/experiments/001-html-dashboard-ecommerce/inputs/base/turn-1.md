@@ -1,1 +1,0 @@
-Update the Total Revenue stat card to show $215,430 with a +12.3% trend indicator

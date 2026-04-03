@@ -1,1 +1,0 @@
-Add rate limiting information to the API info section: 100 requests per minute for authenticated users, 20 for anonymous

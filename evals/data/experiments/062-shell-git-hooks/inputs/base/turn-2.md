@@ -1,0 +1,1 @@
+Update the secrets detection to also scan for AWS access keys matching the pattern AKIA[0-9A-Z]{16}

@@ -1,0 +1,1 @@
+Add a new 'celery-worker' service that shares the same image as the notification service but runs with the celery worker command

@@ -1,1 +1,0 @@
-Add a third alternative considered: 'Use CDC (Change Data Capture) with Debezium' with 3 pros and 2 cons

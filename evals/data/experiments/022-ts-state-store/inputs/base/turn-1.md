@@ -1,0 +1,1 @@
+Add a new 'applyBulkDiscount' action that applies a 15% discount when the cart has 5 or more items

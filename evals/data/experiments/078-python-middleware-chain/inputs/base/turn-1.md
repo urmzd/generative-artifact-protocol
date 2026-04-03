@@ -1,0 +1,1 @@
+Update the rate-limiter to support different rate limits per endpoint by accepting a dict mapping path prefixes to (requests, window_seconds) tuples

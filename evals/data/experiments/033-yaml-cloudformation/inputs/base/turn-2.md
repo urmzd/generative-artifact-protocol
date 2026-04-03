@@ -1,0 +1,1 @@
+Update the Auto Scaling Group to use a target tracking scaling policy based on ALBRequestCountPerTarget with a target value of 1000

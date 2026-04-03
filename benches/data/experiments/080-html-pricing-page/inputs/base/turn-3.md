@@ -1,1 +1,0 @@
-Add a new 'Add-ons' section after the comparison table showing 4 optional add-ons: Extra Storage ($5/mo), Priority Support ($15/mo), Custom Domain ($10/mo), API Access ($25/mo)

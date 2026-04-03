@@ -1,0 +1,1 @@
+Change the primary color from blue to indigo (#4f46e5) and update the secondary color to amber (#f59e0b) across all CSS custom properties

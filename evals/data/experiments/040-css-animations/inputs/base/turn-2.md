@@ -1,0 +1,1 @@
+Update all animation durations to use CSS custom properties like --duration-fast: 150ms, --duration-normal: 300ms, --duration-slow: 500ms

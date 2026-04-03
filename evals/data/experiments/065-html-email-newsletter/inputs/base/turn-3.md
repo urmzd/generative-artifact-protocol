@@ -1,0 +1,1 @@
+Add a 'Quick Tips' section between the featured article and the article cards showing 3 short developer tips in a numbered list

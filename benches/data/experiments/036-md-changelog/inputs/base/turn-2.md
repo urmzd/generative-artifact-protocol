@@ -1,1 +1,0 @@
-Update the unreleased section to include a Deprecated entry for the legacy XML configuration format and a Security fix for CVE-2026-1234

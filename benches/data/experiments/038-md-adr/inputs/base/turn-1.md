@@ -1,1 +1,0 @@
-Update the status from 'Accepted' to 'Superseded by ADR-007' and add a link reference to the superseding ADR

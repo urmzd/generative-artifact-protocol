@@ -1,1 +1,0 @@
-Add 3 more users with the 'contractor' role from timezones 'Asia/Tokyo', 'Europe/Berlin', and 'America/Sao_Paulo'

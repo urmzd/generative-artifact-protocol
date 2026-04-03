@@ -1,1 +1,0 @@
-Add a new 'Release Process' subsection to the workflow section explaining semantic versioning, changelog updates, and tag creation

@@ -1,1 +1,0 @@
-Add 4 new action icons: 'filter', 'sort', 'refresh', and 'copy' following the same 24x24 viewBox and 2px stroke style
