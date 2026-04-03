@@ -1,8 +1,8 @@
 {
   "protocol": "aap/0.1",
-  "id": "stats",
+  "id": "add-recent-activity-section",
   "version": 1,
-  "name": "section",
+  "name": "diff",
   "operation": {
     "direction": "output",
     "format": "text/html",
@@ -12,8 +12,15 @@
   },
   "content": [
     {
-      "section": "<div class=\"grid\">\n    <div class=\"card\"><h3>Total Sales</h3><p style=\"font-size:1.5rem; font-weight:bold\">$45,231.89</p></div>\n    <div class=\"card\"><h3>Active Products</h3><p style=\"font-size:1.5rem; font-weight:bold\">1,204</p></div>\n    <div class=\"card\"><h3>Orders</h3><p style=\"font-size:1.5rem; font-weight:bold\">342</p></div>\n    <div class=\"card\"><h3>New Users</h3><p style=\"font-size:1.5rem; font-weight:bold\">89</p></div>\n</div>\n\n<div class=\"card\" style=\"margin-bottom:2rem\">\n    <h2>Recent Activity</h2>\n    <ul style=\"list-style:none; padding:0\">\n        <li style=\"padding:0.5rem 0; border-bottom:1px solid #eee\">Admin updated Product 12 - 2 mins ago</li>\n        <li style=\"padding:0.5rem 0; border-bottom:1px solid #eee\">New order #5521 received - 15 mins ago</li>\n        <li style=\"padding:0.5rem 0; border-bottom:1px solid #eee\">System backup completed - 1 hour ago</li>\n        <li style=\"padding:0.5rem 0; border-bottom:1px solid #eee\">Admin changed site settings - 2 hours ago</li>\n        <li style=\"padding:0.5rem 0; border-bottom:1px solid #eee\">Product 45 deleted - 3 hours ago</li>\n        <li style=\"padding:0.5rem 0; border-bottom:1px solid #eee\">New user registered: jdoe88 - 4 hours ago</li>\n        <li style=\"padding:0.5rem 0; border-bottom:1px solid #eee\">Payment processed for Order #5520 - 5 hours ago</li>\n        <li style=\"padding:0.5rem 0; border-bottom:1px solid #eee\">Admin updated Product 8 - 6 hours ago</li>\n        <li style=\"padding:0.5rem 0; border-bottom:1px solid #eee\">System maintenance window scheduled - 8 hours ago</li>\n        <li style=\"padding:0.5rem 0\">New order #5519 received - 9 hours ago</li>\n    </ul>\n</div>",
-      "id": "stats"
+      "op": "insert_after",
+      "target": {
+        "search": null,
+        "section": "stats",
+        "lines": null,
+        "offsets": null,
+        "pointer": null
+      },
+      "content": "\n<aap:section id=\"recent-activity\">\n    <h2>Recent Activity</h2>\n    <div class=\"card\">\n        <ul style=\"list-style: none; padding: 0;\">\n            <script>\n                const activities = [\"User logged in\", \"Product updated\", \"Order placed\", \"New customer signed up\", \"System update completed\"];\n                for(let i=1; i<=10; i++) {\n                    document.write(`<li style=\"padding: 8px 0; border-bottom: 1px solid #eee;\"><strong>${activities[i%5]}</strong> - ${i} minutes ago</li>`);\n                }\n            </script>\n        </ul>\n    </div>\n</aap:section>\n"
     }
   ]
 }
