@@ -1,0 +1,21 @@
+[project]
+name = "aap-cli"
+version = "0.1.0"
+description = "AAP command-line interface"
+requires-python = ">=3.12"
+dependencies = [
+    "aap-evals",
+]
+
+[project.scripts]
+aap-evals = "aap.cli.main:app"
+
+[build-system]
+requires = ["uv_build>=0.7,<0.8"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "aap.cli"
+
+[tool.uv.sources]
+aap-evals = { workspace = true }

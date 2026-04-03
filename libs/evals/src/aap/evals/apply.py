@@ -7,7 +7,7 @@ import json
 from .schema import EditEnvelope, SynthesizeEnvelope, LLMEnvelope
 
 try:
-    from aap_evals.aap import resolve_envelope as _rust_resolve  # type: ignore[import-not-found]
+    from aap.core import resolve_envelope as _rust_resolve  # type: ignore[import-not-found]
 except ImportError as exc:
     raise ImportError(
         "Rust apply engine not available — run `just bind`"

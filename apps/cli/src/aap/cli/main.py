@@ -12,10 +12,11 @@ from pydantic_ai.models import Model
 from rich.console import Console
 from rich.table import Table
 
+from aap.evals import DATA_DIR
+
 app = typer.Typer(name="aap-evals", help="AAP benchmarks and evaluations.")
 console = Console()
 
-DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data"
 AAP_INIT_SPEC = (DATA_DIR / "aap-spec-init.md").read_text().strip()
 AAP_MAINTAIN_SPEC = (DATA_DIR / "aap-spec-maintain.md").read_text().strip()
 
@@ -139,9 +140,9 @@ async def _run_single_experiment(
     """Run a single experiment (base vs AAP flows). Returns True on success."""
     from datetime import datetime, timezone
 
-    from .eval.metrics import score_experiment
-    from .runner.aap import run_aap_flow, run_aap_turn0
-    from .runner.base import run_base_flow, run_base_turn0
+    from aap.evals.eval.metrics import score_experiment
+    from aap.evals.runner.aap import run_aap_flow, run_aap_turn0
+    from aap.evals.runner.base import run_base_flow, run_base_turn0
 
     exp_name = exp_dir.name
     fmt, ext = _parse_experiment_format(exp_dir / "README.md")
@@ -323,7 +324,7 @@ async def _run_experiments_async(
     flow: str,
     skip_eval: bool,
 ) -> None:
-    from .agents import PROVIDER_DEFAULTS, create_model
+    from aap.evals.agents import PROVIDER_DEFAULTS, create_model
 
     # ── Build provider list ───────────────────────────────────────────
     if providers:
@@ -367,9 +368,6 @@ async def _run_experiments_async(
         return
 
     # ── Parallel (multiple providers) ─────────────────────────────────
-    # Round-robin assign experiments to providers, then gather per-provider
-    # queues so each provider's rate limit is respected sequentially while
-    # different providers run concurrently.
     provider_queues: dict[str, list[tuple[Path, Model, str]]] = {p: [] for p, _ in models}
     model_map = {p: llm for p, llm in models}
     for i, exp_dir in enumerate(exp_dirs):
@@ -409,7 +407,7 @@ def eval_experiments(
     use_ragas: Annotated[bool, typer.Option(help="Use ragas for ROUGE-L and BLEU")] = False,
 ) -> None:
     """Score content quality for completed experiments (retroactive)."""
-    from .eval.metrics import score_experiment
+    from aap.evals.eval.metrics import score_experiment
 
     for exp_dir in sorted(experiments_dir.iterdir()):
         mf = exp_dir / "metrics.json"
@@ -595,14 +593,14 @@ async def _evaluate_async(
     count: int,
     force: bool,
 ) -> None:
-    from .eval import run_eval
+    from aap.evals.eval import run_eval
 
     judge_model = None
     if judge:
         if not provider:
             console.print("[red]--provider is required when using --judge[/red]")
             raise typer.Exit(1)
-        from .agents import create_model
+        from aap.evals.agents import create_model
         judge_model = create_model(provider, model, host)
 
     def _has_turn_outputs(d: Path) -> bool:

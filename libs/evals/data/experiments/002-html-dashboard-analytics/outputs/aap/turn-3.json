@@ -1,0 +1,22 @@
+{
+  "protocol": "aap/0.1",
+  "id": "artifact-id",
+  "version": 2,
+  "name": "edit",
+  "meta": {
+    "format": "text/html",
+    "tokens_used": null,
+    "checksum": null,
+    "state": null
+  },
+  "content": [
+    {
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "top-referrers-list"
+      },
+      "content": "<ul><li aap:target id=\"referrer-item-1\"><span><aap:target id=\"referrer-1-name\">github.com</aap:target></span><span><aap:target id=\"referrer-1-sessions\">78,900</aap:target></span></li><li aap:target id=\"referrer-item-2\"><span><aap:target id=\"referrer-2-name\">stackoverflow.com</aap:target></span><span><aap:target id=\"referrer-2-sessions\">65,400</aap:target></span></li><li aap:target id=\"referrer-item-3\"><span><aap:target id=\"referrer-3-name\">dev.to</aap:target></span><span><aap:target id=\"referrer-3-sessions\">42,100</aap:target></span></li><li aap:target id=\"referrer-item-4\"><span><aap:target id=\"referrer-4-name\">medium.com</aap:target></span><span><aap:target id=\"referrer-4-sessions\">35,600</aap:target></span></li><li aap:target id=\"referrer-item-5\"><span><aap:target id=\"referrer-5-name\">hashnode.com</aap:target></span><span><aap:target id=\"referrer-5-sessions\">28,700</aap:target></span></li><li aap:target id=\"referrer-item-6\"><span><aap:target id=\"referrer-6-name\">reddit.com/r/programming</aap:target></span><span><aap:target id=\"referrer-6-sessions\">21,500</aap:target></span></li><li aap:target id=\"referrer-item-7\"><span><aap:target id=\"referrer-7-name\">freecodecamp.org</aap:target></span><span><aap:target id=\"referrer-7-sessions\">18,900</aap:target></span></li><li aap:target id=\"referrer-item-8\"><span><aap:target id=\"referrer-8-name\">hackernews.com</aap:target></span><span><aap:target id=\"referrer-8-sessions\">15,200</aap:target></span></li><li aap:target id=\"referrer-item-9\"><span><aap:target id=\"referrer-9-name\">codepen.io</aap:target></span><span><aap:target id=\"referrer-9-sessions\">11,800</aap:target></span></li><li aap:target id=\"referrer-item-10\"><span><aap:target id=\"referrer-10-name\">smashingmagazine.com</aap:target></span><span><aap:target id=\"referrer-10-sessions\">9,300</aap:target></span></li><li aap:target id=\"referrer-item-11\"><span><aap:target id=\"referrer-11-name\">css-tricks.com</aap:target></span><span><aap:target id=\"referrer-11-sessions\">7,500</aap:target></span></li><li aap:target id=\"referrer-item-12\"><span><aap:target id=\"referrer-12-name\">w3schools.com</aap:target></span><span><aap:target id=\"referrer-12-sessions\">5,100</aap:target></span></li><li aap:target id=\"referrer-item-13\"><span><aap:target id=\"referrer-13-name\">geeksforgeeks.org</aap:target></span><span><aap:target id=\"referrer-13-sessions\">3,900</aap:target></span></li><li aap:target id=\"referrer-item-14\"><span><aap:target id=\"referrer-14-name\">digitalocean.com/community</aap:target></span><span><aap:target id=\"referrer-14-sessions\">2,800</aap:target></span></li><li aap:target id=\"referrer-item-15\"><span><aap:target id=\"referrer-15-name\">scotch.io</aap:target></span><span><aap:target id=\"referrer-15-sessions\">1,500</aap:target></span></li></ul>"
+    }
+  ]
+}

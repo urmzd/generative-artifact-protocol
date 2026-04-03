@@ -41,8 +41,8 @@ fn resolve_envelope(operation_json: &str, artifact_json: Option<&str>) -> PyResu
 }
 
 /// AAP apply engine Python module.
-#[pymodule]
-fn aap(m: &Bound<'_, PyModule>) -> PyResult<()> {
+#[pymodule(name = "_aap")]
+fn aap_core(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(resolve_envelope, m)?)?;
     Ok(())
 }
