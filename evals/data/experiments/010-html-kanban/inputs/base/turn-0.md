@@ -9,9 +9,6 @@ Include:
 
 Use section IDs: board-header, col-backlog, col-in-progress, col-review, col-done
 
-Use AAP section markers to delineate each major content block.
-Wrap each logical section with `<!-- section:id -->` and `<!-- /section:id -->`.
-
 All CSS inline. Horizontal scrolling layout with colored column headers.
 
 Output raw code only. No markdown fences, no explanation.

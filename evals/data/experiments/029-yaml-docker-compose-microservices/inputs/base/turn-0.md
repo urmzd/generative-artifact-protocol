@@ -14,8 +14,4 @@ Create a docker-compose.yaml for a microservices application with:
 
 Use section IDs: services, networks, volumes
 
-Use AAP section markers to delineate each major block.
-Wrap each logical section with `# region id` and `# endregion id`.
-
-
 Output raw code only. No markdown fences, no explanation.

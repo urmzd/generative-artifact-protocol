@@ -10,8 +10,4 @@ Include:
 
 Use section IDs: chart, labels, legend
 
-Use AAP section markers to delineate each major block.
-Wrap each logical section with `<!-- section:id -->` and `<!-- /section:id -->`.
-
-
 Output raw code only. No markdown fences, no explanation.

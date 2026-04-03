@@ -9,9 +9,6 @@ Include:
 
 Use section IDs: nav, kpi-cards, traffic-table, referrers, geo
 
-Use AAP section markers to delineate each major content block.
-Wrap each logical section with `<!-- section:id -->` and `<!-- /section:id -->`.
-
 All CSS inline. No external dependencies. Clean data-focused design.
 
 Output raw code only. No markdown fences, no explanation.

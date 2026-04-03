@@ -10,8 +10,4 @@ Include:
 
 Use section IDs: intro, setup, building, testing, deploying
 
-Use AAP section markers to delineate each major content block.
-Wrap each logical section with `<!-- section:id -->` and `<!-- /section:id -->`.
-
-
 Output raw code only. No markdown fences, no explanation.

@@ -9,9 +9,6 @@ Include:
 
 Use section IDs: deployment, service, ingress, hpa, configmap
 
-Use AAP section markers to delineate each major block.
-Wrap each logical section with `# region id` and `# endregion id`.
-
 Separate each manifest with `---`.
 
 Output raw code only. No markdown fences, no explanation.

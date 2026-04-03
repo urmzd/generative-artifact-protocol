@@ -11,8 +11,4 @@ Include:
 
 Use section IDs: triggers, build-matrix, publish, notifications
 
-Use AAP section markers to delineate each major block.
-Wrap each logical section with `# region id` and `# endregion id`.
-
-
 Output raw code only. No markdown fences, no explanation.

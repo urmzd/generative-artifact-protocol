@@ -9,8 +9,4 @@ Include:
 
 Use section IDs: base, auth-middleware, logging-middleware, rate-limiter, cors
 
-Use AAP section markers to delineate each major code block.
-Wrap each logical section with `# region id` and `# endregion id`.
-
-
 Output raw code only. No markdown fences, no explanation.

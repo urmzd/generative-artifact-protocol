@@ -9,9 +9,6 @@ Include:
 
 Use section IDs: header, article-content, author-bio, comments
 
-Use AAP section markers to delineate each major content block.
-Wrap each logical section with `<!-- section:id -->` and `<!-- /section:id -->`.
-
 All CSS inline. Clean reading-focused typography.
 
 Output raw code only. No markdown fences, no explanation.

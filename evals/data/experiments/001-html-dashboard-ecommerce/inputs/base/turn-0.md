@@ -9,9 +9,6 @@ Include:
 
 Use section IDs: nav, stats, products-table, orders-table, settings
 
-Use AAP section markers to delineate each major content block.
-Wrap each logical section with `<!-- section:id -->` and `<!-- /section:id -->`.
-
 All CSS inline in <style>. No CDN, no external resources. Modern, clean design.
 
 Output raw code only. No markdown fences, no explanation.

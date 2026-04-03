@@ -9,9 +9,6 @@ Include:
 
 Use section IDs: sidebar, content, code-examples, api-reference
 
-Use AAP section markers to delineate each major content block.
-Wrap each logical section with `<!-- section:id -->` and `<!-- /section:id -->`.
-
 All CSS inline. Documentation-focused typography with code font for examples.
 
 Output raw code only. No markdown fences, no explanation.

@@ -10,8 +10,4 @@ Include:
 
 Use section IDs: associations, validations, scopes, methods
 
-Use AAP section markers to delineate each major code block.
-Wrap each logical section with `# region id` and `# endregion id`.
-
-
 Output raw code only. No markdown fences, no explanation.

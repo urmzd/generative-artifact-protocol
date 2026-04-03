@@ -9,8 +9,4 @@ Include:
 
 Use section IDs: detect-os, install-deps, configure, verify
 
-Use AAP section markers to delineate each major code block.
-Wrap each logical section with `# region id` and `# endregion id`.
-
-
 Output raw code only. No markdown fences, no explanation.

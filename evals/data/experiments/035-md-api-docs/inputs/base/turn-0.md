@@ -12,8 +12,4 @@ At least 12 fully documented endpoints.
 
 Use section IDs: authentication, users-endpoints, projects-endpoints, errors, rate-limiting
 
-Use AAP section markers to delineate each major content block.
-Wrap each logical section with `<!-- section:id -->` and `<!-- /section:id -->`.
-
-
 Output raw code only. No markdown fences, no explanation.
