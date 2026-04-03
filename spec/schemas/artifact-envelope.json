@@ -97,7 +97,21 @@
                 "version": { "type": "integer", "minimum": 1, "description": "Artifact version" },
                 "token_count": { "type": "integer", "minimum": 0, "description": "Approximate token count of the full artifact" },
                 "state": { "type": "string", "enum": ["draft", "published", "archived"] },
-                "content": { "type": "string", "description": "Optional artifact content (when requested)" }
+                "content": { "type": "string", "description": "Optional artifact content (when requested)" },
+                "targets": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["id"],
+                    "properties": {
+                      "id": { "type": "string", "description": "Target identifier" },
+                      "label": { "type": "string", "description": "Human-readable description" },
+                      "accepts": { "type": "string", "description": "Hint about valid replacement content" }
+                    },
+                    "additionalProperties": false
+                  },
+                  "description": "Valid target IDs in the current artifact"
+                }
               }
             }
           }

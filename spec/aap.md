@@ -294,6 +294,8 @@ Producers SHOULD emit `<aap:target>` markers on the **initial synthesize**. This
 
 **Rationale**: the upfront cost of markers is amortized across every future update. After just one ID-targeted edit, the total output token spend is lower than two full regenerations.
 
+> **Structural hints:** Producers SHOULD annotate structurally constrained targets with the `accepts` field — for example, table targets that expect `<tr>` children, list targets that expect `<li>` items, or code block targets that expect specific syntax. This reduces silent structural corruption when the maintain context produces replacement content. See [Section 7.2](#72-handle-name-handle) for the target info schema.
+
 **Output cost model** (N = number of future updates, S = artifact size in output tokens):
 - Without targets: N full regenerations = N x S output tokens
 - With targets: 1 synthesize (with markers) + N targeted edits = S x 1.02 + N x edit_tokens output tokens
@@ -663,8 +665,21 @@ The handle contains the artifact's identity and optional metadata. Implementatio
 | `token_count` | integer | no | Approximate token count of the full artifact |
 | `state` | string | no | Entity lifecycle state |
 | `content` | string | no | Artifact body (included only when explicitly requested) |
+| `targets` | array | no | List of valid target IDs in the current artifact (see target info schema below) |
 
 > **Note:** The `id` and `version` fields in handle content items intentionally duplicate the envelope-level fields. This allows handle content items to be extracted and used standalone — for example, when an orchestrator maintains a collection of handles independent of their original envelopes.
+
+**Target info schema** (items of `targets` array):
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `id` | string | YES | Target identifier (matches `<aap:target id="...">` in the artifact) |
+| `label` | string | no | Human-readable description of the target's purpose |
+| `accepts` | string | no | Hint about valid replacement content (e.g., `"tr*"` for table rows, `"li*"` for list items) |
+
+The `targets` array transforms targeting from a recall problem (the maintain context must remember IDs from the artifact it read) into a selection problem (the maintain context picks from a closed list). This eliminates the dominant failure mode of hallucinated target IDs.
+
+The `accepts` field is a structural hint for the maintain context — not enforced by the apply engine. Init contexts SHOULD annotate structurally constrained targets (tables, lists, select options, code blocks) with what valid replacement content looks like.
 
 **Example:**
 
@@ -676,7 +691,17 @@ The handle contains the artifact's identity and optional metadata. Implementatio
   "name": "handle",
   "meta": {"format": "text/html", "state": "published"},
   "content": [
-    {"id": "dashboard-001", "version": 5, "token_count": 10240}
+    {
+      "id": "dashboard-001",
+      "version": 5,
+      "token_count": 10240,
+      "targets": [
+        {"id": "stats", "label": "Statistics section"},
+        {"id": "revenue-value"},
+        {"id": "user-count"},
+        {"id": "users-table", "label": "Users data table", "accepts": "tr*"}
+      ]
+    }
   ]
 }
 ```
@@ -713,7 +738,21 @@ When the maintain context produces a bad edit — for example, targeting an ID t
 
 > **Restructuring:** When an artifact's target topology is fundamentally inadequate, the recommended approach is to archive the existing artifact and create a new one via the init context. There is no in-place restructuring operation — restructuring is creation.
 
-### 7.4 Operations Summary
+### 7.4 Target Recomputation
+
+After any `synthesize` or `edit` operation, the apply engine MUST derive the target list from the resulting artifact content. The handle's `targets` array reflects the current artifact state, not the previous handle's targets.
+
+**Normative requirements:**
+
+- The apply engine MUST scan the artifact body for `<aap:target id="...">` markers after every operation and populate the handle's `targets` array
+- When a `replace` operation targets a parent that contains nested targets, the nested targets are invalidated if the replacement content does not contain them
+- The returned handle MUST NOT include target IDs that no longer exist in the artifact body
+- If the replacement content introduces new `<aap:target>` markers, those MUST appear in the returned handle's targets
+- Orchestrators MUST use the latest handle's target list when injecting target information into the maintain context
+
+> **Non-normative note:** This ensures the maintain context always operates on a closed, valid target set. When the orchestrator injects the handle's `targets` into the maintain context's prompt, the model selects from known-good IDs rather than recalling them from artifact text — collapsing the dominant failure mode of hallucinated target IDs.
+
+### 7.5 Operations Summary
 
 The Artifact Type Interface defines two operations, both returning a handle:
 
@@ -868,6 +907,7 @@ Implementations declare their conformance level. Each level is a superset of the
 - The maintain context MUST produce `edit` envelopes, not `synthesize`, on edits
 - MUST support `meta.state` and enforce state machine transitions ([Section 8.1](#81-state-machine))
 - Orchestrators MUST use handles rather than full content for artifact interaction
+- MUST populate handle `targets` array derived from the current artifact state after every mutation ([Section 7.4](#74-target-recomputation))
 
 ---
 

@@ -9,7 +9,15 @@
     "name": "handle",
     "meta": {"format": "text/html", "state": "published"},
     "content": [
-      {"id": "dashboard-001", "version": 3, "token_count": 10240}
+      {
+        "id": "dashboard-001", "version": 3, "token_count": 10240,
+        "targets": [
+          {"id": "stats", "label": "Statistics section"},
+          {"id": "revenue-value"},
+          {"id": "orders-count"},
+          {"id": "users-table", "label": "Users data table", "accepts": "tr*"}
+        ]
+      }
     ]
   },
 
@@ -47,7 +55,15 @@
     "name": "handle",
     "meta": {"format": "text/html", "state": "published"},
     "content": [
-      {"id": "dashboard-001", "version": 4, "token_count": 10240}
+      {
+        "id": "dashboard-001", "version": 4, "token_count": 10240,
+        "targets": [
+          {"id": "stats", "label": "Statistics section"},
+          {"id": "revenue-value"},
+          {"id": "orders-count"},
+          {"id": "users-table", "label": "Users data table", "accepts": "tr*"}
+        ]
+      }
     ]
   }
 }
