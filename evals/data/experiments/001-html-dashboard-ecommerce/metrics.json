@@ -1,0 +1,114 @@
+{
+  "experiment_id": "001-html-dashboard-ecommerce",
+  "model": "",
+  "provider": "google",
+  "seed": 42,
+  "temperature": 0,
+  "timestamp": "2026-04-03T03:55:39.570497+00:00",
+  "format": "text/html",
+  "shared": {
+    "creation_input_tokens": 229,
+    "creation_output_tokens": 1340,
+    "creation_latency_ms": 6441,
+    "artifact_bytes": 3864
+  },
+  "default_flow": {
+    "system_prompt_tokens": 229,
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the Total Revenue stat card to show $215,430 with a +12.3% trend indicato",
+        "input_tokens": 1597,
+        "output_tokens": 1416,
+        "latency_ms": 5624,
+        "output_bytes": 4066
+      },
+      {
+        "turn": 2,
+        "edit": "Add 15 new rows to the orders table with recent order data from March 2026",
+        "input_tokens": 3036,
+        "output_tokens": 1542,
+        "latency_ms": 5670,
+        "output_bytes": 4433
+      },
+      {
+        "turn": 3,
+        "edit": "Change the primary accent color from blue to purple (#8b5cf6) across all element",
+        "input_tokens": 4599,
+        "output_tokens": 1588,
+        "latency_ms": 6925,
+        "output_bytes": 4571
+      },
+      {
+        "turn": 4,
+        "edit": "Add a new 'Recent Activity' section after the stats cards showing the last 10 us",
+        "input_tokens": 6209,
+        "output_tokens": 1792,
+        "latency_ms": 7886,
+        "output_bytes": 5310
+      }
+    ],
+    "total_input_tokens": 15441,
+    "total_output_tokens": 6338,
+    "total_latency_ms": 26105
+  },
+  "aap_flow": {
+    "system_prompt_tokens": 0,
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the Total Revenue stat card to show $215,430 with a +12.3% trend indicato",
+        "input_tokens": 1756,
+        "output_tokens": 233,
+        "latency_ms": 2674,
+        "output_bytes": 3434,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "section"
+      },
+      {
+        "turn": 2,
+        "edit": "Add 15 new rows to the orders table with recent order data from March 2026",
+        "input_tokens": 1589,
+        "output_tokens": 354,
+        "latency_ms": 2015,
+        "output_bytes": 2944,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "section"
+      },
+      {
+        "turn": 3,
+        "edit": "Change the primary accent color from blue to purple (#8b5cf6) across all element",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 2890,
+        "output_bytes": 2944,
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "section"
+      },
+      {
+        "turn": 4,
+        "edit": "Add a new 'Recent Activity' section after the stats cards showing the last 10 us",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "latency_ms": 3144,
+        "output_bytes": 2944,
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "section"
+      }
+    ],
+    "total_input_tokens": 3345,
+    "total_output_tokens": 587,
+    "total_latency_ms": 10723,
+    "envelope_parse_rate": 1.0,
+    "apply_success_rate": 0.5
+  },
+  "comparison": {
+    "output_token_savings_pct": 90.7,
+    "input_token_savings_pct": 78.3,
+    "latency_savings_pct": 58.9
+  }
+}

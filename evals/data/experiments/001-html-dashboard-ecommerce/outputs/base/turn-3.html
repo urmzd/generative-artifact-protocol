@@ -1,89 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard</title>
 <style>
-    /* Root/General Styling Update */
-    :root {
-        --primary-accent-color: #8b5cf6 !important;
-        /* Assuming blue was previously defined here, we overwrite it */
-    }
-
-    /* Stat Card Updates */
-    .stat-card {
-        border: 1px solid #eee;
-        padding: 20px;
-        border-radius: 8px;
-        background-color: #fff;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-
-    .stat-card .trend-indicator.positive {
-        color: var(--primary-accent-color) !important;
-        font-weight: bold;
-    }
-
-    /* Table Updates (General Accordion/Accent Styling) */
-    .data-table th {
-        background-color: #ede9fe; /* Light shade of purple */
-        color: var(--primary-accent-color);
-        font-weight: 600;
-    }
-
-    .data-table tr:nth-child(even) {
-        background-color: #f9f7fc;
-    }
-
-    .data-table td {
-        border-color: #eee;
-    }
-
-    .data-table tbody tr:hover {
-        background-color: #e0d9f3; /* Lighter hover indication */
-        cursor: pointer;
-    }
+:root { --primary: #8b5cf6; --bg: #f8fafc; --text: #1e293b; --border: #e2e8f0; }
+body { font-family: system-ui, -apple-system, sans-serif; margin: 0; background: var(--bg); color: var(--text); }
+nav { background: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+.nav-links a { margin-left: 20px; text-decoration: none; color: var(--text); font-weight: 500; }
+.nav-links a:hover { color: var(--primary); }
+.avatar { width: 32px; height: 32px; background: #cbd5e1; border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: 10px; }
+.container { padding: 2rem; max-width: 1200px; margin: auto; }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+.card { background: #fff; padding: 1.5rem; border: 1px solid var(--border); border-radius: 8px; }
+table { width: 100%; border-collapse: collapse; background: #fff; margin-top: 1rem; }
+th { text-align: left; padding: 12px; border-bottom: 2px solid var(--border); background: #f1f5f9; }
+td { padding: 12px; border-bottom: 1px solid var(--border); }
+.badge { padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; }
+.status-active { background: #ede9fe; color: #5b21b6; }
+.status-low { background: #fee2e2; color: #991b1b; }
+.form-group { margin-bottom: 1rem; }
+input { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid var(--border); border-radius: 4px; }
+input:focus { outline: 2px solid var(--primary); border-color: transparent; }
+button { cursor: pointer; }
 </style>
+</head>
+<body>
 
-<div class="stat-card">
-    <h3 style="color: #333;">Total Revenue</h3>
-    <p class="stat-value">$215,430</p>
-    <p class="trend-indicator positive" style="color: #8b5cf6;">+12.3%</p>
-</div>
+<nav id="nav">
+    <div style="font-weight: bold; font-size: 1.2rem; color: var(--primary);">ADMIN DASHBOARD</div>
+    <div class="nav-links">
+        <a href="#stats">Dashboard</a>
+        <a href="#products-table">Products</a>
+        <a href="#orders-table">Orders</a>
+        <a href="#settings">Settings</a>
+        <span class="avatar"></span><span>Admin User</span>
+        <button style="margin-left: 20px; background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 4px;">Sign Out</button>
+    </div>
+</nav>
 
-<table class="data-table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-    <thead>
-        <tr style="border-bottom: 2px solid #ccc;">
-            <th style="text-align: left; padding: 12px;">Order ID</th>
-            <th style="text-align: left; padding: 12px;">Date</th>
-            <th style="text-align: left; padding: 12px;">Customer</th>
-            <th style="text-align: left; padding: 12px;">Product</th>
-            <th style="text-align: left; padding: 12px;">Quantity</th>
-            <th style="text-align: right; padding: 12px;">Price</th>
-            <th style="text-align: right; padding: 12px;">Total</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 10px; border-right: 1px solid #eee;">ORD9001</td><td style="padding: 10px; border-right: 1px solid #eee;">2026-03-01</td><td style="padding: 10px; border-right: 1px solid #eee;">Alice Smith</td><td style="padding: 10px; border-right: 1px solid #eee;">Laptop Pro X</td><td style="padding: 10px; border-right: 1px solid #eee;">1</td><td style="padding: 10px; border-right: 1px solid #eee; text-align: right;">$1200.00</td><td style="padding: 10px; text-align: right;">$1200.00</td></tr>
-        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 10px; border-right: 1px solid #eee;">ORD9002</td><td style="padding: 10px; border-right: 1px solid #eee;">2026-03-01</td><td style="padding: 10px; border-right: 1px solid #eee;">Bob Johnson</td><td style="padding: 10px; border-right: 1px solid #eee;">Wireless Mouse</td><td style="padding: 10px; border-right: 1px solid #eee;">2</td><td style="padding: 10px; border-right: 1px solid #eee; text-align: right;">$25.00</td><td style="padding: 10px; text-align: right;">$50.00</td></tr>
-        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 10px; border-right: 1px solid #eee;">ORD9003</td><td style="padding: 10px; border-right: 1px solid #eee;">2026-03-02</td><td style="padding: 10px; border-right: 1px solid #eee;">Charlie Brown</td><td style="padding: 10px; border-right: 1px solid #eee;">4K Monitor</td><td style="padding: 10px; border-right: 1px solid #eee;">1</td><td style="padding: 10px; border-right: 1px solid #eee; text-align: right;">$350.00</td><td style="padding: 10px; text-align: right;">$350.00</td></tr>
-        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 10px; border-right: 1px solid #eee;">ORD9004</td><td style="padding: 10px; border-right: 1px solid #eee;">2026-03-03</td><td style="padding: 10px; border-right: 1px solid #eee;">Diana Prince</td><td style="padding: 10px; border-right: 1px solid #eee;">USB-C Hub</td><td style="padding: 10px; border-right: 1px solid #eee;">3</td><td style="padding: 10px; border-right: 1px solid #eee; text-align: right;">$45.00</td><td style="padding: 10px; text-align: right;">$135.00</td></tr>
-        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 10px; border-right: 1px solid #eee;">ORD9005</td><td style="padding: 10px; border-right: 1px solid #eee;">2026-03-04</td><td style="padding: 10px; border-right: 1px solid #eee;">Ethan Hunt</td><td style="padding: 10px; border-right: 1px solid #eee;">Mechanical Keyboard</td><td style="padding: 10px; border-right: 1px solid #eee;">1</td><td style="padding: 10px; border-right: 1px solid #eee; text-align: right;">$110.00</td><td style="padding: 10px; text-align: right;">$110.00</td></tr>
-        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 10px; border-right: 1px solid #eee;">ORD9006</td><td style="padding: 10px; border-right: 1px solid #eee;">2026-03-05</td><td style="padding: 10px; border-right: 1px solid #eee;">Fiona Glenanne</td><td style="padding: 10px; border-right: 1px solid #eee;">External SSD 1TB</td><td style="padding: 10px; border-right: 1px solid #eee;">2</td><td style="padding: 10px; border-right: 1px solid #eee; text-align: right;">$99.99</td><td style="padding: 10px; text-align: right;">$199.98</td></tr>
-        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 10px; border-right: 1px solid #eee;">ORD9007</td><td style="padding: 10px; border-right: 1px solid #eee;">2026-03-07</td><td style="padding: 10px; border-right: 1px solid #eee;">George Kirk</td><td style="padding: 10px; border-right: 1px solid #eee;">Webcam HD</td><td style="padding: 10px; border-right: 1px solid #eee;">1</td><td style="padding: 10px; border-right: 1px solid #eee; text-align: right;">$75.00</td><td style="padding: 10px; text-align: right;">$75.00</td></tr>
-        <tr style="border-bottom: 1px solid #eee;"><td style="padding: 10px; border-right: 1px solid #eee;">&nbsp;</td><td style="padding: 10px; border-right: 1px solid #eee;">&nbsp;</td><td style="padding: 10px; border-right: 1px solid #eee;">&nbsp;</td><td style="padding: 10px;"><em>(Added padding for demonstration)</em></td></tr>
-        <tr>
-            <td style="padding: 10px; border-right: 1px solid #eee;">&nbsp;</td>
-            <td style="padding: 10px; border-right: 1px solid #eee;">&nbsp;</td>
-            <td style="padding: 10px; border-right: 1px solid #eee;">&nbsp;</td>
-            <td style="padding: 10px;"><em>(This row is to adjust layout space)</em></td>
-        </tr>
-        <tr>
-            <td style="padding: 10px; border-right: 1px solid #eee;">&nbsp;</td>
-            <td style="padding: 10px; border-right: 1px solid #eee;">&nbsp;</td>
-            <td style="padding: 10px; border-right: 1px solid #eee;">&nbsp;</td>
-            <td style="padding: 10px;"><em>(This row is to adjust layout space)</em></td>
-        </tr>
-        <!-- End adjustment rows -->
-        <tr style="border-bottom: 1px solid #ccc;">
-            <td style="padding: 10px; border-right: 1px solid #eee;">&nbsp;</td>
-            <td style="padding: 10px; border-right: 1px solid #eee;">&nbsp;</td>
-            <td style="padding: 10px; border-right: 1px solid #eee;">&nbsp;</td>
-            <td style="padding: 10px;"><strong>(End of Data)</strong></td>
-        </tr>
+<div class="container">
+
+<aap:section id="stats">
+    <div class="stats-grid">
+        <div class="card"><h3>Total Revenue</h3><p style="font-size: 1.5rem; color: var(--primary); font-weight: bold;">$215,430</p><small style="color: green;">+12.3%</small></div>
+        <div class="card"><h3>Orders</h3><p style="font-size: 1.5rem; font-weight: bold;">1,205</p><small style="color: green;">↑ 8%</small></div>
+        <div class="card"><h3>Customers</h3><p style="font-size: 1.5rem; font-weight: bold;">892</p><small style="color: green;">↑ 2%</small></div>
+        <div class="card"><h3>Conversion</h3><p style="font-size: 1.5rem; font-weight: bold;">3.2%</p><small style="color: red;">↓ 1%</small></div>
+    </div>
+</aap:section>
+
+<aap:section id="products-table">
+    <h2>Products</h2>
+    <table>
+        <thead><tr><th>Name</th><th>SKU</th><th>Price</th><th>Stock</th><th>Category</th><th>Status</th></tr></thead>
+        <tbody>
+            <script>
+                for(let i=1; i<=60; i++) {
+                    document.write(`<tr><td>Product ${i}</td><td>SKU-${1000+i}</td><td>$${(Math.random()*100).toFixed(2)}</td><td>${Math.floor(Math.random()*100)}</td><td>Category ${Math.floor(i/10)}</td><td><span class="badge ${i%5===0?'status-low':'status-active'}">${i%5===0?'Out':'In Stock'}</span></td></tr>`);
+                }
+            </script>
+        </tbody>
     </table>
+</aap:section>
+
+<aap:section id="orders-table">
+    <h2>Orders</h2>
+    <table>
+        <thead><tr><th>Order ID</th><th>Customer</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody>
+            <script>
+                for(let i=1; i<=40; i++) {
+                    document.write(`<tr><td>ORD-${5000+i}</td><td>Customer Name ${i}</td><td>$${(Math.random()*500).toFixed(2)}</td><td>2023-10-${Math.floor(i/2)+1}</td><td><span class="badge status-active">Completed</span></td></tr>`);
+                }
+                for(let i=1; i<=15; i++) {
+                    document.write(`<tr><td>ORD-900${i}</td><td>New Client ${i}</td><td>$${(Math.random()*200+50).toFixed(2)}</td><td>2026-03-${i.toString().padStart(2, '0')}</td><td><span class="badge status-active">Processing</span></td></tr>`);
+                }
+            </script>
+        </tbody>
+    </table>
+</aap:section>
+
+<aap:section id="settings">
+    <h2>Account Settings</h2>
+    <div class="card">
+        <div class="form-group"><label>Display Name</label><input type="text" value="Admin User"></div>
+        <div class="form-group"><label>Email Address</label><input type="email" value="admin@example.com"></div>
+        <div class="form-group"><label><input type="checkbox" checked> Enable email notifications</label></div>
+        <div class="form-group"><label><input type="checkbox"> Enable two-factor authentication</label></div>
+        <button style="background: var(--primary); color: white; padding: 10px 20px; border: none; border-radius: 4px;">Save Changes</button>
+    </div>
+</aap:section>
+
+</div>
+</body>
+</html>

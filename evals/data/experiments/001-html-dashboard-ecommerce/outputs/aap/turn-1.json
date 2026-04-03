@@ -1,0 +1,19 @@
+{
+  "protocol": "aap/0.1",
+  "id": "stats-update-1",
+  "version": 1,
+  "name": "section",
+  "operation": {
+    "direction": "output",
+    "format": "text/html",
+    "tokens_used": null,
+    "created_at": null,
+    "updated_at": null
+  },
+  "content": [
+    {
+      "text": "<div class=\"grid\">\n    <div class=\"card\"><h3>Total Revenue</h3><p>$215,430</p><small style=\"color:green\">↑ 12.3%</small></div>\n    <div class=\"card\"><h3>Orders</h3><p>1,204</p><small style=\"color:green\">↑ 5%</small></div>\n    <div class=\"card\"><h3>Customers</h3><p>8,592</p><small style=\"color:green\">↑ 2%</small></div>\n    <div class=\"card\"><h3>Conversion</h3><p>3.2%</p><small style=\"color:red\">↓ 0.5%</small></div>\n</div>",
+      "id": "stats"
+    }
+  ]
+}

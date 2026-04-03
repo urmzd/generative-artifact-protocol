@@ -1,0 +1,19 @@
+{
+  "protocol": "aap/0.1",
+  "id": "update-orders-table",
+  "version": 1,
+  "name": "section",
+  "operation": {
+    "direction": "output",
+    "format": "text/html",
+    "tokens_used": null,
+    "created_at": null,
+    "updated_at": null
+  },
+  "content": [
+    {
+      "id": "orders-table",
+      "html": "<aap:section id=\"orders-table\">\n<h2>Orders</h2>\n<table>\n    <thead><tr><th>ID</th><th>Customer</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead>\n    <tbody>\n        <script>\n            // Existing orders\n            for(let i=1; i<=40; i++) {\n                document.write(`<tr><td>#ORD-${5000+i}</td><td>Customer ${i}</td><td>$${(Math.random()*500).toFixed(2)}</td><td>2023-10-${(i%28)+1}</td><td><span class=\"badge ${i%3==0?'status-low':'status-active'}\">Processed</span></td></tr>`);\n            }\n            // March 2026 orders\n            for(let i=1; i<=15; i++) {\n                document.write(`<tr><td>#ORD-${6000+i}</td><td>New Cust ${i}</td><td>$${(Math.random()*500).toFixed(2)}</td><td>2026-03-${i.toString().padStart(2, '0')}</td><td><span class=\"badge status-active\">New</span></td></tr>`);\n            }\n        </script>\n    </tbody>\n</table>\n</aap:section>"
+    }
+  ]
+}

@@ -54,17 +54,7 @@ button { cursor: pointer; padding: 0.5rem 1rem; background: var(--primary); colo
 </aap:section>
 
 <aap:section id="orders-table">
-<h2>Orders</h2>
-<table>
-    <thead><tr><th>ID</th><th>Customer</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead>
-    <tbody>
-        <script>
-            for(let i=1; i<=40; i++) {
-                document.write(`<tr><td>#ORD-${5000+i}</td><td>Customer ${i}</td><td>$${(Math.random()*500).toFixed(2)}</td><td>2023-10-${(i%28)+1}</td><td><span class="badge ${i%3==0?'status-low':'status-active'}">Processed</span></td></tr>`);
-            }
-        </script>
-    </tbody>
-</table>
+
 </aap:section>
 
 <aap:section id="settings">

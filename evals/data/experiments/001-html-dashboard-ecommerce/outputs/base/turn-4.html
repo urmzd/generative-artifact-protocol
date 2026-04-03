@@ -1,125 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard</title>
 <style>
-    /* Root/General Styling Update */
-    :root {
-        --primary-accent-color: #8b5cf6 !important;
-        /* Assuming blue was previously defined here, we overwrite it */
-    }
-
-    /* Stat Card Updates */
-    .stat-card {
-        border: 1px solid #eee;
-        padding: 20px;
-        border-radius: 8px;
-        background-color: #fff;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        margin-bottom: 30px; /* Added space below stats */
-    }
-
-    .stat-card .trend-indicator.positive {
-        color: var(--primary-accent-color) !important;
-        font-weight: bold;
-    }
-
-    /* New Recent Activity Section Styling */
-    #recent-activity-section {
-        background-color: #f2f0f7; /* Very light purple background for separation */
-        border: 1px solid #d1c7e0;
-        padding: 30px;
-        border-radius: 10px;
-        margin-top: 40px;
-        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1); /* Subtle purple shadow */
-    }
-
-    #recent-activity-section h2 {
-        color: var(--primary-accent-color);
-        border-bottom: 2px solid var(--primary-accent-color);
-        display: inline-block;
-        padding-bottom: 5px;
-        margin-bottom: 25px;
-    }
-
-    .activity-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .activity-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        padding: 12px 0;
-        border-bottom: 1px dashed #ddd;
-    }
-
-    .activity-item:last-child {
-        border-bottom: none;
-    }
-
-    .activity-details {
-        flex-grow: 1;
-    }
-
-    .activity-time {
-        font-size: 0.9em;
-        color: #777;
-        flex-shrink: 0;
-        margin-left: 20px;
-    }
-    
-    /* Specific styling for actions/links within activity items */
-    .activity-action a {
-        color: var(--primary-accent-color);
-        text-decoration: none;
-    }
-
-    .activity-action a:hover {
-        text-decoration: underline;
-    }
+:root { --bg: #f4f7f6; --primary: #8b5cf6; --text: #1f2937; }
+body { font-family: system-ui, sans-serif; background: var(--bg); margin: 0; color: var(--text); }
+nav { background: #fff; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); }
+.container { padding: 2rem; max-width: 1200px; margin: auto; }
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+.card { background: #fff; padding: 1.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-top: 4px solid var(--primary); }
+table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; margin-top: 1rem; }
+th { background: #f9fafb; }
+th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid #e5e7eb; }
+.badge { padding: 0.25rem 0.5rem; border-radius: 999px; font-size: 0.75rem; font-weight: bold; }
+.status-active { background: #ede9fe; color: #5b21b6; }
+.status-low { background: #fee2e2; color: #991b1b; }
+.activity-list { list-style: none; padding: 0; }
+.activity-item { padding: 0.5rem 0; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+.form-group { margin-bottom: 1rem; }
+input { width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 4px; }
+button { cursor: pointer; padding: 0.5rem 1rem; background: var(--primary); color: white; border: none; border-radius: 4px; font-weight: 600; }
 </style>
+</head>
+<body>
 
-<div class="stat-card">
-    <h3 style="color: #333;">Total Revenue</h3>
-    <p class="stat-value">$215,430</p>
-    <p class="trend-indicator positive" style="color: #8b5cf6;">+12.3%</p>
+<aap:section id="nav">
+<nav>
+    <div style="font-weight:bold; font-size:1.5rem; color: var(--primary);">SHOP-ADMIN</div>
+    <div>Dashboard | Reports | Settings</div>
+    <div style="display:flex; align-items:center; gap:10px">
+        <span>Admin User</span>
+        <div style="width:30px; height:30px; background:var(--primary); border-radius:50%"></div>
+        <button style="background:#ef4444">Sign Out</button>
+    </div>
+</nav>
+</aap:section>
+
+<div class="container">
+<aap:section id="stats">
+<div class="grid">
+    <div class="card"><h3>Total Revenue</h3><p style="font-size: 1.5rem; font-weight: bold;">$215,430</p><small style="color:green; font-weight:bold;">+12.3%</small></div>
+    <div class="card"><h3>Orders</h3><p style="font-size: 1.5rem; font-weight: bold;">1,204</p><small style="color:green">↑ 5%</small></div>
+    <div class="card"><h3>Customers</h3><p style="font-size: 1.5rem; font-weight: bold;">8,592</p><small style="color:green">↑ 2%</small></div>
+    <div class="card"><h3>Conversion</h3><p style="font-size: 1.5rem; font-weight: bold;">3.2%</p><small style="color:red">↓ 0.5%</small></div>
 </div>
+</aap:section>
 
-<table class="data-table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-    <thead style="border-bottom: 2px solid #ccc;">
-        <tr style="background-color: #ede9fe;">
-            <th style="text-align: left; padding: 12px;">Order ID</th>
-            <th style="text-align: left; padding: 12px;">Date</th>
-            <th style="text-align: left; padding: 12px;">Customer</th>
-            <th style="text-align: left; padding: 12px;">Product</th>
-            <th style="text-align: left; padding: 12px;">Quantity</th>
-            <th style="text-align: right; padding: 12px;">Price</th>
-            <th style="text-align: right; padding: 12px;">Total</th>
-        </tr>
-    </thead>
+<aap:section id="recent-activity">
+<div class="card" style="margin-bottom: 2rem;">
+    <h3>Recent Activity</h3>
+    <ul class="activity-list">
+        <script>
+            const actions = ["Updated product pricing", "Added new category", "Processed refund", "Customer signed up", "Exported report", "Changed store settings", "Deleted old media", "Updated security policy", "Added user permission", "Reviewed customer ticket"];
+            actions.forEach(action => document.write(`<li class="activity-item"><strong>Admin:</strong> ${action} <span style="float:right; color:#888;">${Math.floor(Math.random()*60)}m ago</span></li>`));
+        </script>
+    </ul>
+</div>
+</aap:section>
+
+<aap:section id="products-table">
+<h2>Products</h2>
+<table>
+    <thead><tr><th>Name</th><th>SKU</th><th>Price</th><th>Stock</th><th>Category</th><th>Status</th></tr></thead>
     <tbody>
-        <tr><td style="padding: 10px; border-right: 1px solid #eee;">ORD9001</td><td style="padding: 10px; border-right: 1px solid #eee;">2026-03-01</td><td style="padding: 10px; border-right: 1px solid #eee;">Alice Smith</td><td style="padding: 10px; border-right: 1px solid #eee;">Laptop Pro X</td><td style="padding: 10px; border-right: 1px solid #eee;">1</td><td style="padding: 10px; border-right: 1px solid #eee; text-align: right;">$1200.00</td><td style="padding: 10px; text-align: right;">$1200.00</td></tr>
-        <tr><td style="padding: 10px; border-right: 1px solid #eee;">ORD9002</td><td style="padding: 10px; border-right: 1px solid #eee;">2026-03-01</td><td style="padding: 10px; border-right: 1px solid #eee;">Bob Johnson</td><td style="padding: 10px; border-right: 1px solid #eee;">Wireless Mouse</td><td style="padding: 10px; border-right: 1px solid #eee;">2</td><td style="padding: 10px; color: red;">$45.00</td><td style="padding: 10px;"></td></tr>
+        <script>
+            for(let i=1; i<=60; i++) {
+                document.write(`<tr><td>Product ${i}</td><td>SKU-${1000+i}</td><td>$${(Math.random()*100).toFixed(2)}</td><td>${Math.floor(Math.random()*100)}</td><td>Electronics</td><td><span class="badge status-active">Active</span></td></tr>`);
+            }
+        </script>
     </tbody>
 </table>
+</aap:section>
 
-<h2 style="margin-top: 40px;">Recent Activity</h2>
-<div id="recent-activity">
-    <div class="activity-item" style="padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
-        <div style="flex-basis: 70%;">
-            <strong>User A</strong> updated profile info (Email change).
-        </div>
-        <span style="color: #888;">5 minutes ago</span>
-    </div>
-    <div class="activity-item" style="padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
-        <div style="flex-basis: 70%;">
-            <strong>System Alert</strong> Password modified (Security action).
-        </div>
-        <span style="color: #888;">1 hour ago</span>
-    </div>
-    <div class="activity-item" style="padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
-        <div style="flex-basis: 70%;">
-            <strong>User B</strong> viewed product X details.
-        </div>
-        <span style="color: #888;">3 hours ago</span>
-    </div>
+<aap:section id="orders-table">
+<h2>Orders</h2>
+<table>
+    <thead><tr><th>ID</th><th>Customer</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead>
+    <tbody>
+        <script>
+            for(let i=1; i<=40; i++) {
+                document.write(`<tr><td>#ORD-${5000+i}</td><td>Customer ${i}</td><td>$${(Math.random()*500).toFixed(2)}</td><td>2023-10-${(i%28)+1}</td><td><span class="badge ${i%3==0?'status-low':'status-active'}">Processed</span></td></tr>`);
+            }
+            for(let i=1; i<=15; i++) {
+                document.write(`<tr><td>#ORD-${9000+i}</td><td>New Customer ${i}</td><td>$${(Math.random()*800+50).toFixed(2)}</td><td>2026-03-${i.toString().padStart(2, '0')}</td><td><span class="badge status-active">New</span></td></tr>`);
+            }
+        </script>
+    </tbody>
+</table>
+</aap:section>
+
+<aap:section id="settings">
+<div class="card" style="margin-top:2rem">
+    <h2>Account Settings</h2>
+    <div class="form-group"><label>Display Name</label><input type="text" value="Admin User"></div>
+    <div class="form-group"><label>Email</label><input type="email" value="admin@shop.com"></div>
+    <div class="form-group"><label><input type="checkbox" checked> Receive Email Notifications</label></div>
+    <button>Save Changes</button>
 </div>
+</aap:section>
+</div>
+
+</body>
+</html>

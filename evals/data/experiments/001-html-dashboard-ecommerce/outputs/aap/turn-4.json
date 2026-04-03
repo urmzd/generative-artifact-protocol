@@ -1,0 +1,19 @@
+{
+  "protocol": "aap/0.1",
+  "id": "stats",
+  "version": 1,
+  "name": "section",
+  "operation": {
+    "direction": "output",
+    "format": "text/html",
+    "tokens_used": null,
+    "created_at": null,
+    "updated_at": null
+  },
+  "content": [
+    {
+      "section": "<div class=\"grid\">\n    <div class=\"card\"><h3>Total Sales</h3><p style=\"font-size:1.5rem; font-weight:bold\">$45,231.89</p></div>\n    <div class=\"card\"><h3>Active Products</h3><p style=\"font-size:1.5rem; font-weight:bold\">1,204</p></div>\n    <div class=\"card\"><h3>Orders</h3><p style=\"font-size:1.5rem; font-weight:bold\">342</p></div>\n    <div class=\"card\"><h3>New Users</h3><p style=\"font-size:1.5rem; font-weight:bold\">89</p></div>\n</div>\n\n<div class=\"card\" style=\"margin-bottom:2rem\">\n    <h2>Recent Activity</h2>\n    <ul style=\"list-style:none; padding:0\">\n        <li style=\"padding:0.5rem 0; border-bottom:1px solid #eee\">Admin updated Product 12 - 2 mins ago</li>\n        <li style=\"padding:0.5rem 0; border-bottom:1px solid #eee\">New order #5521 received - 15 mins ago</li>\n        <li style=\"padding:0.5rem 0; border-bottom:1px solid #eee\">System backup completed - 1 hour ago</li>\n        <li style=\"padding:0.5rem 0; border-bottom:1px solid #eee\">Admin changed site settings - 2 hours ago</li>\n        <li style=\"padding:0.5rem 0; border-bottom:1px solid #eee\">Product 45 deleted - 3 hours ago</li>\n        <li style=\"padding:0.5rem 0; border-bottom:1px solid #eee\">New user registered: jdoe88 - 4 hours ago</li>\n        <li style=\"padding:0.5rem 0; border-bottom:1px solid #eee\">Payment processed for Order #5520 - 5 hours ago</li>\n        <li style=\"padding:0.5rem 0; border-bottom:1px solid #eee\">Admin updated Product 8 - 6 hours ago</li>\n        <li style=\"padding:0.5rem 0; border-bottom:1px solid #eee\">System maintenance window scheduled - 8 hours ago</li>\n        <li style=\"padding:0.5rem 0\">New order #5519 received - 9 hours ago</li>\n    </ul>\n</div>",
+      "id": "stats"
+    }
+  ]
+}
