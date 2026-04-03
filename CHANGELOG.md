@@ -1,5 +1,97 @@
 # Changelog
 
+## 0.4.0 (2026-04-03)
+
+### Breaking Changes
+
+- **markers**: use universal XML markers for all text formats ([bfe24e4](https://github.com/urmzd/agent-artifact-protocol/commit/bfe24e4b826bafbe754f5dedda919dfecb9c447d))
+
+### Features
+
+- **cli**: add conversation benchmark experiment runner ([22e012d](https://github.com/urmzd/agent-artifact-protocol/commit/22e012d87cdbff64ae4a3fd26a94f536e6a80af1))
+- **store**: add versioned artifact store with control-plane envelopes ([ec2878f](https://github.com/urmzd/agent-artifact-protocol/commit/ec2878f3c94042ae8fc27962eb6763a1fc9a1f92))
+- **aap**: add envelope types for control-plane operations ([830d70e](https://github.com/urmzd/agent-artifact-protocol/commit/830d70e00772113385dacf2f417dc908960cc04a))
+- **spec**: standardize section markers to universal XML format ([c93bd0c](https://github.com/urmzd/agent-artifact-protocol/commit/c93bd0c1377462e1ea10d0becd4f224bda99b560))
+- add deterministic envelope generation ([0f15547](https://github.com/urmzd/agent-artifact-protocol/commit/0f155470624466f915266b1325e6787db70eb7fd))
+- more benchmarks ([2dbd24d](https://github.com/urmzd/agent-artifact-protocol/commit/2dbd24d56fbb9c0af7e19e6ff3b2047594b04b05))
+- **tools**: add Python utilities for prompt management ([95c7013](https://github.com/urmzd/agent-artifact-protocol/commit/95c7013d1ccecdbf3825bd56f3d5d4f8f134f3a0))
+- **skills**: add generate-artifact skill definition ([337a2eb](https://github.com/urmzd/agent-artifact-protocol/commit/337a2eb132cfb7604b03dc33ec643b38a84673db))
+- **benches**: implement envelope apply engine in Go ([09d047d](https://github.com/urmzd/agent-artifact-protocol/commit/09d047d578b6c0bc16643301d1567c65b6edc1f8))
+
+### Bug Fixes
+
+- **main**: update logging field from mode to name ([5fe69f0](https://github.com/urmzd/agent-artifact-protocol/commit/5fe69f07afc86491a1c1f51e0d4918635bd1ec88))
+
+### Documentation
+
+- **project**: update structure to reflect tools → evals reorganization ([ed7a164](https://github.com/urmzd/agent-artifact-protocol/commit/ed7a164aa4a9bedb4da0c70ca81af8f6b5dda7f9))
+- deprecate tools package in favor of evals framework ([62e03f0](https://github.com/urmzd/agent-artifact-protocol/commit/62e03f0cfcd7c9bff8a1a6055db82eea8248c2fc))
+- **spec**: clarify cost model variable notation in aap ([1fd01f6](https://github.com/urmzd/agent-artifact-protocol/commit/1fd01f635097243bb7281478c7f6ee29bc5eb0db))
+- **spec**: clarify cost model and output token reduction ([09b2af5](https://github.com/urmzd/agent-artifact-protocol/commit/09b2af58a8b4966103593e6fde982cb51f8dd76a))
+- **readme**: expand cost model section with detailed analysis ([07b16f8](https://github.com/urmzd/agent-artifact-protocol/commit/07b16f80f88787614447e5a46ee70f369bbfa5f7))
+- **evals**: update maintain context terminology across all experiments ([89d5e27](https://github.com/urmzd/agent-artifact-protocol/commit/89d5e27fcce7f26002cf8d98ae094abd41c8a175))
+- **evals**: add framework documentation and benchmarks ([7f3944b](https://github.com/urmzd/agent-artifact-protocol/commit/7f3944bbdb9ba8c998c50e523b80f5737d298542))
+- **spec**: refactor context terminology and cost model ([732ea33](https://github.com/urmzd/agent-artifact-protocol/commit/732ea33b6325546d69eca07de2dca5fe5c2fb82e))
+- **evals**: add AAP section marker instructions to turn-0 prompts ([7be70e7](https://github.com/urmzd/agent-artifact-protocol/commit/7be70e74ef4e41e6ad66b9923a05c964dd21d73c))
+- **evals**: simplify AAP maintain-agent instructions ([834ae1b](https://github.com/urmzd/agent-artifact-protocol/commit/834ae1bc88b41688f1239b3f9f0aed877b74626f))
+- **evals**: update AAP section marker syntax in init-system prompts ([7e0ef79](https://github.com/urmzd/agent-artifact-protocol/commit/7e0ef791ed8aa5956ff752510468f9f478ff8af1))
+- **evals**: update experiment documentation with new overhead metrics ([0c00fb7](https://github.com/urmzd/agent-artifact-protocol/commit/0c00fb7ea52c13b3ec6e937d153d0b56f8242e66))
+- **evals**: update all prompts to use universal aap section markers ([9f8dfb1](https://github.com/urmzd/agent-artifact-protocol/commit/9f8dfb1f3f233701ab506d737a18be900c5cca60))
+- **readme**: add v0 stability warning ([cef8a75](https://github.com/urmzd/agent-artifact-protocol/commit/cef8a75bb8a8c172464dffb37e5bbb339ef71b95))
+- **spec**: downgrade AAP protocol to v0.1 ([7bfa484](https://github.com/urmzd/agent-artifact-protocol/commit/7bfa4845b13336dbd5d37c0679dcb7480ae7ce7a))
+- **spec**: update AAP specification to v2.0.0-draft ([85de1cc](https://github.com/urmzd/agent-artifact-protocol/commit/85de1cc6ec8c0d51b5431a3191856bed34e01c5a))
+- **benches**: update protocol benchmark results ([55bd8fb](https://github.com/urmzd/agent-artifact-protocol/commit/55bd8fb3a89bb96dc9fe68de9cc6ed46033be2d5))
+
+### Refactoring
+
+- **evals**: clarify context terminology in evaluation framework ([83028d5](https://github.com/urmzd/agent-artifact-protocol/commit/83028d5e9e44f8aff4fe8f1f6f63b896e9e64a60))
+- **evals**: restructure evaluation framework ([b2962dd](https://github.com/urmzd/agent-artifact-protocol/commit/b2962dd9a08cad82632097a586b3fa67221901e6))
+- **ffi**: update Python bindings for new apply signature ([e36ccfa](https://github.com/urmzd/agent-artifact-protocol/commit/e36ccfa322560f4e569ccf2a8dd52e524e17d5c9))
+- **apply**: redesign as stateless function ([13d86d0](https://github.com/urmzd/agent-artifact-protocol/commit/13d86d09141a58a0e050b2024b5581092f1bbc15))
+- **evals**: remove outdated marker instructions from inputs ([c38a853](https://github.com/urmzd/agent-artifact-protocol/commit/c38a85349aae6e520f6897cb5ce98c9a83e67ba8))
+- **build**: replace legacy benchmark script with new CLI ([9bbeec1](https://github.com/urmzd/agent-artifact-protocol/commit/9bbeec1d5a9531ef22195bda72864cede60e8808))
+- **evals**: update apply module for marker system ([13f16cc](https://github.com/urmzd/agent-artifact-protocol/commit/13f16cc4558a20da800983554caf0e1e90a88d98))
+- **evals**: update CLI for deterministic corpus generation ([234a6ca](https://github.com/urmzd/agent-artifact-protocol/commit/234a6ca47964c53fcbff8bac6bcfedbda64f02cb))
+- **benches**: migrate to real fixtures and universal markers ([64c08b1](https://github.com/urmzd/agent-artifact-protocol/commit/64c08b10ca867dac6015a2539f0725894c46d75b))
+- **evals**: migrate from Go benchmarks to Python CLI ([05ba8d9](https://github.com/urmzd/agent-artifact-protocol/commit/05ba8d99ad676d9bd273a4d28d1f83bc98f458ea))
+- **ollama**: replace async aiohttp with pydantic-ai ([3d012f5](https://github.com/urmzd/agent-artifact-protocol/commit/3d012f5c997170400ce005715b5d7d56b6d16f75))
+- replace Go benchmarks with Python eval framework ([c3c0283](https://github.com/urmzd/agent-artifact-protocol/commit/c3c02834b406d04a32cbf0adf5a38da433e2960b))
+- **benches**: improve provider error handling ([41d0428](https://github.com/urmzd/agent-artifact-protocol/commit/41d0428c3fbd38163a3852229a33cb6f540d48d4))
+- **core**: restructure envelope data model for v0.1 ([0d51ba2](https://github.com/urmzd/agent-artifact-protocol/commit/0d51ba228ca1711e1307ee0c2f255a583fe4247d))
+- **tools**: remove legacy aap implementation ([66fe8a8](https://github.com/urmzd/agent-artifact-protocol/commit/66fe8a813881f9c01c092d3d458ab6a0029bb513))
+
+### Miscellaneous
+
+- **data**: add html dashboard ecommerce experiment outputs ([585e265](https://github.com/urmzd/agent-artifact-protocol/commit/585e26533e8ffb9941a5726a61da6543eb3c0e4c))
+- **data**: add apply-engine conversation benchmark corpus (0018) ([786c51b](https://github.com/urmzd/agent-artifact-protocol/commit/786c51b114bfb2c3133adf56a1a5ea50bf6a76f9))
+- **data**: update apply-engine conversation benchmark corpus (0017) ([5672382](https://github.com/urmzd/agent-artifact-protocol/commit/5672382c95c467a756d3886c6c2cb75432b139c8))
+- **data**: add apply-engine conversation benchmark corpus (0017) ([7d2a380](https://github.com/urmzd/agent-artifact-protocol/commit/7d2a380ca282fe7fb7df28b2632eb78abbad436b))
+- **justfile**: add run command for conversation benchmarks ([85ee166](https://github.com/urmzd/agent-artifact-protocol/commit/85ee166a3b8d18344a24ebac171ac07943962f85))
+- **evals**: add apply-engine test case 0016 ([34162a7](https://github.com/urmzd/agent-artifact-protocol/commit/34162a753ff14b6b73290a4f0a02b7945697cf38))
+- **evals**: add apply-engine test case 0015 ([91ab6a3](https://github.com/urmzd/agent-artifact-protocol/commit/91ab6a30f51e4990e6681c084c6cf3a1c0a10b96))
+- **evals**: add apply-engine test case 0014 ([77c25ed](https://github.com/urmzd/agent-artifact-protocol/commit/77c25ed6d395e454a6407a3f1e137dcf6d4b1c5a))
+- **evals**: add apply-engine case 0013 (html-dashboard) ([6ea1720](https://github.com/urmzd/agent-artifact-protocol/commit/6ea172084913a1f1fe147f00a2e13d9173581d85))
+- **evals**: add apply-engine test cases 0002-0012 ([55e8037](https://github.com/urmzd/agent-artifact-protocol/commit/55e80378d056c50e33055e8758338b651a20591d))
+- **deps**: add sha2 for artifact checksums ([b0b4f14](https://github.com/urmzd/agent-artifact-protocol/commit/b0b4f14c703190ab4c73b124877e3b03c8998b0e))
+- **evals**: remove old apply-engine evaluation artifacts ([e3344d4](https://github.com/urmzd/agent-artifact-protocol/commit/e3344d49374398d769f6daea6367942219ed6d1a))
+- **evals**: add apply-engine benchmark corpus fixtures ([fc8951f](https://github.com/urmzd/agent-artifact-protocol/commit/fc8951f7ef403d0af54ef4346a24cc0fb18b3e88))
+- **apply**: update test fixtures to universal XML markers ([65c692a](https://github.com/urmzd/agent-artifact-protocol/commit/65c692afa4485f95a4f0e9147799e6559e9ca5a8))
+- **evals**: compile extension and update dependencies ([d303b09](https://github.com/urmzd/agent-artifact-protocol/commit/d303b098f6967f73c187a3fa461a8cf3130a5a9e))
+- remove deprecated AAP skill definitions ([a8da8f4](https://github.com/urmzd/agent-artifact-protocol/commit/a8da8f4cd73242b997c835655cc81304f98c8202))
+- **benches**: add AAP protocol benchmark dataset ([c6db0f0](https://github.com/urmzd/agent-artifact-protocol/commit/c6db0f06d07de7a78d5a30b06452563ff7f25970))
+- **benches**: add AAP protocol benchmark infrastructure ([f9dbf93](https://github.com/urmzd/agent-artifact-protocol/commit/f9dbf93ab54e0ddc4ebd2667ab6fa064d0ecda45))
+- **benches**: add comprehensive benchmark dataset (88 experiments) ([96ead37](https://github.com/urmzd/agent-artifact-protocol/commit/96ead3733124836d9c2e347909ed901b759f7b65))
+- **justfile**: simplify development recipes ([1898c00](https://github.com/urmzd/agent-artifact-protocol/commit/1898c001890e31f89fa466a8219bf1f4fcad2977))
+- **gitignore**: exclude generated asset inputs ([574cc0f](https://github.com/urmzd/agent-artifact-protocol/commit/574cc0f2adba7485afc1889afb1f14defc2c3f46))
+- **cargo**: add package metadata for crates.io ([285e4e7](https://github.com/urmzd/agent-artifact-protocol/commit/285e4e7025e4bd508cd3a3d7c8c76a07c8f9e5c7))
+- **license**: add dual licensing structure ([e4915d3](https://github.com/urmzd/agent-artifact-protocol/commit/e4915d35a37f6eb20feabe34d1c31fe37ea8b200))
+- **release**: add automated crates.io publish workflow ([45d720d](https://github.com/urmzd/agent-artifact-protocol/commit/45d720db418792c0110b6344a2dac969a6df2c8a))
+- **python**: rename package from artifact-generator to aap ([677e7af](https://github.com/urmzd/agent-artifact-protocol/commit/677e7aff22f78fea14d1cda8adad8c81db37f6d5))
+- **justfile**: add bench-all convenience recipe ([911ea1b](https://github.com/urmzd/agent-artifact-protocol/commit/911ea1be4951aa4200c97af5c1f601f61ac7cf55))
+
+[Full Changelog](https://github.com/urmzd/agent-artifact-protocol/compare/v0.3.0...v0.4.0)
+
+
 ## 0.3.0 (2026-04-01)
 
 ### Features
