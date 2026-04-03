@@ -19,7 +19,7 @@ from ..models import AAPTurnResult
 from ..schema import LLMEnvelope
 
 
-def run_aap_turn0(
+async def run_aap_turn0(
     llm: Model,
     init_system: str,
     turn0_prompt: str,
@@ -32,26 +32,26 @@ def run_aap_turn0(
     """
     agent: Agent[None, str] = Agent(llm, system_prompt=init_system)
     t0 = time.perf_counter()
-    r = agent.run_stream_sync(turn0_prompt)
-    raw_text, latency = collect_text_streaming_latency(r)
-    ms = int((time.perf_counter() - t0) * 1000)
-    usage = r.usage()
-    artifact = clean_artifact(raw_text)
-    (output_dir / f"turn-0{ext}").write_text(artifact)
+    async with agent.run_stream(turn0_prompt) as r:
+        raw_text, latency = await collect_text_streaming_latency(r)
+        ms = int((time.perf_counter() - t0) * 1000)
+        usage = r.usage()
+        artifact = clean_artifact(raw_text)
+        (output_dir / f"turn-0{ext}").write_text(artifact)
 
-    metrics = {
-        "input_tokens": usage.input_tokens,
-        "output_tokens": usage.output_tokens,
-        "latency_ms": ms,
-        "artifact_bytes": len(artifact.encode()),
-        "ttft_ms": latency.ttft_ms,
-        "ttlt_ms": latency.ttlt_ms,
-        "median_itl_ms": latency.median_itl_ms,
-    }
-    return artifact, metrics
+        metrics = {
+            "input_tokens": usage.input_tokens,
+            "output_tokens": usage.output_tokens,
+            "latency_ms": ms,
+            "artifact_bytes": len(artifact.encode()),
+            "ttft_ms": latency.ttft_ms,
+            "ttlt_ms": latency.ttlt_ms,
+            "median_itl_ms": latency.median_itl_ms,
+        }
+        return artifact, metrics
 
 
-def run_aap_flow(
+async def run_aap_flow(
     llm: Model,
     maintain_system: str,
     artifact: str,
@@ -86,25 +86,25 @@ def run_aap_flow(
         env_name = ""
         envelope_json = ""
         latency = StreamingLatency()
+        usage = type("U", (), {"input_tokens": 0, "output_tokens": 0})()
 
         try:
-            r = maintain_agent.run_stream_sync(user_msg)
-            envelope, latency = collect_structured_streaming_latency(r)
-            ms = int((time.perf_counter() - t0) * 1000)
-            usage = r.usage()
+            async with maintain_agent.run_stream(user_msg) as r:
+                envelope, latency = await collect_structured_streaming_latency(r)
+                ms = int((time.perf_counter() - t0) * 1000)
+                usage = r.usage()
 
-            parsed = True
-            env_name = envelope.name
-            envelope_json = envelope.model_dump_json(indent=2)
+                parsed = True
+                env_name = envelope.name
+                envelope_json = envelope.model_dump_json(indent=2)
 
-            new_artifact = apply_envelope(artifact, envelope, fmt)
-            succeeded = True
-            artifact = new_artifact
-            version += 1
+                new_artifact = apply_envelope(artifact, envelope, fmt)
+                succeeded = True
+                artifact = new_artifact
+                version += 1
 
         except Exception as e:
             ms = int((time.perf_counter() - t0) * 1000)
-            usage = type("U", (), {"input_tokens": 0, "output_tokens": 0})()
 
         if envelope_json:
             (output_dir / f"{turn_name}.json").write_text(envelope_json)
