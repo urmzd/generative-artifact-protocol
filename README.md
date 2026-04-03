@@ -1,5 +1,7 @@
 # aap
 
+> **Warning**: This project is `v0` — the protocol, schemas, and APIs are subject to breaking changes without notice until a formal release.
+
 An open standard for token-efficient artifact generation, updates, and streaming — the **[Agent-Artifact Protocol (AAP)](spec/aap.md)**. The protocol defines how LLMs can declare, diff, and reprovision text artifacts with minimal token expenditure (90-99% savings on updates).
 
 Includes a Rust reference implementation with a versioned artifact store, apply engine, and CLI tool for resolving protocol envelopes.
@@ -62,7 +64,7 @@ aap <input> [--watch] [--output <file>]
 - `--watch` — keep watching and resolve on changes (runs until Ctrl+C).
 - `--output` — write resolved content to a file instead of stdout.
 
-When the input contains a protocol envelope (JSON with `"protocol": "aap/1.0"`), the binary resolves the envelope (applying diffs, section updates, templates, or composites) using the versioned artifact store. Plain files are passed through unchanged.
+When the input contains a protocol envelope (JSON with `"protocol": "aap/0.1"`), the binary resolves the envelope (applying diffs, section updates, templates, or composites) using the versioned artifact store. Plain files are passed through unchanged.
 
 ## Observability
 
