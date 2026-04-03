@@ -1,10 +1,13 @@
-"""Spec-compliant AAP Pydantic models — matches spec/aap.md."""
+"""Spec-compliant AAP Pydantic models — mirrors ../src/aap.rs."""
 
 from __future__ import annotations
 
-from typing import Any, Literal
+from typing import Annotated, Literal, Union
 
 from pydantic import BaseModel, Field
+
+
+# ── Content item types (per name discriminator) ───────────────────────────
 
 
 class DiffTarget(BaseModel):
@@ -25,13 +28,6 @@ class DiffOp(BaseModel):
     content: str | None = None
 
 
-class SectionUpdate(BaseModel):
-    """Replace a named section's content."""
-
-    id: str
-    content: str
-
-
 class SectionDef(BaseModel):
     """Section definition within a full envelope."""
 
@@ -39,6 +35,13 @@ class SectionDef(BaseModel):
     label: str | None = None
     start_marker: str | None = None
     end_marker: str | None = None
+
+
+class SectionUpdate(BaseModel):
+    """Replace a named section's content."""
+
+    id: str
+    content: str
 
 
 class FullContentItem(BaseModel):
@@ -55,6 +58,9 @@ class TemplateContentItem(BaseModel):
     bindings: dict[str, str]
 
 
+# ── Operation metadata ────────────────────────────────────────────────────
+
+
 class OperationMeta(BaseModel):
     """Envelope operation metadata."""
 
@@ -65,12 +71,54 @@ class OperationMeta(BaseModel):
     updated_at: str | None = None
 
 
-class Envelope(BaseModel):
-    """Spec-compliant AAP envelope — structured output from the maintain context."""
+# ── Typed envelope variants ───────────────────────────────────────────────
+
+
+class FullEnvelope(BaseModel):
+    """Envelope for name=full."""
 
     protocol: Literal["aap/0.1"] = "aap/0.1"
     id: str
     version: int
-    name: Literal["full", "diff", "section", "template"]
+    name: Literal["full"]
     operation: OperationMeta = Field(default_factory=OperationMeta)
-    content: list[dict[str, Any]]
+    content: list[FullContentItem]
+
+
+class DiffEnvelope(BaseModel):
+    """Envelope for name=diff."""
+
+    protocol: Literal["aap/0.1"] = "aap/0.1"
+    id: str
+    version: int
+    name: Literal["diff"]
+    operation: OperationMeta = Field(default_factory=OperationMeta)
+    content: list[DiffOp]
+
+
+class SectionEnvelope(BaseModel):
+    """Envelope for name=section."""
+
+    protocol: Literal["aap/0.1"] = "aap/0.1"
+    id: str
+    version: int
+    name: Literal["section"]
+    operation: OperationMeta = Field(default_factory=OperationMeta)
+    content: list[SectionUpdate]
+
+
+class TemplateEnvelope(BaseModel):
+    """Envelope for name=template."""
+
+    protocol: Literal["aap/0.1"] = "aap/0.1"
+    id: str
+    version: int
+    name: Literal["template"]
+    operation: OperationMeta = Field(default_factory=OperationMeta)
+    content: list[TemplateContentItem]
+
+
+Envelope = Annotated[
+    Union[FullEnvelope, DiffEnvelope, SectionEnvelope, TemplateEnvelope],
+    Field(discriminator="name"),
+]
