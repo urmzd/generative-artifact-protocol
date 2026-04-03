@@ -39,8 +39,7 @@ The **Agent-Artifact Protocol (AAP)** is a portable, format-agnostic standard th
 | **Generation** | The act of producing artifact content (initial creation or update) |
 | **Reprovisioning** | Updating an existing artifact to a new version |
 | **Token budget** | Maximum token allocation for a generation |
-| **Handle** | Lightweight reference returned after any mutation — contains section IDs, token count, and state |
-| **Handle result** | Response from handle interaction — discriminated union of text, edit, or error |
+| **Handle** | Lightweight reference returned after any mutation — contains artifact ID, version, token count, and optional content |
 | **Orchestrator** | Agent that manages artifacts via handles — never holds full content |
 | **Init context** | Secondary context specialized for artifact creation — produces `name: "synthesize"` envelopes. May be an LLM call, agent, tool invocation, or any bounded execution context |
 | **Maintain context** | Secondary context specialized for edits — produces `name: "edit"` envelopes. Context per call: artifact + message. Discarded after each call |
@@ -65,14 +64,13 @@ Every protocol-aware payload is wrapped in an **envelope** — a JSON object wit
 | `operation` | object | YES | Metadata about the action (see below) |
 | `content` | array | YES | List of content objects — shape determined by `name` |
 
-The `name` field determines what the envelope represents and what shape the `content` items take. There are 4 envelope types:
+The `name` field determines what the envelope represents and what shape the `content` items take. There are 3 envelope types:
 
 | Direction | Name | Description |
 |---|---|---|
 | input | `synthesize` | Full artifact generation |
 | input | `edit` | Targeted changes via Target union |
-| output | `handle` | Lightweight reference returned after any mutation |
-| output | `handle_result` | Response from handle interaction — discriminated union: text, edit, error |
+| output | `handle` | Lightweight artifact reference returned after any mutation |
 
 #### 3.1.1 Operation Object
 
@@ -82,21 +80,15 @@ The `operation` object carries metadata about the action:
 |---|---|---|---|
 | `direction` | string | YES | `"input"` (to the system) or `"output"` (from the system) |
 | `format` | string | YES | MIME type of the artifact content (`text/html`, `text/x-python`, `application/json`, etc.) |
-| `encoding` | string | no | Character encoding. Default: `"utf-8"` |
-| `content_encoding` | string | no | Compression: `"gzip"` or `"zstd"`. Applied to body fields |
-| `token_budget` | object | no | Token budget constraints (see [Section 6](#6-token-budgeting)) |
 | `tokens_used` | integer | no | Actual tokens consumed to produce this payload |
 | `checksum` | string | no | `sha256:<hex>` integrity hash of the resolved content |
-| `created_at` | string | no | ISO 8601 timestamp of initial creation |
-| `updated_at` | string | no | ISO 8601 timestamp of this version |
 | `state` | string | no | Entity lifecycle state: `"draft"`, `"published"`, `"archived"` (see [Section 8](#8-artifact-entity-state)) |
-| `state_changed_at` | string | no | ISO 8601 timestamp of last state transition |
 
 The `operation` object is extensible — implementations MAY add additional fields for vendor-specific or future extensions.
 
 #### 3.1.2 Content Array
 
-The `content` field is always an **array of objects**. This enables parallel operations in a single envelope — multiple edit operations, multiple handle results — without requiring separate tool calls or API requests.
+The `content` field is always an **array of objects**. This enables parallel operations in a single envelope — multiple edit operations in a single envelope — without requiring separate tool calls or API requests.
 
 The shape of each content item is determined by `name`. See [Section 4](#4-operations) for the content schema of each operation name.
 
@@ -111,8 +103,7 @@ The shape of each content item is determined by `name`. See [Section 4](#4-opera
   "operation": {"direction": "input", "format": "text/html"},
   "content": [
     {
-      "body": "<!DOCTYPE html><html><body><h1>Dashboard</h1></body></html>",
-      "targets": [{"id": "stats"}, {"id": "users"}]
+      "body": "<!DOCTYPE html><html><body><h1>Dashboard</h1></body></html>"
     }
   ]
 }
@@ -185,7 +176,6 @@ Complete artifact content. This is the baseline — most expensive, always corre
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `body` | string | YES | Full artifact content |
-| `targets` | array | no | Target definitions (see [Section 3.2](#32-targets)) |
 
 ```json
 {
@@ -196,8 +186,7 @@ Complete artifact content. This is the baseline — most expensive, always corre
   "operation": {"direction": "input", "format": "text/html"},
   "content": [
     {
-      "body": "<html><body><h1>Q4 Report</h1>...</body></html>",
-      "targets": [{"id": "summary"}, {"id": "charts"}]
+      "body": "<html><body><aap:target id=\"summary\"><h1>Q4 Report</h1></aap:target>...</body></html>"
     }
   ]
 }
@@ -277,15 +266,6 @@ A target identifies where in the artifact the operation applies. The target is a
   ]
 }
 ```
-
-### 4.3 Content Encoding (Compression)
-
-Any operation MAY compress its content body fields using `operation.content_encoding`:
-
-- `"gzip"` — gzip compression (RFC 1952)
-- `"zstd"` — Zstandard compression (RFC 8878)
-
-Compressed content MUST be base64-encoded in JSON. The `operation.checksum` field, if present, applies to the **uncompressed** content.
 
 ---
 
@@ -395,8 +375,6 @@ Orchestrator (handles, user conversation)
     |-- create --> Init context --> name:"synthesize" envelope --> Apply engine --> Store --> name:"handle"
     |
     |-- edit --> Maintain context --> name:"edit" envelope --> Apply engine --> Store --> name:"handle"
-    |
-    |-- interact --> Handle interaction --> name:"handle_result"
 ```
 
 > **Non-normative note:** A common realization is two LLM agents with different system prompts, models, and temperature settings behind tool-call interfaces. But the architecture is not prescriptive about mechanism. Any implementation where the orchestrator provides a mechanism to dispatch operations to ephemeral secondary contexts — and those contexts operate on less data than the orchestrator holds — is compliant.
@@ -674,13 +652,17 @@ The architecture structurally reduces hallucination through context separation:
 
 A **handle** is an envelope the orchestrator holds instead of full artifact content. It is returned after every `synthesize` or `edit` operation. It provides enough metadata for decision-making without consuming context budget.
 
+The handle contains the artifact's identity and optional metadata. Implementations MAY include the `content` field when the orchestrator explicitly requests the artifact body (e.g., to answer a user's question), but by default handles are lightweight.
+
 **Content item schema:**
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `sections` | array of strings | YES | Target IDs present in the artifact |
+| `id` | string | YES | Artifact identifier |
+| `version` | integer | YES | Current artifact version |
 | `token_count` | integer | no | Approximate token count of the full artifact |
 | `state` | string | no | Entity lifecycle state |
+| `content` | string | no | Artifact body (included only when explicitly requested) |
 
 **Example:**
 
@@ -690,9 +672,9 @@ A **handle** is an envelope the orchestrator holds instead of full artifact cont
   "id": "dashboard-001",
   "version": 5,
   "name": "handle",
-  "operation": {"direction": "output", "format": "text/html", "state": "published", "updated_at": "2026-03-29T14:30:00Z"},
+  "operation": {"direction": "output", "format": "text/html", "state": "published"},
   "content": [
-    {"sections": ["nav", "stats", "users", "orders"], "token_count": 10240}
+    {"id": "dashboard-001", "version": 5, "token_count": 10240}
   ]
 }
 ```
