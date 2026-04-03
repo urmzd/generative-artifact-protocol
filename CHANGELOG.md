@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.4.1 (2026-04-03)
+
+### Documentation
+
+- remove benchmark generation instruction from README ([a060430](https://github.com/urmzd/agent-artifact-protocol/commit/a06043094cc8ff4a485684c283a6327de1c99bb5))
+- **spec**: fix cross-reference link in error recovery section ([08ec641](https://github.com/urmzd/agent-artifact-protocol/commit/08ec6414880b501aafb9b0f471adcf66192bac27))
+- **readme**: restructure documentation around apply engine library ([64a0578](https://github.com/urmzd/agent-artifact-protocol/commit/64a0578669c863488d3c8633de828a0a98c45be6))
+- **CONTRIBUTING**: simplify contribution guidelines ([bf503ac](https://github.com/urmzd/agent-artifact-protocol/commit/bf503ac14fa6da8f5d010f48dafff2ac6918b521))
+
+### Refactoring
+
+- **evals/cli**: remove experiment command and add provider option ([764d898](https://github.com/urmzd/agent-artifact-protocol/commit/764d898275447fe8cffadf206769beeffadf8865))
+- **evals/agents**: simplify to model factory and artifact generation ([2acabbd](https://github.com/urmzd/agent-artifact-protocol/commit/2acabbd1c12c76da9ef56f183e40460bc76ef29e))
+
+### Miscellaneous
+
+- add eval dataset for apply-engine operations ([44e57f4](https://github.com/urmzd/agent-artifact-protocol/commit/44e57f424181108ce1b9a902f37d2eb3f125814d))
+- update project metadata for agent-artifact-protocol ([d5c84cb](https://github.com/urmzd/agent-artifact-protocol/commit/d5c84cb92b61189343cf7bc28b7a95172e63fd4a))
+- **evals**: add evaluation test cases for apply engine ([4ae007a](https://github.com/urmzd/agent-artifact-protocol/commit/4ae007a2ff4c1b44bba8cfd2b4bc2677568b1f6d))
+- regenerate binary and dependency lock files ([feccecd](https://github.com/urmzd/agent-artifact-protocol/commit/feccecd1244ade1432ab608bc5ab07fe69a828bf))
+- **justfile**: update recipes for experiment removal and provider option ([473ab22](https://github.com/urmzd/agent-artifact-protocol/commit/473ab22d13749fe6ca25d8c7ecbadd4a1f6bf6a1))
+- **evals**: add google provider support to pydantic-ai-slim ([3695121](https://github.com/urmzd/agent-artifact-protocol/commit/369512159ea3b6650d9a5275215b47b5e44218b0))
+- **experiments**: add html-dashboard-ecommerce output turn 2 ([ea95050](https://github.com/urmzd/agent-artifact-protocol/commit/ea95050bebff2db7f68304a2748f8b1b702face0))
+- **apply-engine**: add test case 0020 (energy consumption dashboard) ([1dadf26](https://github.com/urmzd/agent-artifact-protocol/commit/1dadf2679eb72bdacbc48c27a6c358bfbfbf70e1))
+- **apply-engine**: add test case 0019 (server monitoring dashboard) ([5fcf2d5](https://github.com/urmzd/agent-artifact-protocol/commit/5fcf2d5cd8027ba2c095a1e378228cdf000c06ec))
+- **evals**: add experiment 001 HTML dashboard ecommerce ([1d7becd](https://github.com/urmzd/agent-artifact-protocol/commit/1d7becd3d17a67e8e4e6cc3984fa613a84f29058))
+- **evals**: update case 0018 to social media analytics ([20d7a34](https://github.com/urmzd/agent-artifact-protocol/commit/20d7a344f1201d42d15cf6ad53cff352d73c3655))
+
+[Full Changelog](https://github.com/urmzd/agent-artifact-protocol/compare/v0.4.0...v0.4.1)
+
+
 ## 0.4.0 (2026-04-03)
 
 ### Breaking Changes
