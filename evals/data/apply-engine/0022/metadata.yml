@@ -1,0 +1,13 @@
+case_num: 22
+category: html-dashboard
+variant: dashboard for inventory management
+format: text/html
+extension: .html
+filename: dashboard.html
+model: gemma4
+host: http://localhost:11434
+generated_at: 2026-04-03T03:46:57.322535+00:00
+artifact_bytes: 10401
+sections_expected: [nav, stats, content, footer]
+sections_found: []
+envelope_files: [diff-delete.jsonl, diff-multi.jsonl, diff-replace.jsonl, full.jsonl, template-fill.jsonl]
