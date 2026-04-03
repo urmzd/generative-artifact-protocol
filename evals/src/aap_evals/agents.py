@@ -105,13 +105,13 @@ def clean_artifact(text: str) -> str:
     return text
 
 
-def generate_artifact(model: Model, prompt: str) -> str:
+async def generate_artifact(model: Model, prompt: str) -> str:
     """Generate a single artifact. Returns cleaned content."""
     agent: Agent[None, str] = Agent(
         model,
         system_prompt="You are a code generator. Output only raw code/content. No markdown fences, no explanation.",
     )
-    result = agent.run_sync(prompt)
+    result = await agent.run(prompt)
     return clean_artifact(result.output)
 
 
@@ -143,8 +143,8 @@ def _latency_from_timestamps(t0: float, timestamps: list[float]) -> StreamingLat
     return StreamingLatency(ttft_ms=ttft_ms, ttlt_ms=ttlt_ms, median_itl_ms=median_itl_ms)
 
 
-def collect_text_streaming_latency(stream_result) -> tuple[str, StreamingLatency]:
-    """Consume a text StreamedRunResultSync via stream_text and collect latency metrics.
+async def collect_text_streaming_latency(stream_result) -> tuple[str, StreamingLatency]:
+    """Consume a text StreamedRunResult via stream_text and collect latency metrics.
 
     Use for agents with plain text output. Returns (full_text, StreamingLatency).
     """
@@ -152,7 +152,7 @@ def collect_text_streaming_latency(stream_result) -> tuple[str, StreamingLatency
     chunks: list[str] = []
     timestamps: list[float] = []
 
-    for delta in stream_result.stream_text(delta=True, debounce_by=None):
+    async for delta in stream_result.stream_text(delta=True, debounce_by=None):
         if delta:
             timestamps.append(time.perf_counter())
             chunks.append(delta)
@@ -160,8 +160,8 @@ def collect_text_streaming_latency(stream_result) -> tuple[str, StreamingLatency
     return "".join(chunks), _latency_from_timestamps(t0, timestamps)
 
 
-def collect_structured_streaming_latency(stream_result) -> tuple[object, StreamingLatency]:
-    """Consume a structured StreamedRunResultSync via stream_output and collect latency metrics.
+async def collect_structured_streaming_latency(stream_result) -> tuple[object, StreamingLatency]:
+    """Consume a structured StreamedRunResult via stream_output and collect latency metrics.
 
     Use for agents with structured output_type. Returns (parsed_output, StreamingLatency).
     """
@@ -169,7 +169,7 @@ def collect_structured_streaming_latency(stream_result) -> tuple[object, Streami
     timestamps: list[float] = []
     output = None
 
-    for partial in stream_result.stream_output(debounce_by=None):
+    async for partial in stream_result.stream_output(debounce_by=None):
         timestamps.append(time.perf_counter())
         output = partial
 
