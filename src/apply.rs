@@ -4,66 +4,97 @@
 use anyhow::{bail, Context, Result};
 use std::collections::HashMap;
 
-use crate::aap::{DiffOp, Envelope, Include, Mode, OpType, SectionDef, SectionUpdate};
+use crate::aap::{
+    DiffOp, Envelope, FullContentItem, Include, ManifestContentItem, Name, OpType, SectionDef,
+    SectionUpdate, TemplateContentItem,
+};
 use crate::markers::{find_section_def, find_section_range, find_section_range_inclusive, resolve_markers};
 
 /// Resolve an envelope to its final content string.
 ///
-/// For `full` mode, returns content directly.
-/// For other modes, requires the base content from the store.
+/// For `full` name, returns content body directly.
+/// For other names, requires the base content from the store.
+/// Control-plane operations (handle, projection, intent, result, audit) error.
 pub fn resolve(envelope: &Envelope, store: &HashMap<String, String>) -> Result<String> {
-    let format = envelope.format.as_str();
-    let sections = envelope.sections.as_deref();
+    let format = envelope
+        .operation
+        .format
+        .as_deref()
+        .unwrap_or("text/html");
 
-    match envelope.mode {
-        Mode::Full => envelope
-            .content
-            .clone()
-            .context("full-mode envelope missing content"),
-        Mode::Diff => {
+    match envelope.name {
+        Name::Full => {
+            let item: FullContentItem = serde_json::from_value(
+                envelope
+                    .content
+                    .first()
+                    .context("full: empty content array")?
+                    .clone(),
+            )
+            .context("full: failed to parse content item")?;
+            Ok(item.body)
+        }
+        Name::Diff => {
             let base = store
                 .get(&envelope.id)
                 .context("no base content for diff")?;
-            let ops = envelope
-                .operations
-                .as_ref()
-                .context("diff-mode envelope missing operations")?;
-            apply_diff(base, ops, format, sections)
+            let ops: Vec<DiffOp> = envelope
+                .content
+                .iter()
+                .map(|v| serde_json::from_value(v.clone()))
+                .collect::<std::result::Result<Vec<_>, _>>()
+                .context("diff: failed to parse content items")?;
+            // Extract sections from store if available (stored from prior full envelope)
+            apply_diff(base, &ops, format, None)
         }
-        Mode::Section => {
+        Name::Section => {
             let base = store
                 .get(&envelope.id)
                 .context("no base content for section update")?;
-            let updates = envelope
-                .target_sections
-                .as_ref()
-                .context("section-mode envelope missing target_sections")?;
-            apply_section_update(base, updates, format, sections)
+            let updates: Vec<SectionUpdate> = envelope
+                .content
+                .iter()
+                .map(|v| serde_json::from_value(v.clone()))
+                .collect::<std::result::Result<Vec<_>, _>>()
+                .context("section: failed to parse content items")?;
+            apply_section_update(base, &updates, format, None)
         }
-        Mode::Template => {
-            let template = envelope
-                .template
-                .as_ref()
-                .context("template-mode envelope missing template")?;
-            let bindings = envelope
-                .bindings
-                .as_ref()
-                .context("template-mode envelope missing bindings")?;
-            Ok(fill_template(template, bindings))
+        Name::Template => {
+            let item: TemplateContentItem = serde_json::from_value(
+                envelope
+                    .content
+                    .first()
+                    .context("template: empty content array")?
+                    .clone(),
+            )
+            .context("template: failed to parse content item")?;
+            Ok(fill_template(&item.template, &item.bindings))
         }
-        Mode::Composite => {
-            let includes = envelope
-                .includes
-                .as_ref()
-                .context("composite-mode envelope missing includes")?;
-            resolve_composite(includes, store, format, sections)
+        Name::Composite => {
+            let includes: Vec<Include> = envelope
+                .content
+                .iter()
+                .map(|v| serde_json::from_value(v.clone()))
+                .collect::<std::result::Result<Vec<_>, _>>()
+                .context("composite: failed to parse content items")?;
+            resolve_composite(&includes, store, format, None)
         }
-        Mode::Manifest => {
-            let skeleton = envelope
-                .skeleton
-                .as_ref()
-                .context("manifest-mode envelope missing skeleton")?;
-            Ok(skeleton.clone())
+        Name::Manifest => {
+            let item: ManifestContentItem = serde_json::from_value(
+                envelope
+                    .content
+                    .first()
+                    .context("manifest: empty content array")?
+                    .clone(),
+            )
+            .context("manifest: failed to parse content item")?;
+            Ok(item.skeleton)
+        }
+        Name::Handle | Name::Projection | Name::Intent | Name::Result | Name::Audit => {
+            bail!(
+                "control-plane operation '{:?}' does not produce artifact content",
+                envelope.name
+            )
         }
     }
 }

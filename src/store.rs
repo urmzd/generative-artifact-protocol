@@ -6,7 +6,7 @@ use std::collections::HashMap;
 use anyhow::{bail, Context, Result};
 
 use crate::apply;
-use crate::aap::{Envelope, Mode};
+use crate::aap::{Envelope, Name};
 
 /// Entry in the version history.
 #[derive(Debug, Clone)]
@@ -61,18 +61,17 @@ impl ArtifactStore {
 
     /// Apply an envelope, resolving its content and storing the result.
     ///
-    /// Enforces version chain integrity: for non-full modes, `base_version`
-    /// must match the current stored version.
+    /// Enforces version chain integrity: for non-full names, the stored
+    /// version must equal `envelope.version - 1` (implicit base_version).
     pub fn apply(&mut self, envelope: &Envelope) -> Result<String> {
-        // Version chain check for incremental modes
-        if envelope.mode != Mode::Full {
-            let base = envelope
-                .base_version
-                .context("non-full mode requires base_version")?;
+        // Version chain check for incremental operations
+        if envelope.name != Name::Full {
             if let Some(current) = self.current_version(&envelope.id) {
-                if base != current {
+                if current != envelope.version - 1 {
                     bail!(
-                        "version conflict: envelope base_version={base}, store has version={current}"
+                        "version conflict: stored version={current}, envelope version={}, expected stored=={}",
+                        envelope.version,
+                        envelope.version - 1
                     );
                 }
             } else {
@@ -133,67 +132,46 @@ mod tests {
     use super::*;
     use crate::aap::*;
 
-    fn full_envelope(id: &str, version: u64, content: &str) -> Envelope {
-        Envelope {
-            protocol: PROTOCOL_VERSION.to_string(),
-            id: id.to_string(),
-            version,
-            format: "text/html".to_string(),
-            mode: Mode::Full,
+    fn make_operation(format: &str) -> Operation {
+        Operation {
+            direction: "output".to_string(),
+            format: Some(format.to_string()),
             encoding: None,
-            base_version: None,
-            created_at: None,
-            updated_at: None,
+            content_encoding: None,
+            section_id: None,
             token_budget: None,
             tokens_used: None,
             checksum: None,
-            sections: None,
-            content: Some(content.to_string()),
-            operations: None,
-            target_sections: None,
-            template: None,
-            bindings: None,
-            includes: None,
-            skeleton: None,
-            section_prompts: None,
-            section_id: None,
-            content_encoding: None,
+            created_at: None,
+            updated_at: None,
             state: None,
             state_changed_at: None,
-            entity: None,
-            lock: None,
         }
     }
 
-    fn diff_envelope(id: &str, base_version: u64, version: u64, ops: Vec<DiffOp>) -> Envelope {
+    fn full_envelope(id: &str, version: u64, body: &str) -> Envelope {
         Envelope {
             protocol: PROTOCOL_VERSION.to_string(),
             id: id.to_string(),
             version,
-            format: "text/html".to_string(),
-            mode: Mode::Diff,
-            encoding: None,
-            base_version: Some(base_version),
-            created_at: None,
-            updated_at: None,
-            token_budget: None,
-            tokens_used: None,
-            checksum: None,
-            sections: None,
-            content: None,
-            operations: Some(ops),
-            target_sections: None,
-            template: None,
-            bindings: None,
-            includes: None,
-            skeleton: None,
-            section_prompts: None,
-            section_id: None,
-            content_encoding: None,
-            state: None,
-            state_changed_at: None,
-            entity: None,
-            lock: None,
+            name: Name::Full,
+            operation: make_operation("text/html"),
+            content: vec![serde_json::json!({ "body": body })],
+        }
+    }
+
+    fn diff_envelope(id: &str, version: u64, ops: Vec<DiffOp>) -> Envelope {
+        let content: Vec<serde_json::Value> = ops
+            .iter()
+            .map(|op| serde_json::to_value(op).unwrap())
+            .collect();
+        Envelope {
+            protocol: PROTOCOL_VERSION.to_string(),
+            id: id.to_string(),
+            version,
+            name: Name::Diff,
+            operation: make_operation("text/html"),
+            content,
         }
     }
 
@@ -207,7 +185,6 @@ mod tests {
 
         let env2 = diff_envelope(
             "test",
-            1,
             2,
             vec![DiffOp {
                 op: OpType::Replace,
@@ -233,12 +210,8 @@ mod tests {
             .apply(&full_envelope("test", 1, "content"))
             .unwrap();
 
-        let bad_env = diff_envelope(
-            "test",
-            5, // wrong base version
-            6,
-            vec![],
-        );
+        // version 6 requires stored version == 5, but stored is 1
+        let bad_env = diff_envelope("test", 6, vec![]);
         assert!(store.apply(&bad_env).is_err());
     }
 

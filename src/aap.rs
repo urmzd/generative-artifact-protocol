@@ -1,4 +1,4 @@
-//! Agent-Artifact Protocol (AAP) data model — Rust implementation of aap/1.0.
+//! Agent-Artifact Protocol (AAP) data model — Rust implementation of aap/0.1.
 //!
 //! Provides serde-compatible types for envelopes, diff operations, section
 //! updates, template bindings, chunk frames, and token budgets.
@@ -6,7 +6,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-pub const PROTOCOL_VERSION: &str = "aap/1.0";
+pub const PROTOCOL_VERSION: &str = "aap/0.1";
 
 /// Artifact lifecycle state.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -17,179 +17,21 @@ pub enum ArtifactState {
     Archived,
 }
 
-/// Access control permissions.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Permissions {
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub read: Vec<String>,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub write: Vec<String>,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub admin: Vec<String>,
-}
-
-/// Typed relationship to another artifact.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Relationship {
-    #[serde(rename = "type")]
-    pub rel_type: String,
-    pub target: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub version: Option<u64>,
-}
-
-/// Entity metadata for managed artifacts.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EntityMetadata {
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub owner: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub created_by: Option<String>,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub tags: Vec<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub permissions: Option<Permissions>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub collection: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub ttl: Option<u64>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub expires_at: Option<String>,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub relationships: Vec<Relationship>,
-}
-
-/// Advisory lock hint for coordinating concurrent editors.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct AdvisoryLock {
-    pub held_by: String,
-    pub acquired_at: String,
-    pub ttl: u64,
-}
-
-/// SSE error event payload.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SseError {
-    pub code: String,
-    pub message: String,
-    #[serde(default, skip_serializing_if = "is_false")]
-    pub fatal: bool,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub seq: Option<u64>,
-}
-
-/// Top-level envelope wrapping all protocol payloads.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Envelope {
-    pub protocol: String,
-    pub id: String,
-    pub version: u64,
-    pub format: String,
-    pub mode: Mode,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub encoding: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub base_version: Option<u64>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub created_at: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub updated_at: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub token_budget: Option<TokenBudget>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub tokens_used: Option<u64>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub checksum: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub sections: Option<Vec<SectionDef>>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub content: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub operations: Option<Vec<DiffOp>>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub target_sections: Option<Vec<SectionUpdate>>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub template: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub bindings: Option<HashMap<String, serde_json::Value>>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub includes: Option<Vec<Include>>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub skeleton: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub section_prompts: Option<Vec<SectionPromptDef>>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub section_id: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub content_encoding: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub state: Option<ArtifactState>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub state_changed_at: Option<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub entity: Option<EntityMetadata>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub lock: Option<AdvisoryLock>,
-}
-
-/// Per-section generation instruction in a manifest.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SectionPromptDef {
-    pub id: String,
-    pub prompt: String,
-
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub dependencies: Vec<String>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub token_budget: Option<u64>,
-}
-
-impl Envelope {
-    /// Check whether this JSON string looks like a protocol envelope.
-    pub fn is_envelope(s: &str) -> bool {
-        let trimmed = s.trim_start();
-        trimmed.starts_with('{') && trimmed.contains("\"aap/")
-    }
-
-    /// Parse from JSON string.
-    pub fn from_json(s: &str) -> Result<Self, serde_json::Error> {
-        serde_json::from_str(s)
-    }
-}
-
-/// Generation mode.
+/// Operation name — discriminator for envelope content shape.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
-pub enum Mode {
+pub enum Name {
     Full,
     Diff,
     Section,
     Template,
     Composite,
     Manifest,
+    Handle,
+    Projection,
+    Intent,
+    Result,
+    Audit,
 }
 
 /// Token budget constraints.
@@ -205,6 +47,73 @@ pub struct TokenBudget {
     pub max_sections: Option<u64>,
 }
 
+/// Operation metadata object (Section 3.1.1 of spec).
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Operation {
+    pub direction: String,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub format: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub encoding: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub content_encoding: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub section_id: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub token_budget: Option<TokenBudget>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tokens_used: Option<u64>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub checksum: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub created_at: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub updated_at: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub state: Option<ArtifactState>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub state_changed_at: Option<String>,
+}
+
+/// Top-level envelope wrapping all protocol payloads.
+///
+/// The `content` field is always an array of objects whose shape
+/// depends on `name`. We store it as raw JSON values and parse
+/// per-name in the resolve engine.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Envelope {
+    pub protocol: String,
+    pub id: String,
+    pub version: u64,
+    pub name: Name,
+    pub operation: Operation,
+    pub content: Vec<serde_json::Value>,
+}
+
+impl Envelope {
+    /// Check whether this JSON string looks like a protocol envelope.
+    pub fn is_envelope(s: &str) -> bool {
+        let trimmed = s.trim_start();
+        trimmed.starts_with('{') && trimmed.contains("\"aap/")
+    }
+
+    /// Parse from JSON string.
+    pub fn from_json(s: &str) -> Result<Self, serde_json::Error> {
+        serde_json::from_str(s)
+    }
+}
+
 /// Section definition within an artifact.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SectionDef {
@@ -218,6 +127,15 @@ pub struct SectionDef {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub end_marker: Option<String>,
+}
+
+/// Content item for `name: "full"`.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FullContentItem {
+    pub body: String,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sections: Option<Vec<SectionDef>>,
 }
 
 /// A single diff operation.
@@ -267,6 +185,13 @@ pub struct SectionUpdate {
     pub content: String,
 }
 
+/// Content item for `name: "template"`.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TemplateContentItem {
+    pub template: String,
+    pub bindings: HashMap<String, serde_json::Value>,
+}
+
 /// Include reference for composite mode.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Include {
@@ -281,6 +206,37 @@ pub struct Include {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub hash: Option<String>,
+}
+
+/// Content item for `name: "manifest"`.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ManifestContentItem {
+    pub skeleton: String,
+    pub section_prompts: Vec<SectionPromptDef>,
+}
+
+/// Per-section generation instruction in a manifest.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SectionPromptDef {
+    pub id: String,
+    pub prompt: String,
+
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub dependencies: Vec<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub token_budget: Option<u64>,
+}
+
+/// SSE error event payload.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SseError {
+    pub code: String,
+    pub message: String,
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub fatal: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub seq: Option<u64>,
 }
 
 /// Streaming chunk frame.
