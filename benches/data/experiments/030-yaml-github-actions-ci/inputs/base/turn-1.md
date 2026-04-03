@@ -1,0 +1,1 @@
+Add a new 'security-scan' job between lint and test that runs npm audit and Snyk vulnerability scanning

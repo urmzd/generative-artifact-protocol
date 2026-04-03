@@ -1,0 +1,1 @@
+Add resource limits (CPU and memory) to every service: API gateway 0.5 CPU / 256MB, application services 1 CPU / 512MB, databases 2 CPU / 1GB

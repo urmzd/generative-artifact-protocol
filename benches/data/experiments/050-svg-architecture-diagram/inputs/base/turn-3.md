@@ -1,0 +1,1 @@
+Update all connection arrows between API Gateway and backend services to show 'gRPC' instead of 'HTTP' and change the arrow style to dashed lines

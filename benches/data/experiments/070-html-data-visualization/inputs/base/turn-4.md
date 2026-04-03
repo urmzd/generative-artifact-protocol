@@ -1,0 +1,1 @@
+Add a new 'Trends' section after the summary cards showing 3 mini line charts for revenue trend, order volume trend, and average deal size trend

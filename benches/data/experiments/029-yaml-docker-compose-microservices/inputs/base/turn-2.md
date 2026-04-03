@@ -1,0 +1,1 @@
+Update the PostgreSQL service to use version 16 and add a health check that runs pg_isready every 10 seconds

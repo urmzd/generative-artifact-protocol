@@ -1,0 +1,1 @@
+Add a new GET /products/export endpoint in the controller that returns products as a CSV download with Content-Disposition header

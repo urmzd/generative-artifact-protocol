@@ -1,0 +1,1 @@
+Add a MinIO service for S3-compatible local object storage on port 9000 with a web console on port 9001

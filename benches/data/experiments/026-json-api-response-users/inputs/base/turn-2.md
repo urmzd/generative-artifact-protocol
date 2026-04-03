@@ -1,0 +1,1 @@
+Update the pagination to show page 3 of 12 with per_page set to 30 and update has_next and has_prev accordingly

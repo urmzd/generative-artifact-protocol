@@ -1,0 +1,1 @@
+Add a new --head flag to the CLI that shows only the first N rows of output, defaulting to 10

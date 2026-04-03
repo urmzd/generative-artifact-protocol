@@ -1,0 +1,1 @@
+Rewrite the repository to add a custom @Query method findByPriceRangeAndCategory that uses a JPQL query with price between and category filter

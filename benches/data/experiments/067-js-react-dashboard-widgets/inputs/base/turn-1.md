@@ -1,0 +1,1 @@
+Update the StatCard component to accept a 'sparkline' prop with an array of 7 data points and render a mini SVG sparkline chart

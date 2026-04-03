@@ -1,0 +1,1 @@
+Update the ProductService to add a bulkUpdatePrices method that accepts a Map<Long, BigDecimal> and updates prices in a single transaction
