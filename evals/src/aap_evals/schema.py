@@ -1,7 +1,7 @@
 """Spec-compliant AAP Pydantic models — mirrors ../src/aap.rs.
 
-Four envelope types: synthesize (full generation), edit (targeted changes),
-handle (lightweight reference), handle_result (response from handle interaction).
+Three envelope types: synthesize (in), edit (in), handle (out).
+Artifact is a standalone content object, not an envelope.
 """
 
 from __future__ import annotations
@@ -12,13 +12,6 @@ from pydantic import BaseModel, Field
 
 
 # ── Target definitions ────────────────────────────────────────────────────
-
-
-class TargetDef(BaseModel):
-    """Named target in an artifact."""
-
-    id: str
-    label: str | None = None
 
 
 class IdTarget(BaseModel):
@@ -41,7 +34,7 @@ DiffTarget = Annotated[
 ]
 
 
-class DiffOp(BaseModel):
+class EditOp(BaseModel):
     """A single edit operation."""
 
     op: Literal["replace", "insert_before", "insert_after", "delete"]
@@ -53,7 +46,6 @@ class SynthesizeContentItem(BaseModel):
     """Content item for name=synthesize."""
 
     body: str
-    targets: list[TargetDef] | None = None
 
 
 # ── Operation metadata ────────────────────────────────────────────────────
@@ -65,8 +57,8 @@ class OperationMeta(BaseModel):
     direction: Literal["input", "output"] = "output"
     format: str = "text/html"
     tokens_used: int | None = None
-    created_at: str | None = None
-    updated_at: str | None = None
+    checksum: str | None = None
+    state: str | None = None
 
 
 # ── Typed envelope variants ───────────────────────────────────────────────
@@ -91,18 +83,20 @@ class EditEnvelope(BaseModel):
     version: int
     name: Literal["edit"]
     operation: OperationMeta = Field(default_factory=OperationMeta)
-    content: list[DiffOp]
+    content: list[EditOp]
 
 
-# ── Handle types ──────────────────────────────────────────────────────────
+# ── Handle ────────────────────────────────────────────────────────────────
 
 
 class HandleContentItem(BaseModel):
-    """Content item for name=handle."""
+    """Content item for name=handle — lightweight artifact reference."""
 
-    sections: list[str]
+    id: str
+    version: int
     token_count: int | None = None
     state: str | None = None
+    content: str | None = None
 
 
 class HandleEnvelope(BaseModel):
@@ -116,53 +110,17 @@ class HandleEnvelope(BaseModel):
     content: list[HandleContentItem]
 
 
-# ── Handle result types ───────────────────────────────────────────────────
-
-
-class TextResult(BaseModel):
-    """Free-form text response from handle interaction."""
-
-    type: Literal["text"]
-    body: str
-
-
-class EditResult(BaseModel):
-    """Edit confirmation from handle interaction."""
-
-    type: Literal["edit"]
-    status: str
-    changes: list[dict] = Field(default_factory=list)
-
-
-class ErrorResult(BaseModel):
-    """Error response from handle interaction."""
-
-    type: Literal["error"]
-    code: str
-    message: str
-
-
-HandleResultContentItem = Annotated[
-    Union[TextResult, EditResult, ErrorResult],
-    Field(discriminator="type"),
-]
-
-
-class HandleResultEnvelope(BaseModel):
-    """Envelope for name=handle_result (response from handle interaction)."""
-
-    protocol: Literal["aap/0.1"] = "aap/0.1"
-    id: str
-    version: int
-    name: Literal["handle_result"]
-    operation: OperationMeta = Field(default_factory=OperationMeta)
-    content: list[HandleResultContentItem]
-
-
 # ── Envelope union ────────────────────────────────────────────────────────
 
 
+# Full envelope union (all three types)
 Envelope = Annotated[
-    Union[SynthesizeEnvelope, EditEnvelope, HandleEnvelope, HandleResultEnvelope],
+    Union[SynthesizeEnvelope, EditEnvelope, HandleEnvelope],
+    Field(discriminator="name"),
+]
+
+# LLM output type — only the two input envelopes
+LLMEnvelope = Annotated[
+    Union[SynthesizeEnvelope, EditEnvelope],
     Field(discriminator="name"),
 ]
