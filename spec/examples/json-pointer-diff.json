@@ -2,10 +2,12 @@
   "protocol": "aap/1.0",
   "id": "config-001",
   "version": 2,
-  "format": "application/json",
-  "mode": "diff",
-  "base_version": 1,
-  "operations": [
+  "name": "diff",
+  "operation": {
+    "direction": "output",
+    "format": "application/json"
+  },
+  "content": [
     {
       "op": "replace",
       "target": {"pointer": "/database/host"},

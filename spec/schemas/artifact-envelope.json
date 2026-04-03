@@ -2,9 +2,9 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://aap.dev/schemas/artifact-envelope.json",
   "title": "Artifact Envelope",
-  "description": "Top-level wrapper for an Agent-Artifact Protocol (AAP) payload",
+  "description": "Universal message format for the Agent-Artifact Protocol (AAP). Every interaction — artifact content, diffs, projections, edit intents, results, audit entries — is an envelope.",
   "type": "object",
-  "required": ["protocol", "id", "version", "format", "mode"],
+  "required": ["protocol", "id", "version", "name", "operation", "content"],
   "properties": {
     "protocol": {
       "type": "string",
@@ -19,260 +19,344 @@
     "version": {
       "type": "integer",
       "minimum": 1,
-      "description": "Monotonically increasing version number"
+      "description": "Monotonically increasing version number. For non-full operations, the apply engine validates stored_version == version - 1"
     },
-    "format": {
+    "name": {
       "type": "string",
-      "pattern": "^[a-z]+/[a-z0-9.+-]+$",
-      "description": "MIME type of the artifact content"
+      "enum": ["full", "diff", "section", "template", "composite", "manifest", "handle", "projection", "intent", "result", "audit"],
+      "description": "Operation discriminator — determines the shape of content items"
     },
-    "mode": {
-      "type": "string",
-      "enum": ["full", "diff", "section", "template", "composite", "manifest"],
-      "description": "Generation mode"
-    },
-    "encoding": {
-      "type": "string",
-      "default": "utf-8",
-      "description": "Character encoding"
-    },
-    "base_version": {
-      "type": "integer",
-      "minimum": 1,
-      "description": "Version this payload applies against"
-    },
-    "created_at": {
-      "type": "string",
-      "format": "date-time",
-      "description": "ISO 8601 creation timestamp"
-    },
-    "updated_at": {
-      "type": "string",
-      "format": "date-time",
-      "description": "ISO 8601 update timestamp"
-    },
-    "token_budget": {
+    "operation": {
       "type": "object",
+      "required": ["direction"],
+      "description": "Metadata about the action",
       "properties": {
-        "max_tokens": {
-          "type": "integer",
-          "minimum": 1,
-          "description": "Maximum content tokens"
-        },
-        "priority": {
+        "direction": {
           "type": "string",
-          "enum": ["completeness", "brevity", "fidelity"],
-          "description": "Budget priority hint"
+          "enum": ["input", "output"],
+          "description": "Message direction: input (to the system) or output (from the system)"
         },
-        "max_sections": {
+        "format": {
+          "type": "string",
+          "pattern": "^[a-z]+/[a-z0-9.+-]+$",
+          "description": "MIME type of the artifact content"
+        },
+        "encoding": {
+          "type": "string",
+          "default": "utf-8",
+          "description": "Character encoding"
+        },
+        "content_encoding": {
+          "type": "string",
+          "enum": ["gzip", "zstd"],
+          "description": "Compression applied to content body fields"
+        },
+        "section_id": {
+          "type": "string",
+          "description": "Section this result fills (parallel section results)"
+        },
+        "token_budget": {
+          "type": "object",
+          "properties": {
+            "max_tokens": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Maximum content tokens"
+            },
+            "priority": {
+              "type": "string",
+              "enum": ["completeness", "brevity", "fidelity"],
+              "description": "Budget priority hint"
+            },
+            "max_sections": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Maximum sections to regenerate"
+            }
+          },
+          "description": "Token budget constraints"
+        },
+        "tokens_used": {
           "type": "integer",
-          "minimum": 1,
-          "description": "Maximum sections to regenerate"
+          "minimum": 0,
+          "description": "Actual content tokens consumed"
+        },
+        "checksum": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "description": "SHA-256 hash of resolved content"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 creation timestamp"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 update timestamp"
+        },
+        "state": {
+          "type": "string",
+          "enum": ["draft", "published", "archived"],
+          "description": "Entity lifecycle state"
+        },
+        "state_changed_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp of last state transition"
         }
-      }
-    },
-    "tokens_used": {
-      "type": "integer",
-      "minimum": 0,
-      "description": "Actual content tokens consumed"
-    },
-    "checksum": {
-      "type": "string",
-      "pattern": "^sha256:[a-f0-9]{64}$",
-      "description": "SHA-256 hash of resolved content"
-    },
-    "sections": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["id"],
-        "properties": {
-          "id": {
-            "type": "string",
-            "minLength": 1,
-            "description": "Unique section identifier"
-          },
-          "label": {
-            "type": "string",
-            "description": "Human-readable label"
-          },
-          "start_marker": {
-            "type": "string",
-            "description": "Format-specific start boundary"
-          },
-          "end_marker": {
-            "type": "string",
-            "description": "Format-specific end boundary"
-          },
-}
       },
-      "description": "Section definitions"
+      "additionalProperties": true
     },
     "content": {
-      "type": "string",
-      "description": "Artifact content (full mode) or compressed base64 content"
-    },
-    "operations": {
       "type": "array",
-      "items": { "$ref": "diff-operation.json" },
-      "description": "Diff operations (diff mode)"
-    },
-    "target_sections": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["id", "content"],
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Section ID to replace"
-          },
-          "content": {
-            "type": "string",
-            "description": "New content for this section"
-          }
-        }
-      },
-      "description": "Section updates (section mode)"
-    },
-    "template": {
-      "type": "string",
-      "description": "Template content or registered template ID"
-    },
-    "bindings": {
-      "$ref": "template-binding.json",
-      "description": "Slot bindings (template mode)"
-    },
-    "includes": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "ref": {
-            "type": "string",
-            "description": "Reference to artifact or artifact:section"
-          },
-          "uri": {
-            "type": "string",
-            "format": "uri",
-            "description": "External URI"
-          },
-          "content": {
-            "type": "string",
-            "description": "Inline fallback content"
-          },
-          "hash": {
-            "type": "string",
-            "pattern": "^sha256:[a-f0-9]{64}$",
-            "description": "Expected content hash"
-          }
-        },
-        "oneOf": [
-          { "required": ["ref"] },
-          { "required": ["uri"] },
-          { "required": ["content"] }
-        ]
-      },
-      "description": "Sub-artifact references (composite mode)"
-    },
-    "skeleton": {
-      "type": "string",
-      "description": "Static scaffold with section markers (manifest mode)"
-    },
-    "section_prompts": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["id", "prompt"],
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Section ID to generate"
-          },
-          "prompt": {
-            "type": "string",
-            "description": "Generation instruction for this section"
-          },
-          "dependencies": {
-            "type": "array",
-            "items": { "type": "string" },
-            "description": "Section IDs that must complete first"
-          },
-          "token_budget": {
-            "type": "integer",
-            "minimum": 1,
-            "description": "Max tokens for this section"
-          }
-        }
-      },
-      "description": "Per-section generation instructions (manifest mode)"
-    },
-    "section_id": {
-      "type": "string",
-      "description": "Section this result fills (parallel section result)"
-    },
-    "content_encoding": {
-      "type": "string",
-      "enum": ["gzip", "zstd"],
-      "description": "Compression applied to content fields"
-    },
-    "state": {
-      "type": "string",
-      "enum": ["draft", "published", "archived"],
-      "default": "draft",
-      "description": "Entity lifecycle state"
-    },
-    "state_changed_at": {
-      "type": "string",
-      "format": "date-time",
-      "description": "ISO 8601 timestamp of last state transition"
-    },
-    "entity": {
-      "$ref": "entity-metadata.json",
-      "description": "Ownership and organizational metadata"
-    },
-    "lock": {
-      "type": "object",
-      "description": "Advisory lock hint",
-      "properties": {
-        "held_by": {
-          "type": "string"
-        },
-        "acquired_at": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "ttl": {
-          "type": "integer",
-          "minimum": 1
-        }
-      }
+      "items": { "type": "object" },
+      "description": "List of content objects — shape determined by name. Array enables parallel operations in a single envelope."
     }
   },
   "allOf": [
     {
-      "if": { "properties": { "mode": { "const": "full" } } },
-      "then": { "required": ["content"] }
+      "if": { "properties": { "name": { "const": "full" } } },
+      "then": {
+        "properties": {
+          "content": {
+            "items": {
+              "required": ["body"],
+              "properties": {
+                "body": { "type": "string", "description": "Full artifact content" },
+                "sections": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["id"],
+                    "properties": {
+                      "id": { "type": "string", "minLength": 1 },
+                      "label": { "type": "string" },
+                      "start_marker": { "type": "string" },
+                      "end_marker": { "type": "string" }
+                    }
+                  },
+                  "description": "Section definitions"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     {
-      "if": { "properties": { "mode": { "const": "diff" } } },
-      "then": { "required": ["base_version", "operations"] }
+      "if": { "properties": { "name": { "const": "diff" } } },
+      "then": {
+        "properties": {
+          "content": {
+            "items": { "$ref": "diff-operation.json" }
+          }
+        }
+      }
     },
     {
-      "if": { "properties": { "mode": { "const": "section" } } },
-      "then": { "required": ["base_version", "target_sections"] }
+      "if": { "properties": { "name": { "const": "section" } } },
+      "then": {
+        "properties": {
+          "content": {
+            "items": {
+              "required": ["id", "content"],
+              "properties": {
+                "id": { "type": "string", "description": "Section ID to replace" },
+                "content": { "type": "string", "description": "New content for this section" }
+              }
+            }
+          }
+        }
+      }
     },
     {
-      "if": { "properties": { "mode": { "const": "template" } } },
-      "then": { "required": ["template", "bindings"] }
+      "if": { "properties": { "name": { "const": "template" } } },
+      "then": {
+        "properties": {
+          "content": {
+            "items": {
+              "required": ["template", "bindings"],
+              "properties": {
+                "template": { "type": "string", "description": "Template content or registered template ID" },
+                "bindings": { "$ref": "template-binding.json", "description": "Slot bindings" }
+              }
+            }
+          }
+        }
+      }
     },
     {
-      "if": { "properties": { "mode": { "const": "composite" } } },
-      "then": { "required": ["includes"] }
+      "if": { "properties": { "name": { "const": "composite" } } },
+      "then": {
+        "properties": {
+          "content": {
+            "items": {
+              "properties": {
+                "ref": { "type": "string", "description": "Reference to artifact or artifact:section" },
+                "uri": { "type": "string", "format": "uri", "description": "External URI" },
+                "content": { "type": "string", "description": "Inline fallback content" },
+                "hash": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$", "description": "Expected content hash" }
+              },
+              "oneOf": [
+                { "required": ["ref"] },
+                { "required": ["uri"] },
+                { "required": ["content"] }
+              ]
+            }
+          }
+        }
+      }
     },
     {
-      "if": { "properties": { "mode": { "const": "manifest" } } },
-      "then": { "required": ["skeleton", "section_prompts"] }
+      "if": { "properties": { "name": { "const": "manifest" } } },
+      "then": {
+        "properties": {
+          "content": {
+            "items": {
+              "required": ["skeleton", "section_prompts"],
+              "properties": {
+                "skeleton": { "type": "string", "description": "Static scaffold with section markers" },
+                "section_prompts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["id", "prompt"],
+                    "properties": {
+                      "id": { "type": "string" },
+                      "prompt": { "type": "string" },
+                      "dependencies": { "type": "array", "items": { "type": "string" } },
+                      "token_budget": { "type": "integer", "minimum": 1 }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "name": { "const": "handle" } } },
+      "then": {
+        "properties": {
+          "content": {
+            "items": {
+              "required": ["sections"],
+              "properties": {
+                "sections": { "type": "array", "items": { "type": "string" }, "description": "Section IDs present" },
+                "token_count": { "type": "integer", "minimum": 0, "description": "Approximate token count" },
+                "state": { "type": "string", "enum": ["draft", "published", "archived"] },
+                "entity": { "$ref": "entity-metadata.json" }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "name": { "const": "projection" } } },
+      "then": {
+        "properties": {
+          "content": {
+            "items": {
+              "required": ["projection_type", "token_count"],
+              "properties": {
+                "projection_type": { "type": "string", "enum": ["structure", "content_summary", "change_summary", "statistics", "full_summary"] },
+                "token_count": { "type": "integer", "minimum": 0 },
+                "sections": { "type": "array", "items": { "type": "object" } },
+                "changes": { "type": "array", "items": { "type": "object" } },
+                "outline": { "type": "string" },
+                "summary": { "type": "string" },
+                "statistics": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "name": { "const": "intent" } } },
+      "then": {
+        "properties": {
+          "content": {
+            "items": {
+              "required": ["intent"],
+              "properties": {
+                "intent": { "type": "string", "minLength": 1, "description": "Natural-language description of the desired change" },
+                "target_sections": { "type": "array", "items": { "type": "string" } },
+                "constraints": {
+                  "type": "object",
+                  "properties": {
+                    "max_tokens": { "type": "integer", "minimum": 1 },
+                    "preserve_structure": { "type": "boolean" },
+                    "mode_hint": { "type": "string", "enum": ["diff", "section", "template", "full"] },
+                    "validation": { "type": "string" }
+                  }
+                },
+                "priority": { "type": "string", "enum": ["completeness", "brevity", "fidelity"] },
+                "idempotency_key": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "name": { "const": "result" } } },
+      "then": {
+        "properties": {
+          "content": {
+            "items": {
+              "required": ["status", "mode_used", "changes"],
+              "properties": {
+                "status": { "type": "string", "enum": ["applied", "rejected", "partial", "conflict"] },
+                "mode_used": { "type": "string" },
+                "changes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "section_id": { "type": "string" },
+                      "description": { "type": "string" }
+                    }
+                  }
+                },
+                "tokens_used": { "type": "integer", "minimum": 0 },
+                "handle": { "$ref": "#" },
+                "rejection_reason": { "type": "string" },
+                "conflict_detail": { "type": "string" },
+                "checksum": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "name": { "const": "audit" } } },
+      "then": {
+        "properties": {
+          "content": {
+            "items": {
+              "required": ["entry_id", "operation", "actor", "timestamp"],
+              "properties": {
+                "entry_id": { "type": "string", "minLength": 1 },
+                "operation": { "type": "string", "enum": ["create", "read", "summarize", "edit", "state_transition"] },
+                "actor": { "type": "string" },
+                "timestamp": { "type": "string", "format": "date-time" },
+                "version_before": { "type": "integer", "minimum": 1 },
+                "version_after": { "type": "integer", "minimum": 1 },
+                "detail": { "type": "object" },
+                "status": { "type": "string", "enum": ["success", "failure", "partial"] },
+                "error": { "type": "string" },
+                "tokens_used": { "type": "integer", "minimum": 0 }
+              }
+            }
+          }
+        }
+      }
     }
   ]
 }
