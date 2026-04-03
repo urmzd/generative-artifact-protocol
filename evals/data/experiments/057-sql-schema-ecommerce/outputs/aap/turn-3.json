@@ -1,11 +1,10 @@
 {
   "protocol": "aap/0.1",
-  "id": "schema_and_views_v1",
+  "id": "sql-schema-artifact",
   "version": 1,
   "name": "edit",
-  "operation": {
-    "direction": "input",
-    "format": "text/sql",
+  "meta": {
+    "format": "text/html",
     "tokens_used": null,
     "checksum": null,
     "state": null
@@ -17,7 +16,7 @@
         "type": "id",
         "value": "views"
       },
-      "content": "\nCREATE MATERIALIZED VIEW monthly_sales_summary AS\nSELECT \n    DATE_TRUNC('month', created_at) AS report_month,\n    SUM(total_amount) AS total_revenue,\n    COUNT(order_id) AS total_orders,\n    AVG(total_amount) AS average_order_value\nFROM orders\nGROUP BY DATE_TRUNC('month', created_at);\n"
+      "content": "\nCREATE MATERIALIZED VIEW monthly_sales_summary AS\nSELECT \n    DATE_TRUNC('month', created_at) AS month,\n    SUM(total_amount) AS total_revenue,\n    COUNT(order_id) AS order_count,\n    AVG(total_amount) AS avg_order_value\nFROM orders\nGROUP BY DATE_TRUNC('month', created_at);\n"
     }
   ]
 }

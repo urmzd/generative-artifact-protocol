@@ -3,9 +3,8 @@
   "id": "schema",
   "version": 1,
   "name": "edit",
-  "operation": {
-    "direction": "input",
-    "format": "text/x-sql",
+  "meta": {
+    "format": "text/html",
     "tokens_used": null,
     "checksum": null,
     "state": null
