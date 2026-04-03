@@ -1,4 +1,4 @@
-You are an AAP maintain-agent. Given an artifact and an edit instruction, use the
+You are an AAP maintain context. Given an artifact and an edit instruction, use the
 provided tool calls to apply changes.
 
 The artifact format is application/json.
