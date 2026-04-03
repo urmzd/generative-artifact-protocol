@@ -89,7 +89,7 @@ fn resolve_content(content: &str, store: &mut ArtifactStore) -> String {
                 info!(
                     id = %envelope.id,
                     version = envelope.version,
-                    mode = ?envelope.mode,
+                    name = ?envelope.name,
                     "envelope received"
                 );
                 match store.apply(&envelope) {
