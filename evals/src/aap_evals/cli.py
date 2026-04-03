@@ -16,7 +16,7 @@ from .types import Prompt
 app = typer.Typer(name="aap-evals", help="AAP protocol benchmarks and evaluations.")
 console = Console()
 
-DATA_DIR = Path(__file__).resolve().parent.parent.parent.parent / "benches" / "data"
+DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data"
 
 
 def _load_prompts(path: Path) -> list[Prompt]:
@@ -132,6 +132,256 @@ def _print_summary(results: list) -> None:
 
     console.print()
     console.print(table)
+
+
+# ── generate-corpus ─────────────────────────────────────────────────────
+
+
+@app.command()
+def generate_corpus(
+    output: Annotated[Path, typer.Option(help="Output directory")] = DATA_DIR / "apply-engine",
+    model: Annotated[str, typer.Option(help="Ollama model")] = "gemma4",
+    host: Annotated[str, typer.Option(help="Ollama host")] = "http://localhost:11434",
+    count: Annotated[int, typer.Option(help="Number of test cases (0 = all)")] = 0,
+    resume: Annotated[bool, typer.Option(help="Skip existing cases")] = False,
+) -> None:
+    """Generate apply-engine benchmark corpus — artifacts via Ollama + deterministic envelopes."""
+    from .categories import CATEGORIES
+    from .envelopes import generate_all_envelopes
+    from .markers import extract_section_content
+    from .ollama import clean_artifact, create_generator, generate_artifact
+
+    agent = create_generator(model, host)
+
+    # Build flat task list
+    tasks: list[tuple] = []
+    case_num = 1
+    for cat in CATEGORIES:
+        for vi in range(cat.count):
+            tasks.append((cat, vi, case_num))
+            case_num += 1
+
+    if count > 0:
+        tasks = tasks[:count]
+
+    total = len(tasks)
+    console.print(f"Generating {total} test cases -> {output}/")
+    console.print(f"Model: [bold]{model}[/bold]\n")
+
+    output.mkdir(parents=True, exist_ok=True)
+    succeeded = 0
+    failed = 0
+
+    for cat, vi, cn in tasks:
+        case_dir = output / f"{cn:04d}"
+        meta_path = case_dir / "meta.json"
+
+        if resume and meta_path.exists():
+            succeeded += 1
+            continue
+
+        artifact_id = f"artifact-{cn:04d}"
+
+        try:
+            content = generate_artifact(agent, cat, vi)
+            if len(content) < 50:
+                raise RuntimeError("artifact too short")
+        except Exception as e:
+            console.print(f"  [red]FAIL {cn:04d} ({cat.name}): {e}[/red]")
+            failed += 1
+            continue
+
+        # Write artifact
+        artifacts_dir = case_dir / "artifacts"
+        artifacts_dir.mkdir(parents=True, exist_ok=True)
+        (artifacts_dir / cat.filename).write_text(content)
+
+        # Generate and write envelopes
+        all_envs = generate_all_envelopes(content, artifact_id, cat.fmt, cat.sections)
+        envelopes_dir = case_dir / "envelopes"
+        envelopes_dir.mkdir(parents=True, exist_ok=True)
+        for filename, envs in all_envs.items():
+            with open(envelopes_dir / filename, "w") as f:
+                for env in envs:
+                    f.write(json.dumps(env, separators=(",", ":")) + "\n")
+
+        # Metadata
+        valid_sections = [
+            sid for sid in cat.sections
+            if extract_section_content(content, sid, cat.fmt) is not None
+        ]
+        meta = {
+            "case_num": cn,
+            "category": cat.name,
+            "format": cat.fmt,
+            "extension": cat.ext,
+            "filename": cat.filename,
+            "variant_index": vi,
+            "sections_expected": cat.sections,
+            "sections_found": valid_sections,
+            "envelope_files": sorted(all_envs.keys()),
+            "artifact_bytes": len(content.encode()),
+        }
+        meta_path.write_text(json.dumps(meta, indent=2) + "\n")
+
+        succeeded += 1
+        if succeeded % 10 == 0 or succeeded == total:
+            console.print(f"  [{succeeded}/{total}] {succeeded} ok, {failed} failed")
+
+    console.print(f"\n[green]Done: {succeeded}/{total} succeeded, {failed} failed[/green]")
+
+
+# ── bench ──────────────────────────────────────────────────────────────
+
+
+@app.command()
+def bench(
+    corpus: Annotated[Path, typer.Option(help="Apply-engine corpus directory")] = DATA_DIR / "apply-engine",
+    output: Annotated[Path, typer.Option(help="Results output path")] = DATA_DIR / "apply-engine" / "results.json",
+    count: Annotated[int, typer.Option(help="Max test cases (0 = all)")] = 0,
+) -> None:
+    """Benchmark the apply engine against the generated corpus."""
+    import time
+    from statistics import mean, quantiles
+
+    from .apply import apply_envelope
+
+    meta_files = sorted(corpus.glob("*/meta.json"))
+    if count > 0:
+        meta_files = meta_files[:count]
+
+    if not meta_files:
+        console.print("[red]No test cases found. Run generate-corpus first.[/red]")
+        raise typer.Exit(1)
+
+    console.print(f"Benchmarking {len(meta_files)} test cases from {corpus}/\n")
+
+    results_by_type: dict[str, list[dict]] = {}
+
+    for mf in meta_files:
+        meta = json.loads(mf.read_text())
+        case_dir = mf.parent
+        artifact_path = case_dir / "artifacts" / meta["filename"]
+
+        if not artifact_path.exists():
+            continue
+
+        base_content = artifact_path.read_text()
+
+        for env_file in sorted((case_dir / "envelopes").glob("*.jsonl")):
+            env_type = env_file.stem  # e.g. "diff-replace"
+            for line in env_file.read_text().strip().split("\n"):
+                if not line:
+                    continue
+                envelope = json.loads(line)
+                name = envelope["name"]
+                items = envelope["content"]
+                fmt = envelope.get("operation", {}).get("format", "text/html")
+
+                t0 = time.perf_counter_ns()
+                ok = True
+                try:
+                    if name == "full":
+                        _ = items[0]["body"]
+                    elif name == "template":
+                        # Template doesn't need base content
+                        from .apply import apply_envelope as _apply
+                        # Template fill is handled differently — skip for now
+                        pass
+                    else:
+                        apply_envelope(base_content, name, items, fmt)
+                except Exception:
+                    ok = False
+                elapsed_ns = time.perf_counter_ns() - t0
+
+                key = f"{meta['format']}:{env_type}"
+                results_by_type.setdefault(key, []).append({
+                    "case": meta["case_num"],
+                    "elapsed_ns": elapsed_ns,
+                    "ok": ok,
+                    "artifact_bytes": meta["artifact_bytes"],
+                })
+
+    # Aggregate
+    summary = []
+    for key, entries in sorted(results_by_type.items()):
+        fmt, op = key.split(":", 1)
+        times = [e["elapsed_ns"] for e in entries]
+        ok_count = sum(1 for e in entries if e["ok"])
+        qs = quantiles(times, n=100) if len(times) >= 2 else times
+        summary.append({
+            "format": fmt,
+            "operation": op,
+            "count": len(entries),
+            "success_rate": ok_count / len(entries) if entries else 0,
+            "mean_ns": int(mean(times)),
+            "p50_ns": int(qs[49]) if len(qs) > 49 else int(mean(times)),
+            "p95_ns": int(qs[94]) if len(qs) > 94 else int(max(times)),
+            "p99_ns": int(qs[98]) if len(qs) > 98 else int(max(times)),
+            "max_ns": int(max(times)),
+        })
+
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(summary, indent=2) + "\n")
+    console.print(f"[green]Results written to {output}[/green]")
+
+    # Print summary table
+    table = Table(title="Apply Engine Benchmark")
+    table.add_column("Format", style="bold")
+    table.add_column("Operation")
+    table.add_column("Count", justify="right")
+    table.add_column("Success", justify="right")
+    table.add_column("Mean", justify="right")
+    table.add_column("P50", justify="right")
+    table.add_column("P95", justify="right")
+
+    for s in summary:
+        table.add_row(
+            s["format"][:20],
+            s["operation"],
+            str(s["count"]),
+            f"{s['success_rate']:.0%}",
+            f"{s['mean_ns'] / 1000:.1f}us",
+            f"{s['p50_ns'] / 1000:.1f}us",
+            f"{s['p95_ns'] / 1000:.1f}us",
+        )
+
+    console.print()
+    console.print(table)
+
+
+# ── report ─────────────────────────────────────────────────────────────
+
+
+@app.command()
+def report(
+    results_path: Annotated[Path, typer.Option("--input", help="Results JSON")] = DATA_DIR / "apply-engine" / "results.json",
+    output: Annotated[Path, typer.Option(help="Markdown output")] = DATA_DIR / "apply-engine" / "results.md",
+) -> None:
+    """Generate markdown report from bench results."""
+    if not results_path.exists():
+        console.print("[red]No results.json found. Run bench first.[/red]")
+        raise typer.Exit(1)
+
+    summary = json.loads(results_path.read_text())
+
+    lines = ["# Apply Engine Benchmark Results\n"]
+    lines.append("| Format | Operation | Count | Success | Mean | P50 | P95 | P99 | Max |")
+    lines.append("|--------|-----------|------:|--------:|-----:|----:|----:|----:|----:|")
+
+    for s in summary:
+        lines.append(
+            f"| {s['format']} | {s['operation']} | {s['count']} | "
+            f"{s['success_rate']:.0%} | "
+            f"{s['mean_ns']/1000:.1f}us | "
+            f"{s['p50_ns']/1000:.1f}us | "
+            f"{s['p95_ns']/1000:.1f}us | "
+            f"{s['p99_ns']/1000:.1f}us | "
+            f"{s['max_ns']/1000:.1f}us |"
+        )
+
+    output.write_text("\n".join(lines) + "\n")
+    console.print(f"[green]Report written to {output}[/green]")
 
 
 # ── eval ─────────────────────────────────────────────────────────────────

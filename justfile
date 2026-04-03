@@ -14,18 +14,30 @@ bench-protocol:
 
 # Generate experiment input directories (no LLM needed)
 bench-generate count="0":
-    cd benches && go run . generate $(if [ "{{count}}" != "0" ]; then echo "--count {{count}}"; fi)
+    cd evals && uv run aap-evals generate $(if [ "{{count}}" != "0" ]; then echo "--count {{count}}"; fi)
 
-# Run a single experiment (requires Ollama or API key)
+# Run a single experiment (requires Ollama)
 bench-single n="1" model="qwen3.5:4b":
-    cd benches && go run . run --single {{n}} --model {{model}}
+    cd evals && uv run aap-evals run --single {{n}} --model {{model}}
 
 # Run all experiments
 bench model="qwen3.5:4b" count="0":
-    cd benches && go run . run --model {{model}} $(if [ "{{count}}" != "0" ]; then echo "--count {{count}}"; fi)
+    cd evals && uv run aap-evals run --model {{model}} $(if [ "{{count}}" != "0" ]; then echo "--count {{count}}"; fi)
 
 # Generate apply-engine benchmark corpus (artifacts + envelopes)
 bench-generate-apply count="0" model="gemma4":
     python3 scripts/generate_apply_benchmarks.py --model {{model}} $(if [ "{{count}}" != "0" ]; then echo "--count {{count}}"; fi)
+
+# Evaluation reports
+eval-cost:
+    cd evals && uv run aap-evals eval-cost
+
+eval-reliability:
+    cd evals && uv run aap-evals eval-reliability
+
+eval-similarity:
+    cd evals && uv run aap-evals eval-similarity
+
+eval: eval-cost eval-reliability eval-similarity
 
 bench-all: bench-rust bench-protocol
