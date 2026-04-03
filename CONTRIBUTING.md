@@ -20,25 +20,19 @@ aap/
 │   ├── main.rs               # CLI entry point, signal handling
 │   ├── lib.rs                 # File watcher
 │   └── telemetry.rs           # Tracing init, metrics collection, shutdown summary
-├── tools/
-│   ├── pyproject.toml         # Python dependencies (uv)
-│   └── src/aap/
-│       ├── __init__.py        # Package exports (tokenizer factory, corpus)
-│       ├── corpus.py          # HTML corpus generator
-│       ├── scripts/           # Streaming demos (demo, ollama, realtime)
-│       ├── benchmarks/        # Tokenizer benchmarks (run, hf_stream)
-│       └── assets/            # Pre-built HTML dashboard
+├── evals/                       # LLM evaluation framework
+│   ├── pyproject.toml           # Python dependencies (uv + maturin)
+│   └── src/aap_evals/           # Eval CLI and harness
 ├── benches/watcher.rs         # Criterion benchmarks
 ├── justfile                   # Task recipes
-└── .github/workflows/ci.yml   # CI (Rust build + Python benchmarks)
+└── .github/workflows/ci.yml   # CI (Rust build + test)
 ```
 
 ## Making changes
 
 - **Rust binary** (`src/`): file watcher, apply engine, telemetry. Keep dependencies light.
 - **Telemetry** (`src/telemetry.rs`): structured logging via `tracing`, metrics summary on shutdown.
-- **Python tools** (`tools/`): streaming scripts and benchmarks. Import `build_html()` from `corpus.py` rather than duplicating the corpus.
-- **New tokenizers**: add them to the `TOKENIZERS` list in `tools/src/aap/benchmarks/run.py`.
+- **Evals** (`evals/`): LLM evaluation framework for measuring token efficiency. See `evals/README.md`.
 - **New recipes**: add them to `justfile` with a comment describing what they do.
 
 ## Pull requests
