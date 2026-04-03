@@ -22,22 +22,54 @@ pub fn markers_for(target_id: &str, format: &str) -> Result<(String, String)> {
     ))
 }
 
+const OPEN_PREFIX: &str = "<aap:target ";
+const CLOSE_TAG: &str = "</aap:target>";
+
+/// Find the position of the matching `</aap:target>` for a target whose
+/// opening tag ends at `content_start`. Tracks nesting depth so that inner
+/// `<aap:target …>…</aap:target>` pairs are skipped.
+fn find_matching_close(content: &str, content_start: usize) -> Option<usize> {
+    let mut depth: usize = 1;
+    let mut cursor = content_start;
+
+    while cursor < content.len() && depth > 0 {
+        // Find the next interesting tag (whichever comes first).
+        let next_open = content[cursor..].find(OPEN_PREFIX).map(|i| cursor + i);
+        let next_close = content[cursor..].find(CLOSE_TAG).map(|i| cursor + i);
+
+        match (next_open, next_close) {
+            (Some(o), Some(c)) if o < c => {
+                depth += 1;
+                cursor = o + OPEN_PREFIX.len();
+            }
+            (_, Some(c)) => {
+                depth -= 1;
+                if depth == 0 {
+                    return Some(c);
+                }
+                cursor = c + CLOSE_TAG.len();
+            }
+            _ => break,
+        }
+    }
+    None
+}
+
 /// Find the byte range of a target's content within a string.
 ///
 /// Returns `(content_start, content_end)` — byte offsets between markers (exclusive of markers).
+/// Handles nested `<aap:target>` elements via depth counting.
 pub fn find_target_range(
     content: &str,
     target_id: &str,
     format: &str,
 ) -> Result<(usize, usize)> {
-    let (start_marker, end_marker) = markers_for(target_id, format)?;
+    let (start_marker, _) = markers_for(target_id, format)?;
     let si = content
         .find(&start_marker)
         .with_context(|| format!("start marker not found for target: {target_id}"))?;
     let content_start = si + start_marker.len();
-    let ei = content[content_start..]
-        .find(&end_marker)
-        .map(|i| content_start + i)
+    let ei = find_matching_close(content, content_start)
         .with_context(|| format!("end marker not found for target: {target_id}"))?;
     Ok((content_start, ei))
 }
@@ -45,20 +77,20 @@ pub fn find_target_range(
 /// Find the byte range of a target including its markers.
 ///
 /// Returns `(marker_start, marker_end)` — byte offsets including both markers and content.
+/// Handles nested `<aap:target>` elements via depth counting.
 pub fn find_target_range_inclusive(
     content: &str,
     target_id: &str,
     format: &str,
 ) -> Result<(usize, usize)> {
-    let (start_marker, end_marker) = markers_for(target_id, format)?;
+    let (start_marker, _) = markers_for(target_id, format)?;
     let si = content
         .find(&start_marker)
         .with_context(|| format!("start marker not found for target: {target_id}"))?;
-    let ei = content[si..]
-        .find(&end_marker)
-        .map(|i| si + i + end_marker.len())
+    let content_start = si + start_marker.len();
+    let ei = find_matching_close(content, content_start)
         .with_context(|| format!("end marker not found for target: {target_id}"))?;
-    Ok((si, ei))
+    Ok((si, ei + CLOSE_TAG.len()))
 }
 
 /// Extract all target IDs from artifact content by scanning for `<aap:target id="...">` markers.
@@ -105,10 +137,17 @@ mod tests {
     }
 
     #[test]
-    fn test_find_target_range_nested() {
+    fn test_find_target_range_nested_inner() {
         let content = r#"<aap:target id="outer"><aap:target id="inner">val</aap:target></aap:target>"#;
         let (start, end) = find_target_range(content, "inner", "text/html").unwrap();
         assert_eq!(&content[start..end], "val");
+    }
+
+    #[test]
+    fn test_find_target_range_nested_outer() {
+        let content = r#"<aap:target id="outer"><aap:target id="inner">val</aap:target></aap:target>"#;
+        let (start, end) = find_target_range(content, "outer", "text/html").unwrap();
+        assert_eq!(&content[start..end], r#"<aap:target id="inner">val</aap:target>"#);
     }
 
     #[test]
