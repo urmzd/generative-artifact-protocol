@@ -116,27 +116,9 @@ broadcast.lag_count           0
 | `just bench-protocol` | Regenerate AAP benchmark table and embed into README |
 | `just test` | Run Rust unit tests |
 
-## Tools package
+## Evals
 
-The Python scripts live under `tools/` and are structured as a proper package (`aap`) with console entry points:
-
-| Entry point | Description |
-|---|---|
-| `ag-demo` | Stream a pre-built HTML dashboard in fixed chunks |
-| `ag-ollama` | Stream a live LLM response via ollama |
-| `ag-stream` | Generic file streaming utility |
-| `ag-hf-stream` | Stream via a HuggingFace tokenizer |
-| `ag-bench` | Offline benchmark: tokenize time, token count, throughput |
-| `ag-realtime` | Real-time streaming dashboard |
-| `ag-aap-demo` | AAP lifecycle demo (full → diff → section → template) |
-| `ag-aap-bench` | Token savings benchmark across AAP generation modes |
-| `ag-parallel-demo` | Parallel manifest generation demo (concurrent sections + assembly) |
-
-Install and run any entry point with:
-
-```sh
-uv run --project tools ag-bench
-```
+The `evals/` directory contains an evaluation framework that measures AAP's token efficiency and envelope reliability against real LLM runs. See [`evals/README.md`](evals/README.md) for details.
 
 ## Cost model
 
@@ -190,7 +172,7 @@ Fixed 30-char chunks          2,169        30.0       0.1      23,220k
 
 This project is dual-licensed:
 
-- **Code** (`src/`, `tools/`, `benches/`, build files) — [Apache License 2.0](LICENSE)
+- **Code** (`src/`, `evals/`, `benches/`, build files) — [Apache License 2.0](LICENSE)
 - **Specification & docs** (`spec/`, `assets/`, documentation) — [CC-BY 4.0](LICENSE-CC-BY-4.0)
 
 See [NOTICE](NOTICE) for details. Attribution is required under both licenses.
