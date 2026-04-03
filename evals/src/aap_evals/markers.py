@@ -21,13 +21,42 @@ def marker_example(fmt: str) -> str:
     return '<aap:target id="ID"> ... </aap:target>'
 
 
+def _find_matching_close(content: str, content_start: int) -> int:
+    """Find the position of the matching </aap:target> with depth counting."""
+    open_prefix = "<aap:target "
+    close_tag = "</aap:target>"
+    depth = 1
+    cursor = content_start
+
+    while cursor < len(content) and depth > 0:
+        next_open = content.find(open_prefix, cursor)
+        next_close = content.find(close_tag, cursor)
+
+        if next_close == -1:
+            return -1
+
+        if next_open != -1 and next_open < next_close:
+            depth += 1
+            cursor = next_open + len(open_prefix)
+        else:
+            depth -= 1
+            if depth == 0:
+                return next_close
+            cursor = next_close + len(close_tag)
+
+    return -1
+
+
 def extract_target_content(content: str, target_id: str, fmt: str) -> str | None:
     pair = markers_for(target_id, fmt)
     if not pair:
         return None
     start, end = pair
     si = content.find(start)
-    ei = content.find(end)
-    if si == -1 or ei == -1:
+    if si == -1:
         return None
-    return content[si + len(start) : ei]
+    content_start = si + len(start)
+    ei = _find_matching_close(content, content_start)
+    if ei == -1:
+        return None
+    return content[content_start:ei]

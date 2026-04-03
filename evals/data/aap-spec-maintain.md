@@ -39,3 +39,5 @@ To edit an artifact, produce a JSON envelope with `name: "edit"`:
 
 Target by ID only: `{"type": "id", "value": "target-id"}`. Reference existing target IDs from the artifact.
 Ops: `replace`, `delete`, `insert_before`, `insert_after`.
+
+IMPORTANT: You MUST respond with a JSON edit envelope, NOT the full artifact. Reference existing `<aap:target>` IDs from the current artifact. Use `replace` to update content within a target, `delete` to remove a target and its markers, `insert_before`/`insert_after` to add content adjacent to a target. Always increment the version number.

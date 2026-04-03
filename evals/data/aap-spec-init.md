@@ -20,22 +20,4 @@ Targets nest — coarse blocks contain fine-grained value targets:
 Target IDs describe the role, not the current value (e.g., "total-revenue" not "12345").
 Place targets where values are most likely to be revised.
 
-## AAP Edit Envelope
-
-To edit an artifact, produce a JSON envelope with `name: "edit"`:
-
-```json
-{
-  "protocol": "aap/0.1",
-  "id": "artifact-id",
-  "version": 2,
-  "name": "edit",
-  "meta": {"format": "text/html"},
-  "content": [
-    {"op": "replace", "target": {"type": "id", "value": "revenue-value"}, "content": "$15,720"}
-  ]
-}
-```
-
-Target by ID only: `{"type": "id", "value": "target-id"}`. Reference existing target IDs from the artifact.
-Ops: `replace`, `delete`, `insert_before`, `insert_after`.
+IMPORTANT: You MUST wrap every major section and individually-updatable value in your output with `<aap:target id="ID">…</aap:target>` markers. Use descriptive, role-based IDs (e.g., "nav", "stats-card", "total-revenue"). Nest targets: coarse section targets should contain fine-grained value targets. Place markers on ALL values that are likely to be revised later. The markers are essential for efficient future edits.
