@@ -14,6 +14,7 @@ app = typer.Typer(name="aap-evals", help="AAP benchmarks and evaluations.")
 console = Console()
 
 DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data"
+AAP_SPEC = (DATA_DIR / "aap-spec.md").read_text().strip()
 
 
 # ── generate ───────────────────────────────────────────────────────────
@@ -244,8 +245,8 @@ def run_experiments(
 
         # Read prompts
         base_system = (base_input / "system.md").read_text().strip()
-        init_system = (aap_input / "init-system.md").read_text().strip()
-        maintain_system = (aap_input / "maintain-system.md").read_text().strip()
+        init_system = base_system + "\n\n" + AAP_SPEC
+        maintain_system = base_system + "\n\n" + AAP_SPEC
         turn_files = _find_turn_files(base_input)
 
         if not turn_files:
