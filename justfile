@@ -12,14 +12,10 @@ bench:
 bind:
     uv sync
 
-# Generate benchmark corpus (artifacts + envelopes via LLM)
-generate count="0" model="" id="" provider="google" fallback="":
-    uv run aap-evals generate --provider {{provider}} $(if [ "{{model}}" != "" ]; then echo "--model {{model}}"; fi) $(if [ "{{count}}" != "0" ]; then echo "--count {{count}}"; fi) $(if [ "{{fallback}}" != "" ]; then echo "--fallback {{fallback}}"; fi)
-
-# Run conversation benchmark experiments (base vs AAP flows)
+# Run conversation benchmark experiments (base vs GAP flows)
 run count="0" model="" id="" provider="google" fallback="":
-    uv run aap-evals run --provider {{provider}} $(if [ "{{model}}" != "" ]; then echo "--model {{model}}"; fi) $(if [ "{{count}}" != "0" ]; then echo "--count {{count}}"; fi) $(if [ "{{id}}" != "" ]; then echo "--id {{id}}"; fi) $(if [ "{{fallback}}" != "" ]; then echo "--fallback {{fallback}}"; fi)
+    uv run gap-evals run --provider {{provider}} $(if [ "{{model}}" != "" ]; then echo "--model {{model}}"; fi) $(if [ "{{count}}" != "0" ]; then echo "--count {{count}}"; fi) $(if [ "{{id}}" != "" ]; then echo "--id {{id}}"; fi) $(if [ "{{fallback}}" != "" ]; then echo "--fallback {{fallback}}"; fi)
 
 # Generate markdown report from experiment metrics
 report:
-    uv run aap-evals report
+    uv run gap-evals report

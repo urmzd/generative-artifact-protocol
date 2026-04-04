@@ -7,7 +7,7 @@ license = "Apache-2.0"
 repository = "https://github.com/urmzd/agent-artifact-protocol"
 homepage = "https://github.com/urmzd/agent-artifact-protocol"
 readme = "README.md"
-keywords = ["gap", "aap", "llm", "artifact", "apply-engine"]
+keywords = ["gap", "llm", "artifact", "apply-engine", "generative"]
 categories = ["text-processing"]
 exclude = [
   "apps/",
@@ -51,5 +51,5 @@ criterion = "0.5"
 tempfile = "3"
 
 [[bench]]
-name = "aap"
+name = "gap"
 harness = false

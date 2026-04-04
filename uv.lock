@@ -15,60 +15,10 @@ resolution-markers = [
 
 [manifest]
 members = [
-    "aap",
-    "aap-cli",
-    "aap-core",
-    "aap-evals",
-]
-
-[[package]]
-name = "aap"
-version = "0.12.0"
-source = { virtual = "." }
-
-[[package]]
-name = "aap-cli"
-version = "0.1.0"
-source = { editable = "apps/cli" }
-dependencies = [
-    { name = "aap-evals" },
-]
-
-[package.metadata]
-requires-dist = [{ name = "aap-evals", editable = "libs/evals" }]
-
-[[package]]
-name = "aap-core"
-version = "0.12.0"
-source = { editable = "libs/core" }
-
-[[package]]
-name = "aap-evals"
-version = "0.1.0"
-source = { editable = "libs/evals" }
-dependencies = [
-    { name = "aap-core" },
-    { name = "aiohttp" },
-    { name = "cffi" },
-    { name = "pydantic" },
-    { name = "pydantic-ai-slim", extra = ["google", "groq", "openai"] },
-    { name = "ragas" },
-    { name = "rich" },
-    { name = "tenacity" },
-    { name = "typer" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "aap-core", editable = "libs/core" },
-    { name = "aiohttp", specifier = ">=3.11" },
-    { name = "cffi" },
-    { name = "pydantic", specifier = ">=2.0" },
-    { name = "pydantic-ai-slim", extras = ["google", "groq", "openai"], specifier = ">=1.0" },
-    { name = "ragas", specifier = ">=0.4" },
-    { name = "rich", specifier = ">=14" },
-    { name = "tenacity", specifier = ">=9.0" },
-    { name = "typer", specifier = ">=0.24" },
+    "gap",
+    "gap-cli",
+    "gap-core",
+    "gap-evals",
 ]
 
 [[package]]
@@ -624,6 +574,56 @@ wheels = [
 [package.optional-dependencies]
 http = [
     { name = "aiohttp" },
+]
+
+[[package]]
+name = "gap"
+version = "0.12.0"
+source = { virtual = "." }
+
+[[package]]
+name = "gap-cli"
+version = "0.1.0"
+source = { editable = "apps/cli" }
+dependencies = [
+    { name = "gap-evals" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "gap-evals", editable = "libs/evals" }]
+
+[[package]]
+name = "gap-core"
+version = "0.12.0"
+source = { editable = "libs/core" }
+
+[[package]]
+name = "gap-evals"
+version = "0.1.0"
+source = { editable = "libs/evals" }
+dependencies = [
+    { name = "aiohttp" },
+    { name = "cffi" },
+    { name = "gap-core" },
+    { name = "pydantic" },
+    { name = "pydantic-ai-slim", extra = ["google", "groq", "openai"] },
+    { name = "ragas" },
+    { name = "rich" },
+    { name = "tenacity" },
+    { name = "typer" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "aiohttp", specifier = ">=3.11" },
+    { name = "cffi" },
+    { name = "gap-core", editable = "libs/core" },
+    { name = "pydantic", specifier = ">=2.0" },
+    { name = "pydantic-ai-slim", extras = ["google", "groq", "openai"], specifier = ">=1.0" },
+    { name = "ragas", specifier = ">=0.4" },
+    { name = "rich", specifier = ">=14" },
+    { name = "tenacity", specifier = ">=9.0" },
+    { name = "typer", specifier = ">=0.24" },
 ]
 
 [[package]]

@@ -1,21 +1,21 @@
 [project]
-name = "aap-cli"
+name = "gap-cli"
 version = "0.1.0"
-description = "AAP command-line interface"
+description = "GAP command-line interface"
 requires-python = ">=3.12"
 dependencies = [
-    "aap-evals",
+    "gap-evals",
 ]
 
 [project.scripts]
-aap-evals = "aap.cli.main:app"
+gap-evals = "gap.cli.main:app"
 
 [build-system]
 requires = ["uv_build>=0.7,<0.8"]
 build-backend = "uv_build"
 
 [tool.uv.build-backend]
-module-name = "aap.cli"
+module-name = "gap.cli"
 
 [tool.uv.sources]
-aap-evals = { workspace = true }
+gap-evals = { workspace = true }

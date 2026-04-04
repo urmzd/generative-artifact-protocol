@@ -7,7 +7,7 @@
 
 use anyhow::{bail, Context, Result};
 
-use crate::aap::{
+use crate::gap::{
     Artifact, EditOp, Envelope, HandleContentItem, Name, OpType, Meta, SynthesizeContentItem,
     Target, TargetInfo, PROTOCOL_VERSION,
 };
@@ -30,7 +30,7 @@ pub trait Resolve {
 
 // ── Text resolver ────────────────────────────────────────────────────────
 
-/// Text-based resolver using `<aap:target id="...">` markers.
+/// Text-based resolver using `<gap:target id="...">` markers.
 pub struct TextResolver {
     pub format: String,
 }
@@ -349,7 +349,7 @@ mod tests {
 
     #[test]
     fn test_edit_replace_by_id() {
-        let env = synth_env("t", 1, r#"<aap:target id="rev">$12,340</aap:target>"#);
+        let env = synth_env("t", 1, r#"<gap:target id="rev">$12,340</gap:target>"#);
         let (art, _) = apply(None, &env).unwrap();
 
         let edit = edit_env("t", 2, vec![EditOp {
@@ -360,7 +360,7 @@ mod tests {
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         assert!(art2.body.contains("$15,720"));
         assert!(!art2.body.contains("$12,340"));
-        assert!(art2.body.contains(r#"<aap:target id="rev">"#));
+        assert!(art2.body.contains(r#"<gap:target id="rev">"#));
     }
 
     #[test]
@@ -368,19 +368,19 @@ mod tests {
         // Spec §4.2: "For delete, the content between markers is removed
         // (markers are preserved). Markers themselves are never moved or
         // removed by edit operations."
-        let env = synth_env("t", 1, r#"before<aap:target id="tmp">remove</aap:target>after"#);
+        let env = synth_env("t", 1, r#"before<gap:target id="tmp">remove</gap:target>after"#);
         let (art, _) = apply(None, &env).unwrap();
 
         let edit = edit_env("t", 2, vec![EditOp {
             op: OpType::Delete, target: id_target("tmp"), content: None,
         }]);
         let (art2, _) = apply(Some(&art), &edit).unwrap();
-        assert_eq!(art2.body, r#"before<aap:target id="tmp"></aap:target>after"#);
+        assert_eq!(art2.body, r#"before<gap:target id="tmp"></gap:target>after"#);
     }
 
     #[test]
     fn test_edit_insert_after() {
-        let env = synth_env("t", 1, r#"<aap:target id="list">item1</aap:target>"#);
+        let env = synth_env("t", 1, r#"<gap:target id="list">item1</gap:target>"#);
         let (art, _) = apply(None, &env).unwrap();
 
         let edit = edit_env("t", 2, vec![EditOp {
@@ -393,7 +393,7 @@ mod tests {
 
     #[test]
     fn test_nested_targets() {
-        let body = r#"<aap:target id="outer"><h2>Stats</h2><aap:target id="val">100</aap:target></aap:target>"#;
+        let body = r#"<gap:target id="outer"><h2>Stats</h2><gap:target id="val">100</gap:target></gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
         let edit = edit_env("t", 2, vec![EditOp {
@@ -425,12 +425,12 @@ mod tests {
     #[test]
     fn test_edit_from_json_string() {
         let json = r#"{
-            "protocol": "aap/0.1", "id": "x", "version": 2, "name": "edit",
+            "protocol": "gap/0.1", "id": "x", "version": 2, "name": "edit",
             "meta": {"format": "text/html"},
             "content": [{"op": "replace", "target": {"type": "id", "value": "rev"}, "content": "new"}]
         }"#;
         let env: Envelope = serde_json::from_str(json).unwrap();
-        let art_body = r#"<aap:target id="rev">old</aap:target>"#;
+        let art_body = r#"<gap:target id="rev">old</gap:target>"#;
         let (art, _) = apply(None, &synth_env("x", 1, art_body)).unwrap();
         let (art2, _) = apply(Some(&art), &env).unwrap();
         assert!(art2.body.contains("new"));
@@ -483,9 +483,9 @@ mod tests {
 
     #[test]
     fn test_synthesize_returns_targets() {
-        let body = r#"<aap:target id="stats"><aap:target id="rev">$100</aap:target></aap:target>"#;
+        let body = r#"<gap:target id="stats"><gap:target id="rev">$100</gap:target></gap:target>"#;
         let (_, handle) = apply(None, &synth_env("t", 1, body)).unwrap();
-        let item: crate::aap::HandleContentItem =
+        let item: crate::gap::HandleContentItem =
             serde_json::from_value(handle.content[0].clone()).unwrap();
         let targets = item.targets.unwrap();
         let ids: Vec<&str> = targets.iter().map(|t| t.id.as_str()).collect();
@@ -494,7 +494,7 @@ mod tests {
 
     #[test]
     fn test_nested_target_invalidation() {
-        let body = r#"<aap:target id="outer"><aap:target id="inner">v</aap:target></aap:target>"#;
+        let body = r#"<gap:target id="outer"><gap:target id="inner">v</gap:target></gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
         // Replace outer with content that drops inner
@@ -503,7 +503,7 @@ mod tests {
             content: Some("no nested targets here".to_string()),
         }]);
         let (_, handle) = apply(Some(&art), &edit).unwrap();
-        let item: crate::aap::HandleContentItem =
+        let item: crate::gap::HandleContentItem =
             serde_json::from_value(handle.content[0].clone()).unwrap();
         let targets = item.targets.unwrap();
         let ids: Vec<&str> = targets.iter().map(|t| t.id.as_str()).collect();
@@ -517,7 +517,7 @@ mod tests {
         let mut env = synth_env("t", 1, base);
         env.meta.format = Some("application/json".to_string());
         let (_, handle) = apply(None, &env).unwrap();
-        let item: crate::aap::HandleContentItem =
+        let item: crate::gap::HandleContentItem =
             serde_json::from_value(handle.content[0].clone()).unwrap();
         assert!(item.targets.is_none());
     }
@@ -526,7 +526,7 @@ mod tests {
 
     #[test]
     fn test_edit_insert_before() {
-        let env = synth_env("t", 1, r#"<aap:target id="list">item1</aap:target>"#);
+        let env = synth_env("t", 1, r#"<gap:target id="list">item1</gap:target>"#);
         let (art, _) = apply(None, &env).unwrap();
 
         let edit = edit_env("t", 2, vec![EditOp {
@@ -535,12 +535,12 @@ mod tests {
         }]);
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         assert!(art2.body.contains("item0, item1"));
-        assert!(art2.body.contains(r#"<aap:target id="list">"#));
+        assert!(art2.body.contains(r#"<gap:target id="list">"#));
     }
 
     #[test]
     fn test_replace_with_empty_string() {
-        let env = synth_env("t", 1, r#"<aap:target id="val">old</aap:target>"#);
+        let env = synth_env("t", 1, r#"<gap:target id="val">old</gap:target>"#);
         let (art, _) = apply(None, &env).unwrap();
 
         let edit = edit_env("t", 2, vec![EditOp {
@@ -548,12 +548,12 @@ mod tests {
             content: Some("".to_string()),
         }]);
         let (art2, _) = apply(Some(&art), &edit).unwrap();
-        assert_eq!(art2.body, r#"<aap:target id="val"></aap:target>"#);
+        assert_eq!(art2.body, r#"<gap:target id="val"></gap:target>"#);
     }
 
     #[test]
     fn test_replace_with_none_content() {
-        let env = synth_env("t", 1, r#"<aap:target id="val">old</aap:target>"#);
+        let env = synth_env("t", 1, r#"<gap:target id="val">old</gap:target>"#);
         let (art, _) = apply(None, &env).unwrap();
 
         let edit = edit_env("t", 2, vec![EditOp {
@@ -561,21 +561,21 @@ mod tests {
             content: None,
         }]);
         let (art2, _) = apply(Some(&art), &edit).unwrap();
-        assert_eq!(art2.body, r#"<aap:target id="val"></aap:target>"#);
+        assert_eq!(art2.body, r#"<gap:target id="val"></gap:target>"#);
     }
 
     #[test]
     fn test_delete_preserves_markers_for_reuse() {
         // After delete, the target should still be addressable for future ops.
-        let body = r#"<aap:target id="msg">hello</aap:target>"#;
+        let body = r#"<gap:target id="msg">hello</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
         let delete = edit_env("t", 2, vec![EditOp {
             op: OpType::Delete, target: id_target("msg"), content: None,
         }]);
         let (art2, _) = apply(Some(&art), &delete).unwrap();
-        assert!(art2.body.contains(r#"<aap:target id="msg">"#));
-        assert!(art2.body.contains("</aap:target>"));
+        assert!(art2.body.contains(r#"<gap:target id="msg">"#));
+        assert!(art2.body.contains("</gap:target>"));
         assert!(!art2.body.contains("hello"));
 
         // Can still replace into the now-empty target.
@@ -590,14 +590,14 @@ mod tests {
     #[test]
     fn test_delete_target_still_in_handle() {
         // Since markers are preserved, handle should still list the target.
-        let body = r#"<aap:target id="msg">hello</aap:target>"#;
+        let body = r#"<gap:target id="msg">hello</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
         let delete = edit_env("t", 2, vec![EditOp {
             op: OpType::Delete, target: id_target("msg"), content: None,
         }]);
         let (_, handle) = apply(Some(&art), &delete).unwrap();
-        let item: crate::aap::HandleContentItem =
+        let item: crate::gap::HandleContentItem =
             serde_json::from_value(handle.content[0].clone()).unwrap();
         let targets = item.targets.unwrap();
         let ids: Vec<&str> = targets.iter().map(|t| t.id.as_str()).collect();
@@ -607,7 +607,7 @@ mod tests {
     #[test]
     fn test_multiple_ops_same_target() {
         // Delete content, then insert new content into same target.
-        let body = r#"<aap:target id="x">old</aap:target>"#;
+        let body = r#"<gap:target id="x">old</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
         let edit = edit_env("t", 2, vec![
@@ -621,7 +621,7 @@ mod tests {
 
     #[test]
     fn test_multiple_ops_different_targets() {
-        let body = r#"<aap:target id="a">1</aap:target><aap:target id="b">2</aap:target>"#;
+        let body = r#"<gap:target id="a">1</gap:target><gap:target id="b">2</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
         let edit = edit_env("t", 2, vec![
@@ -637,7 +637,7 @@ mod tests {
 
     #[test]
     fn test_nonexistent_target_fails() {
-        let body = r#"<aap:target id="a">val</aap:target>"#;
+        let body = r#"<gap:target id="a">val</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
         let edit = edit_env("t", 2, vec![EditOp {
@@ -649,7 +649,7 @@ mod tests {
 
     #[test]
     fn test_deeply_nested_targets() {
-        let body = r#"<aap:target id="l1"><aap:target id="l2"><aap:target id="l3">deep</aap:target></aap:target></aap:target>"#;
+        let body = r#"<gap:target id="l1"><gap:target id="l2"><gap:target id="l3">deep</gap:target></gap:target></gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
         // Edit the innermost target.
@@ -660,13 +660,13 @@ mod tests {
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         assert!(art2.body.contains("shallow"));
         // Outer markers still intact.
-        assert!(art2.body.contains(r#"<aap:target id="l1">"#));
-        assert!(art2.body.contains(r#"<aap:target id="l2">"#));
+        assert!(art2.body.contains(r#"<gap:target id="l1">"#));
+        assert!(art2.body.contains(r#"<gap:target id="l2">"#));
     }
 
     #[test]
     fn test_adjacent_sibling_targets() {
-        let body = r#"<aap:target id="a">1</aap:target><aap:target id="b">2</aap:target><aap:target id="c">3</aap:target>"#;
+        let body = r#"<gap:target id="a">1</gap:target><gap:target id="b">2</gap:target><gap:target id="c">3</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
         // Replace middle sibling.
@@ -675,23 +675,23 @@ mod tests {
             content: Some("X".to_string()),
         }]);
         let (art2, _) = apply(Some(&art), &edit).unwrap();
-        assert!(art2.body.contains(r#"<aap:target id="a">1</aap:target>"#));
-        assert!(art2.body.contains(r#"<aap:target id="b">X</aap:target>"#));
-        assert!(art2.body.contains(r#"<aap:target id="c">3</aap:target>"#));
+        assert!(art2.body.contains(r#"<gap:target id="a">1</gap:target>"#));
+        assert!(art2.body.contains(r#"<gap:target id="b">X</gap:target>"#));
+        assert!(art2.body.contains(r#"<gap:target id="c">3</gap:target>"#));
     }
 
     #[test]
     fn test_replace_with_content_containing_new_targets() {
-        let body = r#"<aap:target id="section">old</aap:target>"#;
+        let body = r#"<gap:target id="section">old</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
-        let new_content = r#"<aap:target id="inner">nested</aap:target>"#;
+        let new_content = r#"<gap:target id="inner">nested</gap:target>"#;
         let edit = edit_env("t", 2, vec![EditOp {
             op: OpType::Replace, target: id_target("section"),
             content: Some(new_content.to_string()),
         }]);
         let (_, handle) = apply(Some(&art), &edit).unwrap();
-        let item: crate::aap::HandleContentItem =
+        let item: crate::gap::HandleContentItem =
             serde_json::from_value(handle.content[0].clone()).unwrap();
         let targets = item.targets.unwrap();
         let ids: Vec<&str> = targets.iter().map(|t| t.id.as_str()).collect();
@@ -700,7 +700,7 @@ mod tests {
 
     #[test]
     fn test_empty_target_content() {
-        let body = r#"<aap:target id="empty"></aap:target>"#;
+        let body = r#"<gap:target id="empty"></gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
         let edit = edit_env("t", 2, vec![EditOp {
@@ -734,7 +734,7 @@ mod tests {
 
     #[test]
     fn test_edit_empty_ops_is_noop() {
-        let body = r#"<aap:target id="a">val</aap:target>"#;
+        let body = r#"<gap:target id="a">val</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
         let edit = edit_env("t", 2, vec![]);
@@ -765,7 +765,7 @@ mod tests {
     #[test]
     fn test_all_or_nothing_semantics() {
         // Second op targets a nonexistent target — entire edit should fail.
-        let body = r#"<aap:target id="a">old</aap:target>"#;
+        let body = r#"<gap:target id="a">old</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
         let edit = edit_env("t", 2, vec![
@@ -780,7 +780,7 @@ mod tests {
     #[test]
     fn test_sequential_ops_with_position_shift() {
         // Two insert_after ops on the same target — both should work.
-        let body = r#"<aap:target id="list">a</aap:target>"#;
+        let body = r#"<gap:target id="list">a</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
         let edit = edit_env("t", 2, vec![
@@ -793,7 +793,7 @@ mod tests {
 
     #[test]
     fn test_insert_before_and_after_combined() {
-        let body = r#"<aap:target id="mid">M</aap:target>"#;
+        let body = r#"<gap:target id="mid">M</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
         let edit = edit_env("t", 2, vec![
@@ -806,7 +806,7 @@ mod tests {
 
     #[test]
     fn test_delete_nested_inner_preserves_outer() {
-        let body = r#"<aap:target id="outer">pre<aap:target id="inner">val</aap:target>post</aap:target>"#;
+        let body = r#"<gap:target id="outer">pre<gap:target id="inner">val</gap:target>post</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
         let edit = edit_env("t", 2, vec![EditOp {
@@ -814,10 +814,10 @@ mod tests {
         }]);
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         // Inner markers preserved but content gone, outer intact.
-        assert!(art2.body.contains(r#"<aap:target id="inner"></aap:target>"#));
+        assert!(art2.body.contains(r#"<gap:target id="inner"></gap:target>"#));
         assert!(art2.body.contains("pre"));
         assert!(art2.body.contains("post"));
-        assert!(art2.body.contains(r#"<aap:target id="outer">"#));
+        assert!(art2.body.contains(r#"<gap:target id="outer">"#));
     }
 
     #[test]
@@ -837,7 +837,7 @@ mod tests {
 
     #[test]
     fn test_multiline_content_in_targets() {
-        let body = "<aap:target id=\"code\">line1\nline2\nline3</aap:target>";
+        let body = "<gap:target id=\"code\">line1\nline2\nline3</gap:target>";
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
         let edit = edit_env("t", 2, vec![EditOp {
@@ -1077,7 +1077,7 @@ mod tests {
 
     #[test]
     fn test_python_format_targets() {
-        let body = r#"<aap:target id="imports">import os</aap:target>"#;
+        let body = r#"<gap:target id="imports">import os</gap:target>"#;
         let mut env = synth_env("t", 1, body);
         env.meta.format = Some("text/x-python".to_string());
         let (art, _) = apply(None, &env).unwrap();

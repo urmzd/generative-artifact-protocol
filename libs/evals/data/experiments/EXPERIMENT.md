@@ -1,11 +1,11 @@
-# AAP Conversation Benchmark Experiment
+# GAP Conversation Benchmark Experiment
 
 ## Hypothesis
 
-The Agent-Artifact Protocol reduces token cost and latency for multi-turn artifact editing compared to the default full-regeneration approach. Specifically:
+The Generative Artifact Protocol reduces token cost and latency for multi-turn artifact editing compared to the default full-regeneration approach. Specifically:
 
 1. **Output tokens decrease 90-99%** on edit turns (diff/section envelopes vs full artifact)
-2. **Input tokens stay bounded** — AAP context does not grow with conversation history
+2. **Input tokens stay bounded** — GAP context does not grow with conversation history
 3. **Cumulative cost breaks even after one edit** — the protocol overhead (larger system prompt) is recovered
 4. **Apply engine adds negligible latency** — envelope resolution is ~2μs, dominated by LLM time
 5. **Envelope reliability is measurable** — the maintain context can produce valid, applicable envelopes
@@ -14,7 +14,7 @@ The Agent-Artifact Protocol reduces token cost and latency for multi-turn artifa
 
 ### Shared Turn 0
 
-Both flows start from the **same artifact**. The creation prompt is run once. The resulting artifact is used as the starting point for both the default and AAP edit flows. This eliminates variance in the baseline and ensures edits operate on identical content.
+Both flows start from the **same artifact**. The creation prompt is run once. The resulting artifact is used as the starting point for both the default and GAP edit flows. This eliminates variance in the baseline and ensures edits operate on identical content.
 
 ### Two Flows, Same Edits
 
@@ -26,10 +26,10 @@ Each experiment runs the same sequence of follow-up edits through both flows:
 - Turn N: full conversation history + edit instruction → full artifact regeneration
 - Context grows with every turn (prior artifacts accumulate in message history)
 
-**AAP flow** — stateless dispatch:
+**GAP flow** — stateless dispatch:
 - Turn 0: same creation prompt → same artifact (shared)
 - Turn N: fresh maintain context call with:
-  - System prompt: AAP spec excerpt (~350 tokens, describes envelope format)
+  - System prompt: GAP spec excerpt (~350 tokens, describes envelope format)
   - Artifact injection: current artifact revision (not conversation history)
   - Edit instruction: same edit as default flow
   - Output: JSON envelope (diff or section operations)
@@ -44,16 +44,16 @@ Each experiment runs the same sequence of follow-up edits through both flows:
 | Seed | Fixed per experiment | Deterministic where supported |
 | Edit instructions | Identical text | Same task, different execution |
 | Starting artifact | Shared (run once) | No variance in baseline |
-| System prompt | **NOT controlled** — this IS the independent variable | The AAP system prompt is larger; this cost is the protocol overhead |
+| System prompt | **NOT controlled** — this IS the independent variable | The GAP system prompt is larger; this cost is the protocol overhead |
 
 ### Independent Variable
 
 The **system prompt and conversation structure** differ between flows. This is the intervention being tested:
 
 - Default: minimal system prompt + growing conversation context
-- AAP: spec-aware system prompt + bounded artifact injection
+- GAP: spec-aware system prompt + bounded artifact injection
 
-The AAP system prompt is intentionally **not optimized** — it uses a straightforward spec excerpt, not a hand-tuned minimal prompt. This represents what a real user would start with (suboptimal prompting baseline).
+The GAP system prompt is intentionally **not optimized** — it uses a straightforward spec excerpt, not a hand-tuned minimal prompt. This represents what a real user would start with (suboptimal prompting baseline).
 
 ### Dependent Variables (Measured)
 
@@ -62,18 +62,18 @@ The AAP system prompt is intentionally **not optimized** — it uses a straightf
 | `input_tokens` | count | YES | YES |
 | `output_tokens` | count | YES | YES |
 | `llm_latency_ms` | milliseconds | YES | YES |
-| `apply_latency_us` | microseconds | YES (AAP only) | YES |
-| `envelope_parsed` | boolean | YES (AAP only) | success rate |
-| `apply_succeeded` | boolean | YES (AAP only) | success rate |
+| `apply_latency_us` | microseconds | YES (GAP only) | YES |
+| `envelope_parsed` | boolean | YES (GAP only) | success rate |
+| `apply_succeeded` | boolean | YES (GAP only) | success rate |
 | `output_bytes` | bytes | YES | — |
 
 ### Fairness Guarantees
 
 1. **Shared baseline**: Turn 0 runs once and is reused. Both flows edit the same artifact.
 2. **Same model + params**: Identical LLM configuration for both flows.
-3. **Protocol overhead measured honestly**: The AAP system prompt's token cost is reported separately as `system_prompt_tokens`. It is NOT hidden or excluded from totals.
-4. **Failures counted**: If the AAP flow produces an unparseable envelope or the apply engine rejects it, this is recorded as a failure — not silently retried or discarded.
-5. **No prompt optimization**: The AAP system prompt is a naive spec excerpt. Future work can measure the impact of prompt engineering, but the baseline experiment uses the straightforward version.
+3. **Protocol overhead measured honestly**: The GAP system prompt's token cost is reported separately as `system_prompt_tokens`. It is NOT hidden or excluded from totals.
+4. **Failures counted**: If the GAP flow produces an unparseable envelope or the apply engine rejects it, this is recorded as a failure — not silently retried or discarded.
+5. **No prompt optimization**: The GAP system prompt is a naive spec excerpt. Future work can measure the impact of prompt engineering, but the baseline experiment uses the straightforward version.
 6. **Sequential execution**: Both flows run sequentially (not interleaved) to avoid resource contention affecting latency measurements.
 
 ## Directory Structure
@@ -91,8 +91,8 @@ Each experiment produces:
 │   │   ├── turn-1.md               # full context + edit (shows growing input)
 │   │   ├── turn-2.md               # full context + edit (even larger)
 │   │   └── ...
-│   └── aap/
-│       ├── system.md               # AAP system prompt (spec excerpt)
+│   └── gap/
+│       ├── system.md               # GAP system prompt (spec excerpt)
 │       ├── turn-1.md               # artifact injection + edit intent (bounded)
 │       ├── turn-2.md               # artifact injection + edit intent (bounded)
 │       └── ...
@@ -101,8 +101,8 @@ Each experiment produces:
 │   │   ├── turn-1.{ext}            # full artifact (regenerated)
 │   │   ├── turn-2.{ext}            # full artifact (regenerated)
 │   │   └── ...
-│   └── aap/
-│       ├── turn-1.json             # AAP envelope (raw LLM output)
+│   └── gap/
+│       ├── turn-1.json             # GAP envelope (raw LLM output)
 │       ├── turn-1.{ext}            # resolved artifact (after apply engine)
 │       ├── turn-2.json
 │       ├── turn-2.{ext}
@@ -146,7 +146,7 @@ Each experiment produces:
     "total_latency_ms": 48000
   },
 
-  "aap_flow": {
+  "gap_flow": {
     "system_prompt_tokens": 350,
     "per_turn": [
       {
@@ -183,10 +183,10 @@ Each experiment produces:
 
 ### Comparison Fields
 
-- `output_token_savings_pct`: `(default_out - aap_out) / default_out * 100`
-- `input_token_savings_pct`: `(default_in - aap_in) / default_in * 100` — may be negative on turn 1 (AAP system prompt is larger) but positive on later turns (default context grows)
-- `break_even_turn`: the turn at which AAP's cumulative total tokens first dip below default's
-- `protocol_overhead_tokens`: `aap_system_prompt_tokens - default_system_prompt_tokens` — the fixed cost of teaching the LLM the protocol
+- `output_token_savings_pct`: `(default_out - gap_out) / default_out * 100`
+- `input_token_savings_pct`: `(default_in - gap_in) / default_in * 100` — may be negative on turn 1 (GAP system prompt is larger) but positive on later turns (default context grows)
+- `break_even_turn`: the turn at which GAP's cumulative total tokens first dip below default's
+- `protocol_overhead_tokens`: `gap_system_prompt_tokens - default_system_prompt_tokens` — the fixed cost of teaching the LLM the protocol
 - `protocol_overhead_amortized_by_turn`: the turn at which cumulative output token savings exceed the protocol overhead
 
 ## Interpreting Results
@@ -194,7 +194,7 @@ Each experiment produces:
 ### What success looks like
 
 - Output token savings >90% on edit turns
-- Input tokens flat across turns for AAP, growing for default
+- Input tokens flat across turns for GAP, growing for default
 - Break-even at turn 1 or 2
 - Envelope parse rate >80% (model can produce valid JSON)
 - Apply success rate >70% (model produces correct search targets)
@@ -204,14 +204,14 @@ Each experiment produces:
 - Envelope parse rate <50% → model can't reliably produce the protocol format
 - Apply success rate <50% → model hallucinates search targets
 - No break-even within the conversation → protocol overhead never recovered
-- AAP latency higher than default → structured output constraint slows generation
+- GAP latency higher than default → structured output constraint slows generation
 
 ### What to investigate
 
 - Which edit types produce the best savings (small value changes vs section rewrites)?
 - Does model size affect envelope reliability? (4b vs 9b vs larger)
 - How does artifact size affect the savings curve?
-- Does the AAP system prompt need optimization, or is naive prompting sufficient?
+- Does the GAP system prompt need optimization, or is naive prompting sufficient?
 
 ## Running
 

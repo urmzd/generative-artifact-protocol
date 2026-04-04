@@ -1,10 +1,10 @@
 [project]
-name = "aap-evals"
+name = "gap-evals"
 version = "0.1.0"
-description = "AAP apply-engine evaluation suite"
+description = "GAP apply-engine evaluation suite"
 requires-python = ">=3.12"
 dependencies = [
-    "aap-core",
+    "gap-core",
     "typer>=0.24",
     "rich>=14",
     "pydantic-ai-slim[google,groq,openai]>=1.0",
@@ -20,7 +20,7 @@ requires = ["uv_build>=0.7,<0.8"]
 build-backend = "uv_build"
 
 [tool.uv.build-backend]
-module-name = "aap.evals"
+module-name = "gap.evals"
 
 [tool.uv.sources]
-aap-core = { workspace = true }
+gap-core = { workspace = true }

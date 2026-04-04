@@ -1,7 +1,7 @@
 [project]
-name = "aap-core"
+name = "gap-core"
 version = "0.12.0"
-description = "AAP apply-engine — Rust/PyO3 bindings"
+description = "GAP apply-engine — Rust/PyO3 bindings"
 requires-python = ">=3.12"
 dependencies = []
 
@@ -12,5 +12,5 @@ build-backend = "maturin"
 [tool.maturin]
 manifest-path = "../../Cargo.toml"
 features = ["python"]
-module-name = "aap.core._aap"
+module-name = "gap.core._gap"
 python-source = "src"
