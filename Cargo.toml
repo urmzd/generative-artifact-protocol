@@ -9,6 +9,20 @@ homepage = "https://github.com/urmzd/agent-artifact-protocol"
 readme = "README.md"
 keywords = ["aap", "llm", "artifact", "apply-engine"]
 categories = ["text-processing"]
+exclude = [
+  "apps/",
+  "libs/",
+  "spec/",
+  "scripts/",
+  ".github/",
+  ".githooks/",
+  "pyproject.toml",
+  "uv.lock",
+  ".python-version",
+  "justfile",
+  "sr.yaml",
+  "target/",
+]
 
 [lib]
 name = "aap"
