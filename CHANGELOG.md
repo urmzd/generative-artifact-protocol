@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.14.2 (2026-04-09)
+
+### Bug Fixes
+
+- **ci**: remove --allow-dirty from cargo publish ([30ffdc9](https://github.com/urmzd/generative-artifact-protocol/commit/30ffdc9475b645bfc7f9e90a20127bc0e203068a))
+
+[Full Changelog](https://github.com/urmzd/generative-artifact-protocol/compare/v0.14.1...v0.14.2)
+
+
 ## 0.14.1 (2026-04-09)
 
 ### Bug Fixes
