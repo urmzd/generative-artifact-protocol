@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.15.1 (2026-04-16)
+
+### Bug Fixes
+
+- **ci**: migrate sr v4 to v7 for artifact and input support (#10) ([4040890](https://github.com/urmzd/generative-artifact-protocol/commit/404089073f67212758e3eec60bc9c8101d544270))
+
+[Full Changelog](https://github.com/urmzd/generative-artifact-protocol/compare/v0.15.0...v0.15.1)
+
+
 ## 0.15.0 (2026-04-14)
 
 ### Features
