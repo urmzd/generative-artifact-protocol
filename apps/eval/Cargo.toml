@@ -1,0 +1,23 @@
+[package]
+name = "gap-eval"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[[bin]]
+name = "gap-eval"
+path = "src/main.rs"
+
+[dependencies]
+gap = { path = "../..", package = "generative-artifact-protocol" }
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+regex.workspace = true
+tokio.workspace = true
+reqwest.workspace = true
+clap.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+chrono = { version = "0.4", features = ["serde"] }
+futures-util = "0.3"

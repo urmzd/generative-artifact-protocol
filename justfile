@@ -8,32 +8,25 @@ test:
 bench:
     cargo bench
 
-# Sync workspace — builds Rust FFI via maturin + all Python packages
-bind:
-    uv sync
+# Build the eval CLI (release for speed)
+build-eval:
+    cargo build --release -p gap-eval
 
 # Run conversation benchmark experiments (base vs GAP flows)
-run count="0" model="" id="" provider="google" fallback="":
-    uv run gap-evals run --provider {{provider}} $(if [ "{{model}}" != "" ]; then echo "--model {{model}}"; fi) $(if [ "{{count}}" != "0" ]; then echo "--count {{count}}"; fi) $(if [ "{{id}}" != "" ]; then echo "--id {{id}}"; fi) $(if [ "{{fallback}}" != "" ]; then echo "--fallback {{fallback}}"; fi)
+run count="0" model="" id="" flow="both" api-base="" api-key="": build-eval
+    ./target/release/gap-eval run \
+        --experiments-dir assets/evals/experiments \
+        $(if [ "{{model}}" != "" ]; then echo "--model {{model}}"; fi) \
+        $(if [ "{{count}}" != "0" ]; then echo "--count {{count}}"; fi) \
+        $(if [ "{{id}}" != "" ]; then echo "--id {{id}}"; fi) \
+        --flow {{flow}} \
+        $(if [ "{{api-base}}" != "" ]; then echo "--api-base {{api-base}}"; fi) \
+        $(if [ "{{api-key}}" != "" ]; then echo "--api-key {{api-key}}"; fi)
 
-# Generate markdown report from experiment metrics
-report:
-    uv run gap-evals report
+# Generate report from experiment metrics
+report: build-eval
+    ./target/release/gap-eval report --experiments-dir assets/evals/experiments
 
-# ── Go eval-cli ──────────────────────────────────────────────────────────
-
-# Build Rust cdylib (C FFI target) + Go eval-cli binary
-build-go: build
-    cd apps/eval-cli && go build -ldflags "-X github.com/urmzd/generative-artifact-protocol/eval-cli/cmd.Version=$(git describe --tags --always 2>/dev/null || echo dev)" -o ../../target/gap-eval-cli .
-
-# Run Go tests for eval-cli
-test-go: build
-    cd apps/eval-cli && go test ./...
-
-# Run experiments using the Go CLI
-run-go count="0" model="" id="" provider="google" fallback="":
-    ./target/gap-eval-cli run --provider {{provider}} --experiments-dir libs/evals/data/experiments $(if [ "{{model}}" != "" ]; then echo "--model {{model}}"; fi) $(if [ "{{count}}" != "0" ]; then echo "--count {{count}}"; fi) $(if [ "{{id}}" != "" ]; then echo "--id {{id}}"; fi) $(if [ "{{fallback}}" != "" ]; then echo "--fallback {{fallback}}"; fi)
-
-# Generate report using the Go CLI
-report-go:
-    ./target/gap-eval-cli report --experiments-dir libs/evals/data/experiments
+# Retroactive quality scoring
+score: build-eval
+    ./target/release/gap-eval score --experiments-dir assets/evals/experiments

@@ -301,7 +301,7 @@ Producers SHOULD emit `<gap:target>` markers on the **initial synthesize**. This
 - With targets: 1 synthesize (with markers) + $N$ targeted edits = $S \times 1.02 + N \times \text{edit\_tokens}$ output tokens
 - Break-even: 1 update ($\text{edit\_tokens}$ is typically 1–10% of $S$)
 
-> **Note:** Input costs are roughly equal in both cases — the maintain context reads the full artifact regardless of operation type. The savings concentrate on the output side, where tokens are 3–5x more expensive. See [Section 7.1](#71-memory-model) for the full cost derivation.
+> **Note:** Per-edit input cost is the same whether the operation is a synthesize or an edit — the maintain context reads the full artifact ($I + S$) either way. However, compared to a naive conversation (which accumulates all prior versions in context, growing as $O(N^2 \cdot S)$), GAP's stateless maintain context saves significantly on input. The output savings are typically larger per-edit (output tokens cost $r$x more), but input savings compound over the artifact's lifetime. See [Section 7.1](#71-memory-model) for the full cost derivation.
 
 ### 5.2 Strategy Selection Guide
 
@@ -567,7 +567,9 @@ An 8 KB HTML dashboard artifact with typical model pricing:
 | $S$ | 2,000 tokens | ~4 bytes/token average for HTML |
 | $d$ | 30 tokens | Small edit: update two stat values |
 | $I$ | 500 tokens | System prompt + GAP instructions |
-| $r$ ($p_{\text{out}}/p_{\text{in}}$) | 4x | Typical frontier model ratio |
+| $p_{\text{in}}$ | \$3/M tokens | Reference model input pricing |
+| $p_{\text{out}}$ | \$15/M tokens | Reference model output pricing |
+| $r$ ($p_{\text{out}}/p_{\text{in}}$) | 5x | Typical frontier model ratio |
 | $N$ | 10 edits | Moderate lifecycle |
 
 **Output tokens (cumulative):**
@@ -589,23 +591,24 @@ An 8 KB HTML dashboard artifact with typical model pricing:
 | 5 | \$0.180 | \$0.032 | \$0.148 |
 | 10 | \$0.330 | \$0.035 | \$0.296 |
 
-**Dollar cost (total: input + output, at \$3.75/M input, \$15/M output):**
+**Dollar cost (total: input + output, at \$3/M input, \$15/M output):**
 
 | Edit # | A (naive convo) | B (stateless full) | C (GAP edit) | C vs B saves | C vs A saves |
 |---|---:|---:|---:|---:|---:|
 | Init | \$0.032 | \$0.032 | \$0.032 | 0% | 0% |
-| 1 | \$0.071 | \$0.069 | \$0.039 | 43% | 45% |
-| 5 | \$0.304 | \$0.217 | \$0.070 | 68% | 77% |
-| 10 | \$0.763 | \$0.402 | \$0.107 | 74% | 86% |
+| 1 | \$0.069 | \$0.069 | \$0.039 | 43% | 43% |
+| 5 | \$0.279 | \$0.219 | \$0.071 | 68% | 75% |
+| 10 | \$0.677 | \$0.407 | \$0.111 | 73% | 84% |
 
 The three columns reveal the two savings mechanisms:
 
-- **B vs A** (input savings from context flattening): \$0.763 → \$0.402 at edit 10. The naive conversation re-reads every prior regeneration; stateless dispatch reads only the current version.
-- **C vs B** (output savings from edit operations): \$0.402 → \$0.107 at edit 10. Same input cost, but output drops from $S$ to $d$ per edit.
-- **C vs A** (both effects combined): \$0.763 → \$0.107 at edit 10 — **86% total savings**. The gap widens with every edit because both quadratic input growth *and* redundant output accumulate in A but not in C.
+- **B vs A** (input savings from context flattening): \$0.677 → \$0.407 at edit 10. The naive conversation re-reads every prior regeneration; stateless dispatch reads only the current version.
+- **C vs B** (output savings from edit operations): \$0.407 → \$0.111 at edit 10. Same input cost, but output drops from $S$ to $d$ per edit.
+- **C vs A** (both effects combined): \$0.677 → \$0.111 at edit 10 — **84% estimated savings**. The gap widens with every edit because both quadratic input growth *and* redundant output accumulate in A but not in C.
 
+> **These are projections, not guarantees.** Actual savings depend on how efficiently the LLM generates edit envelopes. The LLM may produce larger-than-minimal edits, fall back to section-level rewrites, or regenerate entirely. Implementations SHOULD track actual token counts to calibrate expectations.
 
-> **Sensitivity to price ratio:** At $r = 1$ (equal input/output pricing), the same scenario yields ~49% total savings after 10 edits. At $r = 5$, it reaches ~78%. The output token reduction is constant regardless — what changes is how much of total cost it represents.
+> **Sensitivity to price ratio:** Per-edit savings (B→C) scale with $r$: at $r = 1$ (equal pricing), ~44%; at $r = 3$, ~70%; at $r = 5$, ~79%. The output token reduction itself ($d/S$) is constant — what changes is how much of total cost it represents.
 
 ##### With Model Asymmetry
 

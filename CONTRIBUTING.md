@@ -23,10 +23,12 @@ generative-artifact-protocol/
 │   ├── store.rs               # versioned artifact store
 │   ├── markers.rs             # section marker utilities
 │   ├── telemetry.rs           # tracing and metrics
-│   └── ffi.rs                 # Python bindings (optional, pyo3)
-├── evals/                     # LLM evaluation framework
-│   ├── pyproject.toml         # Python dependencies (uv + maturin)
-│   └── src/gap_evals/         # Eval CLI and harness
+│   └── cffi.rs                # C FFI bindings
+├── apps/
+│   └── eval/                  # Rust eval CLI (gap-eval)
+│       └── src/               # experiment runner, scorer, reporter
+├── assets/
+│   └── evals/                 # evaluation datasets and experiments
 ├── spec/                      # Protocol specification
 │   ├── gap.md                 # Main spec (v0.1)
 │   ├── gap-sse.md             # SSE wire format binding
@@ -41,7 +43,7 @@ generative-artifact-protocol/
 
 - **Apply engine** (`src/apply.rs`): stateless function that resolves envelopes. Keep it pure — no I/O, no side effects.
 - **Store** (`src/store.rs`): versioned artifact store with control-plane envelopes.
-- **Evals** (`evals/`): LLM evaluation framework for measuring token efficiency. See `evals/README.md`.
+- **Eval CLI** (`apps/eval/`): Rust CLI for running LLM experiments, scoring, and reporting.
 - **New recipes**: add them to `justfile` with a comment describing what they do.
 
 ## Pull requests
