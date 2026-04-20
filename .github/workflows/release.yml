@@ -41,7 +41,10 @@ jobs:
       - uses: rust-lang/crates-io-auth-action@v1
         id: auth
 
-      - uses: urmzd/sr@v7
+      - name: Update Cargo.lock
+        run: cargo update --workspace
+
+      - uses: urmzd/sr@v8
         id: sr
         env:
           CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
