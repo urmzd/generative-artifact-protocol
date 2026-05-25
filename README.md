@@ -111,6 +111,39 @@ pub fn apply(artifact: Option<&Artifact>, envelope: &Envelope) -> Result<(Artifa
 | `just report` | Generate markdown report from experiment metrics |
 | `just score` | Retroactive quality scoring of experiment results |
 
+### Running evals on a free tier
+
+The eval CLI speaks the OpenAI chat completions wire format, so any OpenAI-compatible endpoint works. Point it at a free-tier provider with `GAP_API_BASE` and `GAP_API_KEY` (or `--api-base` / `--api-key`). The CLI also picks up `OPENAI_API_KEY` as a fallback.
+
+| Provider | Base URL | Free-tier highlights |
+|---|---|---|
+| **Google AI Studio** (Gemini) | `https://generativelanguage.googleapis.com/v1beta/openai/` | Persistent free tier on `gemini-2.5-flash` / `gemini-2.0-flash` — recommended starting point |
+| **Groq** | `https://api.groq.com/openai/v1` | Free `llama-3.3-70b-versatile`, `qwen3-32b`, etc.; sub-second TTFT, ~30 RPM |
+| **Cerebras** | `https://api.cerebras.ai/v1` | Free `llama-4-scout`, `qwen-3-32b`; fastest tokens/sec on the list |
+| **OpenRouter** | `https://openrouter.ai/api/v1` | 25+ models suffixed `:free` (e.g. `deepseek/deepseek-chat:free`); aggregates many providers |
+| **Mistral La Plateforme** | `https://api.mistral.ai/v1` | Free "Experiment" tier — 1 B tokens/month at ~2 RPM |
+| **GitHub Models** | `https://models.inference.ai.azure.com` | Free preview for developers; OpenAI, Llama, Mistral, Phi |
+| **Cloudflare Workers AI** | `https://api.cloudflare.com/client/v4/accounts/<ACCOUNT_ID>/ai/v1` | Free daily quota across Llama, Mistral, Qwen |
+
+Example — run five experiments against Gemini for free:
+
+```sh
+export GAP_API_BASE="https://generativelanguage.googleapis.com/v1beta/openai/"
+export GAP_API_KEY="$GEMINI_API_KEY"
+just run count=5 model="gemini-2.5-flash"
+```
+
+Example — run a single experiment against an OpenRouter free model:
+
+```sh
+just run count=1 model="deepseek/deepseek-chat:free" \
+  api-base="https://openrouter.ai/api/v1" api-key="$OPENROUTER_API_KEY"
+```
+
+> **Tip — model asymmetry for cheaper runs.** GAP's maintain context only needs recall and structured output. A frontier model for `init` paired with a free or near-free model for `maintain` matches the [model asymmetry](spec/gap.md#71-memory-model) the cost model assumes. Today the CLI runs both flows with one model — for asymmetric runs, invoke `gap-eval run --flow gap` against the cheaper provider after a baseline pass with the stronger one.
+
+> **Caveat.** Free tiers carry per-minute and per-day caps. For the full 90-experiment suite, expect to throttle or batch with `--count` and `--id`.
+
 ### Cost model
 
 GAP saves tokens by replacing full artifact regeneration with small edit envelopes. The actual savings are **not deterministic** — they depend on edit scope, how efficiently the LLM generates envelopes, the model's tokenizer, and pricing. The LLM may produce larger-than-minimal edits or fall back to full regeneration. The estimates below assume well-formed, targeted edits. See the [full derivation in the spec](spec/gap.md#711-cost-model).

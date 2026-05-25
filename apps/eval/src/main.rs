@@ -39,11 +39,15 @@ enum Command {
         #[arg(long)]
         model: Option<String>,
 
-        /// OpenAI-compatible API base URL
+        /// OpenAI-compatible API base URL. Works with Gemini, Groq, Cerebras,
+        /// OpenRouter, Mistral, GitHub Models, etc. — see README "Running evals
+        /// on a free tier" for endpoints.
         #[arg(long, env = "GAP_API_BASE", default_value = "https://api.openai.com/v1")]
         api_base: String,
 
-        /// API key
+        /// API key. Falls back to OPENAI_API_KEY, then GEMINI_API_KEY /
+        /// GOOGLE_API_KEY / GROQ_API_KEY / CEREBRAS_API_KEY / OPENROUTER_API_KEY
+        /// / MISTRAL_API_KEY / GITHUB_TOKEN in that order.
         #[arg(long, env = "GAP_API_KEY")]
         api_key: Option<String>,
 
@@ -96,6 +100,13 @@ async fn main() -> Result<()> {
         } => {
             let api_key = api_key
                 .or_else(|| std::env::var("OPENAI_API_KEY").ok())
+                .or_else(|| std::env::var("GEMINI_API_KEY").ok())
+                .or_else(|| std::env::var("GOOGLE_API_KEY").ok())
+                .or_else(|| std::env::var("GROQ_API_KEY").ok())
+                .or_else(|| std::env::var("CEREBRAS_API_KEY").ok())
+                .or_else(|| std::env::var("OPENROUTER_API_KEY").ok())
+                .or_else(|| std::env::var("MISTRAL_API_KEY").ok())
+                .or_else(|| std::env::var("GITHUB_TOKEN").ok())
                 .unwrap_or_default();
 
             let model = model.unwrap_or_else(|| "gpt-4o-mini".to_string());
