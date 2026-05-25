@@ -29,6 +29,7 @@
     "meta": {
       "type": "object",
       "description": "Metadata about the action",
+      "required": ["format"],
       "properties": {
         "format": {
           "type": "string",

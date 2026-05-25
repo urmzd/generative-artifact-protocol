@@ -76,7 +76,7 @@ The `meta` object carries metadata about the action:
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `format` | string | YES | MIME type of the artifact content (`text/html`, `text/x-python`, `application/json`, etc.) |
+| `format` | string | YES | MIME type of the artifact content (`text/html`, `text/x-python`, `application/json`, etc.). Consumers MAY default a missing `format` to `text/html` for forward compatibility, but producers MUST emit it |
 | `tokens_used` | integer | no | Actual tokens consumed to produce this payload |
 | `checksum` | string | no | `sha256:<hex>` integrity hash of the resolved content |
 | `state` | string | no | Entity lifecycle state: `"draft"`, `"published"`, `"archived"` (see [Section 8](#8-artifact-entity-state)) |
