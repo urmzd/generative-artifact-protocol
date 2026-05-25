@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.16.0 (2026-05-25)
+
+### Features
+
+- **eval**: support OpenAI-compatible providers for free-tier evals ([0fe234b](https://github.com/urmzd/generative-artifact-protocol/commit/0fe234b4481f0caa822395a237e4a7078c892473))
+
+### Bug Fixes
+
+- **spec**: require format field in meta envelope ([8c2406d](https://github.com/urmzd/generative-artifact-protocol/commit/8c2406d8805253019c962cb9c05c48c3a007856f))
+
+### Misc
+
+- **ci**: bump sr to v8, typed cargo publisher, move cargo update to CI step ([5195460](https://github.com/urmzd/generative-artifact-protocol/commit/519546079d149b27b040597505c8ff9664ef2c00))
+- **ci**: remove unused force input from release workflow ([79c7cb7](https://github.com/urmzd/generative-artifact-protocol/commit/79c7cb7e22e7b14a1932019632a98c0a9120b9fa))
+- **community**: add GitHub community-health files ([bc266a6](https://github.com/urmzd/generative-artifact-protocol/commit/bc266a6d267cbac296ac8da51edd30453119771e))
+- **fix**: standardize README format ([e5ff2d4](https://github.com/urmzd/generative-artifact-protocol/commit/e5ff2d45341d8d2d0cf4eb2cce52233118ec6196))
+
+[Full Changelog](https://github.com/urmzd/generative-artifact-protocol/compare/v0.15.3...v0.16.0)
+
+
 ## 0.15.3 (2026-04-19)
 
 ### Bug Fixes
