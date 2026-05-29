@@ -148,6 +148,21 @@ This lets the report **decompose** GAP's win: **B vs A** is the input/statelessn
 
 > **⚠ Results depend on the synthesis system prompt.** GAP only works if the producer is prompted to emit **fine-grained, role-based target markers** at creation time (or clean, pointer-addressable JSON). A weak prompt collapses the artifact into one coarse marker, so edits replace — and destroy — the whole document while reporting success. Strengthening the prompt alone took a complex HTML case from ~0 to high correctness with the same model and the same ~99% token savings. Targeting is format-aware: markers for text/code, JSON Pointer for `application/json`. See [spec §5.1](spec/gap.md#producer-system-prompt-requirements).
 
+### Measured results
+
+A run across **18 experiments** spanning 17 formats on `gpt-5.4-mini` (full report: [`results.md`](assets/evals/experiments/results.md)). These are real measurements, not the projections in the [cost model](#cost-model) below — and they include the cases where GAP loses.
+
+| Finding | Result |
+|---|---|
+| **Output-token reduction** | **81% in aggregate** across the suite (token-weighted; per-experiment 64–95% on well-suited artifacts, with one outlier loss below) |
+| **Cost vs full-regen baseline** | **54.5% cheaper** with caching off → **45.9% cheaper even when the baseline is *perfectly* cached** and GAP is not. The surviving gap is the output-token win, which no cache can discount. |
+| **Break-even** | GAP's cumulative cost overtakes the baseline by **edit ~1.3** on average (11/18 experiments) |
+| **End-to-end latency** | **~4× faster** — mean time-to-last-token 3.4 s vs 16.6 s (far fewer output tokens to stream) |
+| **Tool-use / orchestrator (Effect 2)** | over a 10-turn agent loop, **~80% less orchestrator input** than keeping the latest artifact body in context — 240 full-body re-reads avoided |
+| **Envelope reliability** | parse **56/56 (100%)**; apply **47/56 (84%)** — applies are the weak point, concentrated in a few formats |
+
+**Where it doesn't pay off (kept in the headline, not hidden).** On a tiny SQL schema (`057`), GAP emitted **10× *more* tokens** than a full rewrite (−859% "savings"): when the artifact is small and the edit rewrites most of it, an envelope is pure overhead and full regeneration wins. One run was flagged **degenerate** (every apply failed → the artifact never changed) and excluded from the headline. The full loss region — tiny artifacts, full rewrites, single-edit lifecycles, high failure rates — is characterized in [`apps/eval/STEELMAN.md`](apps/eval/STEELMAN.md).
+
 ### Running evals on a free tier
 
 The eval CLI speaks the OpenAI chat completions wire format, so any OpenAI-compatible endpoint works. Point it at a free-tier provider with `GAP_API_BASE` and `GAP_API_KEY` (or `--api-base` / `--api-key`). The CLI also picks up `OPENAI_API_KEY` as a fallback.
