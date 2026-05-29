@@ -1,0 +1,31 @@
+{
+  "turn": 3,
+  "checks": [
+    {
+      "kind": "absent",
+      "value": "dailybyte-0050",
+      "desc": "Deleted item 50 (guid dailybyte-0050) is gone from the feed"
+    },
+    {
+      "kind": "contains",
+      "value": "dailybyte-0081",
+      "desc": "Previously inserted item 81 still present (unaffected by the delete)"
+    },
+    {
+      "kind": "contains",
+      "value": "dailybyte-0049",
+      "desc": "Neighboring item 49 still present (only item 50 removed)"
+    },
+    {
+      "kind": "contains",
+      "value": "dailybyte-0051",
+      "desc": "Neighboring item 51 still present (only item 50 removed)"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "<guid",
+      "expected": 80,
+      "desc": "Feed back to exactly 80 items after deleting one of the 81"
+    }
+  ]
+}

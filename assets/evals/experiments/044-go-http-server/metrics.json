@@ -1,0 +1,182 @@
+{
+  "base_turn0": {
+    "artifact_bytes": 11021,
+    "cached_input_tokens": 0,
+    "input_tokens": 151,
+    "latency_ms": 16074,
+    "median_itl_ms": 0.002708,
+    "output_tokens": 3174,
+    "ttft_ms": 1,
+    "ttlt_ms": 15007
+  },
+  "comparison": {
+    "input_token_savings_pct": 53.7,
+    "latency_savings_pct": 59.0,
+    "output_token_savings_pct": 64.2
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "cached_input_tokens": 2816,
+        "edit": "Add a new GetTopURLs handler (GET /urls/top?limit=10) that returns the most-clic",
+        "failed": false,
+        "input_tokens": 3360,
+        "latency_ms": 14980,
+        "median_itl_ms": 0.0031455,
+        "output_bytes": 12007,
+        "output_tokens": 3480,
+        "ttft_ms": 0,
+        "ttlt_ms": 14570,
+        "turn": 1
+      },
+      {
+        "cached_input_tokens": 6400,
+        "edit": "Update the rate limiting middleware to use a per-IP token bucket with configurab",
+        "failed": false,
+        "input_tokens": 6874,
+        "latency_ms": 15990,
+        "median_itl_ms": 0.002542,
+        "output_bytes": 13225,
+        "output_tokens": 3868,
+        "ttft_ms": 4,
+        "ttlt_ms": 15704,
+        "turn": 2
+      },
+      {
+        "cached_input_tokens": 10496,
+        "edit": "Add URL expiration support: a new 'expires_at' field on the URL struct and a han",
+        "failed": false,
+        "input_tokens": 10779,
+        "latency_ms": 17488,
+        "median_itl_ms": 0.0026249999999999997,
+        "output_bytes": 14998,
+        "output_tokens": 4369,
+        "ttft_ms": 0,
+        "ttlt_ms": 16979,
+        "turn": 3
+      }
+    ],
+    "total_cached_input_tokens": 19712,
+    "total_input_tokens": 21013,
+    "total_latency_ms": 48458,
+    "total_output_tokens": 11717
+  },
+  "experiment_id": "044-go-http-server",
+  "format": "text/x-go",
+  "gap_flow": {
+    "apply_success_rate": 0.6666666666666666,
+    "envelope_parse_rate": 1.0,
+    "per_turn": [
+      {
+        "apply_succeeded": false,
+        "cached_input_tokens": 0,
+        "edit": "Add a new GetTopURLs handler (GET /urls/top?limit=10) that returns the most-clic",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": true,
+        "failure_reason": "parse or apply failed",
+        "input_tokens": 3454,
+        "latency_ms": 4671,
+        "median_itl_ms": 0.0029585,
+        "output_bytes": 11190,
+        "output_tokens": 925,
+        "ttft_ms": 3,
+        "ttlt_ms": 4068,
+        "turn": 1
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 2816,
+        "edit": "Update the rate limiting middleware to use a per-IP token bucket with configurab",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 3453,
+        "latency_ms": 4288,
+        "median_itl_ms": 0.0023745,
+        "output_bytes": 8744,
+        "output_tokens": 767,
+        "ttft_ms": 34,
+        "ttlt_ms": 3840,
+        "turn": 2
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 0,
+        "edit": "Add URL expiration support: a new 'expires_at' field on the URL struct and a han",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 2814,
+        "latency_ms": 10912,
+        "median_itl_ms": 0.002854,
+        "output_bytes": 9636,
+        "output_tokens": 2507,
+        "ttft_ms": 0,
+        "ttlt_ms": 10351,
+        "turn": 3
+      }
+    ],
+    "total_cached_input_tokens": 2816,
+    "total_input_tokens": 9721,
+    "total_latency_ms": 19871,
+    "total_output_tokens": 4199
+  },
+  "gap_turn0": {
+    "artifact_bytes": 11190,
+    "cached_input_tokens": 0,
+    "input_tokens": 413,
+    "latency_ms": 16073,
+    "median_itl_ms": 0.0025,
+    "output_tokens": 3187,
+    "ttft_ms": 0,
+    "ttlt_ms": 15759
+  },
+  "model": "gpt-5.4-mini",
+  "provider": "openai",
+  "quality": {
+    "mean_rouge_l": 0.3981,
+    "mean_sequence_similarity": 0.4915,
+    "mean_token_f1": 0.6097,
+    "per_turn": [
+      {
+        "base_char_count": 12007,
+        "char_delta_pct": -15.5,
+        "gap_char_count": 10146,
+        "lines_added": 198,
+        "lines_removed": 267,
+        "rouge_l": 0.4197,
+        "sequence_similarity": 0.5188,
+        "token_f1": 0.6774,
+        "turn": 1
+      },
+      {
+        "base_char_count": 13225,
+        "char_delta_pct": -41.8,
+        "gap_char_count": 7700,
+        "lines_added": 151,
+        "lines_removed": 370,
+        "rouge_l": 0.3811,
+        "sequence_similarity": 0.4699,
+        "token_f1": 0.5762,
+        "turn": 2
+      },
+      {
+        "base_char_count": 14998,
+        "char_delta_pct": -42.7,
+        "gap_char_count": 8592,
+        "lines_added": 171,
+        "lines_removed": 428,
+        "rouge_l": 0.3934,
+        "sequence_similarity": 0.4858,
+        "token_f1": 0.5754,
+        "turn": 3
+      }
+    ]
+  },
+  "timestamp": "2026-05-29T03:05:22Z",
+  "validity": {
+    "base_input_monotone": true,
+    "gap_run_degenerate": false
+  }
+}

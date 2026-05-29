@@ -1,0 +1,1 @@
+Delete the ConfigMap resource named `billing-worker-config` from the `billing` group entirely, including its `---` document separator. Leave every other resource untouched.

@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "<gap:target id=\"dependency-spring-boot-cache\">\n        <dependency>\n          <gap:target id=\"dependency-spring-boot-cache-group-id\">org.springframework.boot</gap:target>\n          <gap:target id=\"dependency-spring-boot-cache-artifact-id\">spring-boot-starter-cache</gap:target>\n        </dependency>\n      </gap:target>\n\n      <gap:target id=\"dependency-caffeine\">\n        <dependency>\n          <gap:target id=\"dependency-caffeine-group-id\">com.github.ben-manes.caffeine</gap:target>\n          <gap:target id=\"dependency-caffeine-artifact-id\">caffeine</gap:target>\n        </dependency>\n      </gap:target>",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "dependency-spring-boot-validation"
+      }
+    }
+  ]
+}

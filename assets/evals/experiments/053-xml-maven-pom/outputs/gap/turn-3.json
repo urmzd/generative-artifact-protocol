@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "<gap:target id=\"plugin-jib-maven\">\n  <plugin>\n    <groupId>com.google.cloud.tools</groupId>\n    <artifactId>jib-maven-plugin</artifactId>\n    <version>3.4.3</version>\n    <configuration>\n      <from>\n        <image>gcr.io/distroless/java21-debian12</image>\n      </from>\n      <to>\n        <image>${project.artifactId}</image>\n      </to>\n      <container>\n        <jvmFlags>\n          <jvmFlag>-Djava.security.egd=file:/dev/./urandom</jvmFlag>\n        </jvmFlags>\n      </container>\n    </configuration>\n  </plugin>",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "plugin-jacoco"
+      }
+    }
+  ]
+}

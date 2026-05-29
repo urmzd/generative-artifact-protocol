@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "gap-envelope",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "\n    <gap:target id=\"deactivate-user-endpoint\">\n      <gap:target id=\"deactivate-user-method\">PATCH</gap:target>\n      <gap:target id=\"deactivate-user-path\">/users/{id}/deactivate</gap:target>\n      @router.patch(\"/{user_id}/deactivate\", response_model=UserResponse)\n      def deactivate_user_endpoint(user_id: int, db: Session = Depends(get_db)):\n          user = get_user(db, user_id)\n          user.is_active = False\n          db.commit()\n          db.refresh(user)\n          return user\n    </gap:target>\n",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "delete-user-endpoint"
+      }
+    }
+  ]
+}

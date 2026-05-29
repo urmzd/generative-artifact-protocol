@@ -1,0 +1,1 @@
+Delete the order with id 15 from Batch 5 (orders). Remove its INSERT statement entirely. Do not delete or alter any other row, and do not renumber the remaining order ids.

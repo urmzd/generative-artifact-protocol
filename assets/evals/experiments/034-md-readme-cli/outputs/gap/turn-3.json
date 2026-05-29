@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "## Installation\n\n<gap:target id=\"installation-npm-section\">\n### npm\n<gap:target id=\"installation-npm-command\">npm install -g dbmigrate</gap:target>\n</gap:target>\n\n<gap:target id=\"installation-brew-section\">\n### Homebrew\n<gap:target id=\"installation-brew-command\">brew install dbmigrate</gap:target>\n</gap:target>\n\n<gap:target id=\"installation-cargo-section\">\n### Cargo\n<gap:target id=\"installation-cargo-command\">cargo install dbmigrate</gap:target>\n</gap:target>\n\n<gap:target id=\"installation-docker-section\">\n### Docker\n<gap:target id=\"installation-docker-command\">docker run --rm -it -v \"$PWD:/workspace\" dbmigrate/dbmigrate:latest --help</gap:target>\n</gap:target>",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "installation-section"
+      }
+    }
+  ]
+}

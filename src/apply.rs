@@ -267,6 +267,15 @@ fn apply_edit_pointers(base: &str, operations: &[EditOp]) -> Result<String> {
                     .context("insert requires array parent")?;
                 let index: usize = key.parse().context("insert requires numeric array index")?;
                 let insert_at = if op.op == OpType::InsertAfter { index + 1 } else { index };
+                // `Vec::insert` panics if the position is past the end; the apply
+                // engine is a pure fn that must return errors, never panic. A model
+                // can emit an out-of-bounds index, so bounds-check explicitly.
+                if insert_at > arr.len() {
+                    bail!(
+                        "insert index {insert_at} out of bounds for array of len {}",
+                        arr.len()
+                    );
+                }
                 arr.insert(insert_at, new_val);
             }
         }
@@ -1016,6 +1025,28 @@ mod tests {
             op: OpType::Delete, target: ptr_target("/items/5"), content: None,
         }]);
         assert!(apply(Some(&art), &edit).is_err());
+    }
+
+    #[test]
+    fn test_pointer_insert_out_of_bounds_fails() {
+        // An out-of-bounds insert index must return an error, not panic.
+        let base = r#"{"items": [1, 2]}"#;
+        let (art, _) = apply(None, &json_synth_env("t", 1, base)).unwrap();
+
+        // insert_after index 9 → insert_at 10, far past len 2.
+        let edit = json_edit_env("t", 2, vec![EditOp {
+            op: OpType::InsertAfter, target: ptr_target("/items/9"),
+            content: Some("99".to_string()),
+        }]);
+        assert!(apply(Some(&art), &edit).is_err());
+        // Appending exactly at len (insert_before index == len) stays valid.
+        let edit_ok = json_edit_env("t", 2, vec![EditOp {
+            op: OpType::InsertBefore, target: ptr_target("/items/2"),
+            content: Some("3".to_string()),
+        }]);
+        let (art2, _) = apply(Some(&art), &edit_ok).unwrap();
+        let v: serde_json::Value = serde_json::from_str(&art2.body).unwrap();
+        assert_eq!(v["items"], serde_json::json!([1, 2, 3]));
     }
 
     #[test]

@@ -1,0 +1,8 @@
+{
+  "turn": 1,
+  "checks": [
+    {"kind": "contains", "value": "price=249.95", "desc": "record id=87 now priced at 249.95"},
+    {"kind": "contains", "value": "sku=\"CTL-087\"", "desc": "the edited central record (id=87) is still present and unchanged in identity"},
+    {"kind": "regex_count", "pattern": "Record\\(", "expected": 100, "desc": "still exactly 100 record instances after a single-field edit on page 5 (no collateral loss)"}
+  ]
+}

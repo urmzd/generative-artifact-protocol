@@ -1,0 +1,58 @@
+{
+  "turn": 5,
+  "checks": [
+    {
+      "kind": "contains",
+      "value": "Page 6 of 6",
+      "desc": "New page 6 section header added"
+    },
+    {
+      "kind": "contains",
+      "value": "P0122",
+      "desc": "First product of the new page (P0122) present"
+    },
+    {
+      "kind": "contains",
+      "value": "P0133",
+      "desc": "Last product of the new page (P0133) present"
+    },
+    {
+      "kind": "contains",
+      "value": "P0001",
+      "desc": "Pre-existing first product P0001 still present (no collateral loss)"
+    },
+    {
+      "kind": "contains",
+      "value": "P0121",
+      "desc": "Previously inserted P0121 still present"
+    },
+    {
+      "kind": "absent",
+      "value": "P0055",
+      "desc": "Previously deleted P0055 still absent"
+    },
+    {
+      "kind": "absent",
+      "value": "Filters",
+      "desc": "Turn-4 bulk invariant carries forward: no product category reverted to Filters"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "P0\\d{3}",
+      "expected": 132,
+      "desc": "Exactly 132 products after adding a 12-product page to the 120-product catalog"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "Page \\d+ of 6",
+      "expected": 6,
+      "desc": "All 6 page section headers present after the new page"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "Page \\d+ of 5",
+      "expected": 0,
+      "desc": "Old 'of 5' headers fully retired: every existing page header was updated to 'of 6'"
+    }
+  ]
+}

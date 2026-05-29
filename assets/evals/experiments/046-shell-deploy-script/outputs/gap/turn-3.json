@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "deployment-script",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "rollback_on_health_failure() {\n  local elapsed=0\n  local interval=5\n  while [[ $elapsed -lt 60 ]]; do\n    if curl -fsS --max-time 10 \"${HEALTHCHECK_URL}\" >/dev/null; then\n      return 0\n    fi\n    sleep \"$interval\"\n    elapsed=$((elapsed + interval))\n  done\n\n  warn \"Health check failed within 60 seconds of deployment; rolling back\"\n  ssh \"${SERVER_USER}@${SERVER_HOST}\" \"\n    set -e\n    if [ -L '${REMOTE_CURRENT_LINK}' ] && [ -f '${REMOTE_RELEASES_DIR}/previous_release' ]; then\n      PREV_RELEASE=\\\u001bcat '${REMOTE_RELEASES_DIR}/previous_release'\\\u001b\n      ln -sfn \\\"${REMOTE_RELEASES_DIR}/\\\u001b${PREV_RELEASE}\\\u001b\\\" '${REMOTE_CURRENT_LINK}'\n      pm2 restart '${PM2_APP_NAME}' --update-env || true\n      echo 'Rolled back to previous release: ' \\\u001b${PREV_RELEASE}\n    else\n      echo 'No rollback target available'\n      exit 1\n    fi\n  \"\n  return 1\n}",
+      "op": "insert_before",
+      "target": {
+        "type": "id",
+        "value": "post-deploy-verification"
+      }
+    }
+  ]
+}

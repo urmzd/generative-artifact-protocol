@@ -1,0 +1,25 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "image: postgres:16",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "postgres-image"
+      }
+    },
+    {
+      "content": "healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}\"]\n      interval: 10s\n      timeout: 5s\n      retries: 5",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "postgres-healthcheck"
+      }
+    }
+  ]
+}

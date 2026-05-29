@@ -1,0 +1,1 @@
+Delete the item whose guid is dailybyte-0050 (item 50, in batch 3) entirely, including its title, link, guid, pubDate, category, and description. Do not modify or remove any other item. The feed must now contain 80 items total.

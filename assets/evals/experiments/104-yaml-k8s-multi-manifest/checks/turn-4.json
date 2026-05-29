@@ -1,0 +1,28 @@
+{
+  "turn": 4,
+  "checks": [
+    {
+      "kind": "absent",
+      "value": "tier: backend",
+      "desc": "no resource retains the old tier: backend label after the bulk relabel"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^\\s*tier:\\s*platform\\b",
+      "expected": 40,
+      "desc": "every one of the 40 resources now carries tier: platform (bulk change applied to ALL items, GAP's hardest case)"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^\\s*tier:\\s*backend\\b",
+      "expected": 0,
+      "desc": "zero resources still carry tier: backend"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^kind:",
+      "expected": 40,
+      "desc": "total resource count is still exactly 40 after the bulk field change; no items dropped"
+    }
+  ]
+}

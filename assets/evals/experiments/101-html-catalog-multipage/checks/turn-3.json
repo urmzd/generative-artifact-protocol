@@ -1,0 +1,31 @@
+{
+  "turn": 3,
+  "checks": [
+    {
+      "kind": "absent",
+      "value": "P0055",
+      "desc": "Deleted product P0055 no longer appears anywhere"
+    },
+    {
+      "kind": "contains",
+      "value": "P0054",
+      "desc": "Neighbor product P0054 still exists (not renumbered or removed)"
+    },
+    {
+      "kind": "contains",
+      "value": "P0056",
+      "desc": "Neighbor product P0056 still exists (not renumbered or removed)"
+    },
+    {
+      "kind": "contains",
+      "value": "P0121",
+      "desc": "Previously inserted P0121 still present after the delete"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "P0\\d{3}",
+      "expected": 120,
+      "desc": "Exactly 120 products after deleting one from the 121-product catalog"
+    }
+  ]
+}

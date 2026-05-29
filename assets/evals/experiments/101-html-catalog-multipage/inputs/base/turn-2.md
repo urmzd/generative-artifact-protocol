@@ -1,0 +1,1 @@
+Insert a new product on page 2 immediately after P0030. Its id is P0121, name "Titanium Brake Caliper", sku SKU-90121, price $512.00, category Brakes, stock 14. Do not renumber or remove any existing products; the catalog now has 121 products total.

@@ -1,0 +1,596 @@
+const express = require("express");
+const cors = require("cors");
+const crypto = require("crypto");
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(cors());
+app.use(express.json({ limit: "1mb" }));
+
+// Request logging
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on("finish", () => {
+    const ms = Date.now() - start;
+    console.log(
+      `${new Date().toISOString()} ${req.method} ${req.originalUrl} ${res.statusCode} ${ms}ms`
+    );
+  });
+  next();
+});
+
+// Auth token / API key verification
+const AUTH_TOKEN = process.env.AUTH_TOKEN || "dev-token";
+const API_KEY = process.env.API_KEY || "dev-api-key";
+
+function authMiddleware(req, res, next) {
+  const authHeader = req.headers.authorization || "";
+  const bearerToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
+  const apiKey = req.headers["x-api-key"];
+
+  const bearerValid = bearerToken && bearerToken === AUTH_TOKEN;
+  const apiKeyValid = apiKey && apiKey === API_KEY;
+
+  if (!bearerValid && !apiKeyValid) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  req.authType = bearerValid ? "bearer" : "api-key";
+  next();
+}
+
+// Rate limiting
+const rateLimitWindowMs = 60 * 1000;
+const rateLimitMax = 120;
+const clients = new Map();
+
+function rateLimitMiddleware(req, res, next) {
+  const key = req.ip || req.connection.remoteAddress || "unknown";
+  const now = Date.now();
+  const bucket = clients.get(key) || { start: now, count: 0 };
+
+  if (now - bucket.start > rateLimitWindowMs) {
+    bucket.start = now;
+    bucket.count = 0;
+  }
+
+  bucket.count += 1;
+  clients.set(key, bucket);
+
+  if (bucket.count > rateLimitMax) {
+    return res.status(429).json({ error: "Too many requests" });
+  }
+  next();
+}
+
+app.use(rateLimitMiddleware);
+
+// Helpers
+function createError(status, message) {
+  const err = new Error(message);
+  err.status = status;
+  return err;
+}
+
+function isNonEmptyString(value) {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function validateId(id) {
+  return typeof id === "string" && /^[a-zA-Z0-9_-]+$/.test(id);
+}
+
+function generateId(prefix) {
+  return `${prefix}_${crypto.randomBytes(8).toString("hex")}`;
+}
+
+function isStringArray(value) {
+  return Array.isArray(value) && value.every((item) => typeof item === "string");
+}
+
+function normalizeLabels(labels) {
+  return labels.map((label) => label.trim()).filter((label) => label.length > 0);
+}
+
+function paginate(arr, page = 1, limit = 20) {
+  const p = Math.max(parseInt(page, 10) || 1, 1);
+  const l = Math.min(Math.max(parseInt(limit, 10) || 20, 1), 100);
+  const start = (p - 1) * l;
+  return {
+    page: p,
+    limit: l,
+    total: arr.length,
+    data: arr.slice(start, start + l),
+  };
+}
+
+const TASK_STATUSES = ["todo", "in_progress", "done"];
+
+// In-memory models
+class User {
+  constructor({ id, name, email, role = "member" }) {
+    this.id = id || generateId("usr");
+    this.name = name;
+    this.email = email;
+    this.role = role;
+    this.createdAt = new Date().toISOString();
+    this.updatedAt = new Date().toISOString();
+  }
+
+  static store = new Map();
+
+  static create(data) {
+    if (!isNonEmptyString(data?.name)) throw createError(400, "User name is required");
+    if (!isNonEmptyString(data?.email)) throw createError(400, "User email is required");
+    const user = new User(data);
+    User.store.set(user.id, user);
+    return user;
+  }
+
+  static getById(id) {
+    return User.store.get(id) || null;
+  }
+
+  static list() {
+    return Array.from(User.store.values());
+  }
+
+  static update(id, updates) {
+    const user = User.getById(id);
+    if (!user) return null;
+    if (updates.name !== undefined) {
+      if (!isNonEmptyString(updates.name)) throw createError(400, "User name is required");
+      user.name = updates.name.trim();
+    }
+    if (updates.email !== undefined) {
+      if (!isNonEmptyString(updates.email)) throw createError(400, "User email is required");
+      user.email = updates.email.trim();
+    }
+    if (updates.role !== undefined) {
+      user.role = updates.role;
+    }
+    user.updatedAt = new Date().toISOString();
+    return user;
+  }
+
+  static delete(id) {
+    return User.store.delete(id);
+  }
+}
+
+class Project {
+  constructor({ id, name, description = "", ownerId }) {
+    this.id = id || generateId("prj");
+    this.name = name;
+    this.description = description;
+    this.ownerId = ownerId || null;
+    this.taskIds = [];
+    this.createdAt = new Date().toISOString();
+    this.updatedAt = new Date().toISOString();
+  }
+
+  static store = new Map();
+
+  static create(data) {
+    if (!isNonEmptyString(data?.name)) throw createError(400, "Project name is required");
+    const project = new Project(data);
+    if (project.ownerId && !User.getById(project.ownerId)) throw createError(400, "Owner user not found");
+    Project.store.set(project.id, project);
+    return project;
+  }
+
+  static getById(id) {
+    return Project.store.get(id) || null;
+  }
+
+  static list() {
+    return Array.from(Project.store.values());
+  }
+
+  static update(id, updates) {
+    const project = Project.getById(id);
+    if (!project) return null;
+    if (updates.name !== undefined) {
+      if (!isNonEmptyString(updates.name)) throw createError(400, "Project name is required");
+      project.name = updates.name.trim();
+    }
+    if (updates.description !== undefined) {
+      project.description = String(updates.description);
+    }
+    if (updates.ownerId !== undefined) {
+      if (updates.ownerId !== null && !User.getById(updates.ownerId)) throw createError(400, "Owner user not found");
+      project.ownerId = updates.ownerId;
+    }
+    project.updatedAt = new Date().toISOString();
+    return project;
+  }
+
+  static delete(id) {
+    return Project.store.delete(id);
+  }
+}
+
+class Task {
+  constructor({ id, title, description = "", status = "todo", projectId = null, assignedTo = null, labels = [] }) {
+    this.id = id || generateId("tsk");
+    this.title = title;
+    this.description = description;
+    this.status = status;
+    this.projectId = projectId;
+    this.assignedTo = assignedTo;
+    this.labels = labels;
+    this.comments = [];
+    this.createdAt = new Date().toISOString();
+    this.updatedAt = new Date().toISOString();
+  }
+
+  static store = new Map();
+
+  static create(data) {
+    if (!isNonEmptyString(data?.title)) throw createError(400, "Task title is required");
+    const status = data.status || "todo";
+    if (!TASK_STATUSES.includes(status)) throw createError(400, "Invalid task status");
+    if (data.projectId && !Project.getById(data.projectId)) throw createError(400, "Project not found");
+    if (data.assignedTo && !User.getById(data.assignedTo)) throw createError(400, "Assigned user not found");
+    if (data.labels !== undefined && !isStringArray(data.labels)) throw createError(400, "Labels must be an array of strings");
+    const task = new Task({
+      ...data,
+      labels: normalizeLabels(data.labels || []),
+    });
+    Task.store.set(task.id, task);
+    if (task.projectId) {
+      const project = Project.getById(task.projectId);
+      if (project && !project.taskIds.includes(task.id)) project.taskIds.push(task.id);
+    }
+    return task;
+  }
+
+  static getById(id) {
+    return Task.store.get(id) || null;
+  }
+
+  static list() {
+    return Array.from(Task.store.values());
+  }
+
+  static update(id, updates) {
+    const task = Task.getById(id);
+    if (!task) return null;
+
+    if (updates.title !== undefined) {
+      if (!isNonEmptyString(updates.title)) throw createError(400, "Task title is required");
+      task.title = updates.title.trim();
+    }
+    if (updates.description !== undefined) {
+      task.description = String(updates.description);
+    }
+    if (updates.status !== undefined) {
+      if (!TASK_STATUSES.includes(updates.status)) throw createError(400, "Invalid task status");
+      task.status = updates.status;
+    }
+    if (updates.projectId !== undefined) {
+      if (updates.projectId !== null && !Project.getById(updates.projectId)) throw createError(400, "Project not found");
+      if (task.projectId && task.projectId !== updates.projectId) {
+        const prev = Project.getById(task.projectId);
+        if (prev) prev.taskIds = prev.taskIds.filter((tid) => tid !== task.id);
+      }
+      task.projectId = updates.projectId;
+      if (task.projectId) {
+        const proj = Project.getById(task.projectId);
+        if (proj && !proj.taskIds.includes(task.id)) proj.taskIds.push(task.id);
+      }
+    }
+    if (updates.assignedTo !== undefined) {
+      if (updates.assignedTo !== null && !User.getById(updates.assignedTo)) throw createError(400, "Assigned user not found");
+      task.assignedTo = updates.assignedTo;
+    }
+    if (updates.labels !== undefined) {
+      if (!isStringArray(updates.labels)) throw createError(400, "Labels must be an array of strings");
+      task.labels = normalizeLabels(updates.labels);
+    }
+    task.updatedAt = new Date().toISOString();
+    return task;
+  }
+
+  static delete(id) {
+    const task = Task.getById(id);
+    if (!task) return false;
+    if (task.projectId) {
+      const project = Project.getById(task.projectId);
+      if (project) project.taskIds = project.taskIds.filter((tid) => tid !== id);
+    }
+    return Task.store.delete(id);
+  }
+
+  static addComment(id, { userId, text }) {
+    const task = Task.getById(id);
+    if (!task) return null;
+    if (userId && !User.getById(userId)) throw createError(400, "User not found");
+    if (!isNonEmptyString(text)) throw createError(400, "Comment text is required");
+    const comment = {
+      id: generateId("cmt"),
+      userId: userId || null,
+      text: text.trim(),
+      createdAt: new Date().toISOString(),
+    };
+    task.comments.push(comment);
+    task.updatedAt = new Date().toISOString();
+    return comment;
+  }
+
+  static assign(id, userId) {
+    if (!User.getById(userId)) throw createError(400, "User not found");
+    return Task.update(id, { assignedTo: userId });
+  }
+
+  static changeStatus(id, status) {
+    if (!TASK_STATUSES.includes(status)) throw createError(400, "Invalid task status");
+    return Task.update(id, { status });
+  }
+
+  static setLabels(id, labels) {
+    if (!isStringArray(labels)) throw createError(400, "Labels must be an array of strings");
+    return Task.update(id, { labels: normalizeLabels(labels) });
+  }
+}
+
+// Seed some demo data
+const user1 = User.create({ name: "Admin", email: "admin@example.com", role: "admin" });
+const user2 = User.create({ name: "Member", email: "member@example.com", role: "member" });
+const project1 = Project.create({ name: "Demo Project", description: "Sample project", ownerId: user1.id });
+const task1 = Task.create({
+  title: "Initial task",
+  description: "This is a seeded task",
+  status: "todo",
+  projectId: project1.id,
+  assignedTo: user2.id,
+  labels: ["seeded", "demo"],
+});
+
+// Validation middleware
+function validateTaskInput(req, res, next) {
+  const { title, status, projectId, assignedTo, labels } = req.body || {};
+  if (title !== undefined && !isNonEmptyString(title)) return res.status(400).json({ error: "Task title must be a non-empty string" });
+  if (status !== undefined && !TASK_STATUSES.includes(status)) return res.status(400).json({ error: "Invalid task status" });
+  if (projectId !== undefined && projectId !== null && !validateId(projectId)) return res.status(400).json({ error: "Invalid projectId" });
+  if (assignedTo !== undefined && assignedTo !== null && !validateId(assignedTo)) return res.status(400).json({ error: "Invalid assignedTo" });
+  if (labels !== undefined && !isStringArray(labels)) return res.status(400).json({ error: "Labels must be an array of strings" });
+  next();
+}
+
+function validateProjectInput(req, res, next) {
+  const { name, ownerId } = req.body || {};
+  if (name !== undefined && !isNonEmptyString(name)) return res.status(400).json({ error: "Project name must be a non-empty string" });
+  if (ownerId !== undefined && ownerId !== null && !validateId(ownerId)) return res.status(400).json({ error: "Invalid ownerId" });
+  next();
+}
+
+function validateCommentInput(req, res, next) {
+  const { text, userId } = req.body || {};
+  if (!isNonEmptyString(text)) return res.status(400).json({ error: "Comment text must be a non-empty string" });
+  if (userId !== undefined && userId !== null && !validateId(userId)) return res.status(400).json({ error: "Invalid userId" });
+  next();
+}
+
+function validateLabelsInput(req, res, next) {
+  const { labels } = req.body || {};
+  if (!isStringArray(labels)) return res.status(400).json({ error: "Labels must be an array of strings" });
+  next();
+}
+
+// Routes
+app.get("/health", (req, res) => res.json({ ok: true }));
+
+app.get("/users", authMiddleware, (req, res) => {
+  res.json(User.list());
+});
+
+app.post("/users", authMiddleware, (req, res, next) => {
+  try {
+    const user = User.create(req.body);
+    res.status(201).json(user);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get("/users/:id", authMiddleware, (req, res, next) => {
+  try {
+    if (!validateId(req.params.id)) throw createError(400, "Invalid user id");
+    const user = User.getById(req.params.id);
+    if (!user) throw createError(404, "User not found");
+    res.json(user);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.patch("/users/:id", authMiddleware, (req, res, next) => {
+  try {
+    if (!validateId(req.params.id)) throw createError(400, "Invalid user id");
+    const user = User.update(req.params.id, req.body);
+    if (!user) throw createError(404, "User not found");
+    res.json(user);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.delete("/users/:id", authMiddleware, (req, res, next) => {
+  try {
+    if (!validateId(req.params.id)) throw createError(400, "Invalid user id");
+    const ok = User.delete(req.params.id);
+    if (!ok) throw createError(404, "User not found");
+    res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get("/projects", authMiddleware, (req, res) => {
+  res.json(Project.list());
+});
+
+app.post("/projects", authMiddleware, validateProjectInput, (req, res, next) => {
+  try {
+    const project = Project.create(req.body);
+    res.status(201).json(project);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get("/projects/:id", authMiddleware, (req, res, next) => {
+  try {
+    if (!validateId(req.params.id)) throw createError(400, "Invalid project id");
+    const project = Project.getById(req.params.id);
+    if (!project) throw createError(404, "Project not found");
+    res.json(project);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.patch("/projects/:id", authMiddleware, validateProjectInput, (req, res, next) => {
+  try {
+    if (!validateId(req.params.id)) throw createError(400, "Invalid project id");
+    const project = Project.update(req.params.id, req.body);
+    if (!project) throw createError(404, "Project not found");
+    res.json(project);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.delete("/projects/:id", authMiddleware, (req, res, next) => {
+  try {
+    if (!validateId(req.params.id)) throw createError(400, "Invalid project id");
+    const project = Project.getById(req.params.id);
+    if (!project) throw createError(404, "Project not found");
+    Array.from(Task.list())
+      .filter((t) => t.projectId === project.id)
+      .forEach((t) => Task.update(t.id, { projectId: null }));
+    Project.delete(req.params.id);
+    res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get("/tasks", authMiddleware, (req, res) => {
+  const tasks = Task.list();
+  const { page, limit, total, data } = paginate(tasks, req.query.page, req.query.limit);
+  res.json({ page, limit, total, data });
+});
+
+app.post("/tasks", authMiddleware, validateTaskInput, (req, res, next) => {
+  try {
+    const task = Task.create(req.body);
+    res.status(201).json(task);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get("/tasks/:id", authMiddleware, (req, res, next) => {
+  try {
+    if (!validateId(req.params.id)) throw createError(400, "Invalid task id");
+    const task = Task.getById(req.params.id);
+    if (!task) throw createError(404, "Task not found");
+    res.json(task);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.patch("/tasks/:id", authMiddleware, validateTaskInput, (req, res, next) => {
+  try {
+    if (!validateId(req.params.id)) throw createError(400, "Invalid task id");
+    const task = Task.update(req.params.id, req.body);
+    if (!task) throw createError(404, "Task not found");
+    res.json(task);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.delete("/tasks/:id", authMiddleware, (req, res, next) => {
+  try {
+    if (!validateId(req.params.id)) throw createError(400, "Invalid task id");
+    const ok = Task.delete(req.params.id);
+    if (!ok) throw createError(404, "Task not found");
+    res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.put("/tasks/:id/labels", authMiddleware, validateLabelsInput, (req, res, next) => {
+  try {
+    if (!validateId(req.params.id)) throw createError(400, "Invalid task id");
+    const task = Task.setLabels(req.params.id, req.body.labels);
+    if (!task) throw createError(404, "Task not found");
+    res.json(task);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post("/tasks/:id/assign", authMiddleware, (req, res, next) => {
+  try {
+    if (!validateId(req.params.id)) throw createError(400, "Invalid task id");
+    const { userId } = req.body || {};
+    if (!validateId(userId)) throw createError(400, "Valid userId is required");
+    const task = Task.assign(req.params.id, userId);
+    if (!task) throw createError(404, "Task not found");
+    res.json(task);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post("/tasks/:id/status", authMiddleware, (req, res, next) => {
+  try {
+    if (!validateId(req.params.id)) throw createError(400, "Invalid task id");
+    const { status } = req.body || {};
+    if (!TASK_STATUSES.includes(status)) throw createError(400, "Valid status is required");
+    const task = Task.changeStatus(req.params.id, status);
+    if (!task) throw createError(404, "Task not found");
+    res.json(task);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post("/tasks/:id/comments", authMiddleware, validateCommentInput, (req, res, next) => {
+  try {
+    if (!validateId(req.params.id)) throw createError(400, "Invalid task id");
+    const comment = Task.addComment(req.params.id, req.body);
+    if (!comment) throw createError(404, "Task not found");
+    res.status(201).json(comment);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// 404
+app.use((req, res, next) => {
+  next(createError(404, "Route not found"));
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  const status = err.status || err.statusCode || 500;
+  const message =
+    status === 500 ? "Internal server error" : err.message || "Error";
+  if (status >= 500) console.error(err);
+  res.status(status).json({
+    error: message,
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`Task management API running on port ${PORT}`);
+});

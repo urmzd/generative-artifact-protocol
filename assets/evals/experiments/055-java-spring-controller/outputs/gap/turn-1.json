@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "\n    /**\n     * Export all products as CSV.\n     *\n     * @return CSV file download\n     */\n    @GetMapping(\"/export\")\n    public ResponseEntity<Resource> exportProducts() {\n        Resource csvFile = productService.exportProductsAsCsv();\n        return ResponseEntity.ok()\n                .header(HttpHeaders.CONTENT_DISPOSITION, \"attachment; filename=products.csv\")\n                .contentType(MediaType.parseMediaType(\"text/csv\"))\n                .body(csvFile);\n    }\n",
+      "op": "insert_before",
+      "target": {
+        "type": "id",
+        "value": "controller-section"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+On Page 4: Storage, change the Path of endpoint EP-407 to exactly `/v1/storage/buckets/{bucketId}/lifecycle`. Leave its method, parameters table, and response unchanged, and do not touch any other endpoint.

@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "/**\n * JPA repository for product persistence operations.\n */\n@Repository\npublic interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {\n\n    /**\n     * Find product by SKU.\n     *\n     * @param sku product SKU\n     * @return true if exists\n     */\n    boolean existsBySku(String sku);\n\n    /**\n     * Check if SKU exists excluding a specific id.\n     *\n     * @param sku product SKU\n     * @param id id to exclude\n     * @return true if exists\n     */\n    boolean existsBySkuAndIdNot(String sku, Long id);\n\n    /**\n     * Find products by exact category.\n     *\n     * @param category product category\n     * @return matching products\n     */\n    List<Product> findByCategory(String category);\n\n    /**\n     * Find products by name containing keyword.\n     *\n     * @param name product name keyword\n     * @return matching products\n     */\n    List<Product> findByNameContainingIgnoreCase(String name);\n\n    /**\n     * Find products by price range and category.\n     *\n     * @param minPrice minimum price\n     * @param maxPrice maximum price\n     * @param category product category\n     * @return matching products\n     */\n    @Query(\"\"\"\n           SELECT p\n           FROM Product p\n           WHERE p.price BETWEEN :minPrice AND :maxPrice\n             AND (:category IS NULL OR LOWER(p.category) = LOWER(:category))\n           \"\"\")\n    List<Product> findByPriceRangeAndCategory(@Param(\"minPrice\") BigDecimal minPrice,\n                                              @Param(\"maxPrice\") BigDecimal maxPrice,\n                                              @Param(\"category\") String category);\n\n    /**\n     * Custom search query for products.\n     *\n     * @param keyword search keyword\n     * @param category category filter\n     * @param minPrice minimum price\n     * @param maxPrice maximum price\n     * @param pageable pageable request\n     * @return page of products\n     */\n    @Query(\"\"\"\n           SELECT p\n           FROM Product p\n           WHERE (:keyword IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))\n               OR LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%')))\n             AND (:category IS NULL OR LOWER(p.category) = LOWER(:category))\n             AND (:minPrice IS NULL OR p.price >= :minPrice)\n             AND (:maxPrice IS NULL OR p.price <= :maxPrice)\n           \"\"\")\n    Page<Product> searchProducts(@Param(\"keyword\") String keyword,\n                                 @Param(\"category\") String category,\n                                 @Param(\"minPrice\") BigDecimal minPrice,\n                                 @Param(\"maxPrice\") BigDecimal maxPrice,\n                                 Pageable pageable);\n}",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "repository-section"
+      }
+    }
+  ]
+}

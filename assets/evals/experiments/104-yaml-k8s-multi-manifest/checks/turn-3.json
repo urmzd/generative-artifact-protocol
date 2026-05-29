@@ -1,0 +1,27 @@
+{
+  "turn": 3,
+  "checks": [
+    {
+      "kind": "absent",
+      "value": "billing-worker-config",
+      "desc": "the deleted ConfigMap billing-worker-config is gone entirely"
+    },
+    {
+      "kind": "contains",
+      "value": "billing-api-config",
+      "desc": "sibling ConfigMaps in the billing group were not collaterally removed"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^kind:\\s*ConfigMap\\b",
+      "expected": 11,
+      "desc": "ConfigMap count dropped from 12 to 11 after deleting exactly one ConfigMap"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^kind:",
+      "expected": 40,
+      "desc": "total resource count is exactly 40 after deleting one item from the prior 41 (insert at turn 2, delete here)"
+    }
+  ]
+}

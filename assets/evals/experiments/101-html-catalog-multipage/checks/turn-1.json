@@ -1,0 +1,27 @@
+{
+  "turn": 1,
+  "checks": [
+    {
+      "kind": "contains",
+      "value": "$349.95",
+      "desc": "Targeted edit: P0087 price updated to $349.95 is present"
+    },
+    {
+      "kind": "contains",
+      "value": "P0087",
+      "desc": "The edited product P0087 still exists"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "P0\\d{3}",
+      "expected": 120,
+      "desc": "All 120 products preserved; a single-field edit must not drop any product"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "Page \\d+ of 5",
+      "expected": 5,
+      "desc": "All 5 page section headers preserved"
+    }
+  ]
+}

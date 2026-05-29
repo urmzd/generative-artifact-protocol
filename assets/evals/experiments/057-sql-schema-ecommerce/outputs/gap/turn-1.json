@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "\n    <gap:target id=\"wishlists-table\">\n      CREATE TABLE <gap:target id=\"wishlists-table-name\">wishlists</gap:target> (\n        <gap:target id=\"wishlists-id-column\">id BIGSERIAL PRIMARY KEY</gap:target>,\n        <gap:target id=\"wishlists-user-id-column\">user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE</gap:target>,\n        <gap:target id=\"wishlists-product-id-column\">product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE</gap:target>,\n        <gap:target id=\"wishlists-added-at-column\">added_at TIMESTAMPTZ NOT NULL DEFAULT NOW()</gap:target>,\n        <gap:target id=\"wishlists-unique-user-product\">CONSTRAINT wishlists_user_product_unique UNIQUE (user_id, product_id)</gap:target>\n      );\n    </gap:target>",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "inventory-table"
+      }
+    }
+  ]
+}

@@ -1,0 +1,243 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+CREATE TABLE users (
+    id BIGSERIAL PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    phone VARCHAR(30),
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE categories (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(150) NOT NULL UNIQUE,
+    slug VARCHAR(180) NOT NULL UNIQUE,
+    description TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE products (
+    id BIGSERIAL PRIMARY KEY,
+    category_id INTEGER NOT NULL REFERENCES categories(id) ON DELETE RESTRICT,
+    name VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) NOT NULL UNIQUE,
+    description TEXT,
+    sku VARCHAR(100) NOT NULL UNIQUE,
+    price NUMERIC(12,2) NOT NULL CHECK (price >= 0),
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (category_id, name)
+);
+
+CREATE TABLE addresses (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    label VARCHAR(100) NOT NULL DEFAULT 'Home',
+    line1 VARCHAR(255) NOT NULL,
+    line2 VARCHAR(255),
+    city VARCHAR(100) NOT NULL,
+    state VARCHAR(100),
+    postal_code VARCHAR(20) NOT NULL,
+    country VARCHAR(2) NOT NULL DEFAULT 'US',
+    is_default BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE coupons (
+    id BIGSERIAL PRIMARY KEY,
+    code VARCHAR(50) NOT NULL UNIQUE,
+    description TEXT,
+    discount_type VARCHAR(20) NOT NULL CHECK (discount_type IN ('percent', 'fixed')),
+    discount_value NUMERIC(12,2) NOT NULL CHECK (discount_value > 0),
+    minimum_order_amount NUMERIC(12,2) NOT NULL DEFAULT 0 CHECK (minimum_order_amount >= 0),
+    max_redemptions INTEGER,
+    redemptions_count INTEGER NOT NULL DEFAULT 0 CHECK (redemptions_count >= 0),
+    starts_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    ends_at TIMESTAMPTZ,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CHECK (ends_at IS NULL OR ends_at > starts_at)
+);
+
+CREATE TABLE orders (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
+    address_id BIGINT REFERENCES addresses(id) ON DELETE SET NULL,
+    coupon_id BIGINT REFERENCES coupons(id) ON DELETE SET NULL,
+    order_number VARCHAR(30) NOT NULL UNIQUE,
+    status VARCHAR(20) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'paid', 'processing', 'shipped', 'completed', 'cancelled', 'refunded')),
+    subtotal NUMERIC(12,2) NOT NULL DEFAULT 0 CHECK (subtotal >= 0),
+    discount_amount NUMERIC(12,2) NOT NULL DEFAULT 0 CHECK (discount_amount >= 0),
+    tax_amount NUMERIC(12,2) NOT NULL DEFAULT 0 CHECK (tax_amount >= 0),
+    shipping_amount NUMERIC(12,2) NOT NULL DEFAULT 0 CHECK (shipping_amount >= 0),
+    total_amount NUMERIC(12,2) NOT NULL DEFAULT 0 CHECK (total_amount >= 0),
+    placed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE order_items (
+    id BIGSERIAL PRIMARY KEY,
+    order_id BIGINT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+    product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE RESTRICT,
+    quantity INTEGER NOT NULL CHECK (quantity > 0),
+    unit_price NUMERIC(12,2) NOT NULL CHECK (unit_price >= 0),
+    line_total NUMERIC(12,2) NOT NULL CHECK (line_total >= 0),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (order_id, product_id)
+);
+
+CREATE TABLE reviews (
+    id BIGSERIAL PRIMARY KEY,
+    product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+    user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    title VARCHAR(200),
+    body TEXT,
+    is_verified_purchase BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (product_id, user_id)
+);
+
+CREATE TABLE inventory (
+    id BIGSERIAL PRIMARY KEY,
+    product_id BIGINT NOT NULL UNIQUE REFERENCES products(id) ON DELETE CASCADE,
+    quantity_on_hand INTEGER NOT NULL DEFAULT 0 CHECK (quantity_on_hand >= 0),
+    quantity_reserved INTEGER NOT NULL DEFAULT 0 CHECK (quantity_reserved >= 0),
+    reorder_level INTEGER NOT NULL DEFAULT 10 CHECK (reorder_level >= 0),
+    warehouse_location VARCHAR(100),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CHECK (quantity_on_hand >= quantity_reserved)
+);
+
+CREATE INDEX idx_products_category_id ON products(category_id);
+CREATE INDEX idx_addresses_user_id ON addresses(user_id);
+CREATE INDEX idx_coupons_is_active ON coupons(is_active);
+CREATE INDEX idx_orders_user_id ON orders(user_id);
+CREATE INDEX idx_orders_status_placed_at ON orders(status, placed_at DESC);
+CREATE INDEX idx_orders_coupon_id ON orders(coupon_id);
+CREATE INDEX idx_order_items_order_id ON order_items(order_id);
+CREATE INDEX idx_order_items_product_id ON order_items(product_id);
+CREATE INDEX idx_reviews_product_id ON reviews(product_id);
+CREATE INDEX idx_reviews_user_id ON reviews(user_id);
+CREATE INDEX idx_reviews_product_rating ON reviews(product_id, rating DESC);
+CREATE INDEX idx_inventory_quantity_on_hand ON inventory(quantity_on_hand);
+CREATE INDEX idx_products_active_category ON products(is_active, category_id, id);
+
+CREATE VIEW order_summary AS
+SELECT
+    o.id AS order_id,
+    o.order_number,
+    o.user_id,
+    u.email AS user_email,
+    o.status,
+    o.subtotal,
+    o.discount_amount,
+    o.tax_amount,
+    o.shipping_amount,
+    o.total_amount,
+    COUNT(oi.id) AS item_count,
+    SUM(oi.quantity) AS total_quantity,
+    o.placed_at
+FROM orders o
+JOIN users u ON u.id = o.user_id
+LEFT JOIN order_items oi ON oi.order_id = o.id
+GROUP BY o.id, o.order_number, o.user_id, u.email, o.status, o.subtotal, o.discount_amount, o.tax_amount, o.shipping_amount, o.total_amount, o.placed_at;
+
+CREATE VIEW product_ratings AS
+SELECT
+    p.id AS product_id,
+    p.name AS product_name,
+    COUNT(r.id) AS rating_count,
+    ROUND(COALESCE(AVG(r.rating), 0)::numeric, 2) AS average_rating
+FROM products p
+LEFT JOIN reviews r ON r.product_id = p.id
+GROUP BY p.id, p.name;
+
+CREATE VIEW low_stock_products AS
+SELECT
+    p.id AS product_id,
+    p.name AS product_name,
+    p.sku,
+    i.quantity_on_hand,
+    i.quantity_reserved,
+    i.reorder_level
+FROM products p
+JOIN inventory i ON i.product_id = p.id
+WHERE i.quantity_on_hand <= i.reorder_level;
+
+INSERT INTO categories (id, name, slug, description) VALUES
+(1, 'Electronics', 'electronics', 'Gadgets and devices'),
+(2, 'Books', 'books', 'Printed and digital books'),
+(3, 'Home & Kitchen', 'home-kitchen', 'Home and kitchen essentials'),
+(4, 'Clothing', 'clothing', 'Apparel and accessories'),
+(5, 'Sports', 'sports', 'Sports and outdoor gear');
+
+INSERT INTO products (id, category_id, name, slug, description, sku, price, is_active) VALUES
+(1, 1, 'Wireless Headphones', 'wireless-headphones', 'Over-ear wireless headphones', 'ELEC-001', 79.99, TRUE),
+(2, 1, 'Smart Watch', 'smart-watch', 'Fitness tracking smartwatch', 'ELEC-002', 149.99, TRUE),
+(3, 2, 'PostgreSQL Guide', 'postgresql-guide', 'Comprehensive PostgreSQL book', 'BOOK-001', 39.95, TRUE),
+(4, 2, 'SQL Cookbook', 'sql-cookbook', 'Recipes for SQL queries', 'BOOK-002', 44.50, TRUE),
+(5, 3, 'Ceramic Mug Set', 'ceramic-mug-set', 'Set of 4 ceramic mugs', 'HOME-001', 24.99, TRUE),
+(6, 3, 'Knife Block Set', 'knife-block-set', 'Stainless steel knife set', 'HOME-002', 89.00, TRUE),
+(7, 4, 'Cotton T-Shirt', 'cotton-t-shirt', 'Unisex cotton t-shirt', 'CLOTH-001', 19.99, TRUE),
+(8, 4, 'Denim Jeans', 'denim-jeans', 'Classic fit denim jeans', 'CLOTH-002', 59.99, TRUE),
+(9, 5, 'Yoga Mat', 'yoga-mat', 'Non-slip exercise mat', 'SPORT-001', 29.99, TRUE),
+(10, 5, 'Dumbbell Set', 'dumbbell-set', 'Adjustable dumbbells', 'SPORT-002', 99.99, TRUE);
+
+INSERT INTO users (id, email, password_hash, first_name, last_name, phone) VALUES
+(1, 'alice@example.com', crypt('password123', gen_salt('bf')), 'Alice', 'Wong', '+1555000001'),
+(2, 'bob@example.com', crypt('password123', gen_salt('bf')), 'Bob', 'Smith', '+1555000002'),
+(3, 'carol@example.com', crypt('password123', gen_salt('bf')), 'Carol', 'Johnson', '+1555000003');
+
+INSERT INTO addresses (id, user_id, label, line1, line2, city, state, postal_code, country, is_default) VALUES
+(1, 1, 'Home', '123 Maple St', NULL, 'Springfield', 'IL', '62701', 'US', TRUE),
+(2, 2, 'Home', '45 Oak Ave', 'Apt 2B', 'Madison', 'WI', '53703', 'US', TRUE),
+(3, 3, 'Home', '88 Pine Rd', NULL, 'Austin', 'TX', '73301', 'US', TRUE);
+
+INSERT INTO coupons (id, code, description, discount_type, discount_value, minimum_order_amount, max_redemptions, redemptions_count, starts_at, ends_at, is_active) VALUES
+(1, 'WELCOME10', '10 percent off', 'percent', 10.00, 50.00, 1000, 0, NOW(), NULL, TRUE),
+(2, 'SAVE20', '20 dollars off', 'fixed', 20.00, 100.00, 500, 0, NOW(), NULL, TRUE);
+
+INSERT INTO inventory (product_id, quantity_on_hand, quantity_reserved, reorder_level, warehouse_location) VALUES
+(1, 25, 2, 10, 'A1'),
+(2, 15, 1, 8, 'A1'),
+(3, 50, 5, 15, 'B2'),
+(4, 40, 3, 12, 'B2'),
+(5, 8, 1, 10, 'C3'),
+(6, 12, 0, 10, 'C3'),
+(7, 100, 10, 20, 'D1'),
+(8, 60, 4, 15, 'D1'),
+(9, 7, 2, 10, 'E2'),
+(10, 5, 0, 10, 'E2');
+
+INSERT INTO orders (id, user_id, address_id, coupon_id, order_number, status, subtotal, discount_amount, tax_amount, shipping_amount, total_amount, placed_at) VALUES
+(1, 1, 1, 1, 'ORD-1001', 'completed', 109.98, 10.00, 8.00, 5.99, 113.97, NOW() - INTERVAL '10 days'),
+(2, 2, 2, NULL, 'ORD-1002', 'processing', 84.49, 0.00, 6.76, 5.99, 97.24, NOW() - INTERVAL '8 days'),
+(3, 3, 3, 2, 'ORD-1003', 'shipped', 129.98, 20.00, 8.80, 5.99, 124.77, NOW() - INTERVAL '6 days'),
+(4, 1, 1, NULL, 'ORD-1004', 'paid', 49.98, 0.00, 4.00, 5.99, 59.97, NOW() - INTERVAL '3 days'),
+(5, 2, 2, 1, 'ORD-1005', 'pending', 179.98, 18.00, 12.96, 5.99, 180.93, NOW() - INTERVAL '1 day');
+
+INSERT INTO order_items (order_id, product_id, quantity, unit_price, line_total) VALUES
+(1, 1, 1, 79.99, 79.99),
+(1, 5, 1, 24.99, 24.99),
+(2, 3, 1, 39.95, 39.95),
+(2, 7, 2, 19.99, 39.98),
+(3, 2, 1, 149.99, 149.99),
+(3, 9, 1, 29.99, 29.99),
+(4, 4, 1, 44.50, 44.50),
+(4, 7, 1, 19.99, 19.99),
+(5, 6, 1, 89.00, 89.00),
+(5, 10, 1, 99.99, 99.99);
+
+INSERT INTO reviews (product_id, user_id, rating, title, body, is_verified_purchase) VALUES
+(1, 1, 5, 'Great sound', 'Very comfortable and excellent battery life.', TRUE),
+(2, 2, 4, 'Solid watch', 'Useful features for the price.', TRUE),
+(3, 3, 5, 'Very informative', 'Helped me learn advanced PostgreSQL.', TRUE),
+(5, 1, 4, 'Nice mugs', 'Good quality and attractive design.', TRUE),
+(7, 2, 3, 'Average shirt', 'Fit is okay but fabric is a bit thin.', TRUE);

@@ -1,0 +1,296 @@
+<gap:target id="pom-project">
+  <gap:target id="model-version">4.0.0</gap:target>
+
+  <gap:target id="parent-block">
+    <parent>
+      <gap:target id="parent-group-id">org.springframework.boot</gap:target>
+      <gap:target id="parent-artifact-id">spring-boot-starter-parent</gap:target>
+      <gap:target id="parent-version">3.3.5</gap:target>
+      <gap:target id="parent-relative-path"/>
+    </parent>
+  </gap:target>
+
+  <gap:target id="coordinates-block">
+    <gap:target id="group-id">com.example</gap:target>
+    <gap:target id="artifact-id">spring-boot-web-app</gap:target>
+    <gap:target id="version">0.0.1-SNAPSHOT</gap:target>
+    <gap:target id="packaging">jar</gap:target>
+    <gap:target id="name">spring-boot-web-app</gap:target>
+    <gap:target id="description">Spring Boot 3 Web Application</gap:target>
+  </gap:target>
+
+  <gap:target id="properties-block">
+    <properties>
+      <gap:target id="java-version">21</gap:target>
+      <gap:target id="mapstruct-version">1.6.3</gap:target>
+      <gap:target id="springdoc-openapi-version">2.6.0</gap:target>
+      <gap:target id="testcontainers-version">1.20.3</gap:target>
+      <gap:target id="lombok-version">1.18.34</gap:target>
+      <gap:target id="maven-compiler-plugin-version">3.13.0</gap:target>
+      <gap:target id="jacoco-maven-plugin-version">0.8.12</gap:target>
+      <gap:target id="spring-boot-maven-plugin-version">3.3.5</gap:target>
+      <gap:target id="postgresql-version">42.7.4</gap:target>
+      <gap:target id="flyway-version">10.20.1</gap:target>
+    </properties>
+  </gap:target>
+
+  <gap:target id="dependencies-block">
+    <dependencies>
+      <gap:target id="dependency-spring-boot-web">
+        <dependency>
+          <gap:target id="dependency-spring-boot-web-group-id">org.springframework.boot</gap:target>
+          <gap:target id="dependency-spring-boot-web-artifact-id">spring-boot-starter-web</gap:target>
+        </dependency>
+      </gap:target>
+
+      <gap:target id="dependency-spring-boot-jpa">
+        <dependency>
+          <gap:target id="dependency-spring-boot-jpa-group-id">org.springframework.boot</gap:target>
+          <gap:target id="dependency-spring-boot-jpa-artifact-id">spring-boot-starter-data-jpa</gap:target>
+        </dependency>
+      </gap:target>
+
+      <gap:target id="dependency-spring-boot-security">
+        <dependency>
+          <gap:target id="dependency-spring-boot-security-group-id">org.springframework.boot</gap:target>
+          <gap:target id="dependency-spring-boot-security-artifact-id">spring-boot-starter-security</gap:target>
+        </dependency>
+      </gap:target>
+
+      <gap:target id="dependency-spring-boot-validation">
+        <dependency>
+          <gap:target id="dependency-spring-boot-validation-group-id">org.springframework.boot</gap:target>
+          <gap:target id="dependency-spring-boot-validation-artifact-id">spring-boot-starter-validation</gap:target>
+        </dependency>
+      <gap:target id="dependency-spring-boot-cache">
+        <dependency>
+          <gap:target id="dependency-spring-boot-cache-group-id">org.springframework.boot</gap:target>
+          <gap:target id="dependency-spring-boot-cache-artifact-id">spring-boot-starter-cache</gap:target>
+        </dependency>
+      </gap:target>
+
+      <gap:target id="dependency-caffeine">
+        <dependency>
+          <gap:target id="dependency-caffeine-group-id">com.github.ben-manes.caffeine</gap:target>
+          <gap:target id="dependency-caffeine-artifact-id">caffeine</gap:target>
+        </dependency>
+      </gap:target></gap:target>
+
+      <gap:target id="dependency-postgresql">
+        <dependency>
+          <gap:target id="dependency-postgresql-group-id">org.postgresql</gap:target>
+          <gap:target id="dependency-postgresql-artifact-id">postgresql</gap:target>
+          <gap:target id="dependency-postgresql-version">${postgresql.version}</gap:target>
+        </dependency>
+      </gap:target>
+
+      <gap:target id="dependency-flyway">
+        <dependency>
+          <gap:target id="dependency-flyway-group-id">org.flywaydb</gap:target>
+          <gap:target id="dependency-flyway-artifact-id">flyway-core</gap:target>
+          <gap:target id="dependency-flyway-version">${flyway.version}</gap:target>
+        </dependency>
+      </gap:target>
+
+      <gap:target id="dependency-lombok">
+        <dependency>
+          <gap:target id="dependency-lombok-group-id">org.projectlombok</gap:target>
+          <gap:target id="dependency-lombok-artifact-id">lombok</gap:target>
+          <gap:target id="dependency-lombok-version">${lombok.version}</gap:target>
+          <gap:target id="dependency-lombok-scope">provided</gap:target>
+        </dependency>
+      </gap:target>
+
+      <gap:target id="dependency-mapstruct">
+        <dependency>
+          <gap:target id="dependency-mapstruct-group-id">org.mapstruct</gap:target>
+          <gap:target id="dependency-mapstruct-artifact-id">mapstruct</gap:target>
+          <gap:target id="dependency-mapstruct-version">${mapstruct.version}</gap:target>
+        </dependency>
+      </gap:target>
+
+      <gap:target id="dependency-springdoc-openapi">
+        <dependency>
+          <gap:target id="dependency-springdoc-openapi-group-id">org.springdoc</gap:target>
+          <gap:target id="dependency-springdoc-openapi-artifact-id">springdoc-openapi-starter-webmvc-ui</gap:target>
+          <gap:target id="dependency-springdoc-openapi-version">${springdoc-openapi.version}</gap:target>
+        </dependency>
+      </gap:target>
+    </dependencies>
+  </gap:target>
+
+  <gap:target id="test-dependencies-block">
+    <dependencies>
+      <gap:target id="dependency-spring-boot-test">
+        <dependency>
+          <gap:target id="dependency-spring-boot-test-group-id">org.springframework.boot</gap:target>
+          <gap:target id="dependency-spring-boot-test-artifact-id">spring-boot-starter-test</gap:target>
+          <gap:target id="dependency-spring-boot-test-scope">test</gap:target>
+        </dependency>
+      </gap:target>
+
+      <gap:target id="dependency-testcontainers">
+        <dependency>
+          <gap:target id="dependency-testcontainers-group-id">org.testcontainers</gap:target>
+          <gap:target id="dependency-testcontainers-artifact-id">testcontainers</gap:target>
+          <gap:target id="dependency-testcontainers-version">${testcontainers.version}</gap:target>
+          <gap:target id="dependency-testcontainers-scope">test</gap:target>
+        </dependency>
+      </gap:target>
+
+      <gap:target id="dependency-testcontainers-junit-jupiter">
+        <dependency>
+          <gap:target id="dependency-testcontainers-junit-jupiter-group-id">org.testcontainers</gap:target>
+          <gap:target id="dependency-testcontainers-junit-jupiter-artifact-id">junit-jupiter</gap:target>
+          <gap:target id="dependency-testcontainers-junit-jupiter-version">${testcontainers.version}</gap:target>
+          <gap:target id="dependency-testcontainers-junit-jupiter-scope">test</gap:target>
+        </dependency>
+      </gap:target>
+    </dependencies>
+  </gap:target>
+
+  <gap:target id="build-block">
+    <build>
+      <gap:target id="plugins-block">
+        <plugins>
+          <gap:target id="plugin-spring-boot-maven">
+            <plugin>
+              <gap:target id="plugin-spring-boot-maven-group-id">org.springframework.boot</gap:target>
+              <gap:target id="plugin-spring-boot-maven-artifact-id">spring-boot-maven-plugin</gap:target>
+              <gap:target id="plugin-spring-boot-maven-version">${spring-boot-maven-plugin.version}</gap:target>
+            </plugin>
+          </gap:target>
+
+          <gap:target id="plugin-mapstruct-processor">
+            <plugin>
+              <gap:target id="plugin-maven-compiler-group-id">org.apache.maven.plugins</gap:target>
+              <gap:target id="plugin-maven-compiler-artifact-id">maven-compiler-plugin</gap:target>
+              <gap:target id="plugin-maven-compiler-version">${maven-compiler-plugin.version}</gap:target>
+              <gap:target id="plugin-maven-compiler-configuration">
+                <configuration>
+                  <gap:target id="compiler-source">${java.version}</gap:target>
+                  <gap:target id="compiler-target">${java.version}</gap:target>
+                  <gap:target id="compiler-annotation-processor-paths">
+                    <annotationProcessorPaths>
+                      <gap:target id="processor-mapstruct">
+                        <path>
+                          <gap:target id="processor-mapstruct-group-id">org.mapstruct</gap:target>
+                          <gap:target id="processor-mapstruct-artifact-id">mapstruct-processor</gap:target>
+                          <gap:target id="processor-mapstruct-version">${mapstruct.version}</gap:target>
+                        </path>
+                      </gap:target>
+                      <gap:target id="processor-lombok">
+                        <path>
+                          <gap:target id="processor-lombok-group-id">org.projectlombok</gap:target>
+                          <gap:target id="processor-lombok-artifact-id">lombok</gap:target>
+                          <gap:target id="processor-lombok-version">${lombok.version}</gap:target>
+                        </path>
+                      </gap:target>
+                    </annotationProcessorPaths>
+                  </gap:target>
+                </configuration>
+              </gap:target>
+            </plugin>
+          </gap:target>
+
+          <gap:target id="plugin-jacoco">
+            <plugin>
+              <gap:target id="plugin-jacoco-group-id">org.jacoco</gap:target>
+              <gap:target id="plugin-jacoco-artifact-id">jacoco-maven-plugin</gap:target>
+              <gap:target id="plugin-jacoco-version">${jacoco-maven-plugin.version}</gap:target>
+              <gap:target id="plugin-jacoco-executions">
+                <executions>
+                  <gap:target id="jacoco-agent-execution">
+                    <execution>
+                      <gap:target id="jacoco-agent-id">prepare-agent</gap:target>
+                      <gap:target id="jacoco-agent-goals">
+                        <goal>prepare-agent</goal>
+                      </gap:target>
+                    </execution>
+                  </gap:target>
+                  <gap:target id="jacoco-report-execution">
+                    <execution>
+                      <gap:target id="jacoco-report-id">report</gap:target>
+                      <gap:target id="jacoco-report-phase">test</gap:target>
+                      <gap:target id="jacoco-report-goals">
+                        <goal>report</goal>
+                      </gap:target>
+                    </execution>
+                  </gap:target>
+                </executions>
+              </gap:target>
+            </plugin>
+          </gap:target>
+        </plugins>
+      </gap:target>
+    </build>
+  </gap:target>
+
+  <gap:target id="profiles-block">  <gap:target id="profiles-block">
+    <profiles>
+      <gap:target id="profile-dev">
+        <profile>
+          <gap:target id="profile-dev-id">dev</gap:target>
+          <gap:target id="profile-dev-properties">
+            <properties>
+              <gap:target id="dev-active-profile">spring.profiles.active=dev</gap:target>
+              <gap:target id="dev-hibernate-ddl-auto">spring.jpa.hibernate.ddl-auto=update</gap:target>
+              <gap:target id="dev-show-sql">spring.jpa.show-sql=true</gap:target>
+              <gap:target id="dev-flyway-enabled">spring.flyway.enabled=true</gap:target>
+            </properties>
+          </gap:target>
+        </profile>
+      </gap:target>
+
+      <gap:target id="profile-test">
+        <profile>
+          <gap:target id="profile-test-id">test</gap:target>
+          <gap:target id="profile-test-properties">
+            <properties>
+              <gap:target id="test-active-profile">spring.profiles.active=test</gap:target>
+              <gap:target id="test-datasource-url">spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</gap:target>
+              <gap:target id="test-datasource-driver">spring.datasource.driver-class-name=org.h2.Driver</gap:target>
+              <gap:target id="test-datasource-username">spring.datasource.username=sa</gap:target>
+              <gap:target id="test-datasource-password">spring.datasource.password=</gap:target>
+              <gap:target id="test-hibernate-ddl-auto">spring.jpa.hibernate.ddl-auto=create-drop</gap:target>
+              <gap:target id="test-show-sql">spring.jpa.show-sql=false</gap:target>
+              <gap:target id="test-flyway-enabled">spring.flyway.enabled=false</gap:target>
+              <gap:target id="test-testcontainers-enabled">testcontainers.enabled=false</gap:target>
+              <gap:target id="test-logging-level-root">logging.level.root=WARN</gap:target>
+              <gap:target id="test-logging-level-org-springframework">logging.level.org.springframework=INFO</gap:target>
+              <gap:target id="test-logging-level-org-hibernate">logging.level.org.hibernate=WARN</gap:target>
+            </properties>
+          </gap:target>
+        </profile>
+      </gap:target>
+
+      <gap:target id="profile-staging">
+        <profile>
+          <gap:target id="profile-staging-id">staging</gap:target>
+          <gap:target id="profile-staging-properties">
+            <properties>
+              <gap:target id="staging-active-profile">spring.profiles.active=staging</gap:target>
+              <gap:target id="staging-hibernate-ddl-auto">spring.jpa.hibernate.ddl-auto=validate</gap:target>
+              <gap:target id="staging-show-sql">spring.jpa.show-sql=false</gap:target>
+              <gap:target id="staging-flyway-enabled">spring.flyway.enabled=true</gap:target>
+            </properties>
+          </gap:target>
+        </profile>
+      </gap:target>
+
+      <gap:target id="profile-production">
+        <profile>
+          <gap:target id="profile-production-id">production</gap:target>
+          <gap:target id="profile-production-properties">
+            <properties>
+              <gap:target id="production-active-profile">spring.profiles.active=production</gap:target>
+              <gap:target id="production-hibernate-ddl-auto">spring.jpa.hibernate.ddl-auto=validate</gap:target>
+              <gap:target id="production-show-sql">spring.jpa.show-sql=false</gap:target>
+              <gap:target id="production-flyway-enabled">spring.flyway.enabled=true</gap:target>
+            </properties>
+          </gap:target>
+        </profile>
+      </gap:target>
+    </profiles>
+  </gap:target></gap:target>
+</gap:target>

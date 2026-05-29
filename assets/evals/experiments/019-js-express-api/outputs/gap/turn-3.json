@@ -1,0 +1,17 @@
+{
+  "protocol": "gap-envelope",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "\nrouter.post('/projects/:id/archive', (req, res, next) => {\n  try {\n    validateId(req.params.id);\n    const project = Project.findById(req.params.id);\n    if (!project) throw new ApiError('Project not found', 404);\n\n    const pendingTasks = tasks.filter(task => task.projectId === project.id && task.status !== 'done' && task.status !== 'cancelled');\n    pendingTasks.forEach(task => {\n      task.status = 'cancelled';\n      task.updatedAt = new Date().toISOString();\n    });\n\n    project.archived = true;\n    project.updatedAt = new Date().toISOString();\n\n    return res.json(project);\n  } catch (err) { return next(err); }\n});\n",
+      "op": "insert_before",
+      "target": {
+        "type": "id",
+        "value": "project-routes-block"
+      }
+    }
+  ]
+}

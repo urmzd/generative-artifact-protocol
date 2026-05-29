@@ -1,0 +1,1 @@
+In REGION_CENTRAL, change the price of the record with id=87 to 249.95. Leave its other fields and all other records unchanged.

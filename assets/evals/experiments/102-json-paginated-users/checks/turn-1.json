@@ -1,0 +1,11 @@
+{
+  "turn": 1,
+  "checks": [
+    {"kind": "valid_json", "desc": "artifact is still parseable JSON after the single-field edit"},
+    {"kind": "contains", "value": "j.navarro@corp.example.com", "desc": "the new email for user id 67 is present"},
+    {"kind": "json_pointer_equals", "pointer": "/data/66/id", "value": 67, "desc": "array index 66 still holds the user with id 67 (no reorder)"},
+    {"kind": "json_pointer_equals", "pointer": "/data/66/email", "value": "j.navarro@corp.example.com", "desc": "user id 67 (index 66) now has the new email"},
+    {"kind": "json_pointer_equals", "pointer": "/pagination/total", "value": 100, "desc": "total is unchanged at 100"},
+    {"kind": "regex_count", "pattern": "\"id\"\\s*:", "expected": 100, "desc": "still exactly 100 user records — no collateral loss"}
+  ]
+}

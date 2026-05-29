@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "edit-1",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "\n  @media (prefers-color-scheme: dark) {\n    :root {\n      --color-primary: #818cf8;\n      --color-primary-hover: #a5b4fc;\n      --color-secondary: #fbbf24;\n      --color-secondary-hover: #fcd34d;\n\n      --neutral-50: #171717;\n      --neutral-100: #262626;\n      --neutral-200: #404040;\n      --neutral-300: #525252;\n      --neutral-400: #737373;\n      --neutral-500: #a3a3a3;\n      --neutral-600: #d4d4d4;\n      --neutral-700: #e5e5e5;\n      --neutral-800: #f5f5f5;\n      --neutral-900: #fafafa;\n\n      --color-success: #4ade80;\n      --color-warning: #fbbf24;\n      --color-danger: #f87171;\n      --color-info: #38bdf8;\n    }\n\n    body {\n      color: var(--neutral-900);\n      background: var(--neutral-50);\n    }\n\n    a {\n      color: var(--color-primary);\n    }\n\n    pre {\n      background: var(--neutral-900);\n      color: var(--neutral-50);\n    }\n\n    .code-inline {\n      background: var(--neutral-100);\n      border-color: var(--neutral-200);\n    }\n\n    .card,\n    .modal,\n    .table,\n    .form-control {\n      background: var(--neutral-100);\n      color: var(--neutral-900);\n      border-color: var(--neutral-200);\n    }\n\n    .card-header,\n    .modal-header,\n    .modal-footer,\n    .table th,\n    .table td {\n      border-color: var(--neutral-200);\n    }\n\n    .table th {\n      background: var(--neutral-200);\n    }\n\n    .btn-ghost {\n      color: var(--neutral-800);\n      border-color: var(--neutral-200);\n    }\n\n    .btn-ghost:hover {\n      background: var(--neutral-200);\n    }\n\n    .badge {\n      background: var(--neutral-200);\n      color: var(--neutral-800);\n    }\n\n    .alert,\n    .alert-info,\n    .alert-success,\n    .alert-warning,\n    .alert-danger {\n      color: var(--neutral-900);\n    }\n\n    .nav a {\n      color: var(--neutral-700);\n    }\n\n    .nav a.active,\n    .nav a:hover {\n      color: var(--color-primary);\n    }\n\n    .breadcrumbs-link {\n      color: var(--neutral-700);\n    }\n\n    .breadcrumbs-current {\n      color: var(--neutral-900);\n    }\n\n    .text-muted {\n      color: var(--neutral-600);\n    }\n\n    .bg-neutral-100 {\n      background: var(--neutral-100);\n    }\n\n    .bg-neutral-900 {\n      background: var(--neutral-900);\n      color: var(--neutral-50);\n    }\n  }\n",
+      "op": "insert_before",
+      "target": {
+        "type": "id",
+        "value": "utility-classes-block"
+      }
+    }
+  ]
+}

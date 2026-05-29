@@ -1,0 +1,27 @@
+{
+  "turn": 1,
+  "checks": [
+    {
+      "kind": "contains",
+      "value": "/v1/storage/buckets/{bucketId}/lifecycle",
+      "desc": "EP-407 Path was updated to the new lifecycle path"
+    },
+    {
+      "kind": "contains",
+      "value": "### EP-407",
+      "desc": "the targeted endpoint EP-407 still exists"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^### EP-",
+      "expected": 90,
+      "desc": "all 90 endpoints preserved; single-field edit must not drop other items"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^## Page \\d+:",
+      "expected": 6,
+      "desc": "all 6 pages preserved"
+    }
+  ]
+}

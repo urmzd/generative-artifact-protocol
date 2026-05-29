@@ -1,0 +1,236 @@
+<gap:target id="compose-document">
+version: <gap:target id="compose-version">"3.9"</gap:target>
+
+services:
+  <gap:target id="api-gateway-service">
+    <gap:target id="api-gateway-name">api-gateway</gap:target>:
+    <gap:target id="api-gateway-image">image: nginx:1.27-alpine</gap:target>
+    <gap:target id="api-gateway-ports">ports:
+      - "80:80"</gap:target>
+    <gap:target id="api-gateway-networks">networks:
+      - <gap:target id="shared-network-name">app-network</gap:target></gap:target>
+    <gap:target id="api-gateway-volumes">volumes:
+      - <gap:target id="nginx-conf-volume">./nginx/nginx.conf:/etc/nginx/nginx.conf:ro</gap:target></gap:target>
+    <gap:target id="api-gateway-healthcheck">healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/health"]
+      interval: <gap:target id="api-gateway-health-interval">10s</gap:target>
+      timeout: <gap:target id="api-gateway-health-timeout">5s</gap:target>
+      retries: <gap:target id="api-gateway-health-retries">3</gap:target></gap:target>
+    <gap:target id="api-gateway-depends-on">depends_on:
+      <gap:target id="auth-service-dependency">auth-service</gap:target>:
+        condition: service_healthy
+      <gap:target id="user-service-dependency">user-service</gap:target>:
+        condition: service_healthy
+      <gap:target id="order-service-dependency">order-service</gap:target>:
+        condition: service_healthy
+      <gap:target id="notification-service-dependency">notification-service</gap:target>:
+        condition: service_healthy</gap:target>
+  </gap:target>
+
+  <gap:target id="auth-service-block">
+    <gap:target id="auth-service-name">auth-service</gap:target>:
+    <gap:target id="auth-service-build">build:
+      context: ./auth-service</gap:target>
+    <gap:target id="auth-service-environment">environment:
+      <gap:target id="jwt-secret-env">JWT_SECRET=${JWT_SECRET}</gap:target>
+      <gap:target id="jwt-issuer-env">JWT_ISSUER=${JWT_ISSUER}</gap:target>
+      <gap:target id="jwt-expiry-env">JWT_EXPIRY=${JWT_EXPIRY}</gap:target>
+      <gap:target id="auth-port-env">PORT=${AUTH_PORT}</gap:target>
+      <gap:target id="auth-db-url-env">DATABASE_URL=${AUTH_DATABASE_URL}</gap:target></gap:target>
+    <gap:target id="auth-service-env-file">env_file:
+      - <gap:target id="auth-env-file-path">./auth-service/.env</gap:target></gap:target>
+    <gap:target id="auth-service-networks">networks:
+      - <gap:target id="shared-network-name-2">app-network</gap:target></gap:target>
+    <gap:target id="auth-service-healthcheck">healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${AUTH_PORT}/health"]
+      interval: <gap:target id="auth-health-interval">10s</gap:target>
+      timeout: <gap:target id="auth-health-timeout">5s</gap:target>
+      retries: <gap:target id="auth-health-retries">3</gap:target></gap:target>
+    <gap:target id="auth-service-depends-on">depends_on:
+      <gap:target id="postgres-dependency">postgres</gap:target>:
+        condition: service_healthy</gap:target>
+  </gap:target>
+
+  <gap:target id="user-service-block">
+    <gap:target id="user-service-name">user-service</gap:target>:
+    <gap:target id="user-service-build">build:
+      context: ./user-service</gap:target>
+    <gap:target id="user-service-environment">environment:
+      <gap:target id="user-db-host-env">DB_HOST=${POSTGRES_HOST}</gap:target>
+      <gap:target id="user-db-port-env">DB_PORT=${POSTGRES_PORT}</gap:target>
+      <gap:target id="user-db-name-env">DB_NAME=${POSTGRES_DB}</gap:target>
+      <gap:target id="user-db-user-env">DB_USER=${POSTGRES_USER}</gap:target>
+      <gap:target id="user-db-password-env">DB_PASSWORD=${POSTGRES_PASSWORD}</gap:target>
+      <gap:target id="user-port-env">PORT=${USER_PORT}</gap:target></gap:target>
+    <gap:target id="user-service-env-file">env_file:
+      - <gap:target id="user-env-file-path">./user-service/.env</gap:target></gap:target>
+    <gap:target id="user-service-networks">networks:
+      - <gap:target id="shared-network-name-3">app-network</gap:target></gap:target>
+    <gap:target id="user-service-healthcheck">healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${USER_PORT}/health"]
+      interval: <gap:target id="user-health-interval">10s</gap:target>
+      timeout: <gap:target id="user-health-timeout">5s</gap:target>
+      retries: <gap:target id="user-health-retries">3</gap:target></gap:target>
+    <gap:target id="user-service-depends-on">depends_on:
+      <gap:target id="postgres-dependency-2">postgres</gap:target>:
+        condition: service_healthy</gap:target>
+  </gap:target>
+
+  <gap:target id="order-service-block">
+    <gap:target id="order-service-name">order-service</gap:target>:
+    <gap:target id="order-service-build">build:
+      context: ./order-service</gap:target>
+    <gap:target id="order-service-environment">environment:
+      <gap:target id="order-db-host-env">DB_HOST=${REDIS_HOST}</gap:target>
+      <gap:target id="order-db-port-env">DB_PORT=${REDIS_PORT}</gap:target>
+      <gap:target id="order-port-env">PORT=${ORDER_PORT}</gap:target></gap:target>
+    <gap:target id="order-service-env-file">env_file:
+      - <gap:target id="order-env-file-path">./order-service/.env</gap:target></gap:target>
+    <gap:target id="order-service-networks">networks:
+      - <gap:target id="shared-network-name-4">app-network</gap:target></gap:target>
+    <gap:target id="order-service-healthcheck">healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:${ORDER_PORT}/health"]
+      interval: <gap:target id="order-health-interval">10s</gap:target>
+      timeout: <gap:target id="order-health-timeout">5s</gap:target>
+      retries: <gap:target id="order-health-retries">3</gap:target></gap:target>
+    <gap:target id="order-service-depends-on">depends_on:
+      <gap:target id="redis-dependency">redis</gap:target>:
+        condition: service_healthy</gap:target>
+  </gap:target>
+
+  <gap:target id="notification-service-block">
+    <gap:target id="notification-service-name">notification-service</gap:target>:
+    <gap:target id="notification-service-build">build:
+      context: ./notification-service</gap:target>
+    <gap:target id="notification-service-environment">environment:
+      <gap:target id="rabbitmq-host-env">RABBITMQ_HOST=${RABBITMQ_HOST}</gap:target>
+      <gap:target id="rabbitmq-port-env">RABBITMQ_PORT=${RABBITMQ_PORT}</gap:target>
+      <gap:target id="notification-port-env">PORT=${NOTIFICATION_PORT}</gap:target></gap:target>
+    <gap:target id="notification-service-env-file">env_file:
+      - <gap:target id="notification-env-file-path">./notification-service/.env</gap:target></gap:target>
+    <gap:target id="notification-service-networks">networks:
+      - <gap:target id="shared-network-name-5">app-network</gap:target></gap:target>
+    <gap:target id="notification-service-healthcheck">healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:${NOTIFICATION_PORT}/health')"]
+      interval: <gap:target id="notification-health-interval">10s</gap:target>
+      timeout: <gap:target id="notification-health-timeout">5s</gap:target>
+      retries: <gap:target id="notification-health-retries">3</gap:target></gap:target>
+    <gap:target id="notification-service-depends-on">depends_on:
+      <gap:target id="rabbitmq-dependency">rabbitmq</gap:target>:
+        condition: service_healthy</gap:target>
+  </gap:target>
+
+  <gap:target id="postgres-block">  <gap:target id="monitoring-service-block">
+    <gap:target id="monitoring-service-name">monitoring</gap:target>:
+    <gap:target id="monitoring-service-image">image: prom/prometheus:latest</gap:target>
+    <gap:target id="monitoring-service-ports">ports:
+      - "9090:9090"</gap:target>
+    <gap:target id="monitoring-service-volumes">volumes:
+      - <gap:target id="monitoring-prometheus-config-volume">./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro</gap:target></gap:target>
+    <gap:target id="monitoring-service-networks">networks:
+      - <gap:target id="shared-network-name-10">app-network</gap:target></gap:target>
+    <gap:target id="monitoring-service-depends-on">depends_on:
+      <gap:target id="api-gateway-dependency">api-gateway</gap:target>:
+        condition: service_started
+      <gap:target id="auth-service-dependency-2">auth-service</gap:target>:
+        condition: service_started
+      <gap:target id="user-service-dependency-2">user-service</gap:target>:
+        condition: service_started
+      <gap:target id="order-service-dependency-2">order-service</gap:target>:
+        condition: service_started
+      <gap:target id="notification-service-dependency-2">notification-service</gap:target>:
+        condition: service_started
+      <gap:target id="postgres-dependency-3">postgres</gap:target>:
+        condition: service_started
+      <gap:target id="redis-dependency-2">redis</gap:target>:
+        condition: service_started
+      <gap:target id="rabbitmq-dependency-2">rabbitmq</gap:target>:
+        condition: service_started</gap:target>
+  </gap:target>
+
+  <gap:target id="monitoring-prometheus-config-file">
+    - content: ./monitoring/prometheus.yml
+      scrape_configs:
+        - job_name: api-gateway
+          metrics_path: /metrics
+          static_configs:
+            - targets: ['api-gateway:80']
+        - job_name: auth-service
+          metrics_path: /metrics
+          static_configs:
+            - targets: ['auth-service:${AUTH_PORT}']
+        - job_name: user-service
+          metrics_path: /metrics
+          static_configs:
+            - targets: ['user-service:${USER_PORT}']
+        - job_name: order-service
+          metrics_path: /metrics
+          static_configs:
+            - targets: ['order-service:${ORDER_PORT}']
+        - job_name: notification-service
+          metrics_path: /metrics
+          static_configs:
+            - targets: ['notification-service:${NOTIFICATION_PORT}']
+    <gap:target id="postgres-service-name">postgres</gap:target>:
+    <gap:target id="postgres-image">image: postgres:16-alpine</gap:target>
+    <gap:target id="postgres-environment">environment:
+      <gap:target id="postgres-db-env">POSTGRES_DB=${POSTGRES_DB}</gap:target>
+      <gap:target id="postgres-user-env">POSTGRES_USER=${POSTGRES_USER}</gap:target>
+      <gap:target id="postgres-password-env">POSTGRES_PASSWORD=${POSTGRES_PASSWORD}</gap:target></gap:target>
+    <gap:target id="postgres-volumes">volumes:
+      - <gap:target id="postgres-data-volume">postgres_data:/var/lib/postgresql/data</gap:target>
+      - <gap:target id="postgres-init-volume">./postgres/init:/docker-entrypoint-initdb.d:ro</gap:target></gap:target>
+    <gap:target id="postgres-networks">networks:
+      - <gap:target id="shared-network-name-6">app-network</gap:target></gap:target>
+    <gap:target id="postgres-healthcheck">healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: <gap:target id="postgres-health-interval">10s</gap:target>
+      timeout: <gap:target id="postgres-health-timeout">5s</gap:target>
+      retries: <gap:target id="postgres-health-retries">5</gap:target></gap:target>
+  </gap:target>
+
+  <gap:target id="redis-block">
+    <gap:target id="redis-service-name">redis</gap:target>:
+    <gap:target id="redis-image">image: redis:7-alpine</gap:target>
+    <gap:target id="redis-volumes">volumes:
+      - <gap:target id="redis-data-volume">redis_data:/data</gap:target></gap:target>
+    <gap:target id="redis-networks">networks:
+      - <gap:target id="shared-network-name-7">app-network</gap:target></gap:target>
+    <gap:target id="redis-healthcheck">healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: <gap:target id="redis-health-interval">10s</gap:target>
+      timeout: <gap:target id="redis-health-timeout">5s</gap:target>
+      retries: <gap:target id="redis-health-retries">5</gap:target></gap:target>
+  </gap:target>
+
+  <gap:target id="rabbitmq-block">
+    <gap:target id="rabbitmq-service-name">rabbitmq</gap:target>:
+    <gap:target id="rabbitmq-image">image: rabbitmq:3-management-alpine</gap:target>
+    <gap:target id="rabbitmq-environment">environment:
+      <gap:target id="rabbitmq-default-user-env">RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}</gap:target>
+      <gap:target id="rabbitmq-default-pass-env">RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}</gap:target></gap:target>
+    <gap:target id="rabbitmq-ports">ports:
+      - "${RABBITMQ_MGMT_PORT}:15672"</gap:target>
+    <gap:target id="rabbitmq-networks">networks:
+      - <gap:target id="shared-network-name-8">app-network</gap:target></gap:target>
+    <gap:target id="rabbitmq-healthcheck">healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: <gap:target id="rabbitmq-health-interval">10s</gap:target>
+      timeout: <gap:target id="rabbitmq-health-timeout">5s</gap:target>
+      retries: <gap:target id="rabbitmq-health-retries">5</gap:target></gap:target>
+  </gap:target>
+
+networks:
+  <gap:target id="shared-network-block">
+    <gap:target id="shared-network-name-9">app-network</gap:target>:
+    <gap:target id="shared-network-driver">driver: bridge</gap:target>
+  </gap:target>
+
+volumes:
+  <gap:target id="postgres-volume-block">
+    <gap:target id="postgres-volume-name">postgres_data</gap:target>: {}
+  </gap:target>
+  <gap:target id="redis-volume-block">
+    <gap:target id="redis-volume-name">redis_data</gap:target>: {}
+  </gap:target>
+</gap:target>

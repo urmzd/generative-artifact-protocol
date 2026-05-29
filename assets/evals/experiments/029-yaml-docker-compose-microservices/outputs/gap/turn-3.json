@@ -1,0 +1,73 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "    deploy:\n      resources:\n        limits:\n          cpus: '0.5'\n          memory: 256M",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "api-gateway-volumes"
+      }
+    },
+    {
+      "content": "    deploy:\n      resources:\n        limits:\n          cpus: '1.0'\n          memory: 512M",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "auth-service-depends-on"
+      }
+    },
+    {
+      "content": "    deploy:\n      resources:\n        limits:\n          cpus: '1.0'\n          memory: 512M",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "user-service-depends-on"
+      }
+    },
+    {
+      "content": "    deploy:\n      resources:\n        limits:\n          cpus: '1.0'\n          memory: 512M",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "order-service-depends-on"
+      }
+    },
+    {
+      "content": "    deploy:\n      resources:\n        limits:\n          cpus: '1.0'\n          memory: 512M",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "notification-service-depends-on"
+      }
+    },
+    {
+      "content": "    deploy:\n      resources:\n        limits:\n          cpus: '2.0'\n          memory: 1G",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "postgres-healthcheck"
+      }
+    },
+    {
+      "content": "    deploy:\n      resources:\n        limits:\n          cpus: '2.0'\n          memory: 1G",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "redis-healthcheck"
+      }
+    },
+    {
+      "content": "    deploy:\n      resources:\n        limits:\n          cpus: '2.0'\n          memory: 1G",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "rabbitmq-healthcheck"
+      }
+    }
+  ]
+}

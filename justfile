@@ -12,7 +12,7 @@ bench:
 build-eval:
     cargo build --release -p gap-eval
 
-# Run conversation benchmark experiments (base vs GAP flows)
+# Run benchmark experiments. flow ∈ base|stateless|gap|both|abc|all
 run count="0" model="" id="" flow="both" api-base="" api-key="": build-eval
     ./target/release/gap-eval run \
         --experiments-dir assets/evals/experiments \
@@ -30,3 +30,7 @@ report: build-eval
 # Retroactive quality scoring
 score: build-eval
     ./target/release/gap-eval score --experiments-dir assets/evals/experiments
+
+# Re-evaluate correctness oracles (checks/turn-N.json) on completed runs
+checks: build-eval
+    ./target/release/gap-eval checks --experiments-dir assets/evals/experiments

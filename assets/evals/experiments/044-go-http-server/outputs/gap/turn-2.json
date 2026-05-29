@@ -1,0 +1,33 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "type tokenBucket struct {\n\ttokens float64\n\tlast   time.Time\n\trps    float64\n\tburst  float64\n\tmu     sync.Mutex\n}\n\nfunc newTokenBucket(rps, burst float64) *tokenBucket {\n\treturn &tokenBucket{\n\t\ttokens: burst,\n\t\tlast:   time.Now(),\n\t\trps:    rps,\n\t\tburst:  burst,\n\t}\n}\n\nfunc (tb *tokenBucket) allow() bool {\n\ttb.mu.Lock()\n\tdefer tb.mu.Unlock()\n\n\tnow := time.Now()\n\telapsed := now.Sub(tb.last).Seconds()\n\ttb.last = now\n\n\ttb.tokens += elapsed * tb.rps\n\tif tb.tokens > tb.burst {\n\t\ttb.tokens = tb.burst\n\t}\n\tif tb.tokens < 1 {\n\t\treturn false\n\t}\n\ttb.tokens -= 1\n\treturn true\n}\n\n",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "rate-limiter-block"
+      }
+    },
+    {
+      "content": "func rateLimitMiddleware(rps, burst float64) func(http.Handler) http.Handler {\n\tbuckets := make(map[string]*tokenBucket)\n\tvar mu sync.Mutex\n\n\treturn func(next http.Handler) http.Handler {\n\t\treturn http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {\n\t\t\tip := clientIP(r)\n\n\t\t\tmu.Lock()\n\t\t\ttb, ok := buckets[ip]\n\t\t\tif !ok {\n\t\t\t\ttb = newTokenBucket(rps, burst)\n\t\t\t\tbuckets[ip] = tb\n\t\t\t}\n\t\t\tmu.Unlock()\n\n\t\t\tif !tb.allow() {\n\t\t\t\twriteError(w, http.StatusTooManyRequests, \"rate limit exceeded\")\n\t\t\t\treturn\n\t\t\t}\n\t\t\tnext.ServeHTTP(w, r)\n\t\t})\n\t}\n}\n\nfunc clientIP(r *http.Request) string {\n\tif xff := strings.TrimSpace(r.Header.Get(\"X-Forwarded-For\")); xff != \"\" {\n\t\tparts := strings.Split(xff, \",\")\n\t\tif ip := strings.TrimSpace(parts[0]); ip != \"\" {\n\t\t\treturn ip\n\t\t}\n\t}\n\tif xrip := strings.TrimSpace(r.Header.Get(\"X-Real-IP\")); xrip != \"\" {\n\t\treturn xrip\n\t}\n\thost, _, err := net.SplitHostPort(r.RemoteAddr)\n\tif err == nil && host != \"\" {\n\t\treturn host\n\t}\n\treturn r.RemoteAddr\n}\n\n",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "middleware-block"
+      }
+    },
+    {
+      "content": "\tvar finalHandler http.Handler = mux\n\tfinalHandler = requestIDMiddleware(finalHandler)\n\tfinalHandler = loggingMiddleware(finalHandler)\n\tfinalHandler = corsMiddleware(finalHandler)\n\tfinalHandler = rateLimitMiddleware(5, 10)(finalHandler)\n\n",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "routing-block"
+      }
+    }
+  ]
+}

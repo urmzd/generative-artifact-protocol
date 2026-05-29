@@ -1,0 +1,1020 @@
+{
+  "components": {
+    "schemas": {
+      "Author": {
+        "properties": {
+          "bio": {
+            "example": "American novelist and short story writer.",
+            "type": "string"
+          },
+          "birthDate": {
+            "example": "1896-09-24",
+            "format": "date",
+            "type": "string"
+          },
+          "id": {
+            "example": "author_456",
+            "type": "string"
+          },
+          "name": {
+            "example": "F. Scott Fitzgerald",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "Book": {
+        "properties": {
+          "authorId": {
+            "example": "author_456",
+            "type": "string"
+          },
+          "categoryId": {
+            "example": "category_789",
+            "type": "string"
+          },
+          "description": {
+            "example": "A novel set in the Jazz Age.",
+            "type": "string"
+          },
+          "id": {
+            "example": "book_123",
+            "type": "string"
+          },
+          "isbn": {
+            "example": "9780743273565",
+            "type": "string"
+          },
+          "price": {
+            "example": 19.99,
+            "format": "float",
+            "type": "number"
+          },
+          "publishedAt": {
+            "example": "1925-04-10",
+            "format": "date",
+            "type": "string"
+          },
+          "stock": {
+            "example": 42,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "title": {
+            "example": "The Great Gatsby",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "authorId",
+          "categoryId",
+          "price"
+        ],
+        "type": "object"
+      },
+      "Category": {
+        "properties": {
+          "description": {
+            "example": "Books considered classics.",
+            "type": "string"
+          },
+          "id": {
+            "example": "category_789",
+            "type": "string"
+          },
+          "name": {
+            "example": "Classic Literature",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "ErrorResponse": {
+        "properties": {
+          "details": {
+            "example": [
+              "page must be greater than 0"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "error": {
+            "example": "Bad Request",
+            "type": "string"
+          },
+          "message": {
+            "example": "The request parameters are invalid.",
+            "type": "string"
+          },
+          "timestamp": {
+            "example": "2026-01-01T12:00:00Z",
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "error",
+          "message"
+        ],
+        "type": "object"
+      },
+      "Order": {
+        "properties": {
+          "createdAt": {
+            "example": "2026-01-01T12:00:00Z",
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "example": "order_001",
+            "type": "string"
+          },
+          "items": {
+            "items": {
+              "properties": {
+                "bookId": {
+                  "example": "book_123",
+                  "type": "string"
+                },
+                "quantity": {
+                  "example": 2,
+                  "minimum": 1,
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "bookId",
+                "quantity"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "paid",
+              "shipped",
+              "cancelled"
+            ],
+            "example": "pending",
+            "type": "string"
+          },
+          "totalAmount": {
+            "example": 39.98,
+            "format": "float",
+            "type": "number"
+          },
+          "userId": {
+            "example": "user_123",
+            "type": "string"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "type": "object"
+      },
+      "PaginatedResponse": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/Book"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "example": 20,
+            "type": "integer"
+          },
+          "page": {
+            "example": 1,
+            "type": "integer"
+          },
+          "total": {
+            "example": 100,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "Review": {
+        "properties": {
+          "bookId": {
+            "example": "book_123",
+            "type": "string"
+          },
+          "comment": {
+            "example": "Excellent read with rich characters.",
+            "type": "string"
+          },
+          "createdAt": {
+            "example": "2026-01-02T09:30:00Z",
+            "format": "date-time",
+            "type": "string"
+          },
+          "id": {
+            "example": "review_001",
+            "type": "string"
+          },
+          "rating": {
+            "example": 5,
+            "maximum": 5,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "userId": {
+            "example": "user_123",
+            "type": "string"
+          }
+        },
+        "required": [
+          "bookId",
+          "rating",
+          "comment"
+        ],
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "bearerFormat": "JWT",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "contact": {
+      "email": "support@bookstore.example.com",
+      "name": "API Support",
+      "url": "https://bookstore.example.com/support"
+    },
+    "description": "100 requests per minute for authenticated users, 20 for anonymous",
+    "title": "Bookstore API",
+    "version": "1.0.0"
+  },
+  "openapi": "3.0.3",
+  "paths": {
+    "/authors": {
+      "get": {
+        "description": "Retrieve a list of authors.",
+        "parameters": [
+          {
+            "description": "Page number",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Page size",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Author"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "List of authors"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request parameters"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "List authors",
+        "tags": [
+          "Authors"
+        ]
+      }
+    },
+    "/books": {
+      "get": {
+        "description": "Retrieve a paginated list of books with optional filtering.",
+        "parameters": [
+          {
+            "description": "Page number",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Page size",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter by author ID",
+            "in": "query",
+            "name": "authorId",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Filter by category ID",
+            "in": "query",
+            "name": "categoryId",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse"
+                }
+              }
+            },
+            "description": "A paginated list of books"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request parameters"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "List books",
+        "tags": [
+          "Books"
+        ]
+      },
+      "post": {
+        "description": "Create a new book record.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Book"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Book"
+                }
+              }
+            },
+            "description": "Book created successfully"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request body"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Related resource not found"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Create a book",
+        "tags": [
+          "Books"
+        ]
+      }
+    },
+    "/books/{id}": {
+      "delete": {
+        "description": "Delete a book by ID.",
+        "parameters": [
+          {
+            "description": "Book ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Book deleted successfully"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid book ID"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Book not found"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Delete a book",
+        "tags": [
+          "Books"
+        ]
+      },
+      "get": {
+        "description": "Retrieve a single book by its unique identifier.",
+        "parameters": [
+          {
+            "description": "Book ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Book"
+                }
+              }
+            },
+            "description": "Book found"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid book ID"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Book not found"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Get a book by ID",
+        "tags": [
+          "Books"
+        ]
+      },
+      "put": {
+        "description": "Update an existing book by ID.",
+        "parameters": [
+          {
+            "description": "Book ID",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Book"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Book"
+                }
+              }
+            },
+            "description": "Book updated successfully"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request data"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Book not found"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Update a book",
+        "tags": [
+          "Books"
+        ]
+      }
+    },
+    "/categories": {
+      "get": {
+        "description": "Retrieve a list of categories.",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Category"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "List of categories"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "List categories",
+        "tags": [
+          "Categories"
+        ]
+      }
+    },
+    "/orders": {
+      "get": {
+        "description": "Retrieve a list of orders for the authenticated user.",
+        "parameters": [
+          {
+            "description": "Filter orders by status",
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "enum": [
+                "pending",
+                "paid",
+                "shipped",
+                "cancelled"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "List of orders"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request parameters"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "List orders",
+        "tags": [
+          "Orders"
+        ]
+      },
+      "post": {
+        "description": "Create a new order for the authenticated user.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Order"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Order"
+                }
+              }
+            },
+            "description": "Order created successfully"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request body"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Related resource not found"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Create an order",
+        "tags": [
+          "Orders"
+        ]
+      }
+    },
+    "/reviews": {
+      "get": {
+        "description": "Retrieve a list of reviews, optionally filtered by book ID.",
+        "parameters": [
+          {
+            "description": "Filter reviews by book ID",
+            "in": "query",
+            "name": "bookId",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Review"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "List of reviews"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request parameters"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "List reviews",
+        "tags": [
+          "Reviews"
+        ]
+      }
+    }
+  },
+  "servers": [
+    {
+      "description": "Production server",
+      "url": "https://api.bookstore.example.com/v1"
+    }
+  ],
+  "tags": [
+    {
+      "description": "Operations related to books",
+      "name": "Books"
+    },
+    {
+      "description": "Operations related to authors",
+      "name": "Authors"
+    },
+    {
+      "description": "Operations related to categories",
+      "name": "Categories"
+    },
+    {
+      "description": "Operations related to orders",
+      "name": "Orders"
+    },
+    {
+      "description": "Operations related to reviews",
+      "name": "Reviews"
+    }
+  ]
+}

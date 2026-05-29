@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="100%" height="100%" role="img" aria-labelledby="title desc">
+  <title id="title">Monthly Revenue 2024 vs 2023</title>
+  <desc id="desc">Grouped bar chart showing monthly revenue and previous year revenue for 2024 with labeled values, grid lines, subtitle, and legend.</desc>
+  <defs>
+    <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4f8df7"/>
+      <stop offset="100%" stop-color="#1f5fbf"/>
+    </linearGradient>
+    <linearGradient id="prevGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#b8d3ff"/>
+      <stop offset="100%" stop-color="#7aa7f5"/>
+    </linearGradient>
+    <linearGradient id="targetGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <style>
+      .bg { fill: #ffffff; }
+      .axis { stroke: #1f2937; stroke-width: 2; }
+      .grid { stroke: #dbe3ee; stroke-width: 1; }
+      .tick { stroke: #1f2937; stroke-width: 1.5; }
+      .label { fill: #374151; font-family: Arial, Helvetica, sans-serif; font-size: 13px; }
+      .ylabel { fill: #374151; font-family: Arial, Helvetica, sans-serif; font-size: 12px; text-anchor: end; }
+      .title { fill: #111827; font-family: Arial, Helvetica, sans-serif; font-size: 26px; font-weight: 700; }
+      .subtitle { fill: #6b7280; font-family: Arial, Helvetica, sans-serif; font-size: 15px; font-weight: 400; }
+      .val { fill: #111827; font-family: Arial, Helvetica, sans-serif; font-size: 11px; font-weight: 700; text-anchor: middle; }
+      .legendText { fill: #374151; font-family: Arial, Helvetica, sans-serif; font-size: 13px; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1000" height="600"/>
+
+  <text class="title" x="500" y="38" text-anchor="middle">Monthly Revenue 2024 vs 2023</text>
+  <text class="subtitle" x="500" y="60" text-anchor="middle">Total: $4.2M (+18% YoY)</text>
+
+  <g transform="translate(90,80)">
+    <rect x="0" y="0" width="850" height="470" fill="#ffffff" rx="10" ry="10"/>
+
+    <g transform="translate(70,20)">
+      <line class="grid" x1="0" y1="360" x2="740" y2="360"/>
+      <line class="grid" x1="0" y1="288" x2="740" y2="288"/>
+      <line class="grid" x1="0" y1="216" x2="740" y2="216"/>
+      <line class="grid" x1="0" y1="144" x2="740" y2="144"/>
+      <line class="grid" x1="0" y1="72" x2="740" y2="72"/>
+      <line class="grid" x1="0" y1="0" x2="740" y2="0"/>
+
+      <text class="ylabel" x="-12" y="364">$0</text>
+      <text class="ylabel" x="-12" y="292">$100K</text>
+      <text class="ylabel" x="-12" y="220">$200K</text>
+      <text class="ylabel" x="-12" y="148">$300K</text>
+      <text class="ylabel" x="-12" y="76">$400K</text>
+      <text class="ylabel" x="-12" y="4">$500K</text>
+
+      <line class="axis" x1="0" y1="360" x2="740" y2="360"/>
+      <line class="axis" x1="0" y1="0" x2="0" y2="360"/>
+
+      <g>
+        <line class="tick" x1="-6" y1="360" x2="0" y2="360"/>
+        <line class="tick" x1="-6" y1="288" x2="0" y2="288"/>
+        <line class="tick" x1="-6" y1="216" x2="0" y2="216"/>
+        <line class="tick" x1="-6" y1="144" x2="0" y2="144"/>
+        <line class="tick" x1="-6" y1="72" x2="0" y2="72"/>
+        <line class="tick" x1="-6" y1="0" x2="0" y2="0"/>
+      </g>
+
+      <g>
+        <rect x="8"   y="255.6" width="24" height="104.4" fill="url(#prevGrad)" rx="6"/>
+        <rect x="36"  y="230.4" width="24" height="129.6" fill="url(#revGrad)" rx="6"/>
+        <text class="val" x="20" y="248">$145K</text>
+        <text class="val" x="48" y="222">$180K</text>
+
+        <rect x="66"  y="244.8" width="24" height="115.2" fill="url(#prevGrad)" rx="6"/>
+        <rect x="94"  y="219.6" width="24" height="140.4" fill="url(#revGrad)" rx="6"/>
+        <text class="val" x="78" y="237">$160K</text>
+        <text class="val" x="106" y="211">$195K</text>
+
+        <rect x="124" y="79.2" width="24" height="280.8" fill="url(#prevGrad)" rx="6"/>
+        <rect x="152" y="54.0" width="24" height="306.0" fill="url(#revGrad)" rx="6"/>
+        <text class="val" x="136" y="71">$390K</text>
+        <text class="val" x="164" y="46">$425K</text>
+
+        <rect x="182" y="219.6" width="24" height="140.4" fill="url(#prevGrad)" rx="6"/>
+        <rect x="210" y="198.0" width="24" height="162.0" fill="url(#revGrad)" rx="6"/>
+        <text class="val" x="194" y="211">$195K</text>
+        <text class="val" x="222" y="190">$225K</text>
+
+        <rect x="240" y="212.4" width="24" height="147.6" fill="url(#prevGrad)" rx="6"/>
+        <rect x="268" y="187.2" width="24" height="172.8" fill="url(#revGrad)" rx="6"/>
+        <text class="val" x="252" y="204">$205K</text>
+        <text class="val" x="280" y="179">$240K</text>
+
+        <rect x="298" y="194.4" width="24" height="165.6" fill="url(#prevGrad)" rx="6"/>
+        <rect x="326" y="169.8" width="24" height="190.2" fill="url(#revGrad)" rx="6"/>
+        <text class="val" x="310" y="186">$230K</text>
+        <text class="val" x="338" y="161">$265K</text>
+
+        <rect x="356" y="115.2" width="24" height="244.8" fill="url(#prevGrad)" rx="6"/>
+        <rect x="384" y="86.4" width="24" height="273.6" fill="url(#revGrad)" rx="6"/>
+        <text class="val" x="368" y="107">$340K</text>
+        <text class="val" x="396" y="78">$380K</text>
+
+        <rect x="414" y="158.4" width="24" height="201.6" fill="url(#prevGrad)" rx="6"/>
+        <rect x="442" y="136.8" width="24" height="223.2" fill="url(#revGrad)" rx="6"/>
+        <text class="val" x="426" y="150">$280K</text>
+        <text class="val" x="454" y="128">$310K</text>
+
+        <rect x="472" y="169.2" width="24" height="190.8" fill="url(#prevGrad)" rx="6"/>
+        <rect x="500" y="147.6" width="24" height="212.4" fill="url(#revGrad)" rx="6"/>
+        <text class="val" x="484" y="161">$265K</text>
+        <text class="val" x="512" y="139">$295K</text>
+
+        <rect x="530" y="144.0" width="24" height="216.0" fill="url(#prevGrad)" rx="6"/>
+        <rect x="558" y="122.4" width="24" height="237.6" fill="url(#revGrad)" rx="6"/>
+        <text class="val" x="542" y="136">$300K</text>
+        <text class="val" x="570" y="114">$330K</text>
+
+        <rect x="588" y="126.0" width="24" height="234.0" fill="url(#prevGrad)" rx="6"/>
+        <rect x="616" y="104.4" width="24" height="255.6" fill="url(#revGrad)" rx="6"/>
+        <text class="val" x="600" y="118">$325K</text>
+        <text class="val" x="628" y="96">$355K</text>
+
+        <rect x="646" y="104.4" width="24" height="255.6" fill="url(#prevGrad)" rx="6"/>
+        <rect x="674" y="82.8" width="24" height="277.2" fill="url(#revGrad)" rx="6"/>
+        <text class="val" x="658" y="96">$355K</text>
+        <text class="val" x="686" y="74">$385K</text>
+      </g>
+
+      <g>
+        <text class="label" x="48"  y="388" text-anchor="middle">Jan</text>
+        <text class="label" x="106" y="388" text-anchor="middle">Feb</text>
+        <text class="label" x="164" y="388" text-anchor="middle">Mar</text>
+        <text class="label" x="222" y="388" text-anchor="middle">Apr</text>
+        <text class="label" x="280" y="388" text-anchor="middle">May</text>
+        <text class="label" x="338" y="388" text-anchor="middle">Jun</text>
+        <text class="label" x="396" y="388" text-anchor="middle">Jul</text>
+        <text class="label" x="454" y="388" text-anchor="middle">Aug</text>
+        <text class="label" x="512" y="388" text-anchor="middle">Sep</text>
+        <text class="label" x="570" y="388" text-anchor="middle">Oct</text>
+        <text class="label" x="628" y="388" text-anchor="middle">Nov</text>
+        <text class="label" x="686" y="388" text-anchor="middle">Dec</text>
+      </g>
+
+      <g transform="translate(500,-2)">
+        <rect x="0" y="0" width="240" height="44" rx="8" fill="#f9fafb" stroke="#e5e7eb"/>
+        <rect x="14" y="13" width="18" height="18" rx="4" fill="url(#revGrad)"/>
+        <text class="legendText" x="40" y="27">Revenue</text>
+        <rect x="98" y="13" width="18" height="18" rx="4" fill="url(#prevGrad)"/>
+        <text class="legendText" x="124" y="27">Previous Year</text>
+        <rect x="200" y="13" width="18" height="18" rx="4" fill="url(#targetGrad)"/>
+        <text class="legendText" x="226" y="27">Target</text>
+      </g>
+    </g>
+  </g>
+</svg>

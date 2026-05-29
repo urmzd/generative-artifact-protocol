@@ -1,0 +1,31 @@
+{
+  "turn": 5,
+  "checks": [
+    {
+      "kind": "contains",
+      "value": "pageSix",
+      "desc": "the new sixth page const is declared"
+    },
+    {
+      "kind": "contains",
+      "value": "SKU-101",
+      "desc": "first record of the new page (SKU-101) is present"
+    },
+    {
+      "kind": "contains",
+      "value": "SKU-120",
+      "desc": "last record of the new page (SKU-120) is present"
+    },
+    {
+      "kind": "contains",
+      "value": "...pageSix",
+      "desc": "pageSix is spread into the combined catalog export"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "sku:\\s*\"SKU-",
+      "expected": 120,
+      "desc": "20 new records added: 100 + 20 = 120 total records"
+    }
+  ]
+}

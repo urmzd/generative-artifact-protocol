@@ -1,0 +1,311 @@
+<gap:target id="app-file">
+const <gap:target id="express-import">express</gap:target> = require('<gap:target id="express-package">express</gap:target>');
+const <gap:target id="cors-import">cors</gap:target> = require('<gap:target id="cors-package">cors</gap:target>');
+const <gap:target id="morgan-import">morgan</gap:target> = require('<gap:target id="morgan-package">morgan</gap:target>');
+const <gap:target id="express-rate-limit-import">rateLimit</gap:target> = require('<gap:target id="express-rate-limit-package">express-rate-limit</gap:target>');
+
+const <gap:target id="app-instance">app</gap:target> = <gap:target id="express-factory">express()</gap:target>;
+const <gap:target id="port-const">PORT</gap:target> = <gap:target id="port-value">3000</gap:target>;
+
+<gap:target id="middleware-block">
+app.use(<gap:target id="cors-middleware-call">cors()</gap:target>);
+app.use(<gap:target id="json-parser-call">express.json()</gap:target>);
+app.use(<gap:target id="request-logging-call">morgan('combined')</gap:target>);
+
+const <gap:target id="rate-limiter-instance">apiLimiter</gap:target> = <gap:target id="rate-limiter-factory">rateLimit</gap:target>({
+  <gap:target id="rate-window-ms-key">windowMs</gap:target>: <gap:target id="rate-window-ms-value">15 * 60 * 1000</gap:target>,
+  <gap:target id="rate-max-key">max</gap:target>: <gap:target id="rate-max-value">100</gap:target>,
+  <gap:target id="rate-standard-headers-key">standardHeaders</gap:target>: <gap:target id="rate-standard-headers-value">true</gap:target>,
+  <gap:target id="rate-legacy-headers-key">legacyHeaders</gap:target>: <gap:target id="rate-legacy-headers-value">false</gap:target>
+});
+
+app.use(<gap:target id="api-limiter-call">apiLimiter</gap:target>);
+
+const <gap:target id="auth-middleware-name">verifyAuthToken</gap:target> = (<gap:target id="auth-req-param">req</gap:target>, <gap:target id="auth-res-param">res</gap:target>, <gap:target id="auth-next-param">next</gap:target>) => {
+  const <gap:target id="auth-header-name">authHeader</gap:target> = <gap:target id="auth-req-headers-access">req.headers['authorization']</gap:target>;
+  const <gap:target id="auth-token-prefix">tokenPrefix</gap:target> = '<gap:target id="auth-bearer-prefix">Bearer </gap:target>';
+  const <gap:target id="expected-token">expectedToken</gap:target> = <gap:target id="expected-token-value">secrettoken</gap:target>;
+
+  if (!<gap:target id="auth-header-present-check">authHeader</gap:target> || !<gap:target id="auth-header-prefix-check">authHeader.startsWith(tokenPrefix)</gap:target>) {
+    return <gap:target id="auth-missing-return">res.status(401).json({ message: 'Missing or invalid authorization token' })</gap:target>;
+  }
+
+  const <gap:target id="provided-token">providedToken</gap:target> = <gap:target id="auth-token-slice">authHeader.slice(tokenPrefix.length)</gap:target>;
+  if (<gap:target id="auth-token-match-check">providedToken !== expectedToken</gap:target>) {
+    return <gap:target id="auth-invalid-return">res.status(401).json({ message: 'Unauthorized' })</gap:target>;
+  }
+
+  <gap:target id="auth-next-call">next()</gap:target>;
+};
+
+app.use(<gap:target id="auth-middleware-call">verifyAuthToken</gap:target>);
+</gap:target>
+
+<gap:target id="error-class-block">
+class <gap:target id="api-error-class-name">ApiError</gap:target> extends <gap:target id="api-error-base">Error</gap:target> {
+  constructor(<gap:target id="api-error-message-param">message</gap:target>, <gap:target id="api-error-status-param">statusCode</gap:target> = <gap:target id="default-error-status">500</gap:target>) {
+    super(<gap:target id="api-error-message-arg">message</gap:target>);
+    this.<gap:target id="api-error-status-prop">statusCode</gap:target> = <gap:target id="api-error-status-assign">statusCode</gap:target>;
+  }
+}
+</gap:target>
+
+<gap:target id="data-models-block">
+let <gap:target id="task-id-seq">taskIdSeq</gap:target> = <gap:target id="task-id-start-value">1</gap:target>;
+let <gap:target id="project-id-seq">projectIdSeq</gap:target> = <gap:target id="project-id-start-value">1</gap:target>;
+let <gap:target id="user-id-seq">userIdSeq</gap:target> = <gap:target id="userIdSeq-start-value">1</gap:target>;
+
+const <gap:target id="users-store">users</gap:target> = [
+  { <gap:target id="user-1-id-key">id</gap:target>: <gap:target id="user-1-id-value">1</gap:target>, <gap:target id="user-1-name-key">name</gap:target>: '<gap:target id="user-1-name-value">Admin User</gap:target>', <gap:target id="user-1-email-key">email</gap:target>: '<gap:target id="user-1-email-value">admin@example.com</gap:target>' }
+];
+
+const <gap:target id="projects-store">projects</gap:target> = [];
+const <gap:target id="tasks-store">tasks</gap:target> = [];
+
+const <gap:target id="task-model">Task</gap:target> = {
+  <gap:target id="task-create-method">create</gap:target>(<gap:target id="task-create-data-param">data</gap:target>) {
+    const <gap:target id="new-task-object">task</gap:target> = {
+      <gap:target id="task-id-key">id</gap:target>: <gap:target id="task-id-generate">taskIdSeq++</gap:target>,
+      <gap:target id="task-title-key">title</gap:target>: <gap:target id="task-title-assign">data.title</gap:target>,
+      <gap:target id="task-description-key">description</gap:target>: <gap:target id="task-description-assign">data.description || ''</gap:target>,
+      <gap:target id="task-status-key">status</gap:target>: <gap:target id="task-status-default">'todo'</gap:target>,
+      <gap:target id="task-project-id-key">projectId</gap:target>: <gap:target id="task-project-id-assign">data.projectId || null</gap:target>,
+      <gap:target id="task-assignee-id-key">assigneeId</gap:target>: <gap:target id="task-assignee-id-assign">null</gap:target>,
+      <gap:target id="task-comments-key">comments</gap:target>: <gap:target id="task-comments-default">[]</gap:target>,
+      <gap:target id="task-created-at-key">      labels: data.labels || [],createdAt</gap:target>: <gap:target id="task-created-at-value">new Date().toISOString()</gap:target>,
+      <gap:target id="task-updated-at-key">updatedAt</gap:target>: <gap:target id="task-updated-at-value">new Date().toISOString()</gap:target>
+    };
+    <gap:target id="task-push-call">tasks.push(task)</gap:target>;
+    return <gap:target id="task-return-value">task</gap:target>;
+  },
+  <gap:target id="task-find-all-method">findAll</gap:target>() { return <gap:target id="task-find-all-return">tasks</gap:target>; },
+  <gap:target id="task-find-by-id-method">findById</gap:target>(<gap:target id="task-find-by-id-param">id</gap:target>) { return <gap:target id="task-find-by-id-return">tasks.find(t =&gt; t.id === Number(id))</gap:target>; },
+  <gap:target id="task-update-method">update</gap:target>(<gap:target id="task-update-id-param">id</gap:target>, <gap:target id="task-update-data-param">data</gap:target>) {
+    const <gap:target id="task-update-target">task</gap:target> = <gap:target id="task-update-find-call">Task.findById(id)</gap:target>;
+    if (!<gap:target id="task-update-found-check">task</gap:target>) return <gap:target id="task-update-null-return">null</gap:target>;
+    Object.assign(<gap:target id="task-update-assign-target">task</gap:target>, <gap:target id="task-update-assign-source">data</gap:target>, { <gap:target id="task-update-time-key">updatedAt</gap:target>: <gap:target id="task-update-time-value">new Date().toISOString()</gap:target> });
+    return <gap:target id="task-update-return">task</gap:target>;
+  }
+};
+
+const <gap:target id="project-model">Project</gap:target> = {
+  <gap:target id="project-create-method">create</gap:target>(<gap:target id="project-create-data-param">data</gap:target>) {
+    const <gap:target id="new-project-object">project</gap:target> = {
+      <gap:target id="project-id-key">id</gap:target>: <gap:target id="project-id-generate">projectIdSeq++</gap:target>,
+      <gap:target id="project-name-key">name</gap:target>: <gap:target id="project-name-assign">data.name</gap:target>,
+      <gap:target id="project-description-key">description</gap:target>: <gap:target id="project-description-assign">data.description || ''</gap:target>,
+      <gap:target id="project-members-key">members</gap:target>: <gap:target id="project-members-default">data.members || []</gap:target>,
+      <gap:target id="project-created-at-key">createdAt</gap:target>: <gap:target id="project-created-at-value">new Date().toISOString()</gap:target>,
+      <gap:target id="project-updated-at-key">updatedAt</gap:target>: <gap:target id="project-updated-at-value">new Date().toISOString()</gap:target>
+    };
+    <gap:target id="project-push-call">projects.push(project)</gap:target>;
+    return <gap:target id="project-return-value">project</gap:target>;
+  },
+  <gap:target id="project-find-all-method">findAll</gap:target>() { return <gap:target id="project-find-all-return">projects</gap:target>; },
+  <gap:target id="project-find-by-id-method">findById</gap:target>(<gap:target id="project-find-by-id-param">id</gap:target>) { return <gap:target id="project-find-by-id-return">projects.find(p =&gt; p.id === Number(id))</gap:target>; },
+  <gap:target id="project-update-method">update</gap:target>(<gap:target id="project-update-id-param">id</gap:target>, <gap:target id="project-update-data-param">data</gap:target>) {
+    const <gap:target id="project-update-target">project</gap:target> = <gap:target id="project-update-find-call">Project.findById(id)</gap:target>;
+    if (!<gap:target id="project-update-found-check">project</gap:target>) return <gap:target id="project-update-null-return">null</gap:target>;
+    Object.assign(<gap:target id="project-update-assign-target">project</gap:target>, <gap:target id="project-update-assign-source">data</gap:target>, { <gap:target id="project-update-time-key">updatedAt</gap:target>: <gap:target id="project-update-time-value">new Date().toISOString()</gap:target> });
+    return <gap:target id="project-update-return">project</gap:target>;
+  }
+};
+
+const <gap:target id="user-model">User</gap:target> = {
+  <gap:target id="user-find-by-id-method">findById</gap:target>(<gap:target id="user-find-by-id-param">id</gap:target>) { return <gap:target id="user-find-by-id-return">users.find(u =&gt; u.id === Number(id))</gap:target>; },
+  <gap:target id="user-create-method">create</gap:target>(<gap:target id="user-create-data-param">data</gap:target>) {
+    const <gap:target id="new-user-object">user</gap:target> = {
+      <gap:target id="user-id-key">id</gap:target>: <gap:target id="user-id-generate">userIdSeq++</gap:target>,
+      <gap:target id="user-name-key">name</gap:target>: <gap:target id="user-name-assign">data.name</gap:target>,
+      <gap:target id="user-email-key">email</gap:target>: <gap:target id="user-email-assign">data.email</gap:target>
+    };
+    <gap:target id="user-push-call">users.push(user)</gap:target>;
+    return <gap:target id="user-return-value">user</gap:target>;
+  }
+};
+</gap:target>
+
+<gap:target id="validation-block">
+const <gap:target id="require-string-name">requireString</gap:target> = (<gap:target id="require-string-value-param">value</gap:target>, <gap:target id="require-string-field-param">field</gap:target>) => {
+  if (typeof <gap:target id="require-string-type-check-value">value</gap:target> !== 'string' || !<gap:target id="require-string-trim-check">value.trim()</gap:target>) {
+    throw new <gap:target id="require-string-error">ApiError</gap:target>(`<gap:target id="require-string-message">Field ${field} is required and must be a non-empty string</gap:target>`, <gap:target id="bad-request-status-string">400</gap:target>);
+  }
+};
+
+const <gap:target id="validate-id-name">validateId</gap:target> = (<gap:target id="validate-id-param">id</gap:target>) => {
+  if (!<gap:target id="validate-id-number-check">Number.isInteger(Number(id))</gap:target> || Number(id) &lt;= <gap:target id="validate-id-min-value">0</gap:target>) {
+    throw new <gap:target id="validate-id-error">ApiError</gap:target>('<gap:target id="validate-id-message">Invalid id</gap:target>', <gap:target id="bad-request-status-id">400</gap:target>);
+  }
+};
+</gap:target>
+
+<gap:target id="routes-block">
+const <gap:target id="router-instance">router</gap:target> = <gap:target id="express-router-call">express.Router()</gap:target>();
+
+<gap:target id="task-routes-block">
+router.get('<gap:target id="tasks-list-path">/tasks</gap:target>', (<gap:target id="tasks-list-req">req</gap:target>, <gap:target id="tasks-list-res">res</gap:target>) => {
+  return <gap:target id="tasks-list-response">res.json(Task.findAll())</gap:target>;
+});
+
+router.get('<gap:target id="task-by-id-path">/tasks/:id</gap:target>', (<gap:target id="task-by-id-req">req</gap:target>, <gap:target id="task-by-id-res">res</gap:target>, <gap:target id="task-by-id-next">next</gap:target>) => {
+  try {
+    <gap:target id="task-by-id-validate-call">validateId(req.params.id)</gap:target>;
+    const <gap:target id="task-by-id-task">task</gap:target> = <gap:target id="task-by-id-find-call">Task.findById(req.params.id)</gap:target>;
+    if (!<gap:target id="task-by-id-found-check">task</gap:target>) throw new <gap:target id="task-not-found-error">ApiError</gap:target>('<gap:target id="task-not-found-message">Task not found</gap:target>', <gap:target id="not-found-status-task">404</gap:target>);
+    return <gap:target id="task-by-id-response">res.json(task)</gap:target>;
+  } catch (<gap:target id="task-by-id-catch">err</gap:target>) { return <gap:target id="task-by-id-next-call">next(err)</gap:target>; }
+});
+
+router.post('<gap:target id="task-create-path">/tasks</gap:target>', (<gap:target id="task-create-req">req</gap:target>, <gap:target id="task-create-res">res</gap:target>, <gap:target id="task-create-next">next</gap:target>) => {
+  try {
+    <gap:target id="task-create-title-validate">requireString(req.body.title, 'title')</gap:target>;
+    const <gap:target id="created-task">task</gap:target> = <gap:target id="task-create-model-call">Task.create({ title: req.body.title, description: req.body.description, projectId: req.body.projectId })</gap:target>;
+    return <gap:target id="task-create-response">res.status(201).json(task)</gap:target>;
+  } catch (<gap:target id="task-create-catch">err</gap:target>) { return <gap:target id="task-create-next-call">next(err)</gap:target>; }
+});
+
+router.put('<gap:target id="task-update-path">/tasks/:id</gap:target>', (<gap:target id="task-update-req">req</gap:target>, <gap:target id="task-update-res">res</gap:target>, <gap:target id="task-update-next">next</gap:target>) => {
+  try {
+    <gap:target id="task-update-validate-id">validateId(req.params.id)</gap:target>;
+    const <gap:target id="updated-task">task</gap:target> = <gap:target id="task-update-model-call">Task.update(req.params.id, req.body)</gap:target>;
+    if (!<gap:target id="task-update-not-found-check">task</gap:target>) throw new <gap:target id="task-update-not-found-error">ApiError</gap:target>('<gap:target id="task-update-not-found-message">Task not found</gap:target>', <gap:target id="not-found-status-task-update">404</gap:target>);
+    return <gap:target id="task-update-response">res.json(task)</gap:target>;
+  } catch (<gap:target id="task-update-catch">err</gap:target>) { return <gap:target id="task-update-next-call">next(err)</gap:target>; }
+});
+
+router.delete('<gap:target id="task-delete-path">/tasks/:id</gap:target>', (<gap:target id="task-delete-req">req</gap:target>, <gap:target id="task-delete-res">res</gap:target>, <gap:target id="task-delete-next">next</gap:target>) => {
+  try {
+    <gap:target id="task-delete-validate-id">validateId(req.params.id)</gap:target>;
+    const <gap:target id="task-delete-index">index</gap:target> = <gap:target id="task-delete-find-index">tasks.findIndex(t =&gt; t.id === Number(req.params.id))</gap:target>;
+    if (<gap:target id="task-delete-index-check">index === -1</gap:target>) throw new <gap:target id="task-delete-not-found-error">ApiError</gap:target>('<gap:target id="task-delete-not-found-message">Task not found</gap:target>', <gap:target id="not-found-status-task-delete">404</gap:target>);
+    <gap:target id="task-delete-splice-call">tasks.splice(index, 1)</gap:target>;
+    return <gap:target id="task-delete-response">res.status(204).send()</gap:target>;
+  } catch (<gap:target id="task-delete-catch">err</gap:target>) { return <gap:target id="task-delete-next-call">next(err)</gap:target>; }
+});
+
+router.post('<gap:target id="assign-task-path">/tasks/:id/assign</gap:target>', (<gap:target id="assign-task-req">req</gap:target>, <gap:target id="assign-task-res">res</gap:target>, <gap:target id="assign-task-next">next</gap:target>) => {
+  try {
+    <gap:target id="assign-task-validate-id">validateId(req.params.id)</gap:target>;
+    <gap:target id="assign-task-user-validate">validateId(req.body.userId)</gap:target>;
+    const <gap:target id="assign-task-task">task</gap:target> = <gap:target id="assign-task-find-task">Task.findById(req.params.id)</gap:target>;
+    const <gap:target id="assign-task-user">user</gap:target> = <gap:target id="assign-task-find-user">User.findById(req.body.userId)</gap:target>;
+    if (!<gap:target id="assign-task-task-found-check">task</gap:target>) throw new <gap:target id="assign-task-task-not-found-error">ApiError</gap:target>('<gap:target id="assign-task-task-not-found-message">Task not found</gap:target>', <gap:target id="not-found-status-assign-task">404</gap:target>);
+    if (!<gap:target id="assign-task-user-found-check">user</gap:target>) throw new <gap:target id="assign-task-user-not-found-error">ApiError</gap:target>('<gap:target id="assign-task-user-not-found-message">User not found</gap:target>', <gap:target id="not-found-status-user">404</gap:target>);
+    <gap:target id="assign-task-assign">task.assigneeId = user.id</gap:target>;
+    return <gap:target id="assign-task-response">res.json(task)</gap:target>;
+  } catch (<gap:target id="assign-task-catch">err</gap:target>) { return <gap:target id="assign-task-next-call">next(err)</gap:target>; }
+});
+
+router.post('<gap:target id="task-status-path">router.put('/tasks/:id/labels', (req, res, next) => {
+  try {
+    validateId(req.params.id);
+    const task = Task.findById(req.params.id);
+    if (!task) throw new ApiError('Task not found', 404);
+    if (!Array.isArray(req.body.labels) || !req.body.labels.every(label => typeof label === 'string' && label.trim())) {
+      throw new ApiError('Labels must be a non-empty array of strings', 400);
+    }
+    task.labels = req.body.labels;
+    task.updatedAt = new Date().toISOString();
+    return res.json(task);
+  } catch (err) { return next(err); }
+});/tasks/:id/status</gap:target>', (<gap:target id="task-status-req">req</gap:target>, <gap:target id="task-status-res">res</gap:target>, <gap:target id="task-status-next">next</gap:target>) => {
+  try {
+    <gap:target id="task-status-validate-id">validateId(req.params.id)</gap:target>;
+    <gap:target id="task-status-validate-value">requireString(req.body.status, 'status')</gap:target>;
+    const <gap:target id="task-status-allowed-values">allowedStatuses</gap:target> = <gap:target id="status-array">['todo', 'in-progress', 'done']</gap:target>;
+    if (!<gap:target id="task-status-includes-check">allowedStatuses.includes(req.body.status)</gap:target>) throw new <gap:target id="task-status-invalid-error">ApiError</gap:target>('<gap:target id="task-status-invalid-message">Invalid status</gap:target>', <gap:target id="bad-request-status-task-status">400</gap:target>);
+    const <gap:target id="task-status-task">task</gap:target> = <gap:target id="task-status-find-task">Task.findById(req.params.id)</gap:target>;
+    if (!<gap:target id="task-status-found-check">task</gap:target>) throw new <gap:target id="task-status-not-found-error">ApiError</gap:target>('<gap:target id="task-status-not-found-message">Task not found</gap:target>', <gap:target id="not-found-status-task-status">404</gap:target>);
+    <gap:target id="task-status-assign">task.status = req.body.status</gap:target>;
+    <gap:target id="task-status-touch">task.updatedAt = new Date().toISOString()</gap:target>;
+    return <gap:target id="task-status-response">res.json(task)</gap:target>;
+  } catch (<gap:target id="task-status-catch">err</gap:target>) { return <gap:target id="task-status-next-call">next(err)</gap:target>; }
+});
+
+router.post('<gap:target id="task-comment-path">/tasks/:id/comments</gap:target>', (<gap:target id="task-comment-req">req</gap:target>, <gap:target id="task-comment-res">res</gap:target>, <gap:target id="task-comment-next">next</gap:target>) => {
+  try {
+    <gap:target id="task-comment-validate-id">validateId(req.params.id)</gap:target>;
+    <gap:target id="task-comment-validate-text">requireString(req.body.text, 'text')</gap:target>;
+    const <gap:target id="task-comment-task">task</gap:target> = <gap:target id="task-comment-find-task">Task.findById(req.params.id)</gap:target>;
+    if (!<gap:target id="task-comment-found-check">task</gap:target>) throw new <gap:target id="task-comment-not-found-error">ApiError</gap:target>('<gap:target id="task-comment-not-found-message">Task not found</gap:target>', <gap:target id="not-found-status-task-comment">404</gap:target>);
+    const <gap:target id="new-comment-object">comment</gap:target> = { <gap:target id="comment-text-key">text</gap:target>: <gap:target id="comment-text-value">req.body.text</gap:target>, <gap:target id="comment-created-at-key">createdAt</gap:target>: <gap:target id="comment-created-at-value">new Date().toISOString()</gap:target> };
+    <gap:target id="comment-push-call">task.comments.push(comment)</gap:target>;
+    return <gap:target id="task-comment-response">res.status(201).json(comment)</gap:target>;
+  } catch (<gap:target id="task-comment-catch">err</gap:target>) { return <gap:target id="task-comment-next-call">next(err)</gap:target>; }
+});
+</gap:target>
+
+<gap:target id="project-routes-block">
+router.get('<gap:target id="projects-list-path">/projects</gap:target>', (<gap:target id="projects-list-req">req</gap:target>, <gap:target id="projects-list-res">res</gap:target>) => {
+  return <gap:target id="projects-list-response">res.json(Project.findAll())</gap:target>;
+});
+
+router.get('<gap:target id="project-by-id-path">/projects/:id</gap:target>', (<gap:target id="project-by-id-req">req</gap:target>, <gap:target id="project-by-id-res">res</gap:target>, <gap:target id="project-by-id-next">next</gap:target>) => {
+  try {
+    <gap:target id="project-by-id-validate-call">validateId(req.params.id)</gap:target>;
+    const <gap:target id="project-by-id-project">project</gap:target> = <gap:target id="project-by-id-find-call">Project.findById(req.params.id)</gap:target>;
+    if (!<gap:target id="project-by-id-found-check">project</gap:target>) throw new <gap:target id="project-not-found-error">ApiError</gap:target>('<gap:target id="project-not-found-message">Project not found</gap:target>', <gap:target id="not-found-status-project">404</gap:target>);
+    return <gap:target id="project-by-id-response">res.json(project)</gap:target>;
+  } catch (<gap:target id="project-by-id-catch">err</gap:target>) { return <gap:target id="project-by-id-next-call">next(err)</gap:target>; }
+});
+
+router.post('<gap:target id="project-create-path">/projects</gap:target>', (<gap:target id="project-create-req">req</gap:target>, <gap:target id="project-create-res">res</gap:target>, <gap:target id="project-create-next">next</gap:target>) => {
+  try {
+    <gap:target id="project-create-name-validate">requireString(req.body.name, 'name')</gap:target>;
+    const <gap:target id="created-project">project</gap:target> = <gap:target id="project-create-model-call">Project.create({ name: req.body.name, description: req.body.description, members: req.body.members })</gap:target>;
+    return <gap:target id="project-create-response">res.status(201).json(project)</gap:target>;
+  } catch (<gap:target id="project-create-catch">err</gap:target>) { return <gap:target id="project-create-next-call">next(err)</gap:target>; }
+});
+
+router.put('<gap:target id="project-update-path">/projects/:id</gap:target>', (<gap:target id="project-update-req">req</gap:target>, <gap:target id="project-update-res">res</gap:target>, <gap:target id="project-update-next">next</gap:target>) => {
+  try {
+    <gap:target id="project-update-validate-id">validateId(req.params.id)</gap:target>;
+    const <gap:target id="project-updated-project">project</gap:target> = <gap:target id="project-update-model-call">Project.update(req.params.id, req.body)</gap:target>;
+    if (!<gap:target id="project-update-not-found-check">project</gap:target>) throw new <gap:target id="project-update-not-found-error">ApiError</gap:target>('<gap:target id="project-update-not-found-message">Project not found</gap:target>', <gap:target id="not-found-status-project-update">404</gap:target>);
+    return <gap:target id="project-update-response">res.json(project)</gap:target>;
+  } catch (<gap:target id="project-update-catch">err</gap:target>) { return <gap:target id="project-update-next-call">next(err)</gap:target>; }
+});
+
+router.delete('<gap:target id="project-delete-path">/projects/:id</gap:target>', (<gap:target id="project-delete-req">req</gap:target>, <gap:target id="project-delete-res">res</gap:target>, <gap:target id="project-delete-next">next</gap:target>) => {
+  try {
+    <gap:target id="project-delete-validate-id">validateId(req.params.id)</gap:target>;
+    const <gap:target id="project-delete-index">index</gap:target> = <gap:target id="project-delete-find-index">projects.findIndex(p =&gt; p.id === Number(req.params.id))</gap:target>;
+    if (<gap:target id="project-delete-index-check">index === -1</gap:target>) throw new <gap:target id="project-delete-not-found-error">ApiError</gap:target>('<gap:target id="project-delete-not-found-message">Project not found</gap:target>', <gap:target id="not-found-status-project-delete">404</gap:target>);
+    <gap:target id="project-delete-splice-call">projects.splice(index, 1)</gap:target>;
+    return <gap:target id="project-delete-response">res.status(204).send()</gap:target>;
+  } catch (<gap:target id="project-delete-catch">err</gap:target>) { return <gap:target id="project-delete-next-call">next(err)</gap:target>; }
+});
+</gap:target>
+
+<gap:target id="user-routes-block">
+router.get('<gap:target id="users-list-path">/users</gap:target>', (<gap:target id="users-list-req">req</gap:target>, <gap:target id="users-list-res">res</gap:target>) => {
+  return <gap:target id="users-list-response">res.json(users)</gap:target>;
+});
+
+router.post('<gap:target id="user-create-path">/users</gap:target>', (<gap:target id="user-create-req">req</gap:target>, <gap:target id="user-create-res">res</gap:target>, <gap:target id="user-create-next">next</gap:target>) => {
+  try {
+    <gap:target id="user-create-name-validate">requireString(req.body.name, 'name')</gap:target>;
+    <gap:target id="user-create-email-validate">requireString(req.body.email, 'email')</gap:target>;
+    const <gap:target id="created-user">user</gap:target> = <gap:target id="user-create-model-call">User.create({ name: req.body.name, email: req.body.email })</gap:target>;
+    return <gap:target id="user-create-response">res.status(201).json(user)</gap:target>;
+  } catch (<gap:target id="user-create-catch">err</gap:target>) { return <gap:target id="user-create-next-call">next(err)</gap:target>; }
+});
+</gap:target>
+
+app.use('<gap:target id="api-prefix">/api</gap:target>', <gap:target id="router-use-call">router</gap:target>);
+</gap:target>
+
+<gap:target id="error-middleware-block">
+app.use((<gap:target id="error-req-param">err</gap:target>, <gap:target id="error-req-param-2">req</gap:target>, <gap:target id="error-res-param">res</gap:target>, <gap:target id="error-next-param">next</gap:target>) => {
+  const <gap:target id="error-status-code">statusCode</gap:target> = <gap:target id="error-status-resolution">err.statusCode || 500</gap:target>;
+  const <gap:target id="error-message">message</gap:target> = <gap:target id="error-message-resolution">err.message || 'Internal Server Error'</gap:target>;
+  return <gap:target id="error-response">res.status(statusCode).json({ message })</gap:target>;
+});
+</gap:target>
+
+<gap:target id="server-start-block">
+app.listen(<gap:target id="listen-port">PORT</gap:target>, () => {
+  console.log(`<gap:target id="server-start-message">Task management API server running on port ${PORT}</gap:target>`);
+});
+</gap:target>
+</gap:target>

@@ -1,0 +1,182 @@
+{
+  "base_turn0": {
+    "artifact_bytes": 28370,
+    "cached_input_tokens": 0,
+    "input_tokens": 121,
+    "latency_ms": 24481,
+    "median_itl_ms": 0.003459,
+    "output_tokens": 5703,
+    "ttft_ms": 0,
+    "ttlt_ms": 24118
+  },
+  "comparison": {
+    "input_token_savings_pct": 55.6,
+    "latency_savings_pct": 72.7,
+    "output_token_savings_pct": 82.4
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "cached_input_tokens": 5376,
+        "edit": "Add a new GET /products/export endpoint in the controller that returns products ",
+        "failed": false,
+        "input_tokens": 5853,
+        "latency_ms": 25417,
+        "median_itl_ms": 0.003167,
+        "output_bytes": 29919,
+        "output_tokens": 5983,
+        "ttft_ms": 0,
+        "ttlt_ms": 24842,
+        "turn": 1
+      },
+      {
+        "cached_input_tokens": 11520,
+        "edit": "Update the ProductService to add a bulkUpdatePrices method that accepts a Map<Lo",
+        "failed": false,
+        "input_tokens": 11870,
+        "latency_ms": 9435,
+        "median_itl_ms": 0.002209,
+        "output_bytes": 10955,
+        "output_tokens": 2075,
+        "ttft_ms": 0,
+        "ttlt_ms": 9052,
+        "turn": 2
+      },
+      {
+        "cached_input_tokens": 13568,
+        "edit": "Rewrite the repository to add a custom @Query method findByPriceRangeAndCategory",
+        "failed": false,
+        "input_tokens": 13980,
+        "latency_ms": 3637,
+        "median_itl_ms": 0.002208,
+        "output_bytes": 2585,
+        "output_tokens": 550,
+        "ttft_ms": 6,
+        "ttlt_ms": 2388,
+        "turn": 3
+      }
+    ],
+    "total_cached_input_tokens": 30464,
+    "total_input_tokens": 31703,
+    "total_latency_ms": 38489,
+    "total_output_tokens": 8608
+  },
+  "experiment_id": "055-java-spring-controller",
+  "format": "text/x-java",
+  "gap_flow": {
+    "apply_success_rate": 0.6666666666666666,
+    "envelope_parse_rate": 1.0,
+    "per_turn": [
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 0,
+        "edit": "Add a new GET /products/export endpoint in the controller that returns products ",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 4628,
+        "latency_ms": 1327,
+        "median_itl_ms": 0.003792,
+        "output_bytes": 21011,
+        "output_tokens": 186,
+        "ttft_ms": 21,
+        "ttlt_ms": 933,
+        "turn": 1
+      },
+      {
+        "apply_succeeded": false,
+        "cached_input_tokens": 0,
+        "edit": "Update the ProductService to add a bulkUpdatePrices method that accepts a Map<Lo",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": true,
+        "failure_reason": "parse or apply failed",
+        "input_tokens": 4728,
+        "latency_ms": 3705,
+        "median_itl_ms": 0.003292,
+        "output_bytes": 21011,
+        "output_tokens": 620,
+        "ttft_ms": 110,
+        "ttlt_ms": 3326,
+        "turn": 2
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 3840,
+        "edit": "Rewrite the repository to add a custom @Query method findByPriceRangeAndCategory",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 4729,
+        "latency_ms": 5492,
+        "median_itl_ms": 0.0027705000000000004,
+        "output_bytes": 21696,
+        "output_tokens": 713,
+        "ttft_ms": 67,
+        "ttlt_ms": 3767,
+        "turn": 3
+      }
+    ],
+    "total_cached_input_tokens": 3840,
+    "total_input_tokens": 14085,
+    "total_latency_ms": 10524,
+    "total_output_tokens": 1519
+  },
+  "gap_turn0": {
+    "artifact_bytes": 20538,
+    "cached_input_tokens": 0,
+    "input_tokens": 383,
+    "latency_ms": 18952,
+    "median_itl_ms": 0.0025840000000000004,
+    "output_tokens": 4361,
+    "ttft_ms": 4,
+    "ttlt_ms": 18719
+  },
+  "model": "gpt-5.4-mini",
+  "provider": "openai",
+  "quality": {
+    "mean_rouge_l": 0.2673,
+    "mean_sequence_similarity": 0.3891,
+    "mean_token_f1": 0.4033,
+    "per_turn": [
+      {
+        "base_char_count": 29919,
+        "char_delta_pct": -32.1,
+        "gap_char_count": 20328,
+        "lines_added": 294,
+        "lines_removed": 691,
+        "rouge_l": 0.455,
+        "sequence_similarity": 0.5359,
+        "token_f1": 0.6788,
+        "turn": 1
+      },
+      {
+        "base_char_count": 10955,
+        "char_delta_pct": 85.6,
+        "gap_char_count": 20328,
+        "lines_added": 527,
+        "lines_removed": 180,
+        "rouge_l": 0.2176,
+        "sequence_similarity": 0.4388,
+        "token_f1": 0.341,
+        "turn": 2
+      },
+      {
+        "base_char_count": 2585,
+        "char_delta_pct": 712.9,
+        "gap_char_count": 21013,
+        "lines_added": 623,
+        "lines_removed": 45,
+        "rouge_l": 0.1293,
+        "sequence_similarity": 0.1926,
+        "token_f1": 0.19,
+        "turn": 3
+      }
+    ]
+  },
+  "timestamp": "2026-05-29T03:10:56Z",
+  "validity": {
+    "base_input_monotone": true,
+    "gap_run_degenerate": false
+  }
+}

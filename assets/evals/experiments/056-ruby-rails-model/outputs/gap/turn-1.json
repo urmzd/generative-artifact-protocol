@@ -1,0 +1,25 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "    has_many <gap:target id=\"refunds-association\">:refunds</gap:target>",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "payments-association"
+      }
+    },
+    {
+      "content": "\n    def <gap:target id=\"refund-method-name\">refund!</gap:target>\n      <gap:target id=\"refund-method-body\">refunds.create!\\n      update!(status: :refunded)</gap:target>\n    end",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "complete-method-body"
+      }
+    }
+  ]
+}

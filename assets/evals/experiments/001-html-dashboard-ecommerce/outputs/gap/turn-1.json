@@ -1,34 +1,17 @@
 {
-  "protocol": "gap/0.1",
-  "id": "artifact",
+  "protocol": "gap",
+  "id": "edit",
   "version": 1,
   "name": "edit",
-  "meta": {
-    "format": "text/html",
-    "tokens_used": 0,
-    "checksum": "5606d20f666b6c0e0b370604b9c1d0f5e1975e7a9b60b78490656a1b244795b5",
-    "state": "success"
-  },
+  "meta": {},
   "content": [
     {
+      "content": "<article class=\"card\">\n                  <div class=\"stat-head\">\n                    <div class=\"stat-label\">Total Revenue</div>\n                    <div class=\"stat-icon bg-blue\">R</div>\n                  </div>\n                  <div class=\"stat-value\"><gap:target id=\"stat-total-revenue-value\">$215,430</gap:target></div>\n                  <div class=\"trend up\">▲ <gap:target id=\"stat-total-revenue-trend\">12.3% from last month</gap:target></div>\n                </article>",
       "op": "replace",
       "target": {
-        "type": "css",
-        "value": ".stat-cards \u003e .card:nth-child(1) \u003e .card-value:nth-child(2)"
+        "type": "id",
+        "value": "stat-total-revenue-card"
       }
-    },
-    {
-      "body": "$215,430"
-    },
-    {
-      "op": "replace",
-      "target": {
-        "type": "css",
-        "value": ".stat-cards \u003e .card:nth-child(1) \u003e .card-trend:nth-child(3) \u003e span:nth-child(2)"
-      }
-    },
-    {
-      "body": "+12.3% vs last month"
     }
   ]
 }

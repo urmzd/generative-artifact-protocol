@@ -1,0 +1,28 @@
+{
+  "turn": 4,
+  "checks": [
+    {
+      "kind": "absent",
+      "value": "`/v1/",
+      "desc": "no endpoint Path begins with /v1/ anymore; bulk version bump applied everywhere"
+    },
+    {
+      "kind": "regex_count_at_least",
+      "pattern": "`/v2/",
+      "min": 90,
+      "desc": "every one of the 90 endpoints now has a /v2/ Path (bulk edit hit all items)"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^### EP-",
+      "expected": 90,
+      "desc": "bulk field change must not add or drop any of the 90 endpoints"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^## Page \\d+:",
+      "expected": 6,
+      "desc": "still 6 pages after the bulk version bump"
+    }
+  ]
+}

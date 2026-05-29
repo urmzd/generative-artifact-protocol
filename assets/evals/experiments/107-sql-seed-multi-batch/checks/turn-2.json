@@ -1,0 +1,37 @@
+{
+  "turn": 2,
+  "checks": [
+    {
+      "kind": "contains",
+      "value": "SKU-0041",
+      "desc": "The newly inserted product 41 (sku SKU-0041) is present."
+    },
+    {
+      "kind": "contains",
+      "value": "Aurora Wireless Headphones",
+      "desc": "The newly inserted product 41's name is present."
+    },
+    {
+      "kind": "contains",
+      "value": "1299.99",
+      "desc": "The turn-1 edit to product 27 (price 1299.99) is still present — prior edits are not lost."
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?i)INSERT\\s+INTO",
+      "expected": 121,
+      "desc": "Total seed rows are exactly 121 after inserting one new product (120 + 1)."
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?i)INSERT\\s+INTO\\s+products",
+      "expected": 41,
+      "desc": "products table now has exactly 41 rows (40 original + product 41)."
+    },
+    {
+      "kind": "contains",
+      "value": "SKU-0040",
+      "desc": "The anchor row product 40 (sku SKU-0040), the original end of Batch 2 the new row is appended after, is still present."
+    }
+  ]
+}

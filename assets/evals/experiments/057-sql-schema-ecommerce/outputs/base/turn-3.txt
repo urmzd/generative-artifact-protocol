@@ -1,0 +1,12 @@
+CREATE MATERIALIZED VIEW monthly_sales_summary AS
+SELECT
+    EXTRACT(YEAR FROM o.placed_at)::INTEGER AS sales_year,
+    EXTRACT(MONTH FROM o.placed_at)::INTEGER AS sales_month,
+    DATE_TRUNC('month', o.placed_at)::DATE AS sales_period,
+    COUNT(*)::BIGINT AS order_count,
+    COALESCE(SUM(o.total_amount), 0)::NUMERIC(14,2) AS total_revenue,
+    ROUND(COALESCE(AVG(o.total_amount), 0)::NUMERIC, 2) AS average_order_value
+FROM orders o
+GROUP BY EXTRACT(YEAR FROM o.placed_at), EXTRACT(MONTH FROM o.placed_at), DATE_TRUNC('month', o.placed_at)::DATE;
+
+CREATE INDEX idx_monthly_sales_summary_year_month ON monthly_sales_summary (sales_year, sales_month);

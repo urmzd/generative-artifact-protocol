@@ -1,0 +1,12 @@
+{
+  "turn": 2,
+  "checks": [
+    {"kind": "valid_json", "desc": "artifact is still parseable JSON after the insert"},
+    {"kind": "contains", "value": "priya.raman@corp.example.com", "desc": "the inserted user's unique email is present"},
+    {"kind": "contains", "value": "1001", "desc": "the inserted user's id 1001 is present"},
+    {"kind": "json_pointer_equals", "pointer": "/data/45/id", "value": 1001, "desc": "the new user landed at index 45, immediately after id 45 (index 44)"},
+    {"kind": "json_pointer_equals", "pointer": "/data/44/id", "value": 45, "desc": "the user with id 45 is still at index 44 (insert did not displace it)"},
+    {"kind": "json_pointer_equals", "pointer": "/pagination/total", "value": 101, "desc": "total bumped to 101 after the insert"},
+    {"kind": "regex_count", "pattern": "\"id\"\\s*:", "expected": 101, "desc": "exactly 101 user records after inserting one — original 100 preserved"}
+  ]
+}

@@ -1,0 +1,1 @@
+Across EVERY remaining resource in the entire manifest set, change the `metadata.labels` value `tier: backend` to `tier: platform`. Every resource currently carries the `tier: backend` label; after this edit none may remain and all must read `tier: platform`. Do not add, remove, or reorder any resources.

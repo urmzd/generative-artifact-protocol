@@ -1,0 +1,177 @@
+{
+  "base_turn0": {
+    "artifact_bytes": 5933,
+    "cached_input_tokens": 0,
+    "input_tokens": 147,
+    "latency_ms": 7165,
+    "median_itl_ms": 0.004541,
+    "output_tokens": 1451,
+    "ttft_ms": 65,
+    "ttlt_ms": 6627
+  },
+  "comparison": {
+    "input_token_savings_pct": 0.9,
+    "latency_savings_pct": 82.3,
+    "output_token_savings_pct": 89.1
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "cached_input_tokens": 0,
+        "edit": "Add a 'role' field to UserCreate schema with allowed values 'admin', 'editor', '",
+        "failed": false,
+        "input_tokens": 1632,
+        "latency_ms": 6982,
+        "median_itl_ms": 0.00375,
+        "output_bytes": 6171,
+        "output_tokens": 1507,
+        "ttft_ms": 4,
+        "ttlt_ms": 6690,
+        "turn": 1
+      },
+      {
+        "cached_input_tokens": 1280,
+        "edit": "Rewrite the list_users CRUD function to support filtering by role and is_active ",
+        "failed": false,
+        "input_tokens": 3161,
+        "latency_ms": 6851,
+        "median_itl_ms": 0.002959,
+        "output_bytes": 6737,
+        "output_tokens": 1645,
+        "ttft_ms": 2,
+        "ttlt_ms": 6586,
+        "turn": 2
+      },
+      {
+        "cached_input_tokens": 4352,
+        "edit": "Add a new PATCH /users/{id}/deactivate endpoint that sets is_active to False and",
+        "failed": false,
+        "input_tokens": 4836,
+        "latency_ms": 7199,
+        "median_itl_ms": 0.00425,
+        "output_bytes": 7088,
+        "output_tokens": 1733,
+        "ttft_ms": 9,
+        "ttlt_ms": 6758,
+        "turn": 3
+      }
+    ],
+    "total_cached_input_tokens": 5632,
+    "total_input_tokens": 9629,
+    "total_latency_ms": 21032,
+    "total_output_tokens": 4885
+  },
+  "experiment_id": "011-python-fastapi-users",
+  "format": "text/x-python",
+  "gap_flow": {
+    "apply_success_rate": 1.0,
+    "envelope_parse_rate": 1.0,
+    "per_turn": [
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 0,
+        "edit": "Add a 'role' field to UserCreate schema with allowed values 'admin', 'editor', '",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 3179,
+        "latency_ms": 1138,
+        "median_itl_ms": 0.008604500000000001,
+        "output_bytes": 11831,
+        "output_tokens": 113,
+        "ttft_ms": 0,
+        "ttlt_ms": 528,
+        "turn": 1
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 0,
+        "edit": "Rewrite the list_users CRUD function to support filtering by role and is_active ",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 3187,
+        "latency_ms": 1240,
+        "median_itl_ms": 0.004416,
+        "output_bytes": 11730,
+        "output_tokens": 208,
+        "ttft_ms": 4,
+        "ttlt_ms": 786,
+        "turn": 2
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 0,
+        "edit": "Add a new PATCH /users/{id}/deactivate endpoint that sets is_active to False and",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 3173,
+        "latency_ms": 1347,
+        "median_itl_ms": 0.00275,
+        "output_bytes": 12239,
+        "output_tokens": 210,
+        "ttft_ms": 2,
+        "ttlt_ms": 889,
+        "turn": 3
+      }
+    ],
+    "total_cached_input_tokens": 0,
+    "total_input_tokens": 9539,
+    "total_latency_ms": 3725,
+    "total_output_tokens": 531
+  },
+  "gap_turn0": {
+    "artifact_bytes": 11744,
+    "cached_input_tokens": 0,
+    "input_tokens": 409,
+    "latency_ms": 12637,
+    "median_itl_ms": 0.00275,
+    "output_tokens": 2907,
+    "ttft_ms": 5,
+    "ttlt_ms": 12417
+  },
+  "model": "gpt-5.4-mini",
+  "provider": "openai",
+  "quality": {
+    "mean_rouge_l": 0.5204,
+    "mean_sequence_similarity": 0.6042,
+    "mean_token_f1": 0.6461,
+    "per_turn": [
+      {
+        "base_char_count": 6171,
+        "char_delta_pct": 17.2,
+        "gap_char_count": 7230,
+        "lines_added": 238,
+        "lines_removed": 173,
+        "rouge_l": 0.5333,
+        "sequence_similarity": 0.6104,
+        "token_f1": 0.6521,
+        "turn": 1
+      },
+      {
+        "base_char_count": 6737,
+        "char_delta_pct": 9.2,
+        "gap_char_count": 7356,
+        "lines_added": 234,
+        "lines_removed": 189,
+        "rouge_l": 0.5225,
+        "sequence_similarity": 0.6071,
+        "token_f1": 0.6412,
+        "turn": 2
+      },
+      {
+        "base_char_count": 7088,
+        "char_delta_pct": 8.7,
+        "gap_char_count": 7706,
+        "lines_added": 245,
+        "lines_removed": 201,
+        "rouge_l": 0.5053,
+        "sequence_similarity": 0.5951,
+        "token_f1": 0.645,
+        "turn": 3
+      }
+    ]
+  },
+  "timestamp": "2026-05-29T02:49:20Z"
+}

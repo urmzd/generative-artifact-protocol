@@ -1,0 +1,27 @@
+{
+  "turn": 5,
+  "checks": [
+    {
+      "kind": "contains",
+      "value": "notifications-api",
+      "desc": "the new notifications group's first Deployment is present"
+    },
+    {
+      "kind": "contains",
+      "value": "notifications-gateway-config",
+      "desc": "the new notifications group's last ConfigMap is present"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^\\s*group:\\s*notifications\\b",
+      "expected": 10,
+      "desc": "exactly 10 resources belong to the newly added notifications group"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^kind:",
+      "expected": 50,
+      "desc": "total resource count is exactly 50 after appending a whole new 10-resource page to the prior 40; the original 40 are preserved"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+<gap:target id="rustfmt-config"><gap:target id="version">1</gap:target>
+<gap:target id="max-width"></gap:target>
+<gap:target id="hard-tabs">false</gap:target>
+<gap:target id="tab-spaces">4</gap:target>
+<gap:target id="newline-style">Unix</gap:target>
+<gap:target id="indent-style">Block</gap:target>
+<gap:target id="use-field-init-shorthand">true</gap:target>
+<gap:target id="use-field-init-shorthand-force">true</gap:target>
+<gap:target id="imports-granularity">Crate</gap:target>
+<gap:target id="group-imports">StdExternalCrate</gap:target>
+<gap:target id="reorder-imports">true</gap:target>
+<gap:target id="reorder-modules">true</gap:target>
+<gap:target id="edition">2021</gap:target>
+<gap:target id="wrap-comments"></gap:target>
+<gap:target id="format-code-in-doc-comments"></gap:target>
+<gap:target id="normalize-doc-attributes">true</gap:target>
+<gap:target id="comment-width">100</gap:target>
+<gap:target id="fn-single-line">false</gap:target>
+<gap:target id="where-single-line">true</gap:target>
+<gap:target id="chain-width">80</gap:target>
+<gap:target id="array-width">60</gap:target>
+<gap:target id="struct-literal-width">18</gap:target>
+<gap:target id="struct-field-align-threshold">20</gap:target>
+<gap:target id="match-arm-blocks">true</gap:target>
+<gap:target id="control-brace-style">AlwaysSameLine</gap:target>
+<gap:target id="brace-style">SameLineWhere</gap:target>
+<gap:target id="format-strings">true</gap:target>
+<gap:target id="format-macros">true</gap:target>
+<gap:target id="merge-derives">true</gap:target>
+<gap:target id="use-small-heuristics">Max</gap:target>
+<gap:target id="overflow-delimited-expr">true</gap:target>
+<gap:target id="trailing-comma">Vertical</gap:target>
+<gap:target id="blank-lines-upper-bound">1</gap:target>
+<gap:target id="blank-lines-lower-bound">0</gap:target>
+<gap:target id="blank-lines-single-hundred-percent">true</gap:target>
+</gap:target>

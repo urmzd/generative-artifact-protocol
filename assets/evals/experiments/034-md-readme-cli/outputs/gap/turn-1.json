@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "## Troubleshooting\n\n- **`dbmigrate` cannot connect to the database**: Verify `DBMIGRATE_URL` or your config file, confirm the database is running, and check network/firewall settings.\n- **Migrations fail with a syntax error**: Inspect the generated migration file for invalid SQL or schema changes that are not supported by your database dialect.\n- **A migration was applied but not recorded correctly**: Check the migrations tracking table name in your config and ensure the application user has permission to read/write it.\n- **Seed files are not being found**: Confirm `DBMIGRATE_SEEDS_DIR` or `seedsDir` points to the correct folder and that the file path used in the command is valid.\n- **Rollback stops partway through**: Make sure each migration has a valid down/rollback path, then retry with a smaller number of steps or a specific target version.\n",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "api-section"
+      }
+    }
+  ]
+}

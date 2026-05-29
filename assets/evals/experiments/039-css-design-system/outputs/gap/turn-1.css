@@ -1,0 +1,539 @@
+<gap:target id="design-system-root">
+  <gap:target id="design-tokens-block">
+    <gap:target id="css-custom-properties-block">
+      :root {
+        <gap:target id="color-primary">#4f46e5</gap:target>
+        <gap:target id="color-primary-hover">#4338ca</gap:target>
+        <gap:target id="color-secondary">#f59e0b</gap:target>
+        <gap:target id="color-secondary-hover">#d97706</gap:target>
+
+        <gap:target id="neutral-50">#fafafa</gap:target>
+        <gap:target id="neutral-100">#f5f5f5</gap:target>
+        <gap:target id="neutral-200">#e5e5e5</gap:target>
+        <gap:target id="neutral-300">#d4d4d4</gap:target>
+        <gap:target id="neutral-400">#a3a3a3</gap:target>
+        <gap:target id="neutral-500">#737373</gap:target>
+        <gap:target id="neutral-600">#525252</gap:target>
+        <gap:target id="neutral-700">#404040</gap:target>
+        <gap:target id="neutral-800">#262626</gap:target>
+        <gap:target id="neutral-900">#171717</gap:target>
+
+        <gap:target id="color-success">#16a34a</gap:target>
+        <gap:target id="color-warning">#f59e0b</gap:target>
+        <gap:target id="color-danger">#dc2626</gap:target>
+        <gap:target id="color-info">#0ea5e9</gap:target>
+
+        <gap:target id="space-0">0</gap:target>
+        <gap:target id="space-1">0.25rem</gap:target>
+        <gap:target id="space-2">0.5rem</gap:target>
+        <gap:target id="space-3">0.75rem</gap:target>
+        <gap:target id="space-4">1rem</gap:target>
+        <gap:target id="space-5">1.25rem</gap:target>
+        <gap:target id="space-6">1.5rem</gap:target>
+        <gap:target id="space-8">2rem</gap:target>
+        <gap:target id="space-10">2.5rem</gap:target>
+        <gap:target id="space-12">3rem</gap:target>
+        <gap:target id="space-16">4rem</gap:target>
+        <gap:target id="space-20">5rem</gap:target>
+
+        <gap:target id="font-size-xs">0.75rem</gap:target>
+        <gap:target id="font-size-sm">0.875rem</gap:target>
+        <gap:target id="font-size-base">1rem</gap:target>
+        <gap:target id="font-size-lg">1.125rem</gap:target>
+        <gap:target id="font-size-xl">1.25rem</gap:target>
+        <gap:target id="font-size-2xl">1.5rem</gap:target>
+        <gap:target id="font-size-3xl">1.875rem</gap:target>
+        <gap:target id="font-size-4xl">2.25rem</gap:target>
+        <gap:target id="font-size-5xl">3rem</gap:target>
+
+        <gap:target id="radius-sm">0.25rem</gap:target>
+        <gap:target id="radius-md">0.5rem</gap:target>
+        <gap:target id="radius-lg">0.75rem</gap:target>
+        <gap:target id="radius-xl">1rem</gap:target>
+        <gap:target id="radius-full">9999px</gap:target>
+
+        <gap:target id="shadow-sm">0 1px 2px rgba(0, 0, 0, 0.05)</gap:target>
+        <gap:target id="shadow-md">0 4px 6px rgba(0, 0, 0, 0.08)</gap:target>
+        <gap:target id="shadow-lg">0 10px 15px rgba(0, 0, 0, 0.1)</gap:target>
+        <gap:target id="shadow-xl">0 20px 25px rgba(0, 0, 0, 0.12)</gap:target>
+
+        <gap:target id="breakpoint-sm">576px</gap:target>
+        <gap:target id="breakpoint-md">768px</gap:target>
+        <gap:target id="breakpoint-lg">992px</gap:target>
+        <gap:target id="breakpoint-xl">1200px</gap:target>
+        <gap:target id="breakpoint-2xl">1400px</gap:target>
+
+        <gap:target id="font-family-base">system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif</gap:target>
+        <gap:target id="line-height-base">1.5</gap:target>
+        <gap:target id="line-height-heading">1.2</gap:target>
+        <gap:target id="container-max-width">1200px</gap:target>
+      }
+    </gap:target>
+  </gap:target>
+
+  <gap:target id="reset-normalize-block">
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      line-height: 1.15;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-family-base);
+      line-height: var(--line-height-base);
+      color: var(--neutral-900);
+      background: var(--neutral-50);
+    }
+
+    img,
+    picture,
+    video,
+    canvas,
+    svg {
+      display: block;
+      max-width: 100%;
+    }
+
+    input,
+    button,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    a {
+      color: var(--color-primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: var(--space-6);
+    }
+
+    p {
+      margin: 0 0 var(--space-4);
+    }
+
+    code,
+    pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+  </gap:target>
+
+  <gap:target id="typography-block">
+    h1,
+    .h1 {
+      font-size: var(--font-size-4xl);
+      line-height: var(--line-height-heading);
+      font-weight: 700;
+      margin: 0 0 var(--space-4);
+    }
+
+    h2,
+    .h2 {
+      font-size: var(--font-size-3xl);
+      line-height: var(--line-height-heading);
+      font-weight: 700;
+      margin: 0 0 var(--space-4);
+    }
+
+    h3,
+    .h3 {
+      font-size: var(--font-size-2xl);
+      line-height: var(--line-height-heading);
+      font-weight: 700;
+      margin: 0 0 var(--space-3);
+    }
+
+    h4,
+    .h4 {
+      font-size: var(--font-size-xl);
+      line-height: var(--line-height-heading);
+      font-weight: 700;
+      margin: 0 0 var(--space-3);
+    }
+
+    h5,
+    .h5 {
+      font-size: var(--font-size-lg);
+      line-height: var(--line-height-heading);
+      font-weight: 700;
+      margin: 0 0 var(--space-2);
+    }
+
+    h6,
+    .h6 {
+      font-size: var(--font-size-base);
+      line-height: var(--line-height-heading);
+      font-weight: 700;
+      margin: 0 0 var(--space-2);
+    }
+
+    .text-sm {
+      font-size: var(--font-size-sm);
+    }
+
+    .text-base {
+      font-size: var(--font-size-base);
+    }
+
+    .text-lg {
+      font-size: var(--font-size-lg);
+    }
+
+    .text-muted {
+      color: var(--neutral-600);
+    }
+
+    .code-inline {
+      padding: 0.125rem 0.375rem;
+      background: var(--neutral-100);
+      border: 1px solid var(--neutral-200);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-sm);
+    }
+
+    pre {
+      margin: 0 0 var(--space-4);
+      padding: var(--space-4);
+      overflow: auto;
+      background: var(--neutral-900);
+      color: var(--neutral-50);
+      border-radius: var(--radius-md);
+    }
+  </gap:target>
+
+  <gap:target id="layout-block">
+    .container {
+      width: min(100% - 2rem, var(--container-max-width));
+      margin-inline: auto;
+    }
+
+    .grid {
+      display: grid;
+      gap: var(--space-4);
+    }
+
+    .grid-cols-12 {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+
+    <gap:target id="grid-column-span-classes">
+      .col-1 { grid-column: span 1; }
+      .col-2 { grid-column: span 2; }
+      .col-3 { grid-column: span 3; }
+      .col-4 { grid-column: span 4; }
+      .col-5 { grid-column: span 5; }
+      .col-6 { grid-column: span 6; }
+      .col-7 { grid-column: span 7; }
+      .col-8 { grid-column: span 8; }
+      .col-9 { grid-column: span 9; }
+      .col-10 { grid-column: span 10; }
+      .col-11 { grid-column: span 11; }
+      .col-12 { grid-column: span 12; }
+    </gap:target>
+
+    .flex { display: flex; }
+    .inline-flex { display: inline-flex; }
+    .flex-col { flex-direction: column; }
+    .flex-wrap { flex-wrap: wrap; }
+    .items-start { align-items: flex-start; }
+    .items-center { align-items: center; }
+    .items-end { align-items: flex-end; }
+    .justify-start { justify-content: flex-start; }
+    .justify-center { justify-content: center; }
+    .justify-between { justify-content: space-between; }
+    .justify-end { justify-content: flex-end; }
+    .gap-1 { gap: var(--space-1); }
+    .gap-2 { gap: var(--space-2); }
+    .gap-3 { gap: var(--space-3); }
+    .gap-4 { gap: var(--space-4); }
+  </gap:target>
+
+  <gap:target id="spacing-utilities-block">
+    .m-0 { margin: 0; }
+    .mt-1 { margin-top: var(--space-1); }
+    .mt-2 { margin-top: var(--space-2); }
+    .mt-3 { margin-top: var(--space-3); }
+    .mt-4 { margin-top: var(--space-4); }
+    .mb-1 { margin-bottom: var(--space-1); }
+    .mb-2 { margin-bottom: var(--space-2); }
+    .mb-3 { margin-bottom: var(--space-3); }
+    .mb-4 { margin-bottom: var(--space-4); }
+    .p-1 { padding: var(--space-1); }
+    .p-2 { padding: var(--space-2); }
+    .p-3 { padding: var(--space-3); }
+    .p-4 { padding: var(--space-4); }
+    .px-2 { padding-inline: var(--space-2); }
+    .px-4 { padding-inline: var(--space-4); }
+    .py-2 { padding-block: var(--space-2); }
+    .py-4 { padding-block: var(--space-4); }
+  </gap:target>
+
+  <gap:target id="components-block">
+    <gap:target id="buttons-component-block">
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-2);
+        padding: 0.625rem 1rem;
+        border: 1px solid transparent;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        line-height: 1;
+        cursor: pointer;
+        transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .btn:focus-visible {
+        outline: 3px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
+        outline-offset: 2px;
+      }
+
+      .btn-primary {
+        background: var(--color-primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: var(--color-primary-hover);
+      }
+
+      .btn-secondary {
+        background: var(--color-secondary);
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background: var(--color-secondary-hover);
+      }
+
+      .btn-ghost {
+        background: transparent;
+        color: var(--neutral-800);
+        border-color: var(--neutral-200);
+      }
+
+      .btn-ghost:hover {
+        background: var(--neutral-100);
+      }
+
+      .btn-sm { padding: 0.5rem 0.75rem; font-size: var(--font-size-sm); }
+      .btn-md { padding: 0.625rem 1rem; font-size: var(--font-size-base); }
+      .btn-lg { padding: 0.875rem 1.25rem; font-size: var(--font-size-lg); }
+      .btn-block { width: 100%; }
+    </gap:target>
+
+    <gap:target id="cards-component-block">
+      .card {
+        background: white;
+        border: 1px solid var(--neutral-200);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+      }
+
+      .card-header,
+      .card-body,
+      .card-footer {
+        padding: var(--space-4);
+      }
+
+      .card-header {
+        border-bottom: 1px solid var(--neutral-200);
+        font-weight: 600;
+      }
+    </gap:target>
+
+    <gap:target id="badges-component-block">
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.5rem;
+        border-radius: var(--radius-full);
+        font-size: var(--font-size-xs);
+        font-weight: 600;
+        background: var(--neutral-200);
+        color: var(--neutral-800);
+      }
+
+      .badge-success { background: color-mix(in srgb, var(--color-success) 12%, white); color: var(--color-success); }
+      .badge-warning { background: color-mix(in srgb, var(--color-warning) 12%, white); color: var(--color-warning); }
+      .badge-danger { background: color-mix(in srgb, var(--color-danger) 12%, white); color: var(--color-danger); }
+      .badge-info { background: color-mix(in srgb, var(--color-info) 12%, white); color: var(--color-info); }
+    </gap:target>
+
+    <gap:target id="alerts-component-block">
+      .alert {
+        padding: var(--space-4);
+        border-radius: var(--radius-md);
+        border: 1px solid transparent;
+      }
+
+      .alert-info { background: color-mix(in srgb, var(--color-info) 10%, white); border-color: color-mix(in srgb, var(--color-info) 25%, white); color: var(--neutral-900); }
+      .alert-success { background: color-mix(in srgb, var(--color-success) 10%, white); border-color: color-mix(in srgb, var(--color-success) 25%, white); }
+      .alert-warning { background: color-mix(in srgb, var(--color-warning) 10%, white); border-color: color-mix(in srgb, var(--color-warning) 25%, white); }
+      .alert-danger { background: color-mix(in srgb, var(--color-danger) 10%, white); border-color: color-mix(in srgb, var(--color-danger) 25%, white); }
+    </gap:target>
+
+    <gap:target id="forms-component-block">
+      .form-control {
+        width: 100%;
+        padding: 0.625rem 0.875rem;
+        border: 1px solid var(--neutral-300);
+        border-radius: var(--radius-md);
+        background: white;
+        color: var(--neutral-900);
+      }
+
+      .form-control:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 15%, transparent);
+      }
+
+      .form-label {
+        display: inline-block;
+        margin-bottom: var(--space-2);
+        font-weight: 600;
+      }
+
+      .form-help {
+        margin-top: var(--space-2);
+        font-size: var(--font-size-sm);
+        color: var(--neutral-600);
+      }
+    </gap:target>
+
+    <gap:target id="tables-component-block">
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+      }
+
+      .table th,
+      .table td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--neutral-200);
+        text-align: left;
+      }
+
+      .table th {
+        background: var(--neutral-100);
+        font-weight: 600;
+      }
+    </gap:target>
+
+    <gap:target id="navigation-component-block">
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: var(--space-4);
+      }
+
+      .nav a {
+        color: var(--neutral-700);
+        font-weight: 500;
+      }
+
+      .nav a.active,
+      .nav a:hover {
+        color: var(--color-primary);
+      }
+    </gap:target>
+
+    <gap:target id="modals-component-block">
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: grid;
+        place-items: center;
+        padding: var(--space-4);
+      }
+
+      .modal {
+        width: min(100%, 600px);
+        background: white;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-xl);
+        overflow: hidden;
+      }
+
+      .modal-header,
+      .modal-body,
+      .modal-footer {
+        padding: var(--space-4);
+      }
+
+      .modal-header {
+        border-bottom: 1px solid var(--neutral-200);
+      }
+
+      .modal-footer {
+        border-top: 1px solid var(--neutral-200);
+        display: flex;
+        justify-content: flex-end;
+        gap: var(--space-2);
+      }
+    </gap:target>
+
+    <gap:target id="tooltips-component-block">
+      .tooltip {
+        position: relative;
+        display: inline-flex;
+      }
+
+      .tooltip-content {
+        position: absolute;
+        z-index: 10;
+        bottom: calc(100% + 0.5rem);
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 0.5rem 0.75rem;
+        background: var(--neutral-900);
+        color: white;
+        border-radius: var(--radius-sm);
+        font-size: var(--font-size-xs);
+        white-space: nowrap;
+        box-shadow: var(--shadow-md);
+      }
+    </gap:target>
+  </gap:target>
+
+  <gap:target id="utility-classes-block">
+    .block { display: block; }
+    .inline-block { display: inline-block; }
+    .hidden { display: none; }
+
+    .text-left { text-align: left; }
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+
+    .text-primary { color: var(--color-primary); }
+    .text-secondary { color: var(--color-secondary); }
+    .text-success { color: var(--color-success); }
+    .text-warning { color: var(--color-warning); }
+    .text-danger { color: var(--color-danger); }
+    .text-info { color: var(--color-info); }
+
+    .bg-primary { background: var(--color-primary); }
+    .bg-secondary { background: var(--color-secondary); }
+    .bg-neutral-100 { background: var(--neutral-100); }
+    .bg-neutral-900 { background: var(--neutral-900); color: white; }
+  </gap:target>
+</gap:target>

@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "edit-1",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "    scope <gap:target id=\"by-payment-method-scope-name\">:by_payment_method</gap:target>, ->(payment_method) { where(<gap:target id=\"payment-method-column\">payment_method</gap:target>: payment_method) }\n",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "pending-shipment-scope-name"
+      }
+    }
+  ]
+}

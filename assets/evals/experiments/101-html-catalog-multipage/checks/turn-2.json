@@ -1,0 +1,36 @@
+{
+  "turn": 2,
+  "checks": [
+    {
+      "kind": "contains",
+      "value": "P0121",
+      "desc": "Inserted product P0121 is present"
+    },
+    {
+      "kind": "contains",
+      "value": "Titanium Brake Caliper",
+      "desc": "Inserted product name present"
+    },
+    {
+      "kind": "contains",
+      "value": "SKU-90121",
+      "desc": "Inserted product sku present"
+    },
+    {
+      "kind": "contains",
+      "value": "$512.00",
+      "desc": "Inserted product price present"
+    },
+    {
+      "kind": "contains",
+      "value": "P0030",
+      "desc": "The anchor product P0030 (insert is after it) still exists"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "P0\\d{3}",
+      "expected": 121,
+      "desc": "Exactly 121 products after inserting one (was 120); no existing product dropped"
+    }
+  ]
+}

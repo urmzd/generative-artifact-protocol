@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "  <gap:target id=\"monitoring-service-block\">\n    <gap:target id=\"monitoring-service-name\">monitoring</gap:target>:\n    <gap:target id=\"monitoring-service-image\">image: prom/prometheus:latest</gap:target>\n    <gap:target id=\"monitoring-service-ports\">ports:\n      - \"9090:9090\"</gap:target>\n    <gap:target id=\"monitoring-service-volumes\">volumes:\n      - <gap:target id=\"monitoring-prometheus-config-volume\">./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro</gap:target></gap:target>\n    <gap:target id=\"monitoring-service-networks\">networks:\n      - <gap:target id=\"shared-network-name-10\">app-network</gap:target></gap:target>\n    <gap:target id=\"monitoring-service-depends-on\">depends_on:\n      <gap:target id=\"api-gateway-dependency\">api-gateway</gap:target>:\n        condition: service_started\n      <gap:target id=\"auth-service-dependency-2\">auth-service</gap:target>:\n        condition: service_started\n      <gap:target id=\"user-service-dependency-2\">user-service</gap:target>:\n        condition: service_started\n      <gap:target id=\"order-service-dependency-2\">order-service</gap:target>:\n        condition: service_started\n      <gap:target id=\"notification-service-dependency-2\">notification-service</gap:target>:\n        condition: service_started\n      <gap:target id=\"postgres-dependency-3\">postgres</gap:target>:\n        condition: service_started\n      <gap:target id=\"redis-dependency-2\">redis</gap:target>:\n        condition: service_started\n      <gap:target id=\"rabbitmq-dependency-2\">rabbitmq</gap:target>:\n        condition: service_started</gap:target>\n  </gap:target>\n\n  <gap:target id=\"monitoring-prometheus-config-file\">\n    - content: ./monitoring/prometheus.yml\n      scrape_configs:\n        - job_name: api-gateway\n          metrics_path: /metrics\n          static_configs:\n            - targets: ['api-gateway:80']\n        - job_name: auth-service\n          metrics_path: /metrics\n          static_configs:\n            - targets: ['auth-service:${AUTH_PORT}']\n        - job_name: user-service\n          metrics_path: /metrics\n          static_configs:\n            - targets: ['user-service:${USER_PORT}']\n        - job_name: order-service\n          metrics_path: /metrics\n          static_configs:\n            - targets: ['order-service:${ORDER_PORT}']\n        - job_name: notification-service\n          metrics_path: /metrics\n          static_configs:\n            - targets: ['notification-service:${NOTIFICATION_PORT}']",
+      "op": "insert_before",
+      "target": {
+        "type": "id",
+        "value": "postgres-block"
+      }
+    }
+  ]
+}

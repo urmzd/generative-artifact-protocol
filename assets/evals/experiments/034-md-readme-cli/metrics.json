@@ -1,0 +1,177 @@
+{
+  "base_turn0": {
+    "artifact_bytes": 5058,
+    "cached_input_tokens": 0,
+    "input_tokens": 129,
+    "latency_ms": 7242,
+    "median_itl_ms": 0.003083,
+    "output_tokens": 1329,
+    "ttft_ms": 0,
+    "ttlt_ms": 6816
+  },
+  "comparison": {
+    "input_token_savings_pct": 25.5,
+    "latency_savings_pct": 81.7,
+    "output_token_savings_pct": 87.6
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "cached_input_tokens": 1280,
+        "edit": "Add a new 'Troubleshooting' section after API with 5 common issues and their sol",
+        "failed": false,
+        "input_tokens": 1484,
+        "latency_ms": 7863,
+        "median_itl_ms": 0.0027295,
+        "output_bytes": 6503,
+        "output_tokens": 1628,
+        "ttft_ms": 0,
+        "ttlt_ms": 7532,
+        "turn": 1
+      },
+      {
+        "cached_input_tokens": 2816,
+        "edit": "Update the usage section to add examples for two new commands: 'dbmigrate squash",
+        "failed": false,
+        "input_tokens": 3156,
+        "latency_ms": 8162,
+        "median_itl_ms": 0.002916,
+        "output_bytes": 6914,
+        "output_tokens": 1727,
+        "ttft_ms": 0,
+        "ttlt_ms": 7905,
+        "turn": 2
+      },
+      {
+        "cached_input_tokens": 4352,
+        "edit": "Rewrite the installation section to add Docker installation instructions with a ",
+        "failed": false,
+        "input_tokens": 4904,
+        "latency_ms": 8361,
+        "median_itl_ms": 0.002333,
+        "output_bytes": 7361,
+        "output_tokens": 1859,
+        "ttft_ms": 0,
+        "ttlt_ms": 7542,
+        "turn": 3
+      }
+    ],
+    "total_cached_input_tokens": 8448,
+    "total_input_tokens": 9544,
+    "total_latency_ms": 24386,
+    "total_output_tokens": 5214
+  },
+  "experiment_id": "034-md-readme-cli",
+  "format": "text/markdown",
+  "gap_flow": {
+    "apply_success_rate": 1.0,
+    "envelope_parse_rate": 1.0,
+    "per_turn": [
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 0,
+        "edit": "Add a new 'Troubleshooting' section after API with 5 common issues and their sol",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 2226,
+        "latency_ms": 1955,
+        "median_itl_ms": 0.002521,
+        "output_bytes": 7949,
+        "output_tokens": 259,
+        "ttft_ms": 0,
+        "ttlt_ms": 1571,
+        "turn": 1
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 1792,
+        "edit": "Update the usage section to add examples for two new commands: 'dbmigrate squash",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 2430,
+        "latency_ms": 954,
+        "median_itl_ms": 0.001791,
+        "output_bytes": 8134,
+        "output_tokens": 120,
+        "ttft_ms": 24,
+        "ttlt_ms": 586,
+        "turn": 2
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 0,
+        "edit": "Rewrite the installation section to add Docker installation instructions with a ",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 2457,
+        "latency_ms": 1565,
+        "median_itl_ms": 0.007353999999999999,
+        "output_bytes": 8337,
+        "output_tokens": 265,
+        "ttft_ms": 28,
+        "ttlt_ms": 1164,
+        "turn": 3
+      }
+    ],
+    "total_cached_input_tokens": 1792,
+    "total_input_tokens": 7113,
+    "total_latency_ms": 4474,
+    "total_output_tokens": 644
+  },
+  "gap_turn0": {
+    "artifact_bytes": 7092,
+    "cached_input_tokens": 0,
+    "input_tokens": 391,
+    "latency_ms": 10211,
+    "median_itl_ms": 0.0021869999999999997,
+    "output_tokens": 1962,
+    "ttft_ms": 12,
+    "ttlt_ms": 9928
+  },
+  "model": "gpt-5.4-mini",
+  "provider": "openai",
+  "quality": {
+    "mean_rouge_l": 0.262,
+    "mean_sequence_similarity": 0.4631,
+    "mean_token_f1": 0.4812,
+    "per_turn": [
+      {
+        "base_char_count": 6503,
+        "char_delta_pct": -38.4,
+        "gap_char_count": 4006,
+        "lines_added": 72,
+        "lines_removed": 194,
+        "rouge_l": 0.2675,
+        "sequence_similarity": 0.4686,
+        "token_f1": 0.4894,
+        "turn": 1
+      },
+      {
+        "base_char_count": 6914,
+        "char_delta_pct": -40.8,
+        "gap_char_count": 4091,
+        "lines_added": 73,
+        "lines_removed": 218,
+        "rouge_l": 0.2586,
+        "sequence_similarity": 0.4636,
+        "token_f1": 0.4813,
+        "turn": 2
+      },
+      {
+        "base_char_count": 7361,
+        "char_delta_pct": -43.2,
+        "gap_char_count": 4178,
+        "lines_added": 74,
+        "lines_removed": 239,
+        "rouge_l": 0.26,
+        "sequence_similarity": 0.4572,
+        "token_f1": 0.4729,
+        "turn": 3
+      }
+    ]
+  },
+  "timestamp": "2026-05-29T02:59:57Z"
+}

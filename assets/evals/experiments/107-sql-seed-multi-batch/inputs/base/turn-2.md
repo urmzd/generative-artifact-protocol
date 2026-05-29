@@ -1,0 +1,1 @@
+Append a new product row to the end of Batch 2 (products): id 41, sku 'SKU-0041', name 'Aurora Wireless Headphones', category 'Electronics', price 249.50, stock 120. Do not modify any other row.

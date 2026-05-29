@@ -126,6 +126,8 @@ Each target ID MUST be unique within the artifact. Targets MAY nest — a coarse
 - Target placement is **preference-driven and prompt-optimizable** — the init context's system prompt can instruct where targets are most likely to be revised based on the artifact's purpose. A dashboard's stat values, a form's validation messages, a config's environment-specific fields — these are high-churn locations that benefit most from fine-grained targets
 - Targets MAY carry an optional `type` attribute as a classification hint (e.g., `type="section"`, `type="value"`). The apply engine ignores `type` — it is metadata for producers and consumers
 
+> **⚠ Marker granularity is a correctness property, not just an efficiency one.** The edit fidelity of every future update is bounded by the targets placed at synthesis. If the producer wraps the whole artifact in a single coarse target — or omits fine-grained value targets — the maintain context has nowhere to aim: a "change one value" edit can only target the coarse region, and replacing it with the edited fragment **silently discards everything else inside that region**. The apply engine reports success (it faithfully replaced the targeted range), so naive reliability metrics look perfect while the artifact has been destroyed. Granularity is therefore a function of the producer's **synthesis system prompt** — see [Section 5.1](#51-target-first-generation-recommended). The reference evaluation guards against this with per-turn correctness oracles that re-count items and verify untargeted content survives, not just that `apply` returned `Ok`.
+
 **Example:**
 
 ```html
@@ -302,6 +304,22 @@ Producers SHOULD emit `<gap:target>` markers on the **initial synthesize**. This
 - Break-even: 1 update ($\text{edit\_tokens}$ is typically 1–10% of $S$)
 
 > **Note:** Per-edit input cost is the same whether the operation is a synthesize or an edit — the maintain context reads the full artifact ($I + S$) either way. However, compared to a naive conversation (which accumulates all prior versions in context, growing as $O(N^2 \cdot S)$), GAP's stateless maintain context saves significantly on input. The output savings are typically larger per-edit (output tokens cost $r$x more), but input savings compound over the artifact's lifetime. See [Section 7.1](#71-memory-model) for the full cost derivation.
+
+#### Producer System Prompt Requirements
+
+GAP defines the *wire format*; the producer's **system prompts** determine whether a model uses it correctly. The protocol is necessary but not sufficient — savings *and correctness* both depend on prompting. Two prompts matter:
+
+- **Init (synthesis) prompt.** MUST instruct the producer to emit fine-grained, role-based markers (text/markup formats) or clean, pointer-addressable structure (JSON). A vague instruction such as *"wrap updatable values in markers"* is **insufficient**: models routinely collapse to a single document-level target, after which every edit is destructive ([Section 3.2](#32-targets)). The prompt SHOULD (a) demand a marker on **every** independently-updatable value **and** every section, (b) give a concrete nested example, and (c) state explicitly that a single root marker is wrong.
+- **Maintain (edit) prompt.** MUST instruct the producer to reference existing target IDs (or JSON Pointers), put the replacement text in each operation's **`content`** field, and never re-emit the full artifact.
+
+**Targeting mode is format-dependent and the init prompt MUST match the format:**
+
+| Artifact family | Targeting mode | Synthesis output |
+|---|---|---|
+| HTML, code, Markdown, YAML, XML, SVG, CSS, … | `<gap:target>` markers | instrumented text |
+| `application/json` | JSON Pointer (RFC 6901) | clean JSON, **no markers** |
+
+> **Empirical note (non-normative).** In the reference evaluation, changing only the init prompt — from a one-line "wrap updatable values" instruction to one mandating per-value markers with an example — took a complex HTML artifact from **1** marker (every edit emptied the document; correctness ≈ 0) to **58** markers (edits surgical; correctness restored), while preserving ~99% output-token savings. Identical wire format, identical model: the prompt is what made the protocol work. See [`assets/evals/`](../assets/evals/experiments/EXPERIMENT.md).
 
 ### 5.2 Strategy Selection Guide
 

@@ -1,0 +1,25 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "from typing import Literal\n\n",
+      "op": "insert_before",
+      "target": {
+        "type": "id",
+        "value": "user-create-schema"
+      }
+    },
+    {
+      "content": "          role: Literal[\"admin\", \"editor\", \"viewer\"] = \"viewer\"",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "user-create-role-field"
+      }
+    }
+  ]
+}

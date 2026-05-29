@@ -1,1438 +1,472 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-commerce Admin Dashboard</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap'); /* Using Inter font for a modern look */
-
-        :root {
-            --primary-color: #8b5cf6;
-            --primary-light: #9a70f8;
-            --primary-dark: #7a4dd4;
-            --text-color: #1F2937;
-            --text-secondary: #4B5563;
-            --bg-color: #F9FAFB;
-            --card-bg: #FFFFFF;
-            --border-color: #E5E7EB;
-            --success-color: #10B981;
-            --warning-color: #F59E0B;
-            --danger-color: #EF4444;
-            --info-color: #3B82F6;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.5;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* --- Navigation Bar --- */
-        .navbar {
-            background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-
-        .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .nav-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 5px 0;
-            transition: color 0.2s ease;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            color: var(--primary-color);
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: var(--primary-light);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-
-        .sign-out-btn {
-            background-color: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-        }
-
-        .sign-out-btn:hover {
-            background-color: var(--bg-color);
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-        }
-
-        /* --- Main Content Layout --- */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        @media (min-width: 768px) {
-            .dashboard-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .dashboard-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
-        /* --- Stat Cards --- */
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--border-color);
-        }
-
-        .card-title {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
-
-        .card-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-color);
-            margin-bottom: 10px;
-        }
-
-        .card-trend {
-            display: flex;
-            align-items: center;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-        }
-
-        .card-trend.positive {
-            color: var(--success-color);
-        }
-
-        .card-trend.negative {
-            color: var(--danger-color);
-        }
-
-        .trend-icon {
-            margin-right: 5px;
-            display: inline-block;
-        }
-
-        /* --- Section Titles --- */
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-color);
-            margin-top: 30px;
-            margin-bottom: 20px;
-        }
-
-        /* --- Tables --- */
-        .table-wrapper {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--border-color);
-            overflow-x: auto;
-            margin-top: 20px;
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-        }
-
-        .data-table th, .data-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .data-table th {
-            background-color: var(--bg-color);
-            color: var(--text-secondary);
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-        }
-
-        .data-table tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        .data-table tbody tr:hover {
-            background-color: var(--bg-color);
-        }
-
-        /* Status Badges */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 5px 10px;
-            border-radius: 9999px; /* Pill shape */
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: capitalize;
-        }
-
-        .badge-success { background-color: #D1FAE5; color: var(--success-color); }
-        .badge-warning { background-color: #FDE68A; color: var(--warning-color); }
-        .badge-danger { background-color: #FEE2E2; color: var(--danger-color); }
-        .badge-info { background-color: #DBEAFE; color: var(--info-color); }
-        .badge-secondary { background-color: #E5E7EB; color: var(--text-secondary); }
-
-        /* --- Settings Form --- */
-        .form-section {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--border-color);
-            margin-top: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 8px;
-            color: var(--text-color);
-            font-size: 0.9rem;
-        }
-
-        .form-group input[type="text"],
-        .form-group input[type="email"],
-        .form-group input[type="password"] {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 0.9rem;
-            color: var(--text-color);
-            box-sizing: border-box;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .form-group input[type="text"]:focus,
-        .form-group input[type="email"]:focus,
-        .form-group input[type="password"]:focus {
-            outline: none;
-            border-color: var(--primary-light);
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
-        }
-
-        .form-actions {
-            margin-top: 30px;
-            text-align: right;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: background-color 0.2s ease;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-        }
-
-        /* Toggle Switch */
-        .toggle-switch {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .toggle-switch:last-of-type {
-            border-bottom: none;
-        }
-
-        .toggle-switch-label {
-            font-weight: 500;
-            color: var(--text-color);
-            font-size: 0.9rem;
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 24px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: var(--primary-color);
-        }
-
-        input:focus + .slider {
-            box-shadow: 0 0 1px var(--primary-color);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(20px);
-        }
-
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard</title>
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --panel:#ffffff;
+      --panel-2:#f8fafc;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --primary:#2563eb;
+      --primary-2:#1d4ed8;
+      --success:#16a34a;
+      --warning:#d97706;
+      --danger:#dc2626;
+      --info:#0ea5e9;
+      --shadow:0 10px 30px rgba(15,23,42,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    a{text-decoration:none;color:inherit}
+    button,input,select,textarea{font:inherit}
+    .app{min-height:100vh}
+    .topbar{
+      position:sticky;top:0;z-index:50;
+      backdrop-filter: blur(12px);
+      background:rgba(245,247,251,.82);
+      border-bottom:1px solid rgba(229,231,235,.7);
+    }
+    .container{max-width:1600px;margin:0 auto;padding:0 24px}
+    .topbar-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 0}
+    .brand{display:flex;align-items:center;gap:14px;font-weight:800;font-size:20px}
+    .brand-mark{
+      width:42px;height:42px;border-radius:14px;
+      background:linear-gradient(135deg,var(--primary),#7c3aed);
+      display:grid;place-items:center;color:#fff;font-weight:900;box-shadow:var(--shadow)
+    }
+    .nav{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+    .nav a{
+      color:var(--muted);font-weight:600;padding:10px 12px;border-radius:12px;
+    }
+    .nav a.active,.nav a:hover{color:var(--text);background:#eef2ff}
+    .userbox{display:flex;align-items:center;gap:14px}
+    .avatar{
+      width:42px;height:42px;border-radius:50%;
+      background:linear-gradient(135deg,#93c5fd,#2563eb);
+      color:#fff;font-weight:800;display:grid;place-items:center;
+      box-shadow:var(--shadow)
+    }
+    .signout{
+      border:1px solid var(--line);background:var(--panel);color:var(--text);
+      padding:11px 16px;border-radius:14px;cursor:pointer;font-weight:700;
+      transition:.2s ease
+    }
+    .signout:hover{border-color:#cbd5e1;transform:translateY(-1px)}
+    .dashboard{padding:28px 0 40px}
+    .hero{
+      display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:22px;
+    }
+    .hero h1{margin:0;font-size:34px;line-height:1.1}
+    .hero p{margin:10px 0 0;color:var(--muted)}
+    .pill-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .pill{
+      background:var(--panel);border:1px solid var(--line);border-radius:999px;
+      padding:10px 14px;font-size:13px;color:var(--muted);box-shadow:0 4px 16px rgba(15,23,42,.04)
+    }
+    .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin:20px 0 28px}
+    .card{
+      background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+      box-shadow:var(--shadow);padding:22px
+    }
+    .stat-head{display:flex;align-items:center;justify-content:space-between;gap:14px}
+    .stat-label{color:var(--muted);font-weight:700}
+    .stat-icon{
+      width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#fff;font-weight:900
+    }
+    .bg-blue{background:linear-gradient(135deg,#3b82f6,#2563eb)}
+    .bg-green{background:linear-gradient(135deg,#22c55e,#16a34a)}
+    .bg-purple{background:linear-gradient(135deg,#8b5cf6,#7c3aed)}
+    .bg-orange{background:linear-gradient(135deg,#fb923c,#f97316)}
+    .stat-value{font-size:34px;font-weight:900;margin:12px 0 8px}
+    .trend{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
+    .up{color:var(--success)} .down{color:var(--danger)}
+    .content-grid{display:grid;grid-template-columns:1.45fr .95fr;gap:22px}
+    .section{margin-bottom:22px}
+    .section-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px}
+    .section-head h2{margin:0;font-size:22px}
+    .section-head .sub{color:var(--muted);font-size:14px}
+    .table-wrap{overflow:auto;border-radius:16px;border:1px solid var(--line);background:var(--panel);box-shadow:var(--shadow)}
+    table{width:100%;border-collapse:separate;border-spacing:0;min-width:980px}
+    thead th{
+      position:sticky;top:0;background:linear-gradient(#fff,#fbfdff);
+      text-align:left;padding:16px 18px;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted);letter-spacing:.02em
+    }
+    tbody td{padding:14px 18px;border-bottom:1px solid #eef2f7;font-size:14px}
+    tbody tr:hover{background:#fafcff}
+    .sku,.date{color:var(--muted)}
+    .money,.num{font-variant-numeric:tabular-nums;font-weight:700}
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:999px;
+      font-weight:700;font-size:12px;border:1px solid transparent;white-space:nowrap
+    }
+    .badge::before{content:"";width:8px;height:8px;border-radius:999px;background:currentColor;opacity:.9}
+    .badge-success{color:var(--success);background:#ecfdf5;border-color:#bbf7d0}
+    .badge-warning{color:var(--warning);background:#fffbeb;border-color:#fde68a}
+    .badge-danger{color:var(--danger);background:#fef2f2;border-color:#fecaca}
+    .badge-info{color:var(--info);background:#ecfeff;border-color:#a5f3fc}
+    .settings{
+      background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+      box-shadow:var(--shadow);padding:22px
+    }
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .field{display:flex;flex-direction:column;gap:8px}
+    .field.full{grid-column:1/-1}
+    label{font-size:13px;font-weight:800;color:#374151}
+    input[type="text"],input[type="email"],input[type="password"],select,textarea{
+      width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--text)
+    }
+    textarea{min-height:110px;resize:vertical}
+    .toggles{display:grid;gap:12px}
+    .toggle{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--panel-2)
+    }
+    .toggle .meta{display:flex;flex-direction:column;gap:4px}
+    .toggle .meta strong{font-size:14px}
+    .toggle .meta span{font-size:13px;color:var(--muted)}
+    .switch{position:relative;display:inline-block;width:54px;height:30px}
+    .switch input{opacity:0;width:0;height:0}
+    .slider{
+      position:absolute;cursor:pointer;inset:0;background:#cbd5e1;border-radius:999px;transition:.2s
+    }
+    .slider:before{
+      content:"";position:absolute;height:22px;width:22px;left:4px;top:4px;background:white;border-radius:50%;
+      transition:.2s;box-shadow:0 2px 8px rgba(15,23,42,.2)
+    }
+    .switch input:checked + .slider{background:var(--primary)}
+    .switch input:checked + .slider:before{transform:translateX(24px)}
+    .form-actions{display:flex;justify-content:flex-end;gap:12px;margin-top:18px}
+    .btn{
+      border:1px solid var(--line);background:#fff;color:var(--text);
+      padding:12px 16px;border-radius:14px;font-weight:800;cursor:pointer
+    }
+    .btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+    .btn.primary:hover{background:var(--primary-2)}
+    .footer-note{margin-top:18px;color:var(--muted);font-size:13px}
+    @media (max-width: 1200px){
+      .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .content-grid{grid-template-columns:1fr}
+    }
+    @media (max-width: 780px){
+      .topbar-inner,.hero{flex-direction:column;align-items:flex-start}
+      .userbox{width:100%;justify-content:space-between}
+      .stats{grid-template-columns:1fr}
+      .form-grid{grid-template-columns:1fr}
+      .container{padding:0 16px}
+      .hero h1{font-size:28px}
+    }
+  </style>
 </head>
 <body>
-    <gap:target id="nav-bar">
-        <nav class="navbar">
-            <gap:target id="logo">
-                <a href="#" class="navbar-brand">AdminDash</a>
-            </gap:target>
-            <gap:target id="nav-links">
-                <div class="nav-links">
-                    <a href="#" class="nav-link active" id="nav-link-dashboard">Dashboard</a>
-                    <a href="#" class="nav-link" id="nav-link-products">Products</a>
-                    <a href="#" class="nav-link" id="nav-link-orders">Orders</a>
-                    <a href="#" class="nav-link" id="nav-link-customers">Customers</a>
-                    <a href="#" class="nav-link" id="nav-link-settings">Settings</a>
-                </div>
-            </gap:target>
-            <div class="nav-actions">
-                <gap:target id="user-profile">
-                    <div class="avatar">
-                        <gap:target id="user-name-initials">JS</gap:target>
-                    </div>
-                </gap:target>
-                <gap:target id="sign-out-btn">
-                    <button class="sign-out-btn">Sign Out</button>
-                </gap:target>
-            </div>
-        </nav>
-    </gap:target>
+  <div class="app">
+    <gap:target id="top-navigation">    :root{
+      --bg:#f5f7fb;
+      --panel:#ffffff;
+      --panel-2:#f8fafc;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --primary:#8b5cf6;
+      --primary-2:#7c3aed;
+      --success:#16a34a;
+      --warning:#d97706;
+      --danger:#dc2626;
+      --info:#0ea5e9;
+      --shadow:0 10px 30px rgba(15,23,42,.08);
+      --radius:18px;
+    }</gap:target>
 
-    <div class="container">
-        <h1 class="section-title">Dashboard Overview</h1>
+    <main class="dashboard">
+      <div class="container">
+        <div class="hero">
+          <div>
+            <h1>Store Overview</h1>
+            <p>Track performance, manage inventory, review orders, and configure account settings.</p>
+          </div>
+          <div class="pill-row">
+            <div class="pill">Last updated: Today, 09:42 AM</div>
+            <div class="pill">Region: Global</div>
+            <div class="pill">Plan: Enterprise</div>
+          </div>
+        </div>
 
         <gap:target id="stats-section">
-            <div class="dashboard-grid">
-                <gap:target id="stat-card-revenue">
-                    <div class="card">
-                        <div class="card-title">Total Revenue</div>
-                        <div class="card-value"><gap:target id="stat-value-revenue">$215,430</gap:target></div>
-                        <div class="card-trend positive">
-                            <span class="trend-icon">&#x25B2;</span> <gap:target id="stat-trend-revenue">12.3% vs last month</gap:target>
-                        </div>
-                    </div>
-                </gap:target>
-
-                <gap:target id="stat-card-orders">
-                    <div class="card">
-                        <div class="card-title">Total Orders</div>
-                        <div class="card-value"><gap:target id="stat-value-orders">5,231</gap:target></div>
-                        <div class="card-trend positive">
-                            <span class="trend-icon">&#x25B2;</span> <gap:target id="stat-trend-orders">8.1% vs last month</gap:target>
-                        </div>
-                    </div>
-                </gap:target>
-
-                <gap:target id="stat-card-customers">
-                    <div class="card">
-                        <div class="card-title">New Customers</div>
-                        <div class="card-value"><gap:target id="stat-value-customers">890</gap:target></div>
-                        <div class="card-trend negative">
-                            <span class="trend-icon">&#x25BC;</span> <gap:target id="stat-trend-customers">-3.2% vs last month</gap:target>
-                        </div>
-                    </div>
-                </gap:target>
-
-                <gap:target id="stat-card-conversion">
-                    <div class="card">
-                        <div class="card-title">Conversion Rate</div>
-                        <div class="card-value"><gap:target id="stat-value-conversion">3.8%</gap:target></div>
-                        <div class="card-trend positive">
-                            <span class="trend-icon">&#x25B2;</span> <gap:target id="stat-trend-conversion">0.5% vs last month</gap:target>
-                        </div>
-                    </div>
-                </gap:target>
+          <section class="section">
+            <div class="stats">
+              <gap:target id="stat-total-revenue-card"><article class="card">
+                  <div class="stat-head">
+                    <div class="stat-label">Total Revenue</div>
+                    <div class="stat-icon bg-blue">R</div>
+                  </div>
+                  <div class="stat-value"><gap:target id="stat-total-revenue-value">$215,430</gap:target></div>
+                  <div class="trend up">▲ <gap:target id="stat-total-revenue-trend">12.3% from last month</gap:target></div>
+                </article></gap:target>
+              <gap:target id="stat-orders-card">
+                <article class="card">
+                  <div class="stat-head">
+                    <div class="stat-label">Orders</div>
+                    <div class="stat-icon bg-green">O</div>
+                  </div>
+                  <div class="stat-value"><gap:target id="stat-orders-value">8,246</gap:target></div>
+                  <div class="trend up">▲ <gap:target id="stat-orders-trend">8.1% from last week</gap:target></div>
+                </article>
+              </gap:target>
+              <gap:target id="stat-customers-card">
+                <article class="card">
+                  <div class="stat-head">
+                    <div class="stat-label">Customers</div>
+                    <div class="stat-icon bg-purple">C</div>
+                  </div>
+                  <div class="stat-value"><gap:target id="stat-customers-value">24,918</gap:target></div>
+                  <div class="trend up">▲ <gap:target id="stat-customers-trend">5.7% growth</gap:target></div>
+                </article>
+              </gap:target>
+              <gap:target id="stat-conversion-rate-card">
+                <article class="card">
+                  <div class="stat-head">
+                    <div class="stat-label">Conversion Rate</div>
+                    <div class="stat-icon bg-orange">%</div>
+                  </div>
+                  <div class="stat-value"><gap:target id="stat-conversion-rate-value">4.8%</gap:target></div>
+                  <div class="trend down">▼ <gap:target id="stat-conversion-rate-trend">0.3% from target</gap:target></div>
+                </article>
+              </gap:target>
             </div>
+          </section>
         </gap:target>
 
-        <h2 class="section-title">Product List</h2>
-        <gap:target id="products-section">
-            <div class="table-wrapper">
-                <gap:target id="products-table">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>SKU</th>
-                                <th>Price</th>
-                                <th>Stock</th>
-                                <th>Category</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <gap:target id="products-table-body">
-                            <tbody>
-                                <!-- Product Rows (60+ rows) -->
-                                <!-- Data generated for example -->
-                                <tr>
-                                    <td>Wireless Bluetooth Headphones</td>
-                                    <td>ELC-HP-001</td>
-                                    <td><gap:target id="product-price-001">$79.99</gap:target></td>
-                                    <td><gap:target id="product-stock-001">150</gap:target></td>
-                                    <td>Electronics</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Smartwatch Series 7</td>
-                                    <td>ELC-SW-007</td>
-                                    <td><gap:target id="product-price-002">$249.00</gap:target></td>
-                                    <td><gap:target id="product-stock-002">80</gap:target></td>
-                                    <td>Wearables</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>USB-C Fast Charger (65W)</td>
-                                    <td>ELC-CH-065</td>
-                                    <td><gap:target id="product-price-003">$29.99</gap:target></td>
-                                    <td><gap:target id="product-stock-003">30</gap:target></td>
-                                    <td>Accessories</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Mechanical Gaming Keyboard RGB</td>
-                                    <td>PCG-KB-RGB</td>
-                                    <td><gap:target id="product-price-004">$119.99</gap:target></td>
-                                    <td><gap:target id="product-stock-004">25</gap:target></td>
-                                    <td>PC Peripherals</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Portable SSD 1TB USB 3.2</td>
-                                    <td>STO-SSD-1TB</td>
-                                    <td><gap:target id="product-price-005">$129.99</gap:target></td>
-                                    <td><gap:target id="product-stock-005">95</gap:target></td>
-                                    <td>Storage</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>4K UHD Smart TV 55-inch</td>
-                                    <td>ELC-TV-55</td>
-                                    <td><gap:target id="product-price-006">$699.00</gap:target></td>
-                                    <td><gap:target id="product-stock-006">5</gap:target></td>
-                                    <td>Televisions</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Ergonomic Office Chair</td>
-                                    <td>FURN-OC-ERG</td>
-                                    <td><gap:target id="product-price-007">$299.00</gap:target></td>
-                                    <td><gap:target id="product-stock-007">12</gap:target></td>
-                                    <td>Office Furniture</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Noise Cancelling Earbuds Pro</td>
-                                    <td>ELC-EB-PRO</td>
-                                    <td><gap:target id="product-price-008">$179.00</gap:target></td>
-                                    <td><gap:target id="product-stock-008">70</gap:target></td>
-                                    <td>Audio</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Compact Espresso Machine</td>
-                                    <td>HOME-CM-ESP</td>
-                                    <td><gap:target id="product-price-009">$149.99</gap:target></td>
-                                    <td><gap:target id="product-stock-009">0</gap:target></td>
-                                    <td>Kitchen Appliances</td>
-                                    <td><span class="badge badge-danger">Out of Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Robot Vacuum Cleaner with Mop</td>
-                                    <td>HOME-VC-ROB</td>
-                                    <td><gap:target id="product-price-010">$349.99</gap:target></td>
-                                    <td><gap:target id="product-stock-010">18</gap:target></td>
-                                    <td>Home Appliances</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>High-Performance Blender</td>
-                                    <td>HOME-BL-HP</td>
-                                    <td><gap:target id="product-price-011">$89.99</gap:target></td>
-                                    <td><gap:target id="product-stock-011">40</gap:target></td>
-                                    <td>Kitchen Appliances</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Digital Air Fryer 5.8QT</td>
-                                    <td>HOME-AF-5QT</td>
-                                    <td><gap:target id="product-price-012">$110.00</gap:target></td>
-                                    <td><gap:target id="product-stock-012">20</gap:target></td>
-                                    <td>Kitchen Appliances</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Portable Bluetooth Speaker X2</td>
-                                    <td>ELC-SP-X2</td>
-                                    <td><gap:target id="product-price-013">$59.99</gap:target></td>
-                                    <td><gap:target id="product-stock-013">60</gap:target></td>
-                                    <td>Audio</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Gaming Mouse RGB Pro</td>
-                                    <td>PCG-MS-RGB</td>
-                                    <td><gap:target id="product-price-014">$49.99</gap:target></td>
-                                    <td><gap:target id="product-stock-014">75</gap:target></td>
-                                    <td>PC Peripherals</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>External Hard Drive 2TB</td>
-                                    <td>STO-HDD-2TB</td>
-                                    <td><gap:target id="product-price-015">$79.00</gap:target></td>
-                                    <td><gap:target id="product-stock-015">0</gap:target></td>
-                                    <td>Storage</td>
-                                    <td><span class="badge badge-danger">Out of Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Mesh Wi-Fi System (3-pack)</td>
-                                    <td>NET-WF-MESH</td>
-                                    <td><gap:target id="product-price-016">$199.99</gap:target></td>
-                                    <td><gap:target id="product-stock-016">10</gap:target></td>
-                                    <td>Networking</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Electric Kettle Stainless Steel</td>
-                                    <td>HOME-KT-SS</td>
-                                    <td><gap:target id="product-price-017">$39.99</gap:target></td>
-                                    <td><gap:target id="product-stock-017">55</gap:target></td>
-                                    <td>Kitchen Appliances</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Smart Doorbell Camera</td>
-                                    <td>SMART-DB-CAM</td>
-                                    <td><gap:target id="product-price-018">$150.00</gap:target></td>
-                                    <td><gap:target id="product-stock-018">22</gap:target></td>
-                                    <td>Smart Home</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Fitness Tracker with HR</td>
-                                    <td>ELC-FT-HR</td>
-                                    <td><gap:target id="product-price-019">$65.00</gap:target></td>
-                                    <td><gap:target id="product-stock-019">90</gap:target></td>
-                                    <td>Wearables</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Digital Drawing Tablet 10-inch</td>
-                                    <td>ART-DT-10</td>
-                                    <td><gap:target id="product-price-020">$99.00</gap:target></td>
-                                    <td><gap:target id="product-stock-020">15</gap:target></td>
-                                    <td>Creative Tools</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Wireless Charging Pad</td>
-                                    <td>ELC-WP-001</td>
-                                    <td><gap:target id="product-price-021">$25.00</gap:target></td>
-                                    <td><gap:target id="product-stock-021">120</gap:target></td>
-                                    <td>Accessories</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Curved Gaming Monitor 27-inch</td>
-                                    <td>PCG-MN-27C</td>
-                                    <td><gap:target id="product-price-022">$349.00</gap:target></td>
-                                    <td><gap:target id="product-stock-022">8</gap:target></td>
-                                    <td>Monitors</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Portable Projector Mini</td>
-                                    <td>ELC-PJ-MINI</td>
-                                    <td><gap:target id="product-price-023">$199.00</gap:target></td>
-                                    <td><gap:target id="product-stock-023">0</gap:target></td>
-                                    <td>Projectors</td>
-                                    <td><span class="badge badge-danger">Out of Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Action Camera 4K Pro</td>
-                                    <td>CAM-AC-4K</td>
-                                    <td><gap:target id="product-price-024">$299.00</gap:target></td>
-                                    <td><gap:target id="product-stock-024">10</gap:target></td>
-                                    <td>Cameras</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Smart Plug Wi-Fi (4-pack)</td>
-                                    <td>SMART-PL-4PK</td>
-                                    <td><gap:target id="product-price-025">$39.99</gap:target></td>
-                                    <td><gap:target id="product-stock-025">70</gap:target></td>
-                                    <td>Smart Home</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Premium Noise-Cancelling Over-Ear Headphones</td>
-                                    <td>ELC-HP-NC-PRE</td>
-                                    <td><gap:target id="product-price-026">$349.99</gap:target></td>
-                                    <td><gap:target id="product-stock-026">45</gap:target></td>
-                                    <td>Audio</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Wireless Gaming Headset</td>
-                                    <td>PCG-HS-WL</td>
-                                    <td><gap:target id="product-price-027">$99.99</gap:target></td>
-                                    <td><gap:target id="product-stock-027">20</gap:target></td>
-                                    <td>PC Peripherals</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Portable Power Bank 20000mAh</td>
-                                    <td>ELC-PB-20K</td>
-                                    <td><gap:target id="product-price-028">$45.00</gap:target></td>
-                                    <td><gap:target id="product-stock-028">180</gap:target></td>
-                                    <td>Accessories</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Smart Light Bulb E27 (Color)</td>
-                                    <td>SMART-LB-C</td>
-                                    <td><gap:target id="product-price-029">$15.99</gap:target></td>
-                                    <td><gap:target id="product-stock-029">200</gap:target></td>
-                                    <td>Smart Home</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Digital Photo Frame 8-inch</td>
-                                    <td>ELC-PF-8IN</td>
-                                    <td><gap:target id="product-price-030">$75.00</gap:target></td>
-                                    <td><gap:target id="product-stock-030">12</gap:target></td>
-                                    <td>Home Decor</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Entry-Level DSLR Camera Kit</td>
-                                    <td>CAM-DSLR-KIT</td>
-                                    <td><gap:target id="product-price-031">$599.00</gap:target></td>
-                                    <td><gap:target id="product-stock-031">7</gap:target></td>
-                                    <td>Cameras</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Wireless Router Wi-Fi 6</td>
-                                    <td>NET-RT-W6</td>
-                                    <td><gap:target id="product-price-032">$120.00</gap:target></td>
-                                    <td><gap:target id="product-stock-032">25</gap:target></td>
-                                    <td>Networking</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Smart Scale with Body Composition</td>
-                                    <td>HEALTH-SC-BC</td>
-                                    <td><gap:target id="product-price-033">$49.99</gap:target></td>
-                                    <td><gap:target id="product-stock-033">35</gap:target></td>
-                                    <td>Health & Fitness</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Electric Toothbrush with App</td>
-                                    <td>HEALTH-TB-APP</td>
-                                    <td><gap:target id="product-price-034">$89.00</gap:target></td>
-                                    <td><gap:target id="product-stock-034">0</gap:target></td>
-                                    <td>Personal Care</td>
-                                    <td><span class="badge badge-danger">Out of Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Home Security Camera Indoor</td>
-                                    <td>SMART-SC-IN</td>
-                                    <td><gap:target id="product-price-035">$69.99</gap:target></td>
-                                    <td><gap:target id="product-stock-035">40</gap:target></td>
-                                    <td>Smart Home</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Portable Mini Fan USB</td>
-                                    <td>HOME-FN-USB</td>
-                                    <td><gap:target id="product-price-036">$19.99</gap:target></td>
-                                    <td><gap:target id="product-stock-036">100</gap:target></td>
-                                    <td>Home Appliances</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>USB Microphone for Streaming</td>
-                                    <td>AUDIO-MIC-USB</td>
-                                    <td><gap:target id="product-price-037">$60.00</gap:target></td>
-                                    <td><gap:target id="product-stock-037">15</gap:target></td>
-                                    <td>Audio</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Universal Travel Adapter</td>
-                                    <td>ELC-TA-UNI</td>
-                                    <td><gap:target id="product-price-038">$22.00</gap:target></td>
-                                    <td><gap:target id="product-stock-038">110</gap:target></td>
-                                    <td>Travel Accessories</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Digital Kitchen Food Scale</td>
-                                    <td>HOME-FS-DIG</td>
-                                    <td><gap:target id="product-price-039">$29.99</gap:target></td>
-                                    <td><gap:target id="product-stock-039">60</gap:target></td>
-                                    <td>Kitchen Appliances</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Smart Thermostat Learning</td>
-                                    <td>SMART-TH-LRN</td>
-                                    <td><gap:target id="product-price-040">$180.00</gap:target></td>
-                                    <td><gap:target id="product-stock-040">9</gap:target></td>
-                                    <td>Smart Home</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Mini Projector Portable HD</td>
-                                    <td>ELC-MP-HD</td>
-                                    <td><gap:target id="product-price-041">$120.00</gap:target></td>
-                                    <td><gap:target id="product-stock-041">0</gap:target></td>
-                                    <td>Projectors</td>
-                                    <td><span class="badge badge-danger">Out of Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Gaming Chair with Lumbar Support</td>
-                                    <td>FURN-GC-LUM</td>
-                                    <td><gap:target id="product-price-042">$250.00</gap:target></td>
-                                    <td><gap:target id="product-stock-042">10</gap:target></td>
-                                    <td>Office Furniture</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Electric Hand Mixer</td>
-                                    <td>HOME-MX-ELEC</td>
-                                    <td><gap:target id="product-price-043">$35.00</gap:target></td>
-                                    <td><gap:target id="product-stock-043">45</gap:target></td>
-                                    <td>Kitchen Appliances</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Portable Photo Printer</td>
-                                    <td>CAM-PR-PORT</td>
-                                    <td><gap:target id="product-price-044">$99.00</gap:target></td>
-                                    <td><gap:target id="product-stock-044">18</gap:target></td>
-                                    <td>Cameras</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Smart Water Bottle</td>
-                                    <td>HEALTH-WB-SMART</td>
-                                    <td><gap:target id="product-price-045">$30.00</gap:target></td>
-                                    <td><gap:target id="product-stock-045">70</gap:target></td>
-                                    <td>Health & Fitness</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Bluetooth Car Adapter</td>
-                                    <td>AUTO-BT-ADP</td>
-                                    <td><gap:target id="product-price-046">$20.00</gap:target></td>
-                                    <td><gap:target id="product-stock-046">90</gap:target></td>
-                                    <td>Car Accessories</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Air Purifier for Home</td>
-                                    <td>HOME-AP-01</td>
-                                    <td><gap:target id="product-price-047">$149.00</gap:target></td>
-                                    <td><gap:target id="product-stock-047">10</gap:target></td>
-                                    <td>Home Appliances</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Robot Toy Programmable</td>
-                                    <td>TOY-RB-PROG</td>
-                                    <td><gap:target id="product-price-048">$85.00</gap:target></td>
-                                    <td><gap:target id="product-stock-048">25</gap:target></td>
-                                    <td>Toys & Games</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>External Webcam Full HD</td>
-                                    <td>ELC-WC-FHD</td>
-                                    <td><gap:target id="product-price-049">$49.00</gap:target></td>
-                                    <td><gap:target id="product-stock-049">30</gap:target></td>
-                                    <td>PC Peripherals</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Smart Garden Indoor Kit</td>
-                                    <td>HOME-SG-IN</td>
-                                    <td><gap:target id="product-price-050">$79.00</gap:target></td>
-                                    <td><gap:target id="product-stock-050">15</gap:target></td>
-                                    <td>Smart Home</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Magnetic Phone Car Mount</td>
-                                    <td>AUTO-PM-MAG</td>
-                                    <td><gap:target id="product-price-051">$15.00</gap:target></td>
-                                    <td><gap:target id="product-stock-051">150</gap:target></td>
-                                    <td>Car Accessories</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Portable Espresso Maker</td>
-                                    <td>HOME-PM-ESP</td>
-                                    <td><gap:target id="product-price-052">$60.00</gap:target></td>
-                                    <td><gap:target id="product-stock-052">0</gap:target></td>
-                                    <td>Kitchen Appliances</td>
-                                    <td><span class="badge badge-danger">Out of Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>UV Light Sanitizer Box</td>
-                                    <td>HEALTH-UV-BOX</td>
-                                    <td><gap:target id="product-price-053">$40.00</gap:target></td>
-                                    <td><gap:target id="product-stock-053">50</gap:target></td>
-                                    <td>Personal Care</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Wireless Charger Stand</td>
-                                    <td>ELC-CS-WL</td>
-                                    <td><gap:target id="product-price-054">$30.00</gap:target></td>
-                                    <td><gap:target id="product-stock-054">80</gap:target></td>
-                                    <td>Accessories</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Dimmable LED Desk Lamp</td>
-                                    <td>HOME-DL-LED</td>
-                                    <td><gap:target id="product-price-055">$45.00</gap:target></td>
-                                    <td><gap:target id="product-stock-055">25</gap:target></td>
-                                    <td>Home Decor</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>VR Headset Basic</td>
-                                    <td>GAMING-VR-BASIC</td>
-                                    <td><gap:target id="product-price-056">$199.00</gap:target></td>
-                                    <td><gap:target id="product-stock-056">5</gap:target></td>
-                                    <td>Gaming</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Streaming Webcam 1080p</td>
-                                    <td>ELC-WC-1080</td>
-                                    <td><gap:target id="product-price-057">$55.00</gap:target></td>
-                                    <td><gap:target id="product-stock-057">30</gap:target></td>
-                                    <td>PC Peripherals</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Foldable Drone with Camera</td>
-                                    <td>DRN-FL-CAM</td>
-                                    <td><gap:target id="product-price-058">$120.00</gap:target></td>
-                                    <td><gap:target id="product-stock-058">10</gap:target></td>
-                                    <td>Drones</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Smart Wi-Fi Coffee Maker</td>
-                                    <td>HOME-CM-WIFI</td>
-                                    <td><gap:target id="product-price-059">$95.00</gap:target></td>
-                                    <td><gap:target id="product-stock-059">12</gap:target></td>
-                                    <td>Kitchen Appliances</td>
-                                    <td><span class="badge badge-warning">Low Stock</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Digital Body Fat Scale</td>
-                                    <td>HEALTH-BFS-DIG</td>
-                                    <td><gap:target id="product-price-060">$35.00</gap:target></td>
-                                    <td><gap:target id="product-stock-060">40</gap:target></td>
-                                    <td>Health & Fitness</td>
-                                    <td><span class="badge badge-success">In Stock</span></td>
-                                </tr>
-                            </tbody>
-                        </gap:target>
-                    </table>
-                </gap:target>
-            </div>
-        </gap:target>
+        <div class="content-grid">
+          <gap:target id="products-section">
+            <section class="section">
+              <div class="section-head">
+                <div>
+                  <h2>Products</h2>
+                  <div class="sub">Inventory and merchandising overview</div>
+                </div>
+                <div class="sub">60 items listed</div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>SKU</th>
+                      <th>Price</th>
+                      <th>Stock</th>
+                      <th>Category</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <gap:target id="products-table-body">
+                    <tbody>
+                      <tr><td>Nova Tee</td><td class="sku">NT-1001</td><td class="money">$24.00</td><td class="num">180</td><td>Apparel</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Orbit Hoodie</td><td class="sku">OH-1002</td><td class="money">$58.00</td><td class="num">74</td><td>Apparel</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Pulse Cap</td><td class="sku">PC-1003</td><td class="money">$19.00</td><td class="num">210</td><td>Accessories</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Metro Backpack</td><td class="sku">MB-1004</td><td class="money">$72.00</td><td class="num">34</td><td>Accessories</td><td><span class="badge badge-warning">Low Stock</span></td></tr>
+                      <tr><td>Edge Sneakers</td><td class="sku">ES-1005</td><td class="money">$95.00</td><td class="num">55</td><td>Footwear</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Flow Socks</td><td class="sku">FS-1006</td><td class="money">$12.00</td><td class="num">320</td><td>Footwear</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Aero Bottle</td><td class="sku">AB-1007</td><td class="money">$16.00</td><td class="num">142</td><td>Home</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Zen Mug</td><td class="sku">ZM-1008</td><td class="money">$14.00</td><td class="num">96</td><td>Home</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Luma Lamp</td><td class="sku">LL-1009</td><td class="money">$49.00</td><td class="num">18</td><td>Home</td><td><span class="badge badge-danger">Out of Stock</span></td></tr>
+                      <tr><td>Prime Desk Mat</td><td class="sku">PDM-1010</td><td class="money">$28.00</td><td class="num">61</td><td>Office</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Arc Mouse</td><td class="sku">AM-1011</td><td class="money">$39.00</td><td class="num">80</td><td>Electronics</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Vertex Keyboard</td><td class="sku">VK-1012</td><td class="money">$84.00</td><td class="num">27</td><td>Electronics</td><td><span class="badge badge-warning">Low Stock</span></td></tr>
+                      <tr><td>Halo Monitor</td><td class="sku">HM-1013</td><td class="money">$219.00</td><td class="num">13</td><td>Electronics</td><td><span class="badge badge-warning">Low Stock</span></td></tr>
+                      <tr><td>Drift Speaker</td><td class="sku">DS-1014</td><td class="money">$67.00</td><td class="num">48</td><td>Electronics</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Canvas Tote</td><td class="sku">CT-1015</td><td class="money">$22.00</td><td class="num">154</td><td>Accessories</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Bloom Journal</td><td class="sku">BJ-1016</td><td class="money">$18.00</td><td class="num">240</td><td>Stationery</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Grid Planner</td><td class="sku">GP-1017</td><td class="money">$20.00</td><td class="num">190</td><td>Stationery</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Pixel Pen Set</td><td class="sku">PPS-1018</td><td class="money">$15.00</td><td class="num">305</td><td>Stationery</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Nova Watercolor Kit</td><td class="sku">NWK-1019</td><td class="money">$31.00</td><td class="num">42</td><td>Craft</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Studio Easel</td><td class="sku">SE-1020</td><td class="money">$129.00</td><td class="num">9</td><td>Craft</td><td><span class="badge badge-warning">Low Stock</span></td></tr>
+                      <tr><td>Craft Scissors</td><td class="sku">CS-1021</td><td class="money">$11.00</td><td class="num">380</td><td>Craft</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Trail Bottle</td><td class="sku">TB-1022</td><td class="money">$17.00</td><td class="num">123</td><td>Outdoors</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Summit Jacket</td><td class="sku">SJ-1023</td><td class="money">$144.00</td><td class="num">22</td><td>Outdoors</td><td><span class="badge badge-warning">Low Stock</span></td></tr>
+                      <tr><td>Range Lantern</td><td class="sku">RL-1024</td><td class="money">$36.00</td><td class="num">58</td><td>Outdoors</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Harbor Sandals</td><td class="sku">HS-1025</td><td class="money">$41.00</td><td class="num">77</td><td>Footwear</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Comet Hoodie</td><td class="sku">CH-1026</td><td class="money">$61.00</td><td class="num">66</td><td>Apparel</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Ridge Shorts</td><td class="sku">RS-1027</td><td class="money">$29.00</td><td class="num">92</td><td>Apparel</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Vibe Sweatshirt</td><td class="sku">VS-1028</td><td class="money">$53.00</td><td class="num">38</td><td>Apparel</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Core Leggings</td><td class="sku">CL-1029</td><td class="money">$45.00</td><td class="num">87</td><td>Apparel</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Drip Jacket</td><td class="sku">DJ-1030</td><td class="money">$118.00</td><td class="num">15</td><td>Apparel</td><td><span class="badge badge-warning">Low Stock</span></td></tr>
+                      <tr><td>Vector Belt</td><td class="sku">VB-1031</td><td class="money">$21.00</td><td class="num">140</td><td>Accessories</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Slate Wallet</td><td class="sku">SW-1032</td><td class="money">$32.00</td><td class="num">73</td><td>Accessories</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Beam Charger</td><td class="sku">BC-1033</td><td class="money">$26.00</td><td class="num">101</td><td>Electronics</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Signal Cable</td><td class="sku">SC-1034</td><td class="money">$10.00</td><td class="num">420</td><td>Electronics</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Halo Stand</td><td class="sku">HS-1035</td><td class="money">$34.00</td><td class="num">46</td><td>Electronics</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Echo Earbuds</td><td class="sku">EE-1036</td><td class="money">$78.00</td><td class="num">28</td><td>Electronics</td><td><span class="badge badge-warning">Low Stock</span></td></tr>
+                      <tr><td>Cloud Pillow</td><td class="sku">CP-1037</td><td class="money">$27.00</td><td class="num">68</td><td>Home</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Amber Candle</td><td class="sku">AC-1038</td><td class="money">$23.00</td><td class="num">115</td><td>Home</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>North Rug</td><td class="sku">NR-1039</td><td class="money">$86.00</td><td class="num">24</td><td>Home</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Mint Kettle</td><td class="sku">MK-1040</td><td class="money">$52.00</td><td class="num">31</td><td>Home</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Slate Desk Lamp</td><td class="sku">SDL-1041</td><td class="money">$44.00</td><td class="num">52</td><td>Office</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Nova Chair Pad</td><td class="sku">NCP-1042</td><td class="money">$25.00</td><td class="num">97</td><td>Office</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Orbit Notebook</td><td class="sku">ON-1043</td><td class="money">$13.00</td><td class="num">310</td><td>Stationery</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Peak Highlighter Set</td><td class="sku">PHS-1044</td><td class="money">$9.00</td><td class="num">520</td><td>Stationery</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Crate Storage Box</td><td class="sku">CSB-1045</td><td class="money">$30.00</td><td class="num">84</td><td>Home</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Bloom Shelf</td><td class="sku">BS-1046</td><td class="money">$74.00</td><td class="num">19</td><td>Home</td><td><span class="badge badge-warning">Low Stock</span></td></tr>
+                      <tr><td>Drift Mat</td><td class="sku">DM-1047</td><td class="money">$21.00</td><td class="num">133</td><td>Home</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Coast Sunglasses</td><td class="sku">CS-1048</td><td class="money">$63.00</td><td class="num">41</td><td>Accessories</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Fjord Beanie</td><td class="sku">FB-1049</td><td class="money">$18.00</td><td class="num">160</td><td>Accessories</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Summit Thermos</td><td class="sku">ST-1050</td><td class="money">$29.00</td><td class="num">88</td><td>Outdoors</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>River Pack</td><td class="sku">RP-1051</td><td class="money">$97.00</td><td class="num">26</td><td>Outdoors</td><td><span class="badge badge-warning">Low Stock</span></td></tr>
+                      <tr><td>Peak Tent Light</td><td class="sku">PTL-1052</td><td class="money">$33.00</td><td class="num">57</td><td>Outdoors</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Canvas Apron</td><td class="sku">CA-1053</td><td class="money">$24.00</td><td class="num">72</td><td>Craft</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Studio Brush Pack</td><td class="sku">SBP-1054</td><td class="money">$35.00</td><td class="num">39</td><td>Craft</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Arc File Organizer</td><td class="sku">AFO-1055</td><td class="money">$26.00</td><td class="num">110</td><td>Office</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Pulse Standing Mat</td><td class="sku">PSM-1056</td><td class="money">$46.00</td><td class="num">44</td><td>Office</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>Halo Webcam</td><td class="sku">HW-1057</td><td class="money">$69.00</td><td class="num">25</td><td>Electronics</td><td><span class="badge badge-warning">Low Stock</span></td></tr>
+                      <tr><td>Drift Microphone</td><td class="sku">DM-1058</td><td class="money">$88.00</td><td class="num">14</td><td>Electronics</td><td><span class="badge badge-warning">Low Stock</span></td></tr>
+                      <tr><td>Vertex Hub</td><td class="sku">VH-1059</td><td class="money">$41.00</td><td class="num">63</td><td>Electronics</td><td><span class="badge badge-success">Active</span></td></tr>
+                      <tr><td>North Speaker Mini</td><td class="sku">NSM-1060</td><td class="money">$54.00</td><td class="num">35</td><td>Electronics</td><td><span class="badge badge-success">Active</span></td></tr>
+                    </tbody>
+                  </gap:target>
+                </table>
+              </div>
+            </section>
+          </gap:target>
 
-        <h2 class="section-title">Recent Orders</h2>
+          <gap:target id="settings-section">
+            <section class="section">
+              <div class="section-head">
+                <div>
+                  <h2>Account Settings</h2>
+                  <div class="sub">Profile and notification preferences</div>
+                </div>
+              </div>
+              <div class="settings">
+                <form>
+                  <div class="form-grid">
+                    <div class="field">
+                      <label for="first-name">First Name</label>
+                      <input id="first-name" type="text" value="Sarah" />
+                    </div>
+                    <div class="field">
+                      <label for="last-name">Last Name</label>
+                      <input id="last-name" type="text" value="Rivera" />
+                    </div>
+                    <div class="field full">
+                      <label for="email">Email Address</label>
+                      <input id="email" type="email" value="sarah.rivera@example.com" />
+                    </div>
+                    <div class="field">
+                      <label for="role">Role</label>
+                      <select id="role">
+                        <option selected>Administrator</option>
+                        <option>Manager</option>
+                        <option>Analyst</option>
+                        <option>Support</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label for="timezone">Timezone</label>
+                      <select id="timezone">
+                        <option selected>UTC-05:00 Eastern Time</option>
+                        <option>UTC+00:00 London</option>
+                        <option>UTC+01:00 Berlin</option>
+                        <option>UTC+08:00 Singapore</option>
+                      </select>
+                    </div>
+                    <div class="field full">
+                      <label for="bio">Bio</label>
+                      <textarea id="bio">E-commerce operations lead focused on growth, optimization, and customer experience.</textarea>
+                    </div>
+                    <div class="field full">
+                      <label>Notifications</label>
+                      <div class="toggles">
+                        <div class="toggle">
+                          <div class="meta">
+                            <strong>Email order alerts</strong>
+                            <span>Receive notifications for new orders and cancellations</span>
+                          </div>
+                          <label class="switch">
+                            <input type="checkbox" checked />
+                            <span class="slider"></span>
+                          </label>
+                        </div>
+                        <div class="toggle">
+                          <div class="meta">
+                            <strong>Low stock warnings</strong>
+                            <span>Alert when inventory falls below threshold</span>
+                          </div>
+                          <label class="switch">
+                            <input type="checkbox" checked />
+                            <span class="slider"></span>
+                          </label>
+                        </div>
+                        <div class="toggle">
+                          <div class="meta">
+                            <strong>Weekly performance summary</strong>
+                            <span>Send a weekly digest of store performance</span>
+                          </div>
+                          <label class="switch">
+                            <input type="checkbox" />
+                            <span class="slider"></span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-actions">
+                    <button type="button" class="btn">Cancel</button>
+                    <button type="submit" class="btn primary">Save Changes</button>
+                  </div>
+                </form>
+                <div class="footer-note">Changes are saved instantly to your admin profile.</div>
+              </div>
+            </section>
+          </gap:target>
+        </div>
+
         <gap:target id="orders-section">
-            <div class="table-wrapper">
-                <gap:target id="orders-table">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Customer</th>
-                                <th>Amount</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <gap:target id="orders-table-body">
-                            <tbody>
-                                <!-- Order Rows (40+ rows) -->
-                                <!-- Data generated for example -->
-                                <tr>
-                                    <td>#ORD00101</td>
-                                    <td>Alice Johnson</td>
-                                    <td><gap:target id="order-amount-001">$249.00</gap:target></td>
-                                    <td>2023-10-26</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00102</td>
-                                    <td>Bob Smith</td>
-                                    <td><gap:target id="order-amount-002">$79.99</gap:target></td>
-                                    <td>2023-10-25</td>
-                                    <td><span class="badge badge-info">Shipped</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00103</td>
-                                    <td>Charlie Brown</td>
-                                    <td><gap:target id="order-amount-003">$119.99</gap:target></td>
-                                    <td>2023-10-25</td>
-                                    <td><span class="badge badge-warning">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00104</td>
-                                    <td>Diana Prince</td>
-                                    <td><gap:target id="order-amount-004">$29.99</gap:target></td>
-                                    <td>2023-10-24</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00105</td>
-                                    <td>Eve Adams</td>
-                                    <td><gap:target id="order-amount-005">$699.00</gap:target></td>
-                                    <td>2023-10-24</td>
-                                    <td><span class="badge badge-info">Shipped</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00106</td>
-                                    <td>Frank White</td>
-                                    <td><gap:target id="order-amount-006">$129.99</gap:target></td>
-                                    <td>2023-10-23</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00107</td>
-                                    <td>Grace Lee</td>
-                                    <td><gap:target id="order-amount-007">$299.00</gap:target></td>
-                                    <td>2023-10-23</td>
-                                    <td><span class="badge badge-warning">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00108</td>
-                                    <td>Henry Clark</td>
-                                    <td><gap:target id="order-amount-008">$179.00</gap:target></td>
-                                    <td>2023-10-22</td>
-                                    <td><span class="badge badge-info">Shipped</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00109</td>
-                                    <td>Ivy Green</td>
-                                    <td><gap:target id="order-amount-009">$149.99</gap:target></td>
-                                    <td>2023-10-22</td>
-                                    <td><span class="badge badge-danger">Canceled</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00110</td>
-                                    <td>Jack King</td>
-                                    <td><gap:target id="order-amount-010">$349.99</gap:target></td>
-                                    <td>2023-10-21</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00111</td>
-                                    <td>Karen Hall</td>
-                                    <td><gap:target id="order-amount-011">$89.99</gap:target></td>
-                                    <td>2023-10-21</td>
-                                    <td><span class="badge badge-info">Shipped</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00112</td>
-                                    <td>Liam Scott</td>
-                                    <td><gap:target id="order-amount-012">$110.00</gap:target></td>
-                                    <td>2023-10-20</td>
-                                    <td><span class="badge badge-warning">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00113</td>
-                                    <td>Mia Baker</td>
-                                    <td><gap:target id="order-amount-013">$59.99</gap:target></td>
-                                    <td>2023-10-20</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00114</td>
-                                    <td>Noah Taylor</td>
-                                    <td><gap:target id="order-amount-014">$49.99</gap:target></td>
-                                    <td>2023-10-19</td>
-                                    <td><span class="badge badge-info">Shipped</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00115</td>
-                                    <td>Olivia Miller</td>
-                                    <td><gap:target id="order-amount-015">$79.00</gap:target></td>
-                                    <td>2023-10-19</td>
-                                    <td><span class="badge badge-danger">Canceled</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00116</td>
-                                    <td>Peter Davis</td>
-                                    <td><gap:target id="order-amount-016">$199.99</gap:target></td>
-                                    <td>2023-10-18</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00117</td>
-                                    <td>Quinn Wilson</td>
-                                    <td><gap:target id="order-amount-017">$39.99</gap:target></td>
-                                    <td>2023-10-18</td>
-                                    <td><span class="badge badge-info">Shipped</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00118</td>
-                                    <td>Rachel Moore</td>
-                                    <td><gap:target id="order-amount-018">$150.00</gap:target></td>
-                                    <td>2023-10-17</td>
-                                    <td><span class="badge badge-warning">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00119</td>
-                                    <td>Sam Harris</td>
-                                    <td><gap:target id="order-amount-019">$65.00</gap:target></td>
-                                    <td>2023-10-17</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00120</td>
-                                    <td>Tina Young</td>
-                                    <td><gap:target id="order-amount-020">$99.00</gap:target></td>
-                                    <td>2023-10-16</td>
-                                    <td><span class="badge badge-info">Shipped</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00121</td>
-                                    <td>Uma Jackson</td>
-                                    <td><gap:target id="order-amount-021">$25.00</gap:target></td>
-                                    <td>2023-10-16</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00122</td>
-                                    <td>Victor Green</td>
-                                    <td><gap:target id="order-amount-022">$349.00</gap:target></td>
-                                    <td>2023-10-15</td>
-                                    <td><span class="badge badge-warning">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00123</td>
-                                    <td>Wendy White</td>
-                                    <td><gap:target id="order-amount-023">$199.00</gap:target></td>
-                                    <td>2023-10-15</td>
-                                    <td><span class="badge badge-danger">Canceled</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00124</td>
-                                    <td>Xavier Bell</td>
-                                    <td><gap:target id="order-amount-024">$299.00</gap:target></td>
-                                    <td>2023-10-14</td>
-                                    <td><span class="badge badge-info">Shipped</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00125</td>
-                                    <td>Yara Hall</td>
-                                    <td><gap:target id="order-amount-025">$39.99</gap:target></td>
-                                    <td>2023-10-14</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00126</td>
-                                    <td>Zack Adams</td>
-                                    <td><gap:target id="order-amount-026">$349.99</gap:target></td>
-                                    <td>2023-10-13</td>
-                                    <td><span class="badge badge-info">Shipped</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00127</td>
-                                    <td>Amy Brown</td>
-                                    <td><gap:target id="order-amount-027">$99.99</gap:target></td>
-                                    <td>2023-10-13</td>
-                                    <td><span class="badge badge-warning">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00128</td>
-                                    <td>Brian Davis</td>
-                                    <td><gap:target id="order-amount-028">$45.00</gap:target></td>
-                                    <td>2023-10-12</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00129</td>
-                                    <td>Chloe Evans</td>
-                                    <td><gap:target id="order-amount-029">$15.99</gap:target></td>
-                                    <td>2023-10-12</td>
-                                    <td><span class="badge badge-info">Shipped</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00130</td>
-                                    <td>Daniel Garcia</td>
-                                    <td><gap:target id="order-amount-030">$75.00</gap:target></td>
-                                    <td>2023-10-11</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00131</td>
-                                    <td>Emily Rodriguez</td>
-                                    <td><gap:target id="order-amount-031">$599.00</gap:target></td>
-                                    <td>2023-10-11</td>
-                                    <td><span class="badge badge-warning">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00132</td>
-                                    <td>Fiona Martinez</td>
-                                    <td><gap:target id="order-amount-032">$120.00</gap:target></td>
-                                    <td>2023-10-10</td>
-                                    <td><span class="badge badge-info">Shipped</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00133</td>
-                                    <td>George Hernandez</td>
-                                    <td><gap:target id="order-amount-033">$49.99</gap:target></td>
-                                    <td>2023-10-10</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00134</td>
-                                    <td>Hannah Lopez</td>
-                                    <td><gap:target id="order-amount-034">$89.00</gap:target></td>
-                                    <td>2023-10-09</td>
-                                    <td><span class="badge badge-danger">Canceled</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00135</td>
-                                    <td>Isaac Perez</td>
-                                    <td><gap:target id="order-amount-035">$69.99</gap:target></td>
-                                    <td>2023-10-09</td>
-                                    <td><span class="badge badge-info">Shipped</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00136</td>
-                                    <td>Julia Garcia</td>
-                                    <td><gap:target id="order-amount-036">$19.99</gap:target></td>
-                                    <td>2023-10-08</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00137</td>
-                                    <td>Kevin Scott</td>
-                                    <td><gap:target id="order-amount-037">$60.00</gap:target></td>
-                                    <td>2023-10-08</td>
-                                    <td><span class="badge badge-warning">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00138</td>
-                                    <td>Laura Kim</td>
-                                    <td><gap:target id="order-amount-038">$22.00</gap:target></td>
-                                    <td>2023-10-07</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00139</td>
-                                    <td>Michael Chen</td>
-                                    <td><gap:target id="order-amount-039">$29.99</gap:target></td>
-                                    <td>2023-10-07</td>
-                                    <td><span class="badge badge-info">Shipped</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00140</td>
-                                    <td>Nancy Patel</td>
-                                    <td><gap:target id="order-amount-040">$180.00</gap:target></td>
-                                    <td>2023-10-06</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                            </tbody>
-                                                    <tbody>
-                                <tr>
-                                    <td>#ORD00141</td>
-                                    <td>Chris Evans</td>
-                                    <td><gap:target id="order-amount-041">$75.50</gap:target></td>
-                                    <td>2026-03-15</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00142</td>
-                                    <td>Jessica Alba</td>
-                                    <td><gap:target id="order-amount-042">$120.00</gap:target></td>
-                                    <td>2026-03-14</td>
-                                    <td><span class="badge badge-info">Shipped</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00143</td>
-                                    <td>Tom Hanks</td>
-                                    <td><gap:target id="order-amount-043">$35.99</gap:target></td>
-                                    <td>2026-03-14</td>
-                                    <td><span class="badge badge-warning">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00144</td>
-                                    <td>Sandra Bullock</td>
-                                    <td><gap:target id="order-amount-044">$200.00</gap:target></td>
-                                    <td>2026-03-13</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00145</td>
-                                    <td>Leonardo DiCaprio</td>
-                                    <td><gap:target id="order-amount-045">$89.99</gap:target></td>
-                                    <td>2026-03-13</td>
-                                    <td><span class="badge badge-info">Shipped</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00146</td>
-                                    <td>Julia Roberts</td>
-                                    <td><gap:target id="order-amount-046">$150.00</gap:target></td>
-                                    <td>2026-03-12</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00147</td>
-                                    <td>Brad Pitt</td>
-                                    <td><gap:target id="order-amount-047">$49.00</gap:target></td>
-                                    <td>2026-03-12</td>
-                                    <td><span class="badge badge-warning">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00148</td>
-                                    <td>Angelina Jolie</td>
-                                    <td><gap:target id="order-amount-048">$320.00</gap:target></td>
-                                    <td>2026-03-11</td>
-                                    <td><span class="badge badge-info">Shipped</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00149</td>
-                                    <td>George Clooney</td>
-                                    <td><gap:target id="order-amount-049">$70.00</gap:target></td>
-                                    <td>2026-03-11</td>
-                                    <td><span class="badge badge-danger">Canceled</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00150</td>
-                                    <td>Jennifer Aniston</td>
-                                    <td><gap:target id="order-amount-050">$180.00</gap:target></td>
-                                    <td>2026-03-10</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00151</td>
-                                    <td>Dwayne Johnson</td>
-                                    <td><gap:target id="order-amount-051">$99.00</gap:target></td>
-                                    <td>2026-03-10</td>
-                                    <td><span class="badge badge-info">Shipped</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00152</td>
-                                    <td>Gal Gadot</td>
-                                    <td><gap:target id="order-amount-052">$65.00</gap:target></td>
-                                    <td>2026-03-09</td>
-                                    <td><span class="badge badge-warning">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00153</td>
-                                    <td>Robert Downey Jr.</td>
-                                    <td><gap:target id="order-amount-053">$450.00</gap:target></td>
-                                    <td>2026-03-09</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00154</td>
-                                    <td>Scarlett Johansson</td>
-                                    <td><gap:target id="order-amount-054">$110.00</gap:target></td>
-                                    <td>2026-03-08</td>
-                                    <td><span class="badge badge-info">Shipped</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD00155</td>
-                                    <td>Chris Hemsworth</td>
-                                    <td><gap:target id="order-amount-055">$75.00</gap:target></td>
-                                    <td>2026-03-08</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                </tr>
-                            </tbody></gap:target>
-                    </table>
-                </gap:target>
+          <section class="section">
+            <div class="section-head">
+              <div>
+                <h2>Recent Orders</h2>
+                <div class="sub">Customer orders and fulfillment status</div>
+              </div>
+              <div class="sub">40 orders listed</div>
             </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <gap:target id="orders-table-body"><tbody>
+                    <tr><td>#ORD-2041</td><td>Aria Morgan</td><td class="money">$187.00</td><td class="date">2026-03-31</td><td><span class="badge badge-success">Completed</span></td></tr>
+                    <tr><td>#ORD-2042</td><td>Benjamin Reed</td><td class="money">$64.00</td><td class="date">2026-03-30</td><td><span class="badge badge-info">Processing</span></td></tr>
+                    <tr><td>#ORD-2043</td><td>Madison Cooper</td><td class="money">$219.00</td><td class="date">2026-03-29</td><td><span class="badge badge-warning">Pending</span></td></tr>
+                    <tr><td>#ORD-2044</td><td>Henry Bailey</td><td class="money">$138.00</td><td class="date">2026-03-28</td><td><span class="badge badge-success">Completed</span></td></tr>
+                    <tr><td>#ORD-2045</td><td>Ella Richardson</td><td class="money">$92.00</td><td class="date">2026-03-27</td><td><span class="badge badge-danger">Cancelled</span></td></tr>
+                    <tr><td>#ORD-2046</td><td>Owen Foster</td><td class="money">$305.00</td><td class="date">2026-03-26</td><td><span class="badge badge-success">Completed</span></td></tr>
+                    <tr><td>#ORD-2047</td><td>Scarlett Hughes</td><td class="money">$76.00</td><td class="date">2026-03-25</td><td><span class="badge badge-info">Processing</span></td></tr>
+                    <tr><td>#ORD-2048</td><td>Lucas Bennett</td><td class="money">$154.00</td><td class="date">2026-03-24</td><td><span class="badge badge-success">Completed</span></td></tr>
+                    <tr><td>#ORD-2049</td><td>Chloe Sanders</td><td class="money">$48.00</td><td class="date">2026-03-23</td><td><span class="badge badge-warning">Pending</span></td></tr>
+                    <tr><td>#ORD-2050</td><td>Logan Price</td><td class="money">$412.00</td><td class="date">2026-03-22</td><td><span class="badge badge-success">Completed</span></td></tr>
+                    <tr><td>#ORD-2051</td><td>Grace Howard</td><td class="money">$129.00</td><td class="date">2026-03-21</td><td><span class="badge badge-success">Completed</span></td></tr>
+                    <tr><td>#ORD-2052</td><td>Jack Ward</td><td class="money">$87.00</td><td class="date">2026-03-20</td><td><span class="badge badge-info">Processing</span></td></tr>
+                    <tr><td>#ORD-2053</td><td>Zoey Kim</td><td class="money">$256.00</td><td class="date">2026-03-19</td><td><span class="badge badge-success">Completed</span></td></tr>
+                    <tr><td>#ORD-2054</td><td>Nathan Scott</td><td class="money">$71.00</td><td class="date">2026-03-18</td><td><span class="badge badge-warning">Pending</span></td></tr>
+                    <tr><td>#ORD-2055</td><td>Amelia Brooks</td><td class="money">$334.00</td><td class="date">2026-03-17</td><td><span class="badge badge-success">Completed</span></td></tr>
+                  </tbody></gap:target>
+              </table>
+            </div>
+          </section>
         </gap:target>
-
-        <h2 class="section-title">Account Settings</h2>
-        <gap:target id="settings-section">
-            <div class="form-section">
-                <h3>Profile Information</h3>
-                <gap:target id="profile-form">
-                    <div class="form-group">
-                        <label for="profile-name">Full Name</label>
-                        <gap:target id="profile-name-input">
-                            <input type="text" id="profile-name" value="Jane Smith">
-                        </gap:target>
-                    </div>
-                    <div class="form-group">
-                        <label for="profile-email">Email Address</label>
-                        <gap:target id="profile-email-input">
-                            <input type="email" id="profile-email" value="jane.smith@example.com">
-                        </gap:target>
-                    </div>
-                    <div class="form-group">
-                        <label for="profile-password">Password</label>
-                        <gap:target id="profile-password-input">
-                            <input type="password" id="profile-password" value="********">
-                        </gap:target>
-                    </div>
-                    <div class="form-actions">
-                        <gap:target id="profile-save-btn">
-                            <button type="submit" class="btn-primary">Save Profile</button>
-                        </gap:target>
-                    </div>
-                </gap:target>
-            </div>
-
-            <div class="form-section">
-                <h3>Notification Settings</h3>
-                <gap:target id="notification-settings">
-                    <div class="toggle-switch">
-                        <span class="toggle-switch-label">Email Notifications</span>
-                        <label class="switch">
-                            <gap:target id="email-toggle">
-                                <input type="checkbox" checked>
-                            </gap:target>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="toggle-switch">
-                        <span class="toggle-switch-label">SMS Notifications</span>
-                        <label class="switch">
-                            <gap:target id="sms-toggle">
-                                <input type="checkbox">
-                            </gap:target>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="toggle-switch">
-                        <span class="toggle-switch-label">Push Notifications</span>
-                        <label class="switch">
-                            <gap:target id="push-toggle">
-                                <input type="checkbox" checked>
-                            </gap:target>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="form-actions">
-                        <gap:target id="notification-save-btn">
-                            <button type="submit" class="btn-primary">Save Settings</button>
-                        </gap:target>
-                    </div>
-                </gap:target>
-            </div>
-        </gap:target>
-    </div>
+      </div>
+    </main>
+  </div>
 </body>
 </html>

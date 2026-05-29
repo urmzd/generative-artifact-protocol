@@ -1,0 +1,1 @@
+Set the "active" field to false for EVERY user in the data array. After this change, no user object anywhere in the data array may have active set to true. Do not add, remove, or reorder any users, and do not change any other field. The data array must still contain exactly 100 users.

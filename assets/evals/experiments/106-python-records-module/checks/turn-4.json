@@ -1,0 +1,9 @@
+{
+  "turn": 4,
+  "checks": [
+    {"kind": "absent", "value": "category=\"consumable\"", "desc": "no record retains the old category value across all regions (bulk change complete)"},
+    {"kind": "contains", "value": "category=\"supply\"", "desc": "the new category value is present after the bulk rename"},
+    {"kind": "regex_count_at_least", "pattern": "category=\"supply\"", "min": 14, "desc": "at least 14 records now carry the renamed category (turn-0 guarantees >=15 consumables; turn-3 may have deleted at most one, so >=14 must remain and all are renamed to supply)"},
+    {"kind": "regex_count", "pattern": "Record\\(", "expected": 100, "desc": "exactly 100 record instances preserved through the bulk field rename (no records lost)"}
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "Monthly Revenue 2024 vs 2023",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "chart-title-text"
+      }
+    },
+    {
+      "content": "Total: $4.2M (+18% YoY)",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "chart-title-visible"
+      }
+    }
+  ]
+}

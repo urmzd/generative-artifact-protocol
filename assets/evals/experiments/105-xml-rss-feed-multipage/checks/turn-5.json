@@ -1,0 +1,32 @@
+{
+  "turn": 5,
+  "checks": [
+    {
+      "kind": "contains",
+      "value": "dailybyte-0101",
+      "desc": "First item of the newly added batch 5 (guid dailybyte-0101) is present"
+    },
+    {
+      "kind": "contains",
+      "value": "dailybyte-0120",
+      "desc": "Last item of the newly added batch 5 (guid dailybyte-0120) is present"
+    },
+    {
+      "kind": "contains",
+      "value": "dailybyte-0080",
+      "desc": "Existing final item of batch 4 (guid dailybyte-0080) still present before the new batch"
+    },
+    {
+      "kind": "regex_count_at_least",
+      "pattern": "<category>\\s*Technology",
+      "min": 100,
+      "desc": "All 100 items carry category Technology (80 retained from turn 4 plus 20 new)"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "<guid",
+      "expected": 100,
+      "desc": "Feed now has exactly 100 items after appending the 20-item batch 5"
+    }
+  ]
+}

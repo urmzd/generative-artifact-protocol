@@ -1,0 +1,1 @@
+Change the price of record rec-067 (sku SKU-067, on pageFour) to 249.95. Do not change any other field of that record and do not touch any other record.

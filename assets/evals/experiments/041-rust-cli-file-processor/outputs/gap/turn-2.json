@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "gap-envelope",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "pub fn print_table(records: &[Record], headers: &[String]) {\n    let widths = headers\n        .iter()\n        .map(|h| {\n            let max_value = records\n                .iter()\n                .filter_map(|r| r.fields.get(h))\n                .map(|v| v.len())\n                .max()\n                .unwrap_or(0);\n            h.len().max(max_value)\n        })\n        .collect::<Vec<_>>();\n\n    let sep = widths\n        .iter()\n        .map(|w| \"-\".repeat(*w + 2))\n        .collect::<Vec<_>>()\n        .join(\"+\");\n\n    println!(\"{}\", sep);\n    for (i, h) in headers.iter().enumerate() {\n        print!(\" {:width$} \", h, width = widths[i]);\n        if i + 1 != headers.len() {\n            print!(\"|\");\n        }\n    }\n    println!();\n    println!(\"{}\", sep);\n\n    for rec in records {\n        for (i, h) in headers.iter().enumerate() {\n            let v = rec.fields.get(h).cloned().unwrap_or_default();\n            print!(\" {:width$} \", v, width = widths[i]);\n            if i + 1 != headers.len() {\n                print!(\"|\");\n            }\n        }\n        println!();\n    }\n}\n\npub fn print_markdown_table(records: &[Record], headers: &[String]) {\n    print!(\"|\");\n    for h in headers {\n        print!(\" {} |\", h);\n    }\n    println!();\n\n    print!(\"|\");\n    for _ in headers {\n        print!(\"---|\");\n    }\n    println!();\n\n    for rec in records {\n        print!(\"|\");\n        for h in headers {\n            let v = rec.fields.get(h).cloned().unwrap_or_default();\n            print!(\" {} |\", v);\n        }\n        println!();\n    }\n}\n\npub fn print_json(records: &[Record]) -> Result<(), AppError> {\n    let stdout = io::stdout();\n    let writer = BufWriter::new(stdout.lock());\n    serde_json::to_writer_pretty(writer, records)?;\n    Ok(())\n}\n\npub fn print_csv(records: &[Record], headers: &[String]) -> Result<(), AppError> {\n    let stdout = io::stdout();\n    let mut wtr = csv::Writer::from_writer(BufWriter::new(stdout.lock()));\n    wtr.write_record(headers)?;\n    for rec in records {\n        let row = headers\n            .iter()\n            .map(|h| rec.fields.get(h).cloned().unwrap_or_default())\n            .collect::<Vec<_>>();\n        wtr.write_record(row)?;\n    }\n    wtr.flush()?;\n    Ok(())\n}\n",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "output-formatters-module"
+      }
+    }
+  ]
+}

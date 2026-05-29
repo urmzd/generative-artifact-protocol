@@ -1,0 +1,34 @@
+{
+  "turn": 1,
+  "checks": [
+    {
+      "kind": "contains",
+      "value": "orders-worker",
+      "desc": "the targeted Deployment orders-worker still exists by name"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^\\s*replicas:\\s*6\\b",
+      "expected": 1,
+      "desc": "exactly one resource now has replicas: 6; no other resource was bumped"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?sm)name:\\s*orders-worker\\b(?:(?!^kind:).)*?^[ \\t]*replicas:\\s*6\\b",
+      "expected": 1,
+      "desc": "the replicas: 6 belongs to the orders-worker Deployment itself (binds the new value to the targeted resource within its own document, so a bump applied to the wrong Deployment fails)"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^\\s*replicas:\\s*2\\b",
+      "expected": 15,
+      "desc": "the other 15 Deployments still have replicas: 2 (16 Deployments total minus the 1 changed)"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^kind:",
+      "expected": 40,
+      "desc": "total resource count is still exactly 40 after a single-field edit on a non-first page"
+    }
+  ]
+}

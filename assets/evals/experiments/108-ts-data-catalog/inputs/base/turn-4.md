@@ -1,0 +1,1 @@
+Set the category field of EVERY remaining record in the entire catalog (all pages) to "clearance". Update each record's category value to "clearance" without changing any id, sku, name, price, or stock, and without adding or removing any record.

@@ -1,0 +1,28 @@
+{
+  "turn": 4,
+  "checks": [
+    {
+      "kind": "absent",
+      "value": "'pending'",
+      "desc": "No order still has status 'pending' — the bulk status change touched every order (GAP's hardest case: many ops or fail)."
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "'shipped'",
+      "expected": 39,
+      "desc": "Exactly 39 occurrences of 'shipped' — one per remaining order. Catches a flow that updates some orders but silently drops the rest."
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?i)INSERT\\s+INTO",
+      "expected": 120,
+      "desc": "Total seed rows remain exactly 120 — a bulk field update must not add or drop rows."
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?i)INSERT\\s+INTO\\s+orders",
+      "expected": 39,
+      "desc": "orders table still has exactly 39 rows after the bulk status update."
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "log \"Preparing remote directories\"\nrun_cmd 'for SERVER in \"${SERVERS[@]}\"; do ssh \"${SERVER_USER}@${SERVER}\" \"set -e; mkdir -p '\\''${REMOTE_RELEASES_DIR}'\\'' '\\''${REMOTE_SHARED_DIR}'\\''\"; done'\n\nlog \"Uploading artifact to all servers in parallel\"\nrun_cmd 'pids=(); for SERVER in \"${SERVERS[@]}\"; do rsync -az --delete \"${LOCAL_ARTIFACT_PATH}\" \"${SERVER_USER}@${SERVER}:${REMOTE_ARTIFACT_PATH}\" & pids+=(\"$!\"); done; for pid in \"${pids[@]}\"; do wait \"$pid\"; done'\n\nlog \"Deploying on remote servers\"\nrun_cmd 'for SERVER in \"${SERVERS[@]}\"; do ssh \"${SERVER_USER}@${SERVER}\" \"set -euo pipefail; RELEASE_NAME=\\$(basename '\\''${ARTIFACT_NAME}'\\'' .tar.gz); RELEASE_DIR='\\''${REMOTE_RELEASES_DIR}/'\\''\\${RELEASE_NAME}; mkdir -p \\\"$RELEASE_DIR\\\"; tar -xzf '\\''${REMOTE_ARTIFACT_PATH}'\\'' -C \\\"$RELEASE_DIR\\\"; rm -f '\\''${REMOTE_ARTIFACT_PATH}'\\''; cd \\\"$RELEASE_DIR\\\"; npm ci --omit=dev; cat > .env <<'\"'\"'EOF'\"'\"'; NODE_ENV=production; PORT=3000; LOG_LEVEL=info; EOF; if [ -f '\\''${REMOTE_RELEASES_DIR}/current_release'\\'' ]; then cp '\\''${REMOTE_RELEASES_DIR}/current_release'\\'' '\\''${REMOTE_RELEASES_DIR}/previous_release'\\''; fi; echo \\\"$RELEASE_NAME\\\" > '\\''${REMOTE_RELEASES_DIR}/current_release'\\''; if [ -f migrations.sh ]; then chmod +x migrations.sh; ./migrations.sh; elif npm run | grep -q '\\''migrate'\\''; then npm run migrate; fi; ln -sfn \\\"$RELEASE_DIR\\\" '\\''${REMOTE_CURRENT_LINK}'\\''; pm2 restart '\\''${PM2_APP_NAME}'\\'' --update-env || pm2 start ecosystem.config.js --only '\\''${PM2_APP_NAME}'\\'' --update-env; pm2 save\"; done'",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "deploy"
+      }
+    }
+  ]
+}

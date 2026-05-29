@@ -1,0 +1,36 @@
+{
+  "protocol": "gap",
+  "id": "rustfmt-config",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "body": "120",
+      "content": null,
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "max-width"
+      }
+    },
+    {
+      "body": "true",
+      "content": null,
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "wrap-comments"
+      }
+    },
+    {
+      "body": "true",
+      "content": null,
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "format-code-in-doc-comments"
+      }
+    }
+  ]
+}

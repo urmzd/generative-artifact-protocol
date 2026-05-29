@@ -33,31 +33,31 @@ fn envelope_schema() -> serde_json::Value {
                 },
                 "required": ["format", "tokens_used", "checksum", "state"]
             },
+            // Edit content items match the protocol `EditOp` exactly:
+            // {op, target, content}. The replacement text lives in `content`
+            // (the apply engine ignores any other field). An earlier version of
+            // this schema also exposed a spurious `body` field, which led models
+            // to put replacement text there — apply then replaced targets with
+            // empty strings, silently destroying artifacts. Do not reintroduce it.
             "content": {
                 "type": "array",
                 "items": {
                     "type": "object",
                     "additionalProperties": false,
                     "properties": {
-                        "body": {"type": ["string", "null"]},
-                        "op": {"type": ["string", "null"], "enum": ["replace", "insert_before", "insert_after", "delete", null]},
+                        "op": {"type": "string", "enum": ["replace", "insert_before", "insert_after", "delete"]},
                         "target": {
-                            "anyOf": [
-                                {
-                                    "type": "object",
-                                    "additionalProperties": false,
-                                    "properties": {
-                                        "type": {"type": "string", "enum": ["id", "pointer"]},
-                                        "value": {"type": "string"}
-                                    },
-                                    "required": ["type", "value"]
-                                },
-                                {"type": "null"}
-                            ]
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                                "type": {"type": "string", "enum": ["id", "pointer"]},
+                                "value": {"type": "string"}
+                            },
+                            "required": ["type", "value"]
                         },
                         "content": {"type": ["string", "null"]}
                     },
-                    "required": ["body", "op", "target", "content"]
+                    "required": ["op", "target", "content"]
                 }
             }
         }
@@ -93,6 +93,7 @@ pub async fn run_base_flow(
     let turn0_metrics = TurnMetrics {
         input_tokens: result.input_tokens,
         output_tokens: result.output_tokens,
+        cached_input_tokens: result.cached_input_tokens,
         latency_ms,
         artifact_bytes: artifact.len(),
         ttft_ms: result.ttft_ms,
@@ -124,6 +125,97 @@ pub async fn run_base_flow(
             edit: edit_prompt.chars().take(80).collect(),
             input_tokens: result.input_tokens,
             output_tokens: result.output_tokens,
+            cached_input_tokens: result.cached_input_tokens,
+            latency_ms,
+            output_bytes: artifact.len(),
+            ttft_ms: result.ttft_ms,
+            ttlt_ms: result.ttlt_ms,
+            median_itl_ms: result.median_itl_ms,
+            failed: false,
+            failure_reason: None,
+            envelope_parsed: None,
+            apply_succeeded: None,
+            envelope_name: None,
+        });
+    }
+
+    Ok((turn0_metrics, turn_results))
+}
+
+/// Run the stateless full-regen flow (spec Scenario B — the steelman baseline).
+/// Each edit starts a fresh 2-message context that reads the *current* artifact
+/// and regenerates the FULL artifact. This isolates GAP's output-token win
+/// (C vs B) from the statelessness/input win (B vs A).
+///
+/// `seed` lets the caller share the base flow's plain turn-0 artifact (and its
+/// creation metrics) so A and B operate on an identical document; when `None`,
+/// turn-0 is generated fresh with `system_prompt`.
+pub async fn run_stateless_flow(
+    client: &OpenAIClient,
+    system_prompt: &str,
+    turn0_prompt: &str,
+    edit_prompts: &[(String, String)],
+    output_dir: &Path,
+    ext: &str,
+    seed: Option<(String, TurnMetrics)>,
+) -> Result<(TurnMetrics, Vec<TurnResult>)> {
+    // Turn 0: reuse the shared base artifact, or generate it fresh.
+    let (mut artifact, turn0_metrics) = match seed {
+        Some((art, t0)) => (art, t0),
+        None => {
+            let messages = vec![
+                Message { role: "system".into(), content: system_prompt.to_string() },
+                Message { role: "user".into(), content: turn0_prompt.to_string() },
+            ];
+            let t0 = Instant::now();
+            let result = client.chat_stream(&messages, None).await?;
+            let latency_ms = t0.elapsed().as_millis() as u64;
+            let artifact = clean_artifact(&result.text);
+            let metrics = TurnMetrics {
+                input_tokens: result.input_tokens,
+                output_tokens: result.output_tokens,
+                cached_input_tokens: result.cached_input_tokens,
+                latency_ms,
+                artifact_bytes: artifact.len(),
+                ttft_ms: result.ttft_ms,
+                ttlt_ms: result.ttlt_ms,
+                median_itl_ms: result.median_itl_ms,
+            };
+            (artifact, metrics)
+        }
+    };
+    fs::write(output_dir.join(format!("turn-0{ext}")), &artifact)?;
+
+    // Edit turns: stateless, full regeneration each time.
+    let mut turn_results = Vec::new();
+    for (turn_name, edit_prompt) in edit_prompts {
+        let turn_num: usize = turn_name
+            .strip_prefix("turn-")
+            .and_then(|s| s.parse().ok())
+            .unwrap_or(0);
+
+        let user_msg = format!(
+            "## Current Artifact\n\n```\n{artifact}\n```\n\n## Edit Instruction\n\n{edit_prompt}\n\nReturn the complete updated artifact, raw, with no commentary."
+        );
+
+        let messages = vec![
+            Message { role: "system".into(), content: system_prompt.to_string() },
+            Message { role: "user".into(), content: user_msg },
+        ];
+
+        let t0 = Instant::now();
+        let result = client.chat_stream(&messages, None).await?;
+        let latency_ms = t0.elapsed().as_millis() as u64;
+
+        artifact = clean_artifact(&result.text);
+        fs::write(output_dir.join(format!("{turn_name}{ext}")), &artifact)?;
+
+        turn_results.push(TurnResult {
+            turn: turn_num,
+            edit: edit_prompt.chars().take(80).collect(),
+            input_tokens: result.input_tokens,
+            output_tokens: result.output_tokens,
+            cached_input_tokens: result.cached_input_tokens,
             latency_ms,
             output_bytes: artifact.len(),
             ttft_ms: result.ttft_ms,
@@ -170,6 +262,7 @@ pub async fn run_gap_flow(
     let turn0_metrics = TurnMetrics {
         input_tokens: result.input_tokens,
         output_tokens: result.output_tokens,
+        cached_input_tokens: result.cached_input_tokens,
         latency_ms,
         artifact_bytes: artifact.len(),
         ttft_ms: result.ttft_ms,
@@ -199,7 +292,7 @@ pub async fn run_gap_flow(
         let t0 = Instant::now();
         let result = client.chat_stream(&messages, Some(&schema)).await;
 
-        let (parsed, succeeded, env_name, latency_ms, input_tokens, output_tokens, ttft_ms, ttlt_ms, median_itl_ms) =
+        let (parsed, succeeded, env_name, latency_ms, input_tokens, output_tokens, cached_input_tokens, ttft_ms, ttlt_ms, median_itl_ms) =
             match result {
                 Ok(r) => {
                     let latency_ms = t0.elapsed().as_millis() as u64;
@@ -226,7 +319,7 @@ pub async fn run_gap_flow(
                                     )?;
                                     artifact = new_art.body;
                                     version += 1;
-                                    (true, true, env_name, latency_ms, r.input_tokens, r.output_tokens, r.ttft_ms, r.ttlt_ms, r.median_itl_ms)
+                                    (true, true, env_name, latency_ms, r.input_tokens, r.output_tokens, r.cached_input_tokens, r.ttft_ms, r.ttlt_ms, r.median_itl_ms)
                                 }
                                 Err(_) => {
                                     // Parsed but apply failed
@@ -234,19 +327,19 @@ pub async fn run_gap_flow(
                                         output_dir.join(format!("{turn_name}.json")),
                                         &r.text,
                                     )?;
-                                    (true, false, env_name, latency_ms, r.input_tokens, r.output_tokens, r.ttft_ms, r.ttlt_ms, r.median_itl_ms)
+                                    (true, false, env_name, latency_ms, r.input_tokens, r.output_tokens, r.cached_input_tokens, r.ttft_ms, r.ttlt_ms, r.median_itl_ms)
                                 }
                             }
                         }
                         Err(_) => {
                             // Parse failed
-                            (false, false, String::new(), latency_ms, r.input_tokens, r.output_tokens, r.ttft_ms, r.ttlt_ms, r.median_itl_ms)
+                            (false, false, String::new(), latency_ms, r.input_tokens, r.output_tokens, r.cached_input_tokens, r.ttft_ms, r.ttlt_ms, r.median_itl_ms)
                         }
                     }
                 }
                 Err(_) => {
                     let latency_ms = t0.elapsed().as_millis() as u64;
-                    (false, false, String::new(), latency_ms, 0, 0, None, None, None)
+                    (false, false, String::new(), latency_ms, 0, 0, 0, None, None, None)
                 }
             };
 
@@ -258,6 +351,7 @@ pub async fn run_gap_flow(
             edit: edit_prompt.chars().take(80).collect(),
             input_tokens,
             output_tokens,
+            cached_input_tokens,
             latency_ms,
             output_bytes: artifact.len(),
             ttft_ms,
