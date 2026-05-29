@@ -1,0 +1,10 @@
+{
+  "turn": 2,
+  "checks": [
+    {"kind": "contains", "value": "sku=\"EST-101\"", "desc": "newly inserted east record id=101 is present"},
+    {"kind": "contains", "value": "Thermal Relay X9", "desc": "inserted record carries the specified name"},
+    {"kind": "contains", "value": "id=101,", "desc": "inserted record is constructed with id=101 as a keyword argument"},
+    {"kind": "contains", "value": "sku=\"EST-050\"", "desc": "the anchor record id=50 it was inserted after is still present"},
+    {"kind": "regex_count", "pattern": "Record\\(", "expected": 101, "desc": "exactly 101 record instances after inserting one new record (no other records dropped)"}
+  ]
+}

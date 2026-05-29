@@ -1,0 +1,161 @@
+{
+  "protocol": "gap",
+  "id": "checkout-form-component",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "required = (value: string, fieldName: string): string | null => {\n      return value.trim() ? null : `${fieldName} is required.`;\n    };",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "required-field-validator-name"
+      }
+    },
+    {
+      "content": "validateEmail = (email: string): string | null => {\n      const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n      return emailRegex.test(email.trim()) ? null : \"Please enter a valid email address.\";\n    };",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "email-validator-name"
+      }
+    },
+    {
+      "content": "validateCreditCard = (cardNumber: string): string | null => {\n      const digits = cardNumber.replace(/\\D/g, \"\");\n      if (!digits) return \"Card number is required.\";\n      let sum = 0;\n      let shouldDouble = false;\n\n      for (let i = digits.length - 1; i >= 0; i--) {\n        let digit = parseInt(digits[i], 10);\n        if (shouldDouble) {\n          digit *= 2;\n          if (digit > 9) digit -= 9;\n        }\n        sum += digit;\n        shouldDouble = !shouldDouble;\n      }\n\n      return sum % 10 === 0 ? null : \"Please enter a valid credit card number.\";\n    };",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "luhn-validator-name"
+      }
+    },
+    {
+      "content": "validateExpiryDate = (expiry: string): string | null => {\n      const match = expiry.match(/^(\\d{2})\\/(\\d{2})$/);\n      if (!match) return \"Use MM/YY format.\";\n\n      const month = parseInt(match[1], 10);\n      const year = parseInt(match[2], 10);\n      if (month < 1 || month > 12) return \"Invalid expiry month.\";\n\n      const now = new Date();\n      const currentYear = now.getFullYear() % 100;\n      const currentMonth = now.getMonth() + 1;\n\n      if (year < currentYear || (year === currentYear && month < currentMonth)) {\n        return \"Card has expired.\";\n      }\n\n      return null;\n    };",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "expiry-validator-name"
+      }
+    },
+    {
+      "content": "const validateField = <K extends keyof ValidationErrors>(field: K, value: string): string | null => {\n        switch (field) {\n          case \"email\":\n            return validateEmail(value);\n          case \"cardNumber\":\n            return validateCreditCard(value);\n          case \"cardExpiry\":\n            return validateExpiryDate(value);\n          case \"cardCvv\":\n            return value.replace(/\\D/g, \"\").length < 3 ? \"Please enter a valid CVV.\" : null;\n          default:\n            return required(value, String(field));\n        }\n      };\n\n      const handleFieldBlur = <K extends keyof FormData>(field: K) => {\n        const message = validateField(field as keyof ValidationErrors, formData[field]);\n        setErrors((prev) => ({ ...prev, [field]: message ?? undefined }));\n      };",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "initial-form-state-name"
+      }
+    },
+    {
+      "content": "const validate = (): ValidationErrors => {\n        const nextErrors: ValidationErrors = {};\n        const requiredFields: (keyof FormData)[] = [\"fullName\", \"email\", \"address\", \"city\", \"state\", \"zip\", \"country\", \"shippingMethod\", \"cardName\", \"cardNumber\", \"cardExpiry\", \"cardCvv\"];\n\n        requiredFields.forEach((field) => {\n          const message = required(formData[field], String(field));\n          if (message) nextErrors[field] = message;\n        });\n\n        const emailError = validateEmail(formData.email);\n        if (emailError) nextErrors.email = emailError;\n\n        const cardError = validateCreditCard(formData.cardNumber);\n        if (cardError) nextErrors.cardNumber = cardError;\n\n        const expiryError = validateExpiryDate(formData.cardExpiry);\n        if (expiryError) nextErrors.cardExpiry = expiryError;\n\n        if (formData.cardCvv.replace(/\\D/g, \"\").length < 3) {\n          nextErrors.cardCvv = \"Please enter a valid CVV.\";\n        }\n\n        return nextErrors;\n      };",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "validation-section"
+      }
+    },
+    {
+      "content": "                <TextInput label=\"Full Name\" name=\"fullName\" value={formData.fullName} onChange={(e) => updateField(\"fullName\", e.target.value)} error={errors.fullName} />",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "checkout-component-name"
+      }
+    },
+    {
+      "content": "                <TextInput label=\"Email\" name=\"email\" type=\"email\" value={formData.email} onChange={(e) => updateField(\"email\", e.target.value)} onBlur={() => handleFieldBlur(\"email\")} error={errors.email} />",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "checkout-component-name"
+      }
+    },
+    {
+      "content": "                <TextInput label=\"Address\" name=\"address\" value={formData.address} onChange={(e) => updateField(\"address\", e.target.value)} error={errors.address} />",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "checkout-component-name"
+      }
+    },
+    {
+      "content": "                  <TextInput label=\"City\" name=\"city\" value={formData.city} onChange={(e) => updateField(\"city\", e.target.value)} error={errors.city} />",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "checkout-component-name"
+      }
+    },
+    {
+      "content": "                  <TextInput label=\"State\" name=\"state\" value={formData.state} onChange={(e) => updateField(\"state\", e.target.value)} error={errors.state} />",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "checkout-component-name"
+      }
+    },
+    {
+      "content": "                  <TextInput label=\"ZIP\" name=\"zip\" value={formData.zip} onChange={(e) => updateField(\"zip\", e.target.value)} error={errors.zip} />",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "checkout-component-name"
+      }
+    },
+    {
+      "content": "                <SelectInput\n                  label=\"Country\"\n                  name=\"country\"\n                  value={formData.country}\n                  onChange={(e) => updateField(\"country\", e.target.value)}\n                  options={[\n                    { value: \"US\", label: \"United States\" },\n                    { value: \"CA\", label: \"Canada\" },\n                    { value: \"GB\", label: \"United Kingdom\" },\n                  ]}\n                  error={errors.country}\n                />",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "checkout-component-name"
+      }
+    },
+    {
+      "content": "                <SelectInput\n                  label=\"Shipping Method\"\n                  name=\"shippingMethod\"\n                  value={formData.shippingMethod}\n                  onChange={(e) => updateField(\"shippingMethod\", e.target.value)}\n                  options={shippingOptions.map((option) => ({\n                    value: option.id,\n                    label: `${option.label} — $${option.price.toFixed(2)} (${option.days})`,\n                  }))}\n                  error={errors.shippingMethod}\n                />",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "checkout-component-name"
+      }
+    },
+    {
+      "content": "                <TextInput label=\"Cardholder Name\" name=\"cardName\" value={formData.cardName} onChange={(e) => updateField(\"cardName\", e.target.value)} error={errors.cardName} />",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "checkout-component-name"
+      }
+    },
+    {
+      "content": "                <CardNumberInput label=\"Card Number\" name=\"cardNumber\" value={formData.cardNumber} onChange={(value) => updateField(\"cardNumber\", value)} error={errors.cardNumber} />",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "checkout-component-name"
+      }
+    },
+    {
+      "content": "                  <ExpiryPicker label=\"Expiry Date\" name=\"cardExpiry\" value={formData.cardExpiry} onChange={(value) => updateField(\"cardExpiry\", value)} error={errors.cardExpiry} />",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "checkout-component-name"
+      }
+    },
+    {
+      "content": "                  <TextInput label=\"CVV\" name=\"cardCvv\" value={formData.cardCvv} onChange={(e) => updateField(\"cardCvv\", e.target.value.replace(/\\D/g, \"\").slice(0, 4))} error={errors.cardCvv} />",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "checkout-component-name"
+      }
+    },
+    {
+      "content": "              {submitError && <div style={styles.submitError}>{submitError}</div>}",
+      "op": "delete",
+      "target": {
+        "type": "id",
+        "value": "checkout-component-name"
+      }
+    }
+  ]
+}

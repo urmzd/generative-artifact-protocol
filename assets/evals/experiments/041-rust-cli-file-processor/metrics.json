@@ -1,0 +1,181 @@
+{
+  "base_turn0": {
+    "artifact_bytes": 13510,
+    "cached_input_tokens": 0,
+    "input_tokens": 140,
+    "latency_ms": 15613,
+    "median_itl_ms": 0.00325,
+    "output_tokens": 3314,
+    "ttft_ms": 29,
+    "ttlt_ms": 15178
+  },
+  "comparison": {
+    "input_token_savings_pct": 54.3,
+    "latency_savings_pct": 73.1,
+    "output_token_savings_pct": 79.0
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "cached_input_tokens": 3328,
+        "edit": "Add a new --head flag to the CLI that shows only the first N rows of output, def",
+        "failed": false,
+        "input_tokens": 3485,
+        "latency_ms": 15813,
+        "median_itl_ms": 0.003667,
+        "output_bytes": 14029,
+        "output_tokens": 3465,
+        "ttft_ms": 2,
+        "ttlt_ms": 14054,
+        "turn": 1
+      },
+      {
+        "cached_input_tokens": 6400,
+        "edit": "Rewrite the output section to add a Markdown table formatter that generates GitH",
+        "failed": false,
+        "input_tokens": 6975,
+        "latency_ms": 16246,
+        "median_itl_ms": 0.0024159999999999997,
+        "output_bytes": 15580,
+        "output_tokens": 3836,
+        "ttft_ms": 5,
+        "ttlt_ms": 15922,
+        "turn": 2
+      },
+      {
+        "cached_input_tokens": 10496,
+        "edit": "Add a new aggregation mode 'distinct' that counts unique values in a specified c",
+        "failed": false,
+        "input_tokens": 10840,
+        "latency_ms": 17377,
+        "median_itl_ms": 0.00275,
+        "output_bytes": 17777,
+        "output_tokens": 4325,
+        "ttft_ms": 0,
+        "ttlt_ms": 16889,
+        "turn": 3
+      }
+    ],
+    "total_cached_input_tokens": 20224,
+    "total_input_tokens": 21300,
+    "total_latency_ms": 49436,
+    "total_output_tokens": 11626
+  },
+  "experiment_id": "041-rust-cli-file-processor",
+  "format": "text/x-rust",
+  "gap_flow": {
+    "apply_success_rate": 1.0,
+    "envelope_parse_rate": 1.0,
+    "per_turn": [
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 0,
+        "edit": "Add a new --head flag to the CLI that shows only the first N rows of output, def",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 3307,
+        "latency_ms": 2477,
+        "median_itl_ms": 0.0053124999999999995,
+        "output_bytes": 12036,
+        "output_tokens": 339,
+        "ttft_ms": 60,
+        "ttlt_ms": 1920,
+        "turn": 1
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 0,
+        "edit": "Rewrite the output section to add a Markdown table formatter that generates GitH",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 3151,
+        "latency_ms": 3493,
+        "median_itl_ms": 0.002271,
+        "output_bytes": 12495,
+        "output_tokens": 763,
+        "ttft_ms": 44,
+        "ttlt_ms": 3124,
+        "turn": 2
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 1792,
+        "edit": "Add a new aggregation mode 'distinct' that counts unique values in a specified c",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 3270,
+        "latency_ms": 7316,
+        "median_itl_ms": 0.001916,
+        "output_bytes": 12357,
+        "output_tokens": 1342,
+        "ttft_ms": 0,
+        "ttlt_ms": 5967,
+        "turn": 3
+      }
+    ],
+    "total_cached_input_tokens": 1792,
+    "total_input_tokens": 9728,
+    "total_latency_ms": 13286,
+    "total_output_tokens": 2444
+  },
+  "gap_turn0": {
+    "artifact_bytes": 12743,
+    "cached_input_tokens": 0,
+    "input_tokens": 401,
+    "latency_ms": 14117,
+    "median_itl_ms": 0.0024159999999999997,
+    "output_tokens": 3038,
+    "ttft_ms": 12,
+    "ttlt_ms": 13717
+  },
+  "model": "gpt-5.4-mini",
+  "provider": "openai",
+  "quality": {
+    "mean_rouge_l": 0.3584,
+    "mean_sequence_similarity": 0.5275,
+    "mean_token_f1": 0.461,
+    "per_turn": [
+      {
+        "base_char_count": 14029,
+        "char_delta_pct": -20.3,
+        "gap_char_count": 11185,
+        "lines_added": 303,
+        "lines_removed": 363,
+        "rouge_l": 0.3817,
+        "sequence_similarity": 0.5452,
+        "token_f1": 0.4856,
+        "turn": 1
+      },
+      {
+        "base_char_count": 15580,
+        "char_delta_pct": -25.3,
+        "gap_char_count": 11644,
+        "lines_added": 311,
+        "lines_removed": 409,
+        "rouge_l": 0.3744,
+        "sequence_similarity": 0.5359,
+        "token_f1": 0.4745,
+        "turn": 2
+      },
+      {
+        "base_char_count": 17777,
+        "char_delta_pct": -35.3,
+        "gap_char_count": 11506,
+        "lines_added": 287,
+        "lines_removed": 456,
+        "rouge_l": 0.3192,
+        "sequence_similarity": 0.5014,
+        "token_f1": 0.423,
+        "turn": 3
+      }
+    ]
+  },
+  "timestamp": "2026-05-29T03:03:49Z",
+  "validity": {
+    "base_input_monotone": true,
+    "gap_run_degenerate": false
+  }
+}

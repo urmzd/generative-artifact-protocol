@@ -1,0 +1,32 @@
+{
+  "turn": 2,
+  "checks": [
+    {
+      "kind": "contains",
+      "value": "### EP-216",
+      "desc": "the new endpoint EP-216 was inserted"
+    },
+    {
+      "kind": "contains",
+      "value": "/v1/billing/invoices/export",
+      "desc": "the new endpoint EP-216 has the specified export Path"
+    },
+    {
+      "kind": "contains",
+      "value": "### EP-215",
+      "desc": "the preceding endpoint EP-215 is still present"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^### EP-",
+      "expected": 91,
+      "desc": "exactly one endpoint added; total is now 91 with no collateral loss"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^## Page \\d+:",
+      "expected": 6,
+      "desc": "still 6 pages; insert did not create a new page"
+    }
+  ]
+}

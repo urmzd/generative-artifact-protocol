@@ -1,0 +1,26 @@
+{
+  "turn": 3,
+  "checks": [
+    {
+      "kind": "absent",
+      "value": "SKU-050",
+      "desc": "the deleted record sku SKU-050 is gone"
+    },
+    {
+      "kind": "absent",
+      "value": "rec-050",
+      "desc": "the deleted record id rec-050 is gone"
+    },
+    {
+      "kind": "contains",
+      "value": "SKU-025B",
+      "desc": "the previously inserted rec-025b is still present"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "sku:\\s*\"SKU-",
+      "expected": 100,
+      "desc": "exactly one record deleted: 101 - 1 = 100 records remain"
+    }
+  ]
+}

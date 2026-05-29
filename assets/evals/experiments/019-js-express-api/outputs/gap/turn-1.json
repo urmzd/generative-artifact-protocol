@@ -1,0 +1,25 @@
+{
+  "protocol": "gap",
+  "id": "gap-envelope",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "      labels: data.labels || [],",
+      "op": "insert_before",
+      "target": {
+        "type": "id",
+        "value": "task-created-at-key"
+      }
+    },
+    {
+      "content": "router.put('/tasks/:id/labels', (req, res, next) => {\n  try {\n    validateId(req.params.id);\n    const task = Task.findById(req.params.id);\n    if (!task) throw new ApiError('Task not found', 404);\n    if (!Array.isArray(req.body.labels) || !req.body.labels.every(label => typeof label === 'string' && label.trim())) {\n      throw new ApiError('Labels must be a non-empty array of strings', 400);\n    }\n    task.labels = req.body.labels;\n    task.updatedAt = new Date().toISOString();\n    return res.json(task);\n  } catch (err) { return next(err); }\n});",
+      "op": "insert_before",
+      "target": {
+        "type": "id",
+        "value": "task-status-path"
+      }
+    }
+  ]
+}

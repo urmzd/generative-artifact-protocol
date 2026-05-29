@@ -1,0 +1,46 @@
+{
+  "turn": 5,
+  "checks": [
+    {
+      "kind": "contains",
+      "value": "Batch 7: reviews 1-20",
+      "desc": "The new reviews batch (page) header was added."
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?i)CREATE\\s+TABLE\\s+(?:IF\\s+NOT\\s+EXISTS\\s+)?reviews",
+      "expected": 1,
+      "desc": "A new reviews table was created exactly once."
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?i)CREATE\\s+TABLE",
+      "expected": 4,
+      "desc": "Schema now has exactly 4 tables (products, users, orders, reviews) — existing schema preserved plus the new table."
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?i)INSERT\\s+INTO\\s+reviews",
+      "expected": 20,
+      "desc": "Exactly 20 review rows were added in the new batch."
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?i)INSERT\\s+INTO",
+      "expected": 140,
+      "desc": "Total seed rows are exactly 140 (120 from prior turns + 20 reviews). Catches collateral loss of the existing 120 rows when appending a new page."
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?i)INSERT\\s+INTO\\s+orders",
+      "expected": 39,
+      "desc": "The 39 orders (with prior edits) survive the new-section append."
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "'shipped'",
+      "expected": 39,
+      "desc": "The turn-4 bulk status edit ('shipped' x39) is still intact after adding the reviews page."
+    }
+  ]
+}

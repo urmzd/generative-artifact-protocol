@@ -1,0 +1,1 @@
+Change the <category> of EVERY item in the entire feed to exactly "Technology", replacing whatever category each item currently has. This applies to all items across all batches without exception. Do not change any other field, and do not add or remove any items; the feed must still contain 80 items total, each now having category Technology.

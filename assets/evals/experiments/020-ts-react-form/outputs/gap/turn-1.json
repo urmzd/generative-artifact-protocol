@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "    export interface ShippingOptionV2 {\n      id: string;\n      name: string;\n      price: number;\n      estimated_days: string;\n      carrier: string;\n    }\n",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "shipping-option-type-name"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+Bump the API version across every endpoint in the entire document: change the leading path segment from `/v1/` to `/v2/` in the Path of every single endpoint on all pages. After this change no endpoint Path may begin with `/v1/`; they must all begin with `/v2/`. Do not add, remove, reorder, or otherwise modify any endpoint, and keep the total at 90 endpoints.

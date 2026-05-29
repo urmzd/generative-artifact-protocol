@@ -1,0 +1,1 @@
+Insert a new record into REGION_EAST immediately after the record with id=50: Record(id=101, name="Thermal Relay X9", sku="EST-101", price=58.40, category="hardware", stock=27). Do not renumber any existing records; keep all other records unchanged.

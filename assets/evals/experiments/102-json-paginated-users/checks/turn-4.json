@@ -1,0 +1,10 @@
+{
+  "turn": 4,
+  "checks": [
+    {"kind": "valid_json", "desc": "artifact is still parseable JSON after the bulk edit"},
+    {"kind": "regex_count", "pattern": "\"active\"\\s*:\\s*true", "expected": 0, "desc": "no user remains active:true after the bulk update"},
+    {"kind": "regex_count", "pattern": "\"active\"\\s*:\\s*false", "expected": 100, "desc": "all 100 users now have active:false (one false per user)"},
+    {"kind": "json_pointer_equals", "pointer": "/pagination/total", "value": 100, "desc": "total still 100 — bulk edit did not change counts"},
+    {"kind": "regex_count", "pattern": "\"id\"\\s*:", "expected": 100, "desc": "still exactly 100 user records — bulk edit dropped nobody"}
+  ]
+}

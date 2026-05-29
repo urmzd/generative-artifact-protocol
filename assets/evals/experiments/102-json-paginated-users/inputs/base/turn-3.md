@@ -1,0 +1,1 @@
+Delete the user with id 53 (this user is on page 3, currently located in the data array a few positions after the user named Priya Raman that was inserted in the previous turn). Remove that user object entirely from the data array. Leave every other user untouched. After this deletion the data array must contain 100 users. Also set pagination.total to 100.

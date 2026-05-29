@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "\n  <gap:target id=\"celery-worker-service-block\">\n    <gap:target id=\"celery-worker-service-name\">celery-worker</gap:target>:\n    <gap:target id=\"celery-worker-service-image\">image: notification-service</gap:target>\n    <gap:target id=\"celery-worker-service-command\">command: celery -A app.celery worker --loglevel=info</gap:target>\n    <gap:target id=\"celery-worker-service-env-file\">env_file:\n      - <gap:target id=\"celery-worker-env-file-path\">./notification-service/.env</gap:target></gap:target>\n    <gap:target id=\"celery-worker-service-networks\">networks:\n      - <gap:target id=\"shared-network-name-11\">app-network</gap:target></gap:target>\n  </gap:target>\n",
+      "op": "insert_before",
+      "target": {
+        "type": "id",
+        "value": "monitoring-service-block"
+      }
+    }
+  ]
+}

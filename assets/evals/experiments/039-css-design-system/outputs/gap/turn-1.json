@@ -1,0 +1,41 @@
+{
+  "protocol": "gap",
+  "id": "edit-1",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "#4f46e5",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "color-primary"
+      }
+    },
+    {
+      "content": "#4338ca",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "color-primary-hover"
+      }
+    },
+    {
+      "content": "#f59e0b",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "color-secondary"
+      }
+    },
+    {
+      "content": "#d97706",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "color-secondary-hover"
+      }
+    }
+  ]
+}

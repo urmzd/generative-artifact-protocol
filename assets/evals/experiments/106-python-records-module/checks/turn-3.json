@@ -1,0 +1,10 @@
+{
+  "turn": 3,
+  "checks": [
+    {"kind": "absent", "value": "sku=\"STH-033\"", "desc": "deleted south record id=33 is gone"},
+    {"kind": "contains", "value": "sku=\"STH-032\"", "desc": "neighbouring record id=32 survives the deletion"},
+    {"kind": "contains", "value": "sku=\"STH-034\"", "desc": "neighbouring record id=34 survives the deletion"},
+    {"kind": "contains", "value": "sku=\"EST-101\"", "desc": "previously inserted record id=101 still present (cumulative state intact)"},
+    {"kind": "regex_count", "pattern": "Record\\(", "expected": 100, "desc": "exactly 100 record instances after deleting one (101 from prior turn minus 1)"}
+  ]
+}

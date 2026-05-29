@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "<gap:target id=\"buttons-component-block\">\n  .btn {\n    display: inline-flex;\n    align-items: center;\n    justify-content: center;\n    gap: var(--space-2);\n    padding: 0.625rem 1rem;\n    border: 1px solid transparent;\n    border-radius: var(--radius-md);\n    font-weight: 600;\n    line-height: 1;\n    cursor: pointer;\n    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;\n  }\n\n  .btn:focus-visible {\n    outline: 3px solid color-mix(in srgb, var(--color-primary) 30%, transparent);\n    outline-offset: 2px;\n  }\n\n  .btn-primary {\n    background: var(--color-primary);\n    color: white;\n  }\n\n  .btn-primary:hover {\n    background: var(--color-primary-hover);\n  }\n\n  .btn-secondary {\n    background: var(--color-secondary);\n    color: white;\n  }\n\n  .btn-secondary:hover {\n    background: var(--color-secondary-hover);\n  }\n\n  .btn-danger {\n    background: var(--color-danger);\n    color: white;\n  }\n\n  .btn-danger:hover {\n    background: color-mix(in srgb, var(--color-danger) 85%, black);\n  }\n\n  .btn-ghost {\n    background: transparent;\n    color: var(--neutral-800);\n    border-color: var(--neutral-200);\n  }\n\n  .btn-ghost:hover {\n    background: var(--neutral-100);\n  }\n\n  .btn-sm { padding: 0.5rem 0.75rem; font-size: var(--font-size-sm); }\n  .btn-md { padding: 0.625rem 1rem; font-size: var(--font-size-base); }\n  .btn-lg { padding: 0.875rem 1.25rem; font-size: var(--font-size-lg); }\n  .btn-block { width: 100%; }\n\n  .btn-loading {\n    position: relative;\n    pointer-events: none;\n    opacity: 0.8;\n  }\n\n  .btn-loading::before {\n    content: \"\";\n    width: 1em;\n    height: 1em;\n    border: 2px solid currentColor;\n    border-right-color: transparent;\n    border-radius: 50%;\n    display: inline-block;\n    animation: btn-spin 0.8s linear infinite;\n  }\n\n  @keyframes btn-spin {\n    to { transform: rotate(360deg); }\n  }\n</gap:target>",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "buttons-component-block"
+      }
+    }
+  ]
+}

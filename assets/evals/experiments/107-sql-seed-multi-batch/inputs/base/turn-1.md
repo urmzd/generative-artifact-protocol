@@ -1,0 +1,1 @@
+In Batch 2, change the price of the product with id 27 to 1299.99 and set its stock to 7. Leave every other field of product 27 and every other row in the entire script unchanged.

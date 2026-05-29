@@ -1,0 +1,25 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "#[derive(Parser, Debug)]\n#[command(name = \"csv-tool\", version, about = \"Process and analyze CSV files\")]\npub struct CliArgs {\n    #[arg(short, long)]\n    pub input: String,\n\n    #[arg(short, long, value_parser = [\"table\", \"json\", \"csv\"], default_value = \"table\")]\n    pub output_format: String,\n\n    #[arg(short = 'c', long, value_delimiter = ',')]\n    pub columns: Vec<String>,\n\n    #[arg(short = 'f', long)]\n    pub filter: Option<String>,\n\n    #[arg(short = 's', long)]\n    pub sort_column: Option<String>,\n\n    #[arg(short = 'l', long)]\n    pub limit: Option<usize>,\n\n    #[arg(long, default_value_t = 10)]\n    pub head: usize,\n}",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "cli-args-struct"
+      }
+    },
+    {
+      "content": "    if let Some(limit) = args.limit {\n        processor = processor.limit(limit);\n    }\n\n    processor = processor.limit(args.head);\n\n    match args.output_format.as_str() {",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "main-function-module"
+      }
+    }
+  ]
+}

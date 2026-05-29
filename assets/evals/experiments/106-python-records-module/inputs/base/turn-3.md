@@ -1,0 +1,1 @@
+Delete the record with id=33 (in REGION_SOUTH, sku STH-033) entirely. Do not renumber the remaining records; keep all other records unchanged.

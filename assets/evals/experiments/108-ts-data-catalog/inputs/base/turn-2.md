@@ -1,0 +1,1 @@
+Insert a new record into pageTwo immediately after rec-025. The new record must have id "rec-025b", sku "SKU-025B", name "Flagship Tablet Pro", price 599.00, category "electronics", stock 42. Keep every existing record unchanged; this adds one record to the catalog.

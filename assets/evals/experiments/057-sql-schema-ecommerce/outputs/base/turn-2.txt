@@ -1,0 +1,23 @@
+INSERT INTO products (id, category_id, name, slug, description, sku, price, is_active) VALUES
+(11, 1, 'Bluetooth Speaker', 'bluetooth-speaker', 'Portable waterproof Bluetooth speaker', 'ELEC-003', 59.99, TRUE),
+(12, 1, 'Noise Cancelling Earbuds', 'noise-cancelling-earbuds', 'Compact wireless earbuds with ANC', 'ELEC-004', 129.99, TRUE),
+(13, 2, 'Data Modeling Handbook', 'data-modeling-handbook', 'Practical guide to database design', 'BOOK-003', 49.99, TRUE),
+(14, 2, 'Python for Beginners', 'python-for-beginners', 'Introductory programming book', 'BOOK-004', 29.99, TRUE),
+(15, 3, 'Air Fryer', 'air-fryer', 'Compact digital air fryer', 'HOME-003', 89.99, TRUE),
+(16, 3, 'Stainless Steel Water Bottle', 'stainless-steel-water-bottle', 'Insulated reusable bottle', 'HOME-004', 19.99, TRUE),
+(17, 4, 'Hooded Sweatshirt', 'hooded-sweatshirt', 'Soft fleece hoodie', 'CLOTH-003', 49.99, TRUE),
+(18, 4, 'Running Sneakers', 'running-sneakers', 'Lightweight daily running shoes', 'CLOTH-004', 119.99, TRUE),
+(19, 5, 'Resistance Band Set', 'resistance-band-set', 'Set of 5 exercise bands', 'SPORT-003', 24.99, TRUE),
+(20, 5, 'Camping Backpack', 'camping-backpack', 'Durable 40L outdoor backpack', 'SPORT-004', 79.99, TRUE);
+
+INSERT INTO inventory (product_id, quantity_on_hand, quantity_reserved, reorder_level, warehouse_location) VALUES
+(11, 30, 2, 8, 'A2'),
+(12, 22, 1, 10, 'A2'),
+(13, 45, 4, 12, 'B3'),
+(14, 55, 3, 15, 'B3'),
+(15, 18, 1, 8, 'C4'),
+(16, 80, 6, 20, 'C4'),
+(17, 35, 2, 10, 'D2'),
+(18, 14, 1, 8, 'D2'),
+(19, 70, 5, 15, 'E3'),
+(20, 16, 2, 10, 'E3');

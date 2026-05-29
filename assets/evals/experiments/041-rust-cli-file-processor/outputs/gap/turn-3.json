@@ -1,0 +1,41 @@
+{
+  "protocol": "gap",
+  "id": "edit-1",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "pub enum AggregationMode {\n    Count,\n    Sum,\n    Avg,\n    Min,\n    Max,\n    Distinct,\n}\n\n#[derive(Debug, Clone, Serialize, Deserialize)]\npub struct AggregationResult {\n    pub group_key: String,\n    pub count: usize,\n    pub sum: Option<f64>,\n    pub avg: Option<f64>,\n    pub min: Option<f64>,\n    pub max: Option<f64>,\n    pub distinct_count: Option<usize>,\n}",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "data-models-module"
+      }
+    },
+    {
+      "content": "pub fn print_aggregation_results(results: &[AggregationResult]) {\n    let mut results = results.to_vec();\n    results.sort_by(|a, b| b.count.cmp(&a.count).then_with(|| a.group_key.cmp(&b.group_key)));\n\n    println!(\"| group_key | count | distinct_count |\");\n    println!(\"|---|---:|---:|\");\n    for result in results {\n        let distinct_count = result\n            .distinct_count\n            .map(|v| v.to_string())\n            .unwrap_or_default();\n        println!(\"| {} | {} | {} |\", result.group_key, result.count, distinct_count);\n    }\n}",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "output-formatters-module"
+      }
+    },
+    {
+      "content": "    pub fn aggregate_by_group(\n        &self,\n        group_column: &str,\n        value_column: &str,\n    ) -> Result<Vec<AggregationResult>, AppError> {\n        if !self.headers.contains(&group_column.to_string()) {\n            return Err(AppError::UnknownColumn(group_column.to_string()));\n        }\n        if !self.headers.contains(&value_column.to_string()) {\n            return Err(AppError::UnknownColumn(value_column.to_string()));\n        }\n\n        let mut map: HashMap<String, Vec<String>> = HashMap::new();\n        for rec in &self.records {\n            let group_key = rec.fields.get(group_column).cloned().unwrap_or_default();\n            let value = rec\n                .fields\n                .get(value_column)\n                .ok_or_else(|| AppError::UnknownColumn(value_column.to_string()))?\n                .clone();\n            map.entry(group_key).or_default().push(value);\n        }\n\n        let mut out = Vec::new();\n        for (group_key, values) in map {\n            let count = values.len();\n            let distinct_count = values.iter().collect::<std::collections::HashSet<_>>().len();\n            let parsed_values = values\n                .iter()\n                .filter_map(|v| v.parse::<f64>().ok())\n                .collect::<Vec<_>>();\n            let sum: f64 = parsed_values.iter().sum();\n            let avg = if parsed_values.is_empty() { None } else { Some(sum / parsed_values.len() as f64) };\n            let min = parsed_values.iter().cloned().reduce(f64::min);\n            let max = parsed_values.iter().cloned().reduce(f64::max);\n            out.push(AggregationResult {\n                group_key,\n                count,\n                sum: if parsed_values.is_empty() { None } else { Some(sum) },\n                avg,\n                min,\n                max,\n                distinct_count: Some(distinct_count),\n            });\n        }\n\n        Ok(out)\n    }",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "csv-processor-impl"
+      }
+    },
+    {
+      "content": "    #[test]\n    fn computes_distinct_counts_and_sorts_by_frequency() {\n        let mut records = Vec::new();\n\n        let mut fields = HashMap::new();\n        fields.insert(\"group\".to_string(), \"A\".to_string());\n        fields.insert(\"value\".to_string(), \"x\".to_string());\n        records.push(Record { fields });\n\n        let mut fields = HashMap::new();\n        fields.insert(\"group\".to_string(), \"A\".to_string());\n        fields.insert(\"value\".to_string(), \"x\".to_string());\n        records.push(Record { fields });\n\n        let mut fields = HashMap::new();\n        fields.insert(\"group\".to_string(), \"A\".to_string());\n        fields.insert(\"value\".to_string(), \"y\".to_string());\n        records.push(Record { fields });\n\n        let mut fields = HashMap::new();\n        fields.insert(\"group\".to_string(), \"B\".to_string());\n        fields.insert(\"value\".to_string(), \"z\".to_string());\n        records.push(Record { fields });\n\n        let processor = CsvProcessor {\n            headers: vec![\"group\".to_string(), \"value\".to_string()],\n            records,\n        };\n\n        let mut results = processor.aggregate_by_group(\"group\", \"value\").unwrap();\n        results.sort_by(|a, b| b.count.cmp(&a.count).then_with(|| a.group_key.cmp(&b.group_key)));\n\n        assert_eq!(results[0].group_key, \"A\");\n        assert_eq!(results[0].count, 3);\n        assert_eq!(results[0].distinct_count, Some(2));\n        assert_eq!(results[1].group_key, \"B\");\n        assert_eq!(results[1].count, 1);\n        assert_eq!(results[1].distinct_count, Some(1));\n    }",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "filter-evaluator-tests"
+      }
+    }
+  ]
+}

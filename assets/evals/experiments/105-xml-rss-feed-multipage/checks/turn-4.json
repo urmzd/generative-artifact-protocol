@@ -1,0 +1,47 @@
+{
+  "turn": 4,
+  "checks": [
+    {
+      "kind": "regex_count",
+      "pattern": "<category>\\s*Technology",
+      "expected": 80,
+      "desc": "Every one of the 80 items now has category Technology (bulk change applied to all)"
+    },
+    {
+      "kind": "absent",
+      "value": "<category>Hardware",
+      "desc": "Old Hardware category fully replaced"
+    },
+    {
+      "kind": "absent",
+      "value": "<category>Software",
+      "desc": "Old Software category fully replaced"
+    },
+    {
+      "kind": "absent",
+      "value": "<category>AI",
+      "desc": "Old AI category fully replaced"
+    },
+    {
+      "kind": "absent",
+      "value": "<category>Security",
+      "desc": "Old Security category fully replaced"
+    },
+    {
+      "kind": "absent",
+      "value": "<category>Mobile",
+      "desc": "Old Mobile category fully replaced"
+    },
+    {
+      "kind": "absent",
+      "value": "<category>Cloud",
+      "desc": "Old Cloud category fully replaced"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "<guid",
+      "expected": 80,
+      "desc": "Bulk field change did not add or drop items; still exactly 80"
+    }
+  ]
+}

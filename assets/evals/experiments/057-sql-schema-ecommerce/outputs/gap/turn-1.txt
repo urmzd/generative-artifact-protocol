@@ -1,0 +1,303 @@
+<gap:target id="schema-document">
+  <gap:target id="schema-header">
+    CREATE SCHEMA IF NOT EXISTS <gap:target id="schema-name">ecommerce</gap:target>;
+    SET search_path TO <gap:target id="search-path-schema">ecommerce</gap:target>, public;
+  </gap:target>
+
+  <gap:target id="extensions-section">
+    CREATE EXTENSION IF NOT EXISTS <gap:target id="extension-name">pgcrypto</gap:target>;
+  </gap:target>
+
+  <gap:target id="tables-section">
+    <gap:target id="users-table">
+      CREATE TABLE <gap:target id="users-table-name">users</gap:target> (
+        <gap:target id="users-id-column">id SERIAL PRIMARY KEY</gap:target>,
+        <gap:target id="users-first-name-column">first_name VARCHAR(100) NOT NULL</gap:target>,
+        <gap:target id="users-last-name-column">last_name VARCHAR(100) NOT NULL</gap:target>,
+        <gap:target id="users-email-column">email VARCHAR(255) NOT NULL UNIQUE</gap:target>,
+        <gap:target id="users-password-hash-column">password_hash TEXT NOT NULL</gap:target>,
+        <gap:target id="users-phone-column">phone VARCHAR(30)</gap:target>,
+        <gap:target id="users-role-column">role VARCHAR(30) NOT NULL DEFAULT 'customer'</gap:target>,
+        <gap:target id="users-is-active-column">is_active BOOLEAN NOT NULL DEFAULT TRUE</gap:target>,
+        <gap:target id="users-created-at-column">created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()</gap:target>,
+        <gap:target id="users-updated-at-column">updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()</gap:target>
+      );
+    </gap:target>
+
+    <gap:target id="categories-table">
+      CREATE TABLE <gap:target id="categories-table-name">categories</gap:target> (
+        <gap:target id="categories-id-column">id SERIAL PRIMARY KEY</gap:target>,
+        <gap:target id="categories-name-column">name VARCHAR(150) NOT NULL UNIQUE</gap:target>,
+        <gap:target id="categories-slug-column">slug VARCHAR(180) NOT NULL UNIQUE</gap:target>,
+        <gap:target id="categories-description-column">description TEXT</gap:target>,
+        <gap:target id="categories-parent-id-column">parent_id INT REFERENCES categories(id) ON DELETE SET NULL</gap:target>,
+        <gap:target id="categories-created-at-column">created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()</gap:target>
+      );
+    </gap:target>
+
+    <gap:target id="products-table">
+      CREATE TABLE <gap:target id="products-table-name">products</gap:target> (
+        <gap:target id="products-id-column">id BIGSERIAL PRIMARY KEY</gap:target>,
+        <gap:target id="products-category-id-column">category_id INT NOT NULL REFERENCES categories(id) ON DELETE RESTRICT</gap:target>,
+        <gap:target id="products-name-column">name VARCHAR(255) NOT NULL</gap:target>,
+        <gap:target id="products-slug-column">slug VARCHAR(255) NOT NULL UNIQUE</gap:target>,
+        <gap:target id="products-description-column">description TEXT</gap:target>,
+        <gap:target id="products-sku-column">sku VARCHAR(100) NOT NULL UNIQUE</gap:target>,
+        <gap:target id="products-price-column">price NUMERIC(12,2) NOT NULL CHECK (price &gt;= 0)</gap:target>,
+        <gap:target id="products-currency-column">currency CHAR(3) NOT NULL DEFAULT 'USD'</gap:target>,
+        <gap:target id="products-is-active-column">is_active BOOLEAN NOT NULL DEFAULT TRUE</gap:target>,
+        <gap:target id="products-created-at-column">created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()</gap:target>,
+        <gap:target id="products-updated-at-column">updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()</gap:target>
+      );
+    </gap:target>
+
+    <gap:target id="addresses-table">
+      CREATE TABLE <gap:target id="addresses-table-name">addresses</gap:target> (
+        <gap:target id="addresses-id-column">id BIGSERIAL PRIMARY KEY</gap:target>,
+        <gap:target id="addresses-user-id-column">user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE</gap:target>,
+        <gap:target id="addresses-label-column">label VARCHAR(80) NOT NULL DEFAULT 'home'</gap:target>,
+        <gap:target id="addresses-line1-column">line1 VARCHAR(255) NOT NULL</gap:target>,
+        <gap:target id="addresses-line2-column">line2 VARCHAR(255)</gap:target>,
+        <gap:target id="addresses-city-column">city VARCHAR(100) NOT NULL</gap:target>,
+        <gap:target id="addresses-state-column">state VARCHAR(100) NOT NULL</gap:target>,
+        <gap:target id="addresses-postal-column">postal_code VARCHAR(20) NOT NULL</gap:target>,
+        <gap:target id="addresses-country-column">country VARCHAR(100) NOT NULL DEFAULT 'United States'</gap:target>,
+        <gap:target id="addresses-is-default-column">is_default BOOLEAN NOT NULL DEFAULT FALSE</gap:target>,
+        <gap:target id="addresses-created-at-column">created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()</gap:target>
+      );
+    </gap:target>
+
+    <gap:target id="orders-table">
+      CREATE TABLE <gap:target id="orders-table-name">orders</gap:target> (
+        <gap:target id="orders-id-column">id BIGSERIAL PRIMARY KEY</gap:target>,
+        <gap:target id="orders-user-id-column">user_id INT NOT NULL REFERENCES users(id) ON DELETE RESTRICT</gap:target>,
+        <gap:target id="orders-address-id-column">shipping_address_id BIGINT REFERENCES addresses(id) ON DELETE SET NULL</gap:target>,
+        <gap:target id="orders-order-number-column">order_number VARCHAR(40) NOT NULL UNIQUE</gap:target>,
+        <gap:target id="orders-status-column">status VARCHAR(30) NOT NULL DEFAULT 'pending'</gap:target>,
+        <gap:target id="orders-subtotal-column">subtotal NUMERIC(12,2) NOT NULL DEFAULT 0</gap:target>,
+        <gap:target id="orders-tax-column">tax NUMERIC(12,2) NOT NULL DEFAULT 0</gap:target>,
+        <gap:target id="orders-shipping-column">shipping NUMERIC(12,2) NOT NULL DEFAULT 0</gap:target>,
+        <gap:target id="orders-discount-column">discount NUMERIC(12,2) NOT NULL DEFAULT 0</gap:target>,
+        <gap:target id="orders-total-column">total NUMERIC(12,2) NOT NULL DEFAULT 0</gap:target>,
+        <gap:target id="orders-coupon-id-column">coupon_id BIGINT REFERENCES coupons(id) ON DELETE SET NULL</gap:target>,
+        <gap:target id="orders-notes-column">notes TEXT</gap:target>,
+        <gap:target id="orders-placed-at-column">placed_at TIMESTAMPTZ NOT NULL DEFAULT NOW()</gap:target>,
+        <gap:target id="orders-updated-at-column">updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()</gap:target>,
+        <gap:target id="orders-status-check">CONSTRAINT orders_status_check CHECK (status IN ('pending', 'paid', 'shipped', 'delivered', 'cancelled', 'refunded'))</gap:target>
+      );
+    </gap:target>
+
+    <gap:target id="coupons-table">
+      CREATE TABLE <gap:target id="coupons-table-name">coupons</gap:target> (
+        <gap:target id="coupons-id-column">id BIGSERIAL PRIMARY KEY</gap:target>,
+        <gap:target id="coupons-code-column">code VARCHAR(50) NOT NULL UNIQUE</gap:target>,
+        <gap:target id="coupons-description-column">description TEXT</gap:target>,
+        <gap:target id="coupons-discount-type-column">discount_type VARCHAR(20) NOT NULL</gap:target>,
+        <gap:target id="coupons-discount-value-column">discount_value NUMERIC(12,2) NOT NULL CHECK (discount_value &gt;= 0)</gap:target>,
+        <gap:target id="coupons-min-order-column">min_order_amount NUMERIC(12,2) NOT NULL DEFAULT 0</gap:target>,
+        <gap:target id="coupons-start-date-column">starts_at TIMESTAMPTZ NOT NULL DEFAULT NOW()</gap:target>,
+        <gap:target id="coupons-end-date-column">ends_at TIMESTAMPTZ</gap:target>,
+        <gap:target id="coupons-max-uses-column">max_uses INT</gap:target>,
+        <gap:target id="coupons-used-count-column">used_count INT NOT NULL DEFAULT 0</gap:target>,
+        <gap:target id="coupons-is-active-column">is_active BOOLEAN NOT NULL DEFAULT TRUE</gap:target>,
+        <gap:target id="coupons-created-at-column">created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()</gap:target>
+      );
+    </gap:target>
+
+    <gap:target id="order-items-table">
+      CREATE TABLE <gap:target id="order-items-table-name">order_items</gap:target> (
+        <gap:target id="order-items-id-column">id BIGSERIAL PRIMARY KEY</gap:target>,
+        <gap:target id="order-items-order-id-column">order_id BIGINT NOT NULL REFERENCES orders(id) ON DELETE CASCADE</gap:target>,
+        <gap:target id="order-items-product-id-column">product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE RESTRICT</gap:target>,
+        <gap:target id="order-items-quantity-column">quantity INT NOT NULL CHECK (quantity &gt; 0)</gap:target>,
+        <gap:target id="order-items-unit-price-column">unit_price NUMERIC(12,2) NOT NULL CHECK (unit_price &gt;= 0)</gap:target>,
+        <gap:target id="order-items-discount-column">discount NUMERIC(12,2) NOT NULL DEFAULT 0</gap:target>,
+        <gap:target id="order-items-line-total-column">line_total NUMERIC(12,2) NOT NULL CHECK (line_total &gt;= 0)</gap:target>,
+        <gap:target id="order-items-created-at-column">created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()</gap:target>,
+        <gap:target id="order-items-unique-order-product">CONSTRAINT order_items_order_product_unique UNIQUE (order_id, product_id)</gap:target>
+      );
+    </gap:target>
+
+    <gap:target id="reviews-table">
+      CREATE TABLE <gap:target id="reviews-table-name">reviews</gap:target> (
+        <gap:target id="reviews-id-column">id BIGSERIAL PRIMARY KEY</gap:target>,
+        <gap:target id="reviews-product-id-column">product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE</gap:target>,
+        <gap:target id="reviews-user-id-column">user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE</gap:target>,
+        <gap:target id="reviews-rating-column">rating SMALLINT NOT NULL CHECK (rating BETWEEN 1 AND 5)</gap:target>,
+        <gap:target id="reviews-title-column">title VARCHAR(200)</gap:target>,
+        <gap:target id="reviews-comment-column">comment TEXT</gap:target>,
+        <gap:target id="reviews-is-verified-column">is_verified_purchase BOOLEAN NOT NULL DEFAULT FALSE</gap:target>,
+        <gap:target id="reviews-created-at-column">created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()</gap:target>,
+        <gap:target id="reviews-unique-product-user">CONSTRAINT reviews_product_user_unique UNIQUE (product_id, user_id)</gap:target>
+      );
+    </gap:target>
+
+    <gap:target id="inventory-table">
+      CREATE TABLE <gap:target id="inventory-table-name">inventory</gap:target> (
+        <gap:target id="inventory-product-id-column">product_id BIGINT PRIMARY KEY REFERENCES products(id) ON DELETE CASCADE</gap:target>,
+        <gap:target id="inventory-warehouse-column">warehouse_location VARCHAR(150) NOT NULL DEFAULT 'main'</gap:target>,
+        <gap:target id="inventory-quantity-on-hand-column">quantity_on_hand INT NOT NULL DEFAULT 0 CHECK (quantity_on_hand &gt;= 0)</gap:target>,
+        <gap:target id="inventory-reserved-column">reserved_quantity INT NOT NULL DEFAULT 0 CHECK (reserved_quantity &gt;= 0)</gap:target>,
+        <gap:target id="inventory-reorder-level-column">reorder_level INT NOT NULL DEFAULT 10 CHECK (reorder_level &gt;= 0)</gap:target>,
+        <gap:target id="inventory-last-updated-column">last_updated TIMESTAMPTZ NOT NULL DEFAULT NOW()</gap:target>
+      );
+    
+    <gap:target id="wishlists-table">
+      CREATE TABLE <gap:target id="wishlists-table-name">wishlists</gap:target> (
+        <gap:target id="wishlists-id-column">id BIGSERIAL PRIMARY KEY</gap:target>,
+        <gap:target id="wishlists-user-id-column">user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE</gap:target>,
+        <gap:target id="wishlists-product-id-column">product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE</gap:target>,
+        <gap:target id="wishlists-added-at-column">added_at TIMESTAMPTZ NOT NULL DEFAULT NOW()</gap:target>,
+        <gap:target id="wishlists-unique-user-product">CONSTRAINT wishlists_user_product_unique UNIQUE (user_id, product_id)</gap:target>
+      );
+    </gap:target></gap:target>
+  </gap:target>
+
+  <gap:target id="indexes-section">
+    CREATE INDEX <gap:target id="idx-products-category-id">idx_products_category_id</gap:target> ON <gap:target id="idx-products-category-table">products</gap:target> (<gap:target id="idx-products-category-column">category_id</gap:target>);
+    CREATE INDEX <gap:target id="idx-orders-user-id">idx_orders_user_id</gap:target> ON <gap:target id="idx-orders-table">orders</gap:target> (<gap:target id="idx-orders-user-column">user_id</gap:target>);
+    CREATE INDEX <gap:target id="idx-orders-status-placed-at">idx_orders_status_placed_at</gap:target> ON <gap:target id="idx-orders-composite-table">orders</gap:target> (<gap:target id="idx-orders-status-column">status</gap:target>, <gap:target id="idx-orders-placed-at-column">placed_at DESC</gap:target>);
+    CREATE INDEX <gap:target id="idx-order-items-order-id">idx_order_items_order_id</gap:target> ON <gap:target id="idx-order-items-table">order_items</gap:target> (<gap:target id="idx-order-items-order-column">order_id</gap:target>);
+    CREATE INDEX <gap:target id="idx-order-items-product-id">idx_order_items_product_id</gap:target> ON <gap:target id="idx-order-items-product-table">order_items</gap:target> (<gap:target id="idx-order-items-product-column">product_id</gap:target>);
+    CREATE INDEX <gap:target id="idx-reviews-product-id">idx_reviews_product_id</gap:target> ON <gap:target id="idx-reviews-table">reviews</gap:target> (<gap:target id="idx-reviews-product-column">product_id</gap:target>);
+    CREATE INDEX <gap:target id="idx-reviews-user-id">idx_reviews_user_id</gap:target> ON <gap:target id="idx-reviews-user-table">reviews</gap:target> (<gap:target id="idx-reviews-user-column">user_id</gap:target>);
+    CREATE INDEX <gap:target id="idx-addresses-user-id">idx_addresses_user_id</gap:target> ON <gap:target id="idx-addresses-table">addresses</gap:target> (<gap:target id="idx-addresses-user-column">user_id</gap:target>);
+    CREATE INDEX <gap:target id="idx-coupons-code">idx_coupons_code</gap:target> ON <gap:target id="idx-coupons-table">coupons</gap:target> (<gap:target id="idx-coupons-code-column">code</gap:target>);
+    CREATE INDEX <gap:target id="idx-products-category-active">idx_products_category_active</gap:target> ON <gap:target id="idx-products-category-active-table">products</gap:target> (<gap:target id="idx-products-category-active-column">category_id</gap:target>, <gap:target id="idx-products-active-column">is_active</gap:target>);
+  </gap:target>
+
+  <gap:target id="views-section">
+    CREATE OR REPLACE VIEW <gap:target id="order-summary-view-name">order_summary</gap:target> AS
+    SELECT
+      <gap:target id="order-summary-order-id">o.id</gap:target> AS <gap:target id="order-summary-order-id-alias">order_id</gap:target>,
+      <gap:target id="order-summary-order-number">o.order_number</gap:target> AS <gap:target id="order-summary-order-number-alias">order_number</gap:target>,
+      <gap:target id="order-summary-user-id">o.user_id</gap:target>,
+      <gap:target id="order-summary-user-name">u.first_name || ' ' || u.last_name</gap:target> AS <gap:target id="order-summary-user-name-alias">customer_name</gap:target>,
+      <gap:target id="order-summary-status">o.status</gap:target>,
+      <gap:target id="order-summary-subtotal">o.subtotal</gap:target>,
+      <gap:target id="order-summary-tax">o.tax</gap:target>,
+      <gap:target id="order-summary-shipping">o.shipping</gap:target>,
+      <gap:target id="order-summary-discount">o.discount</gap:target>,
+      <gap:target id="order-summary-total">o.total</gap:target>,
+      <gap:target id="order-summary-item-count">COUNT(oi.id)</gap:target> AS <gap:target id="order-summary-item-count-alias">item_count</gap:target>,
+      <gap:target id="order-summary-created-at">o.placed_at</gap:target> AS <gap:target id="order-summary-created-at-alias">placed_at</gap:target>
+    FROM <gap:target id="order-summary-orders-table">orders</gap:target> o
+    JOIN <gap:target id="order-summary-users-table">users</gap:target> u ON u.id = o.user_id
+    LEFT JOIN <gap:target id="order-summary-order-items-table">order_items</gap:target> oi ON oi.order_id = o.id
+    GROUP BY o.id, u.first_name, u.last_name;
+
+    CREATE OR REPLACE VIEW <gap:target id="product-ratings-view-name">product_ratings</gap:target> AS
+    SELECT
+      <gap:target id="product-ratings-product-id">p.id</gap:target> AS <gap:target id="product-ratings-product-id-alias">product_id</gap:target>,
+      <gap:target id="product-ratings-product-name">p.name</gap:target> AS <gap:target id="product-ratings-product-name-alias">product_name</gap:target>,
+      <gap:target id="product-ratings-average-rating">COALESCE(AVG(r.rating), 0)</gap:target> AS <gap:target id="product-ratings-average-rating-alias">average_rating</gap:target>,
+      <gap:target id="product-ratings-rating-count">COUNT(r.id)</gap:target> AS <gap:target id="product-ratings-rating-count-alias">rating_count</gap:target>
+    FROM <gap:target id="product-ratings-products-table">products</gap:target> p
+    LEFT JOIN <gap:target id="product-ratings-reviews-table">reviews</gap:target> r ON r.product_id = p.id
+    GROUP BY p.id, p.name;
+
+    CREATE OR REPLACE VIEW <gap:target id="low-stock-products-view-name">low_stock_products</gap:target> AS
+    SELECT
+      <gap:target id="low-stock-product-id">p.id</gap:target> AS <gap:target id="low-stock-product-id-alias">product_id</gap:target>,
+      <gap:target id="low-stock-product-name">p.name</gap:target> AS <gap:target id="low-stock-product-name-alias">product_name</gap:target>,
+      <gap:target id="low-stock-sku">p.sku</gap:target>,
+      <gap:target id="low-stock-on-hand">i.quantity_on_hand</gap:target>,
+      <gap:target id="low-stock-reserved">i.reserved_quantity</gap:target>,
+      <gap:target id="low-stock-reorder-level">i.reorder_level</gap:target>
+    FROM <gap:target id="low-stock-products-table">products</gap:target> p
+    JOIN <gap:target id="low-stock-inventory-table">inventory</gap:target> i ON i.product_id = p.id
+    WHERE <gap:target id="low-stock-condition">i.quantity_on_hand &lt;= i.reorder_level</gap:target>;
+  </gap:target>
+
+  <gap:target id="seed-data-section">
+    INSERT INTO <gap:target id="seed-categories-table">categories</gap:target> (<gap:target id="seed-categories-columns">name, slug, description</gap:target>) VALUES
+    (<gap:target id="category-1-name">Electronics</gap:target>, <gap:target id="category-1-slug">electronics</gap:target>, <gap:target id="category-1-description">Devices and gadgets</gap:target>),
+    (<gap:target id="category-2-name">Books</gap:target>, <gap:target id="category-2-slug">books</gap:target>, <gap:target id="category-2-description">Printed and digital books</gap:target>),
+    (<gap:target id="category-3-name">Home</gap:target>, <gap:target id="category-3-slug">home</gap:target>, <gap:target id="category-3-description">Home and kitchen products</gap:target>),
+    (<gap:target id="category-4-name">Fashion</gap:target>, <gap:target id="category-4-slug">fashion</gap:target>, <gap:target id="category-4-description">Clothing and accessories</gap:target>),
+    (<gap:target id="category-5-name">Sports</gap:target>, <gap:target id="category-5-slug">sports</gap:target>, <gap:target id="category-5-description">Fitness and outdoor gear</gap:target>);
+
+    INSERT INTO <gap:target id="seed-users-table">users</gap:target> (<gap:target id="seed-users-columns">first_name, last_name, email, password_hash, phone, role</gap:target>) VALUES
+    (<gap:target id="user-1-first-name">Alice</gap:target>, <gap:target id="user-1-last-name">Johnson</gap:target>, <gap:target id="user-1-email">alice@example.com</gap:target>, <gap:target id="user-1-password-hash">bcrypt_hash_1</gap:target>, <gap:target id="user-1-phone">+1555000001</gap:target>, <gap:target id="user-1-role">customer</gap:target>),
+    (<gap:target id="user-2-first-name">Bob</gap:target>, <gap:target id="user-2-last-name">Smith</gap:target>, <gap:target id="user-2-email">bob@example.com</gap:target>, <gap:target id="user-2-password-hash">bcrypt_hash_2</gap:target>, <gap:target id="user-2-phone">+1555000002</gap:target>, <gap:target id="user-2-role">customer</gap:target>),
+    (<gap:target id="user-3-first-name">Carol</gap:target>, <gap:target id="user-3-last-name">Lee</gap:target>, <gap:target id="user-3-email">carol@example.com</gap:target>, <gap:target id="user-3-password-hash">bcrypt_hash_3</gap:target>, <gap:target id="user-3-phone">+1555000003</gap:target>, <gap:target id="user-3-role">customer</gap:target>);
+
+    INSERT INTO <gap:target id="seed-addresses-table">addresses</gap:target> (<gap:target id="seed-addresses-columns">user_id, label, line1, city, state, postal_code, country, is_default</gap:target>) VALUES
+    (<gap:target id="address-1-user-id">1</gap:target>, <gap:target id="address-1-label">home</gap:target>, <gap:target id="address-1-line1">123 Main St</gap:target>, <gap:target id="address-1-city">New York</gap:target>, <gap:target id="address-1-state">NY</gap:target>, <gap:target id="address-1-postal">10001</gap:target>, <gap:target id="address-1-country">United States</gap:target>, <gap:target id="address-1-default">TRUE</gap:target>),
+    (<gap:target id="address-2-user-id">2</gap:target>, <gap:target id="address-2-label">home</gap:target>, <gap:target id="address-2-line1">456 Oak Ave</gap:target>, <gap:target id="address-2-city">Chicago</gap:target>, <gap:target id="address-2-state">IL</gap:target>, <gap:target id="address-2-postal">60601</gap:target>, <gap:target id="address-2-country">United States</gap:target>, <gap:target id="address-2-default">TRUE</gap:target>),
+    (<gap:target id="address-3-user-id">3</gap:target>, <gap:target id="address-3-label">home</gap:target>, <gap:target id="address-3-line1">789 Pine Rd</gap:target>, <gap:target id="address-3-city">Austin</gap:target>, <gap:target id="address-3-state">TX</gap:target>, <gap:target id="address-3-postal">73301</gap:target>, <gap:target id="address-3-country">United States</gap:target>, <gap:target id="address-3-default">TRUE</gap:target>);
+
+    INSERT INTO <gap:target id="seed-products-table">products</gap:target> (<gap:target id="seed-products-columns">category_id, name, slug, description, sku, price, currency, is_active</gap:target>) VALUES
+    (<gap:target id="product-1-category">1</gap:target>, <gap:target id="product-1-name">Smartphone</gap:target>, <gap:target id="product-1-slug">smartphone</gap:target>, <gap:target id="product-1-description">Latest model smartphone</gap:target>, <gap:target id="product-1-sku">ELEC-001</gap:target>, <gap:target id="product-1-price">699.99</gap:target>, <gap:target id="product-1-currency">USD</gap:target>, <gap:target id="product-1-active">TRUE</gap:target>),
+    (<gap:target id="product-2-category">1</gap:target>, <gap:target id="product-2-name">Wireless Headphones</gap:target>, <gap:target id="product-2-slug">wireless-headphones</gap:target>, <gap:target id="product-2-description">Noise-cancelling headphones</gap:target>, <gap:target id="product-2-sku">ELEC-002</gap:target>, <gap:target id="product-2-price">199.99</gap:target>, <gap:target id="product-2-currency">USD</gap:target>, <gap:target id="product-2-active">TRUE</gap:target>),
+    (<gap:target id="product-3-category">2</gap:target>, <gap:target id="product-3-name">Learning SQL</gap:target>, <gap:target id="product-3-slug">learning-sql</gap:target>, <gap:target id="product-3-description">Beginner SQL book</gap:target>, <gap:target id="product-3-sku">BOOK-001</gap:target>, <gap:target id="product-3-price">39.99</gap:target>, <gap:target id="product-3-currency">USD</gap:target>, <gap:target id="product-3-active">TRUE</gap:target>),
+    (<gap:target id="product-4-category">2</gap:target>, <gap:target id="product-4-name">PostgreSQL Cookbook</gap:target>, <gap:target id="product-4-slug">postgresql-cookbook</gap:target>, <gap:target id="product-4-description">Recipes for PostgreSQL</gap:target>, <gap:target id="product-4-sku">BOOK-002</gap:target>, <gap:target id="product-4-price">49.99</gap:target>, <gap:target id="product-4-currency">USD</gap:target>, <gap:target id="product-4-active">TRUE</gap:target>),
+    (<gap:target id="product-5-category">3</gap:target>, <gap:target id="product-5-name">Blender</gap:target>, <gap:target id="product-5-slug">blender</gap:target>, <gap:target id="product-5-description">Kitchen blender</gap:target>, <gap:target id="product-5-sku">HOME-001</gap:target>, <gap:target id="product-5-price">89.99</gap:target>, <gap:target id="product-5-currency">USD</gap:target>, <gap:target id="product-5-active">TRUE</gap:target>),
+    (<gap:target id="product-6-category">3</gap:target>, <gap:target id="product-6-name">Coffee Maker</gap:target>, <gap:target id="product-6-slug">coffee-maker</gap:target>, <gap:target id="product-6-description">Automatic coffee maker</gap:target>, <gap:target id="product-6-sku">HOME-002</gap:target>, <gap:target id="product-6-price">129.99</gap:target>, <gap:target id="product-6-currency">USD</gap:target>, <gap:target id="product-6-active">TRUE</gap:target>),
+    (<gap:target id="product-7-category">4</gap:target>, <gap:target id="product-7-name">T-Shirt</gap:target>, <gap:target id="product-7-slug">t-shirt</gap:target>, <gap:target id="product-7-description">Cotton t-shirt</gap:target>, <gap:target id="product-7-sku">FASH-001</gap:target>, <gap:target id="product-7-price">24.99</gap:target>, <gap:target id="product-7-currency">USD</gap:target>, <gap:target id="product-7-active">TRUE</gap:target>),
+    (<gap:target id="product-8-category">4</gap:target>, <gap:target id="product-8-name">Sneakers</gap:target>, <gap:target id="product-8-slug">sneakers</gap:target>, <gap:target id="product-8-description">Everyday sneakers</gap:target>, <gap:target id="product-8-sku">FASH-002</gap:target>, <gap:target id="product-8-price">79.99</gap:target>, <gap:target id="product-8-currency">USD</gap:target>, <gap:target id="product-8-active">TRUE</gap:target>),
+    (<gap:target id="product-9-category">5</gap:target>, <gap:target id="product-9-name">Yoga Mat</gap:target>, <gap:target id="product-9-slug">yoga-mat</gap:target>, <gap:target id="product-9-description">Non-slip yoga mat</gap:target>, <gap:target id="product-9-sku">SPORT-001</gap:target>, <gap:target id="product-9-price">29.99</gap:target>, <gap:target id="product-9-currency">USD</gap:target>, <gap:target id="product-9-active">TRUE</gap:target>),
+    (<gap:target id="product-10-category">5</gap:target>, <gap:target id="product-10-name">Dumbbells Set</gap:target>, <gap:target id="product-10-slug">dumbbells-set</gap:target>, <gap:target id="product-10-description">Adjustable dumbbells</gap:target>, <gap:target id="product-10-sku">SPORT-002</gap:target>, <gap:target id="product-10-price">149.99</gap:target>, <gap:target id="product-10-currency">USD</gap:target>, <gap:target id="product-10-active">TRUE</gap:target>);
+
+    INSERT INTO <gap:target id="seed-inventory-table">inventory</gap:target> (<gap:target id="seed-inventory-columns">product_id, warehouse_location, quantity_on_hand, reserved_quantity, reorder_level</gap:target>) VALUES
+    (<gap:target id="inventory-1-product-id">1</gap:target>, <gap:target id="inventory-1-warehouse">main</gap:target>, <gap:target id="inventory-1-on-hand">25</gap:target>, <gap:target id="inventory-1-reserved">2</gap:target>, <gap:target id="inventory-1-reorder">5</gap:target>),
+    (<gap:target id="inventory-2-product-id">2</gap:target>, <gap:target id="inventory-2-warehouse">main</gap:target>, <gap:target id="inventory-2-on-hand">15</gap:target>, <gap:target id="inventory-2-reserved">1</gap:target>, <gap:target id="inventory-2-reorder">5</gap:target>),
+    (<gap:target id="inventory-3-product-id">3</gap:target>, <gap:target id="inventory-3-warehouse">main</gap:target>, <gap:target id="inventory-3-on-hand">40</gap:target>, <gap:target id="inventory-3-reserved">0</gap:target>, <gap:target id="inventory-3-reorder">8</gap:target>),
+    (<gap:target id="inventory-4-product-id">4</gap:target>, <gap:target id="inventory-4-warehouse">main</gap:target>, <gap:target id="inventory-4-on-hand">18</gap:target>, <gap:target id="inventory-4-reserved">1</gap:target>, <gap:target id="inventory-4-reorder">5</gap:target>),
+    (<gap:target id="inventory-5-product-id">5</gap:target>, <gap:target id="inventory-5-warehouse">main</gap:target>, <gap:target id="inventory-5-on-hand">12</gap:target>, <gap:target id="inventory-5-reserved">0</gap:target>, <gap:target id="inventory-5-reorder">5</gap:target>),
+    (<gap:target id="inventory-6-product-id">6</gap:target>, <gap:target id="inventory-6-warehouse">main</gap:target>, <gap:target id="inventory-6-on-hand">9</gap:target>, <gap:target id="inventory-6-reserved">2</gap:target>, <gap:target id="inventory-6-reorder">5</gap:target>),
+    (<gap:target id="inventory-7-product-id">7</gap:target>, <gap:target id="inventory-7-warehouse">main</gap:target>, <gap:target id="inventory-7-on-hand">50</gap:target>, <gap:target id="inventory-7-reserved">5</gap:target>, <gap:target id="inventory-7-reorder">10</gap:target>),
+    (<gap:target id="inventory-8-product-id">8</gap:target>, <gap:target id="inventory-8-warehouse">main</gap:target>, <gap:target id="inventory-8-on-hand">7</gap:target>, <gap:target id="inventory-8-reserved">1</gap:target>, <gap:target id="inventory-8-reorder">10</gap:target>),
+    (<gap:target id="inventory-9-product-id">9</gap:target>, <gap:target id="inventory-9-warehouse">main</gap:target>, <gap:target id="inventory-9-on-hand">30</gap:target>, <gap:target id="inventory-9-reserved">0</gap:target>, <gap:target id="inventory-9-reorder">6</gap:target>),
+    (<gap:target id="inventory-10-product-id">10</gap:target>, <gap:target id="inventory-10-warehouse">main</gap:target>, <gap:target id="inventory-10-on-hand">4</gap:target>, <gap:target id="inventory-10-reserved">0</gap:target>, <gap:target id="inventory-10-reorder">5</gap:target>);
+
+    INSERT INTO <gap:target id="seed-coupons-table">coupons</gap:target> (<gap:target id="seed-coupons-columns">code, description, discount_type, discount_value, min_order_amount, is_active</gap:target>) VALUES
+    (<gap:target id="coupon-1-code">WELCOME10</gap:target>, <gap:target id="coupon-1-description">10 percent off</gap:target>, <gap:target id="coupon-1-type">percent</gap:target>, <gap:target id="coupon-1-value">10.00</gap:target>, <gap:target id="coupon-1-min-order">25.00</gap:target>, <gap:target id="coupon-1-active">TRUE</gap:target>),
+    (<gap:target id="coupon-2-code">SHIP5</gap:target>, <gap:target id="coupon-2-description">5 off shipping</gap:target>, <gap:target id="coupon-2-type">fixed</gap:target>, <gap:target id="coupon-2-value">5.00</gap:target>, <gap:target id="coupon-2-min-order">50.00</gap:target>, <gap:target id="coupon-2-active">TRUE</gap:target>);
+
+    INSERT INTO <gap:target id="seed-orders-table">orders</gap:target> (<gap:target id="seed-orders-columns">user_id, shipping_address_id, order_number, status, subtotal, tax, shipping, discount, total, coupon_id, notes, placed_at</gap:target>) VALUES
+    (<gap:target id="order-1-user-id">1</gap:target>, <gap:target id="order-1-address-id">1</gap:target>, <gap:target id="order-1-number">ORD-1001</gap:target>, <gap:target id="order-1-status">paid</gap:target>, <gap:target id="order-1-subtotal">899.98</gap:target>, <gap:target id="order-1-tax">72.00</gap:target>, <gap:target id="order-1-shipping">10.00</gap:target>, <gap:target id="order-1-discount">0.00</gap:target>, <gap:target id="order-1-total">981.98</gap:target>, <gap:target id="order-1-coupon-id">NULL</gap:target>, <gap:target id="order-1-notes">First sample order</gap:target>, <gap:target id="order-1-placed-at">NOW()</gap:target>),
+    (<gap:target id="order-2-user-id">2</gap:target>, <gap:target id="order-2-address-id">2</gap:target>, <gap:target id="order-2-number">ORD-1002</gap:target>, <gap:target id="order-2-status">shipped</gap:target>, <gap:target id="order-2-subtotal">89.99</gap:target>, <gap:target id="order-2-tax">7.20</gap:target>, <gap:target id="order-2-shipping">8.00</gap:target>, <gap:target id="order-2-discount">0.00</gap:target>, <gap:target id="order-2-total">105.19</gap:target>, <gap:target id="order-2-coupon-id">NULL</gap:target>, <gap:target id="order-2-notes">Second sample order</gap:target>, <gap:target id="order-2-placed-at">NOW()</gap:target>),
+    (<gap:target id="order-3-user-id">3</gap:target>, <gap:target id="order-3-address-id">3</gap:target>, <gap:target id="order-3-number">ORD-1003</gap:target>, <gap:target id="order-3-status">delivered</gap:target>, <gap:target id="order-3-subtotal">179.98</gap:target>, <gap:target id="order-3-tax">14.40</gap:target>, <gap:target id="order-3-shipping">0.00</gap:target>, <gap:target id="order-3-discount">10.00</gap:target>, <gap:target id="order-3-total">184.38</gap:target>, <gap:target id="order-3-coupon-id">1</gap:target>, <gap:target id="order-3-notes">Third sample order</gap:target>, <gap:target id="order-3-placed-at">NOW()</gap:target>),
+    (<gap:target id="order-4-user-id">1</gap:target>, <gap:target id="order-4-address-id">1</gap:target>, <gap:target id="order-4-number">ORD-1004</gap:target>, <gap:target id="order-4-status">paid</gap:target>, <gap:target id="order-4-subtotal">149.99</gap:target>, <gap:target id="order-4-tax">12.00</gap:target>, <gap:target id="order-4-shipping">10.00</gap:target>, <gap:target id="order-4-discount">0.00</gap:target>, <gap:target id="order-4-total">171.99</gap:target>, <gap:target id="order-4-coupon-id">NULL</gap:target>, <gap:target id="order-4-notes">Fourth sample order</gap:target>, <gap:target id="order-4-placed-at">NOW()</gap:target>),
+    (<gap:target id="order-5-user-id">2</gap:target>, <gap:target id="order-5-address-id">2</gap:target>, <gap:target id="order-5-number">ORD-1005</gap:target>, <gap:target id="order-5-status">pending</gap:target>, <gap:target id="order-5-subtotal">59.98</gap:target>, <gap:target id="order-5-tax">4.80</gap:target>, <gap:target id="order-5-shipping">8.00</gap:target>, <gap:target id="order-5-discount">0.00</gap:target>, <gap:target id="order-5-total">72.78</gap:target>, <gap:target id="order-5-coupon-id">NULL</gap:target>, <gap:target id="order-5-notes">Fifth sample order</gap:target>, <gap:target id="order-5-placed-at">NOW()</gap:target>);
+
+    INSERT INTO <gap:target id="seed-order-items-table">order_items</gap:target> (<gap:target id="seed-order-items-columns">order_id, product_id, quantity, unit_price, discount, line_total</gap:target>) VALUES
+    (<gap:target id="order-item-1-order-id">1</gap:target>, <gap:target id="order-item-1-product-id">1</gap:target>, <gap:target id="order-item-1-quantity">1</gap:target>, <gap:target id="order-item-1-unit-price">699.99</gap:target>, <gap:target id="order-item-1-discount">0.00</gap:target>, <gap:target id="order-item-1-line-total">699.99</gap:target>),
+    (<gap:target id="order-item-2-order-id">1</gap:target>, <gap:target id="order-item-2-product-id">2</gap:target>, <gap:target id="order-item-2-quantity">1</gap:target>, <gap:target id="order-item-2-unit-price">199.99</gap:target>, <gap:target id="order-item-2-discount">0.00</gap:target>, <gap:target id="order-item-2-line-total">199.99</gap:target>),
+    (<gap:target id="order-item-3-order-id">2</gap:target>, <gap:target id="order-item-3-product-id">5</gap:target>, <gap:target id="order-item-3-quantity">1</gap:target>, <gap:target id="order-item-3-unit-price">89.99</gap:target>, <gap:target id="order-item-3-discount">0.00</gap:target>, <gap:target id="order-item-3-line-total">89.99</gap:target>),
+    (<gap:target id="order-item-4-order-id">3</gap:target>, <gap:target id="order-item-4-product-id">6</gap:target>, <gap:target id="order-item-4-quantity">1</gap:target>, <gap:target id="order-item-4-unit-price">129.99</gap:target>, <gap:target id="order-item-4-discount">0.00</gap:target>, <gap:target id="order-item-4-line-total">129.99</gap:target>),
+    (<gap:target id="order-item-5-order-id">3</gap:target>, <gap:target id="order-item-5-product-id">9</gap:target>, <gap:target id="order-item-5-quantity">1</gap:target>, <gap:target id="order-item-5-unit-price">29.99</gap:target>, <gap:target id="order-item-5-discount">0.00</gap:target>, <gap:target id="order-item-5-line-total">29.99</gap:target>),
+    (<gap:target id="order-item-6-order-id">4</gap:target>, <gap:target id="order-item-6-product-id">10</gap:target>, <gap:target id="order-item-6-quantity">1</gap:target>, <gap:target id="order-item-6-unit-price">149.99</gap:target>, <gap:target id="order-item-6-discount">0.00</gap:target>, <gap:target id="order-item-6-line-total">149.99</gap:target>),
+    (<gap:target id="order-item-7-order-id">5</gap:target>, <gap:target id="order-item-7-product-id">3</gap:target>, <gap:target id="order-item-7-quantity">1</gap:target>, <gap:target id="order-item-7-unit-price">39.99</gap:target>, <gap:target id="order-item-7-discount">0.00</gap:target>, <gap:target id="order-item-7-line-total">39.99</gap:target>),
+    (<gap:target id="order-item-8-order-id">5</gap:target>, <gap:target id="order-item-8-product-id">7</gap:target>, <gap:target id="order-item-8-quantity">1</gap:target>, <gap:target id="order-item-8-unit-price">24.99</gap:target>, <gap:target id="order-item-8-discount">0.00</gap:target>, <gap:target id="order-item-8-line-total">24.99</gap:target>);
+  </gap:target>
+
+  <gap:target id="additional-supporting-seed-section">
+    INSERT INTO <gap:target id="seed-reviews-table">reviews</gap:target> (<gap:target id="seed-reviews-columns">product_id, user_id, rating, title, comment, is_verified_purchase</gap:target>) VALUES
+    (<gap:target id="review-1-product-id">1</gap:target>, <gap:target id="review-1-user-id">1</gap:target>, <gap:target id="review-1-rating">5</gap:target>, <gap:target id="review-1-title">Great phone</gap:target>, <gap:target id="review-1-comment">Excellent performance.</gap:target>, <gap:target id="review-1-verified">TRUE</gap:target>),
+    (<gap:target id="review-2-product-id">3</gap:target>, <gap:target id="review-2-user-id">2</gap:target>, <gap:target id="review-2-rating">4</gap:target>, <gap:target id="review-2-title">Helpful book</gap:target>, <gap:target id="review-2-comment">Good for beginners.</gap:target>, <gap:target id="review-2-verified">TRUE</gap:target>);
+  </gap:target>
+
+  <gap:target id="constraints-and-maintenance-section">
+    CREATE OR REPLACE FUNCTION <gap:target id="update-timestamp-function-name">set_updated_at</gap:target>()
+    RETURNS TRIGGER AS $$
+    BEGIN
+      NEW.updated_at = NOW();
+      RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;
+
+    CREATE TRIGGER <gap:target id="users-update-timestamp-trigger">trg_users_updated_at</gap:target>
+    BEFORE UPDATE ON <gap:target id="users-update-timestamp-table">users</gap:target>
+    FOR EACH ROW EXECUTE FUNCTION <gap:target id="users-update-timestamp-function">set_updated_at</gap:target>();
+
+    CREATE TRIGGER <gap:target id="products-update-timestamp-trigger">trg_products_updated_at</gap:target>
+    BEFORE UPDATE ON <gap:target id="products-update-timestamp-table">products</gap:target>
+    FOR EACH ROW EXECUTE FUNCTION <gap:target id="products-update-timestamp-function">set_updated_at</gap:target>();
+
+    CREATE TRIGGER <gap:target id="orders-update-timestamp-trigger">trg_orders_updated_at</gap:target>
+    BEFORE UPDATE ON <gap:target id="orders-update-timestamp-table">orders</gap:target>
+    FOR EACH ROW EXECUTE FUNCTION <gap:target id="orders-update-timestamp-function">set_updated_at</gap:target>();
+  </gap:target>
+</gap:target>

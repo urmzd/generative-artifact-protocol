@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acme Parts Catalog</title>
+  <style>
+    :root{
+      --bg:#f4f7fb;
+      --panel:#ffffff;
+      --text:#1e293b;
+      --muted:#64748b;
+      --line:#dbe3ee;
+      --accent:#2563eb;
+      --accent-2:#0f172a;
+      --chip:#e2e8f0;
+      --shadow:0 10px 30px rgba(15,23,42,.08);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:linear-gradient(180deg,#eef4ff 0%,#f8fafc 100%);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+    body{padding:24px}
+    .catalog{max-width:1400px;margin:0 auto}
+    .topbar{
+      position:sticky;top:0;z-index:20;
+      background:rgba(244,247,251,.92);
+      backdrop-filter:saturate(180%) blur(10px);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      border-radius:20px;
+      padding:18px 20px;
+      display:flex;
+      align-items:center;
+      gap:16px;
+      justify-content:space-between;
+      margin-bottom:18px;
+    }
+    .title-wrap{display:flex;flex-direction:column;gap:4px}
+    h1{margin:0;font-size:28px;line-height:1.1;color:var(--accent-2);letter-spacing:-.02em}
+    .subtitle{color:var(--muted);font-size:14px}
+    .search{
+      min-width:280px;max-width:420px;flex:1;
+      display:flex;justify-content:flex-end;
+    }
+    .search input{
+      width:100%;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:999px;
+      padding:14px 18px;
+      font-size:15px;
+      outline:none;
+      box-shadow:0 4px 14px rgba(15,23,42,.05);
+    }
+    .search input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(37,99,235,.12)}
+    section.page{
+      page-break-after:always;
+      break-after:page;
+      margin:0 0 22px 0;
+      background:rgba(255,255,255,.55);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:18px;
+      box-shadow:var(--shadow);
+    }
+    .page-header{
+      display:flex;align-items:center;justify-content:space-between;
+      margin:0 0 16px 0;padding:4px 2px 14px 2px;border-bottom:1px solid var(--line)
+    }
+    .page-header h2{margin:0;font-size:20px;color:var(--accent-2)}
+    .page-header .count{color:var(--muted);font-size:14px}
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:14px;
+    }
+    .product-card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:14px 14px 12px;
+      box-shadow:0 6px 18px rgba(15,23,42,.05);
+      min-height:210px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      position:relative;
+    }
+    .product-card:target{outline:3px solid rgba(37,99,235,.28);border-color:rgba(37,99,235,.45)}
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;
+      width:max-content;
+      background:linear-gradient(135deg,#eff6ff,#dbeafe);
+      color:#1d4ed8;
+      border:1px solid #bfdbfe;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+    .name{
+      font-size:17px;
+      font-weight:700;
+      color:var(--accent-2);
+      line-height:1.25;
+      min-height:44px;
+    }
+    .fields{
+      display:grid;
+      gap:8px;
+      margin-top:auto;
+    }
+    .field{
+      display:flex;
+      gap:8px;
+      align-items:flex-start;
+      font-size:14px;
+      line-height:1.35;
+    }
+    .label{
+      color:var(--muted);
+      min-width:68px;
+      font-weight:700;
+      text-transform:capitalize;
+    }
+    .value{
+      color:var(--text);
+      font-weight:600;
+      word-break:break-word;
+    }
+    .footer-nav{
+      display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+      margin:18px 0 4px;
+      padding:16px;
+      background:rgba(255,255,255,.7);
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+    }
+    .footer-nav a{
+      display:inline-flex;align-items:center;justify-content:center;
+      width:42px;height:42px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--accent-2);
+      text-decoration:none;
+      font-weight:700;
+      box-shadow:0 3px 10px rgba(15,23,42,.04);
+    }
+    .footer-nav a:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+    @media (max-width:1200px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media (max-width:850px){.topbar{flex-direction:column;align-items:stretch}.search{max-width:none}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:560px){body{padding:12px}.grid{grid-template-columns:1fr}.product-card{min-height:auto}.label{min-width:62px}}
+  </style>
+</head>
+<body>
+  <div class="catalog">
+    <header class="topbar">
+      <div class="title-wrap">
+        <h1>Acme Parts Catalog</h1>
+        <div class="subtitle">120 products across 5 paginated sections</div>
+      </div>
+      <div class="search">
+        <input type="search" placeholder="Search products..." aria-label="Search products" />
+      </div>
+    </header>
+
+    <section class="page" id="page-1">
+      <div class="page-header">
+        <h2>Page 1 of 5</h2>
+        <div class="count">Products 1-24</div>
+      </div>
+      <div class="grid">
+        <article class="product-card" id="P0001">
+          <div class="badge">P0001</div>
+          <div class="name">Precision Gasket Set</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0001</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Precision Gasket Set</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00001</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$12.99</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Engine</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">84</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0002">
+          <div class="badge">P0002</div>
+          <div class="name">Heavy-Duty Brake Pads</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0002</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Heavy-Duty Brake Pads</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00002</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$24.50</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Brakes</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">63</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0003">
+          <div class="badge">P0003</div>
+          <div class="name">Alternator Voltage Regulator</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0003</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Alternator Voltage Regulator</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00003</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$18.75</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Electrical</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">92</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0004">
+          <div class="badge">P0004</div>
+          <div class="name">Sport Coil Spring Kit</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0004</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Sport Coil Spring Kit</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00004</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$31.20</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Suspension</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">41</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0005">
+          <div class="badge">P0005</div>
+          <div class="name">High-Flow Air Filter</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0005</span></div>
+            <div class="field"><span class="label">name</span><span class="value">High-Flow Air Filter</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00005</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$14.95</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Filters</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">118</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0006">
+          <div class="badge">P0006</div>
+          <div class="name">Crankshaft Position Sensor</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0006</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Crankshaft Position Sensor</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00006</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$22.10</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Electrical</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">57</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0007">
+          <div class="badge">P0007</div>
+          <div class="name">Ceramic Brake Rotors</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0007</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Ceramic Brake Rotors</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00007</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$39.99</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Brakes</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">33</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0008">
+          <div class="badge">P0008</div>
+          <div class="name">Control Arm Bushing</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0008</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Control Arm Bushing</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00008</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$9.80</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Suspension</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">145</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0009">
+          <div class="badge">P0009</div>
+          <div class="name">Fuel Injection Seal</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0009</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Fuel Injection Seal</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00009</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$6.45</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Engine</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">204</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0010">
+          <div class="badge">P0010</div>
+          <div class="name">Cabin Air Filter</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0010</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Cabin Air Filter</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00010</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$11.25</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Filters</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">126</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0011">
+          <div class="badge">P0011</div>
+          <div class="name">ABS Wheel Speed Sensor</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0011</span></div>
+            <div class="field"><span class="label">name</span><span class="value">ABS Wheel Speed Sensor</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00011</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$27.40</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Electrical</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">73</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0012">
+          <div class="badge">P0012</div>
+          <div class="name">Disc Brake Hardware Kit</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0012</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Disc Brake Hardware Kit</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00012</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$8.99</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Brakes</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">188</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0013">
+          <div class="badge">P0013</div>
+          <div class="name">Strut Mount Assembly</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0013</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Strut Mount Assembly</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00013</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$19.60</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Suspension</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">67</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0014">
+          <div class="badge">P0014</div>
+          <div class="name">Timing Belt Tensioner</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0014</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Timing Belt Tensioner</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00014</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$34.85</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Engine</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">29</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0015">
+          <div class="badge">P0015</div>
+          <div class="name">Spin-On Oil Filter</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0015</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Spin-On Oil Filter</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00015</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$7.35</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Filters</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">152</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0016">
+          <div class="badge">P0016</div>
+          <div class="name">Ignition Coil Pack</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0016</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Ignition Coil Pack</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00016</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$44.20</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Electrical</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">38</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0017">
+          <div class="badge">P0017</div>
+          <div class="name">Brake Caliper Bracket</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0017</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Brake Caliper Bracket</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00017</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$16.49</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Brakes</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">97</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0018">
+          <div class="badge">P0018</div>
+          <div class="name">Rear Shock Absorber</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0018</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Rear Shock Absorber</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00018</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$28.30</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Suspension</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">52</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0019">
+          <div class="badge">P0019</div>
+          <div class="name">Cylinder Head Gasket</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0019</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Cylinder Head Gasket</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00019</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$21.15</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Engine</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">75</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0020">
+          <div class="badge">P0020</div>
+          <div class="name">Fuel Filter Cartridge</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0020</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Fuel Filter Cartridge</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00020</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$13.40</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Filters</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">141</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0021">
+          <div class="badge">P0021</div>
+          <div class="name">Starter Relay Module</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0021</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Starter Relay Module</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00021</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$17.90</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Electrical</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">68</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0022">
+          <div class="badge">P0022</div>
+          <div class="name">Brake Fluid Reservoir Cap</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0022</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Brake Fluid Reservoir Cap</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00022</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$5.25</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Brakes</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">211</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0023">
+          <div class="badge">P0023</div>
+          <div class="name">Lower Ball Joint</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0023</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Lower Ball Joint</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00023</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$23.65</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Suspension</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">44</span></div>
+          </div>
+        </article>
+        <article class="product-card" id="P0024">
+          <div class="badge">P0024</div>
+          <div class="name">Oil Pan Drain Plug</div>
+          <div class="fields">
+            <div class="field"><span class="label">id</span><span class="value">P0024</span></div>
+            <div class="field"><span class="label">name</span><span class="value">Oil Pan Drain Plug</span></div>
+            <div class="field"><span class="label">sku</span><span class="value">SKU-00024</span></div>
+            <div class="field"><span class="label">price</span><span class="value">$4.99</span></div>
+            <div class="field"><span class="label">category</span><span class="value">Engine</span></div>
+            <div class="field"><span class="label">stock</span><span class="value">176</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="page" id="page-2">
+      <div class="page-header">
+        <h2>Page 2 of 5</h2>
+        <div class="count">Products 25-48</div>
+      </div>
+      <div class="grid">
+        <article class="product-card" id="P0025"><div class="badge">P0025</div><div class="name">Radiator Hose Clamp</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0025</span></div><div class="field"><span class="label">name</span><span class="value">Radiator Hose Clamp</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00025</span></div><div class="field"><span class="label">price</span><span class="value">$3.75</span></div><div class="field"><span class="label">category</span><span class="value">Engine</span></div><div class="field"><span class="label">stock</span><span class="value">230</span></div></div></article>
+        <article class="product-card" id="P0026"><div class="badge">P0026</div><div class="name">Ceramic Pad Wear Sensor</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0026</span></div><div class="field"><span class="label">name</span><span class="value">Ceramic Pad Wear Sensor</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00026</span></div><div class="field"><span class="label">price</span><span class="value">$8.60</span></div><div class="field"><span class="label">category</span><span class="value">Brakes</span></div><div class="field"><span class="label">stock</span><span class="value">124</span></div></div></article>
+        <article class="product-card" id="P0027"><div class="badge">P0027</div><div class="name">Headlight Control Unit</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0027</span></div><div class="field"><span class="label">name</span><span class="value">Headlight Control Unit</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00027</span></div><div class="field"><span class="label">price</span><span class="value">$52.15</span></div><div class="field"><span class="label">category</span><span class="value">Electrical</span></div><div class="field"><span class="label">stock</span><span class="value">27</span></div></div></article>
+        <article class="product-card" id="P0028"><div class="badge">P0028</div><div class="name">Rear Sway Bar Link</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0028</span></div><div class="field"><span class="label">name</span><span class="value">Rear Sway Bar Link</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00028</span></div><div class="field"><span class="label">price</span><span class="value">$15.10</span></div><div class="field"><span class="label">category</span><span class="value">Suspension</span></div><div class="field"><span class="label">stock</span><span class="value">88</span></div></div></article>
+        <article class="product-card" id="P0029"><div class="badge">P0029</div><div class="name">Engine Oil Separator</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0029</span></div><div class="field"><span class="label">name</span><span class="value">Engine Oil Separator</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00029</span></div><div class="field"><span class="label">price</span><span class="value">$29.95</span></div><div class="field"><span class="label">category</span><span class="value">Engine</span></div><div class="field"><span class="label">stock</span><span class="value">54</span></div></div></article>
+        <article class="product-card" id="P0030"><div class="badge">P0030</div><div class="name">Diesel Fuel Filter</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0030</span></div><div class="field"><span class="label">name</span><span class="value">Diesel Fuel Filter</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00030</span></div><div class="field"><span class="label">price</span><span class="value">$19.49</span></div><div class="field"><span class="label">category</span><span class="value">Filters</span></div><div class="field"><span class="label">stock</span><span class="value">103</span></div></div></article>
+        <article class="product-card" id="P0031"><div class="badge">P0031</div><div class="name">Door Lock Actuator</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0031</span></div><div class="field"><span class="label">name</span><span class="value">Door Lock Actuator</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00031</span></div><div class="field"><span class="label">price</span><span class="value">$41.00</span></div><div class="field"><span class="label">category</span><span class="value">Electrical</span></div><div class="field"><span class="label">stock</span><span class="value">36</span></div></div></article>
+        <article class="product-card" id="P0032"><div class="badge">P0032</div><div class="name">Brake Pad Shim Set</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0032</span></div><div class="field"><span class="label">name</span><span class="value">Brake Pad Shim Set</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00032</span></div><div class="field"><span class="label">price</span><span class="value">$6.10</span></div><div class="field"><span class="label">category</span><span class="value">Brakes</span></div><div class="field"><span class="label">stock</span><span class="value">159</span></div></div></article>
+        <article class="product-card" id="P0033"><div class="badge">P0033</div><div class="name">Front Stabilizer Bar</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0033</span></div><div class="field"><span class="label">name</span><span class="value">Front Stabilizer Bar</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00033</span></div><div class="field"><span class="label">price</span><span class="value">$48.30</span></div><div class="field"><span class="label">category</span><span class="value">Suspension</span></div><div class="field"><span class="label">stock</span><span class="value">22</span></div></div></article>
+        <article class="product-card" id="P0034"><div class="badge">P0034</div><div class="name">Piston Ring Set</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0034</span></div><div class="field"><span class="label">name</span><span class="value">Piston Ring Set</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00034</span></div><div class="field"><span class="label">price</span><span class="value">$26.80</span></div><div class="field"><span class="label">category</span><span class="value">Engine</span></div><div class="field"><span class="label">stock</span><span class="value">61</span></div></div></article>
+        <article class="product-card" id="P0035"><div class="badge">P0035</div><div class="name">Air Intake Filter Foam</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0035</span></div><div class="field"><span class="label">name</span><span class="value">Air Intake Filter Foam</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00035</span></div><div class="field"><span class="label">price</span><span class="value">$10.05</span></div><div class="field"><span class="label">category</span><span class="value">Filters</span></div><div class="field"><span class="label">stock</span><span class="value">137</span></div></div></article>
+        <article class="product-card" id="P0036"><div class="badge">P0036</div><div class="name">Battery Terminal Clamp</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0036</span></div><div class="field"><span class="label">name</span><span class="value">Battery Terminal Clamp</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00036</span></div><div class="field"><span class="label">price</span><span class="value">$4.20</span></div><div class="field"><span class="label">category</span><span class="value">Electrical</span></div><div class="field"><span class="label">stock</span><span class="value">190</span></div></div></article>
+        <article class="product-card" id="P0037"><div class="badge">P0037</div><div class="name">Hydraulic Brake Hose</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0037</span></div><div class="field"><span class="label">name</span><span class="value">Hydraulic Brake Hose</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00037</span></div><div class="field"><span class="label">price</span><span class="value">$20.75</span></div><div class="field"><span class="label">category</span><span class="value">Brakes</span></div><div class="field"><span class="label">stock</span><span class="value">49</span></div></div></article>
+        <article class="product-card" id="P0038"><div class="badge">P0038</div><div class="name">Shock Mount Kit</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0038</span></div><div class="field"><span class="label">name</span><span class="value">Shock Mount Kit</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00038</span></div><div class="field"><span class="label">price</span><span class="value">$13.15</span></div><div class="field"><span class="label">category</span><span class="value">Suspension</span></div><div class="field"><span class="label">stock</span><span class="value">86</span></div></div></article>
+        <article class="product-card" id="P0039"><div class="badge">P0039</div><div class="name">Valve Cover Grommet</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0039</span></div><div class="field"><span class="label">name</span><span class="value">Valve Cover Grommet</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00039</span></div><div class="field"><span class="label">price</span><span class="value">$5.95</span></div><div class="field"><span class="label">category</span><span class="value">Engine</span></div><div class="field"><span class="label">stock</span><span class="value">172</span></div></div></article>
+        <article class="product-card" id="P0040"><div class="badge">P0040</div><div class="name">Synthetic Fuel Filter</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0040</span></div><div class="field"><span class="label">name</span><span class="value">Synthetic Fuel Filter</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00040</span></div><div class="field"><span class="label">price</span><span class="value">$16.85</span></div><div class="field"><span class="label">category</span><span class="value">Filters</span></div><div class="field"><span class="label">stock</span><span class="value">94</span></div></div></article>
+        <article class="product-card" id="P0041"><div class="badge">P0041</div><div class="name">Headlight Bulb Socket</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0041</span></div><div class="field"><span class="label">name</span><span class="value">Headlight Bulb Socket</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00041</span></div><div class="field"><span class="label">price</span><span class="value">$7.20</span></div><div class="field"><span class="label">category</span><span class="value">Electrical</span></div><div class="field"><span class="label">stock</span><span class="value">143</span></div></div></article>
+        <article class="product-card" id="P0042"><div class="badge">P0042</div><div class="name">Parking Brake Cable</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0042</span></div><div class="field"><span class="label">name</span><span class="value">Parking Brake Cable</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00042</span></div><div class="field"><span class="label">price</span><span class="value">$18.10</span></div><div class="field"><span class="label">category</span><span class="value">Brakes</span></div><div class="field"><span class="label">stock</span><span class="value">77</span></div></div></article>
+        <article class="product-card" id="P0043"><div class="badge">P0043</div><div class="name">Alignment Camber Kit</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0043</span></div><div class="field"><span class="label">name</span><span class="value">Alignment Camber Kit</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00043</span></div><div class="field"><span class="label">price</span><span class="value">$36.45</span></div><div class="field"><span class="label">category</span><span class="value">Suspension</span></div><div class="field"><span class="label">stock</span><span class="value">39</span></div></div></article>
+        <article class="product-card" id="P0044"><div class="badge">P0044</div><div class="name">Engine Mount Insert</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0044</span></div><div class="field"><span class="label">name</span><span class="value">Engine Mount Insert</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00044</span></div><div class="field"><span class="label">price</span><span class="value">$14.35</span></div><div class="field"><span class="label">category</span><span class="value">Engine</span></div><div class="field"><span class="label">stock</span><span class="value">111</span></div></div></article>
+        <article class="product-card" id="P0045"><div class="badge">P0045</div><div class="name">Oil Filter Adapter</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0045</span></div><div class="field"><span class="label">name</span><span class="value">Oil Filter Adapter</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00045</span></div><div class="field"><span class="label">price</span><span class="value">$9.45</span></div><div class="field"><span class="label">category</span><span class="value">Filters</span></div><div class="field"><span class="label">stock</span><span class="value">158</span></div></div></article>
+        <article class="product-card" id="P0046"><div class="badge">P0046</div><div class="name">Ignition Switch Assembly</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0046</span></div><div class="field"><span class="label">name</span><span class="value">Ignition Switch Assembly</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00046</span></div><div class="field"><span class="label">price</span><span class="value">$32.95</span></div><div class="field"><span class="label">category</span><span class="value">Electrical</span></div><div class="field"><span class="label">stock</span><span class="value">46</span></div></div></article>
+        <article class="product-card" id="P0047"><div class="badge">P0047</div><div class="name">Front Brake Hose Set</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0047</span></div><div class="field"><span class="label">name</span><span class="value">Front Brake Hose Set</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00047</span></div><div class="field"><span class="label">price</span><span class="value">$25.60</span></div><div class="field"><span class="label">category</span><span class="value">Brakes</span></div><div class="field"><span class="label">stock</span><span class="value">58</span></div></div></article>
+        <article class="product-card" id="P0048"><div class="badge">P0048</div><div class="name">Tie Rod End</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0048</span></div><div class="field"><span class="label">name</span><span class="value">Tie Rod End</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00048</span></div><div class="field"><span class="label">price</span><span class="value">$12.40</span></div><div class="field"><span class="label">category</span><span class="value">Suspension</span></div><div class="field"><span class="label">stock</span><span class="value">105</span></div></div></article>
+      </div>
+    </section>
+
+    <section class="page" id="page-3">
+      <div class="page-header">
+        <h2>Page 3 of 5</h2>
+        <div class="count">Products 49-72</div>
+      </div>
+      <div class="grid">
+        <article class="product-card" id="P0049"><div class="badge">P0049</div><div class="name">Timing Chain Guide</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0049</span></div><div class="field"><span class="label">name</span><span class="value">Timing Chain Guide</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00049</span></div><div class="field"><span class="label">price</span><span class="value">$11.90</span></div><div class="field"><span class="label">category</span><span class="value">Engine</span></div><div class="field"><span class="label">stock</span><span class="value">87</span></div></div></article>
+        <article class="product-card" id="P0050"><div class="badge">P0050</div><div class="name">Cabin Filter Carbon</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0050</span></div><div class="field"><span class="label">name</span><span class="value">Cabin Filter Carbon</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00050</span></div><div class="field"><span class="label">price</span><span class="value">$15.70</span></div><div class="field"><span class="label">category</span><span class="value">Filters</span></div><div class="field"><span class="label">stock</span><span class="value">119</span></div></div></article>
+        <article class="product-card" id="P0051"><div class="badge">P0051</div><div class="name">Power Window Switch</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0051</span></div><div class="field"><span class="label">name</span><span class="value">Power Window Switch</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00051</span></div><div class="field"><span class="label">price</span><span class="value">$21.45</span></div><div class="field"><span class="label">category</span><span class="value">Electrical</span></div><div class="field"><span class="label">stock</span><span class="value">69</span></div></div></article>
+        <article class="product-card" id="P0052"><div class="badge">P0052</div><div class="name">Brake Master Cylinder Kit</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0052</span></div><div class="field"><span class="label">name</span><span class="value">Brake Master Cylinder Kit</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00052</span></div><div class="field"><span class="label">price</span><span class="value">$42.60</span></div><div class="field"><span class="label">category</span><span class="value">Brakes</span></div><div class="field"><span class="label">stock</span><span class="value">31</span></div></div></article>
+        <article class="product-card" id="P0053"><div class="badge">P0053</div><div class="name">Coilover Adjuster Ring</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0053</span></div><div class="field"><span class="label">name</span><span class="value">Coilover Adjuster Ring</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00053</span></div><div class="field"><span class="label">price</span><span class="value">$8.15</span></div><div class="field"><span class="label">category</span><span class="value">Suspension</span></div><div class="field"><span class="label">stock</span><span class="value">132</span></div></div></article>
+        <article class="product-card" id="P0054"><div class="badge">P0054</div><div class="name">PCV Valve Grommet</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0054</span></div><div class="field"><span class="label">name</span><span class="value">PCV Valve Grommet</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00054</span></div><div class="field"><span class="label">price</span><span class="value">$3.30</span></div><div class="field"><span class="label">category</span><span class="value">Engine</span></div><div class="field"><span class="label">stock</span><span class="value">240</span></div></div></article>
+        <article class="product-card" id="P0055"><div class="badge">P0055</div><div class="name">Fuel Pump Filter Sock</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0055</span></div><div class="field"><span class="label">name</span><span class="value">Fuel Pump Filter Sock</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00055</span></div><div class="field"><span class="label">price</span><span class="value">$9.95</span></div><div class="field"><span class="label">category</span><span class="value">Filters</span></div><div class="field"><span class="label">stock</span><span class="value">151</span></div></div></article>
+        <article class="product-card" id="P0056"><div class="badge">P0056</div><div class="name">Tail Light Connector</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0056</span></div><div class="field"><span class="label">name</span><span class="value">Tail Light Connector</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00056</span></div><div class="field"><span class="label">price</span><span class="value">$6.80</span></div><div class="field"><span class="label">category</span><span class="value">Electrical</span></div><div class="field"><span class="label">stock</span><span class="value">174</span></div></div></article>
+        <article class="product-card" id="P0057"><div class="badge">P0057</div><div class="name">Brake Shoe Spring Set</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0057</span></div><div class="field"><span class="label">name</span><span class="value">Brake Shoe Spring Set</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00057</span></div><div class="field"><span class="label">price</span><span class="value">$5.60</span></div><div class="field"><span class="label">category</span><span class="value">Brakes</span></div><div class="field"><span class="label">stock</span><span class="value">198</span></div></div></article>
+        <article class="product-card" id="P0058"><div class="badge">P0058</div><div class="name">Sway Bar End Link Kit</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0058</span></div><div class="field"><span class="label">name</span><span class="value">Sway Bar End Link Kit</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00058</span></div><div class="field"><span class="label">price</span><span class="value">$17.25</span></div><div class="field"><span class="label">category</span><span class="value">Suspension</span></div><div class="field"><span class="label">stock</span><span class="value">79</span></div></div></article>
+        <article class="product-card" id="P0059"><div class="badge">P0059</div><div class="name">Camshaft Seal Ring</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0059</span></div><div class="field"><span class="label">name</span><span class="value">Camshaft Seal Ring</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00059</span></div><div class="field"><span class="label">price</span><span class="value">$12.35</span></div><div class="field"><span class="label">category</span><span class="value">Engine</span></div><div class="field"><span class="label">stock</span><span class="value">83</span></div></div></article>
+        <article class="product-card" id="P0060"><div class="badge">P0060</div><div class="name">Inline Fuel Filter</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0060</span></div><div class="field"><span class="label">name</span><span class="value">Inline Fuel Filter</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00060</span></div><div class="field"><span class="label">price</span><span class="value">$7.85</span></div><div class="field"><span class="label">category</span><span class="value">Filters</span></div><div class="field"><span class="label">stock</span><span class="value">160</span></div></div></article>
+        <article class="product-card" id="P0061"><div class="badge">P0061</div><div class="name">Dashboard Dimmer Switch</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0061</span></div><div class="field"><span class="label">name</span><span class="value">Dashboard Dimmer Switch</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00061</span></div><div class="field"><span class="label">price</span><span class="value">$14.15</span></div><div class="field"><span class="label">category</span><span class="value">Electrical</span></div><div class="field"><span class="label">stock</span><span class="value">97</span></div></div></article>
+        <article class="product-card" id="P0062"><div class="badge">P0062</div><div class="name">Rear Brake Spring Kit</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0062</span></div><div class="field"><span class="label">name</span><span class="value">Rear Brake Spring Kit</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00062</span></div><div class="field"><span class="label">price</span><span class="value">$9.10</span></div><div class="field"><span class="label">category</span><span class="value">Brakes</span></div><div class="field"><span class="label">stock</span><span class="value">145</span></div></div></article>
+        <article class="product-card" id="P0063"><div class="badge">P0063</div><div class="name">Lift Spacer Kit</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0063</span></div><div class="field"><span class="label">name</span><span class="value">Lift Spacer Kit</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00063</span></div><div class="field"><span class="label">price</span><span class="value">$27.95</span></div><div class="field"><span class="label">category</span><span class="value">Suspension</span></div><div class="field"><span class="label">stock</span><span class="value">42</span></div></div></article>
+        <article class="product-card" id="P0064"><div class="badge">P0064</div><div class="name">Crankcase Breather Filter</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0064</span></div><div class="field"><span class="label">name</span><span class="value">Crankcase Breather Filter</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00064</span></div><div class="field"><span class="label">price</span><span class="value">$13.65</span></div><div class="field"><span class="label">category</span><span class="value">Engine</span></div><div class="field"><span class="label">stock</span><span class="value">76</span></div></div></article>
+        <article class="product-card" id="P0065"><div class="badge">P0065</div><div class="name">Oil Filter O-Ring</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0065</span></div><div class="field"><span class="label">name</span><span class="value">Oil Filter O-Ring</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00065</span></div><div class="field"><span class="label">price</span><span class="value">$2.95</span></div><div class="field"><span class="label">category</span><span class="value">Filters</span></div><div class="field"><span class="label">stock</span><span class="value">220</span></div></div></article>
+        <article class="product-card" id="P0066"><div class="badge">P0066</div><div class="name">Fog Lamp Harness</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0066</span></div><div class="field"><span class="label">name</span><span class="value">Fog Lamp Harness</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00066</span></div><div class="field"><span class="label">price</span><span class="value">$11.55</span></div><div class="field"><span class="label">category</span><span class="value">Electrical</span></div><div class="field"><span class="label">stock</span><span class="value">116</span></div></div></article>
+        <article class="product-card" id="P0067"><div class="badge">P0067</div><div class="name">Parking Brake Shoe</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0067</span></div><div class="field"><span class="label">name</span><span class="value">Parking Brake Shoe</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00067</span></div><div class="field"><span class="label">price</span><span class="value">$18.95</span></div><div class="field"><span class="label">category</span><span class="value">Brakes</span></div><div class="field"><span class="label">stock</span><span class="value">64</span></div></div></article>
+        <article class="product-card" id="P0068"><div class="badge">P0068</div><div class="name">Upper Control Arm</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0068</span></div><div class="field"><span class="label">name</span><span class="value">Upper Control Arm</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00068</span></div><div class="field"><span class="label">price</span><span class="value">$33.70</span></div><div class="field"><span class="label">category</span><span class="value">Suspension</span></div><div class="field"><span class="label">stock</span><span class="value">48</span></div></div></article>
+        <article class="product-card" id="P0069"><div class="badge">P0069</div><div class="name">Engine Valve Stem Seal</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0069</span></div><div class="field"><span class="label">name</span><span class="value">Engine Valve Stem Seal</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00069</span></div><div class="field"><span class="label">price</span><span class="value">$6.75</span></div><div class="field"><span class="label">category</span><span class="value">Engine</span></div><div class="field"><span class="label">stock</span><span class="value">153</span></div></div></article>
+        <article class="product-card" id="P0070"><div class="badge">P0070</div><div class="name">Fuel Screen Mesh</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0070</span></div><div class="field"><span class="label">name</span><span class="value">Fuel Screen Mesh</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00070</span></div><div class="field"><span class="label">price</span><span class="value">$4.40</span></div><div class="field"><span class="label">category</span><span class="value">Filters</span></div><div class="field"><span class="label">stock</span><span class="value">184</span></div></div></article>
+        <article class="product-card" id="P0071"><div class="badge">P0071</div><div class="name">Radiator Fan Connector</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0071</span></div><div class="field"><span class="label">name</span><span class="value">Radiator Fan Connector</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00071</span></div><div class="field"><span class="label">price</span><span class="value">$12.85</span></div><div class="field"><span class="label">category</span><span class="value">Electrical</span></div><div class="field"><span class="label">stock</span><span class="value">81</span></div></div></article>
+        <article class="product-card" id="P0072"><div class="badge">P0072</div><div class="name">Ventilated Rotor Pair</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0072</span></div><div class="field"><span class="label">name</span><span class="value">Ventilated Rotor Pair</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00072</span></div><div class="field"><span class="label">price</span><span class="value">$45.90</span></div><div class="field"><span class="label">category</span><span class="value">Brakes</span></div><div class="field"><span class="label">stock</span><span class="value">24</span></div></div></article>
+      </div>
+    </section>
+
+    <section class="page" id="page-4">
+      <div class="page-header">
+        <h2>Page 4 of 5</h2>
+        <div class="count">Products 73-96</div>
+      </div>
+      <div class="grid">
+        <article class="product-card" id="P0073"><div class="badge">P0073</div><div class="name">Leaf Spring Bushing</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0073</span></div><div class="field"><span class="label">name</span><span class="value">Leaf Spring Bushing</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00073</span></div><div class="field"><span class="label">price</span><span class="value">$7.65</span></div><div class="field"><span class="label">category</span><span class="value">Suspension</span></div><div class="field"><span class="label">stock</span><span class="value">167</span></div></div></article>
+        <article class="product-card" id="P0074"><div class="badge">P0074</div><div class="name">Throttle Body Gasket</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0074</span></div><div class="field"><span class="label">name</span><span class="value">Throttle Body Gasket</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00074</span></div><div class="field"><span class="label">price</span><span class="value">$6.20</span></div><div class="field"><span class="label">category</span><span class="value">Engine</span></div><div class="field"><span class="label">stock</span><span class="value">193</span></div></div></article>
+        <article class="product-card" id="P0075"><div class="badge">P0075</div><div class="name">Air Filter Element</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0075</span></div><div class="field"><span class="label">name</span><span class="value">Air Filter Element</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00075</span></div><div class="field"><span class="label">price</span><span class="value">$9.90</span></div><div class="field"><span class="label">category</span><span class="value">Filters</span></div><div class="field"><span class="label">stock</span><span class="value">205</span></div></div></article>
+        <article class="product-card" id="P0076"><div class="badge">P0076</div><div class="name">Engine Ground Strap</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0076</span></div><div class="field"><span class="label">name</span><span class="value">Engine Ground Strap</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00076</span></div><div class="field"><span class="label">price</span><span class="value">$8.25</span></div><div class="field"><span class="label">category</span><span class="value">Electrical</span></div><div class="field"><span class="label">stock</span><span class="value">109</span></div></div></article>
+        <article class="product-card" id="P0077"><div class="badge">P0077</div><div class="name">Brake Dust Shield</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0077</span></div><div class="field"><span class="label">name</span><span class="value">Brake Dust Shield</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00077</span></div><div class="field"><span class="label">price</span><span class="value">$14.80</span></div><div class="field"><span class="label">category</span><span class="value">Brakes</span></div><div class="field"><span class="label">stock</span><span class="value">71</span></div></div></article>
+        <article class="product-card" id="P0078"><div class="badge">P0078</div><div class="name">Strut Bearing Plate</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0078</span></div><div class="field"><span class="label">name</span><span class="value">Strut Bearing Plate</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00078</span></div><div class="field"><span class="label">price</span><span class="value">$21.90</span></div><div class="field"><span class="label">category</span><span class="value">Suspension</span></div><div class="field"><span class="label">stock</span><span class="value">56</span></div></div></article>
+        <article class="product-card" id="P0079"><div class="badge">P0079</div><div class="name">Valve Cover Seal</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0079</span></div><div class="field"><span class="label">name</span><span class="value">Valve Cover Seal</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00079</span></div><div class="field"><span class="label">price</span><span class="value">$13.05</span></div><div class="field"><span class="label">category</span><span class="value">Engine</span></div><div class="field"><span class="label">stock</span><span class="value">95</span></div></div></article>
+        <article class="product-card" id="P0080"><div class="badge">P0080</div><div class="name">Transmission Filter Screen</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0080</span></div><div class="field"><span class="label">name</span><span class="value">Transmission Filter Screen</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00080</span></div><div class="field"><span class="label">price</span><span class="value">$18.45</span></div><div class="field"><span class="label">category</span><span class="value">Filters</span></div><div class="field"><span class="label">stock</span><span class="value">122</span></div></div></article>
+        <article class="product-card" id="P0081"><div class="badge">P0081</div><div class="name">Marker Lamp Socket</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0081</span></div><div class="field"><span class="label">name</span><span class="value">Marker Lamp Socket</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00081</span></div><div class="field"><span class="label">price</span><span class="value">$5.55</span></div><div class="field"><span class="label">category</span><span class="value">Electrical</span></div><div class="field"><span class="label">stock</span><span class="value">142</span></div></div></article>
+        <article class="product-card" id="P0082"><div class="badge">P0082</div><div class="name">Front Rotor Hardware</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0082</span></div><div class="field"><span class="label">name</span><span class="value">Front Rotor Hardware</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00082</span></div><div class="field"><span class="label">price</span><span class="value">$7.30</span></div><div class="field"><span class="label">category</span><span class="value">Brakes</span></div><div class="field"><span class="label">stock</span><span class="value">163</span></div></div></article>
+        <article class="product-card" id="P0083"><div class="badge">P0083</div><div class="name">Rear Coil Spring Seat</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0083</span></div><div class="field"><span class="label">name</span><span class="value">Rear Coil Spring Seat</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00083</span></div><div class="field"><span class="label">price</span><span class="value">$16.95</span></div><div class="field"><span class="label">category</span><span class="value">Suspension</span></div><div class="field"><span class="label">stock</span><span class="value">80</span></div></div></article>
+        <article class="product-card" id="P0084"><div class="badge">P0084</div><div class="name">Oil Gallery Plug</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0084</span></div><div class="field"><span class="label">name</span><span class="value">Oil Gallery Plug</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00084</span></div><div class="field"><span class="label">price</span><span class="value">$4.60</span></div><div class="field"><span class="label">category</span><span class="value">Engine</span></div><div class="field"><span class="label">stock</span><span class="value">177</span></div></div></article>
+        <article class="product-card" id="P0085"><div class="badge">P0085</div><div class="name">Fuel Vapor Filter</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0085</span></div><div class="field"><span class="label">name</span><span class="value">Fuel Vapor Filter</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00085</span></div><div class="field"><span class="label">price</span><span class="value">$10.75</span></div><div class="field"><span class="label">category</span><span class="value">Filters</span></div><div class="field"><span class="label">stock</span><span class="value">131</span></div></div></article>
+        <article class="product-card" id="P0086"><div class="badge">P0086</div><div class="name">Fuse Block Holder</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0086</span></div><div class="field"><span class="label">name</span><span class="value">Fuse Block Holder</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00086</span></div><div class="field"><span class="label">price</span><span class="value">$12.55</span></div><div class="field"><span class="label">category</span><span class="value">Electrical</span></div><div class="field"><span class="label">stock</span><span class="value">98</span></div></div></article>
+        <article class="product-card" id="P0087"><div class="badge">P0087</div><div class="name">Brake Line Clip</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0087</span></div><div class="field"><span class="label">name</span><span class="value">Brake Line Clip</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00087</span></div><div class="field"><span class="label">price</span><span class="value">$2.90</span></div><div class="field"><span class="label">category</span><span class="value">Brakes</span></div><div class="field"><span class="label">stock</span><span class="value">214</span></div></div></article>
+        <article class="product-card" id="P0088"><div class="badge">P0088</div><div class="name">Stabilizer End Bushing</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0088</span></div><div class="field"><span class="label">name</span><span class="value">Stabilizer End Bushing</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00088</span></div><div class="field"><span class="label">price</span><span class="value">$6.95</span></div><div class="field"><span class="label">category</span><span class="value">Suspension</span></div><div class="field"><span class="label">stock</span><span class="value">154</span></div></div></article>
+        <article class="product-card" id="P0089"><div class="badge">P0089</div><div class="name">Valve Cover Bolt Kit</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0089</span></div><div class="field"><span class="label">name</span><span class="value">Valve Cover Bolt Kit</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00089</span></div><div class="field"><span class="label">price</span><span class="value">$8.40</span></div><div class="field"><span class="label">category</span><span class="value">Engine</span></div><div class="field"><span class="label">stock</span><span class="value">116</span></div></div></article>
+        <article class="product-card" id="P0090"><div class="badge">P0090</div><div class="name">Diesel Filter Cartridge</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0090</span></div><div class="field"><span class="label">name</span><span class="value">Diesel Filter Cartridge</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00090</span></div><div class="field"><span class="label">price</span><span class="value">$20.20</span></div><div class="field"><span class="label">category</span><span class="value">Filters</span></div><div class="field"><span class="label">stock</span><span class="value">89</span></div></div></article>
+        <article class="product-card" id="P0091"><div class="badge">P0091</div><div class="name">Horn Relay Assembly</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0091</span></div><div class="field"><span class="label">name</span><span class="value">Horn Relay Assembly</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00091</span></div><div class="field"><span class="label">price</span><span class="value">$9.20</span></div><div class="field"><span class="label">category</span><span class="value">Electrical</span></div><div class="field"><span class="label">stock</span><span class="value">101</span></div></div></article>
+        <article class="product-card" id="P0092"><div class="badge">P0092</div><div class="name">Caliper Slide Pin Kit</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0092</span></div><div class="field"><span class="label">name</span><span class="value">Caliper Slide Pin Kit</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00092</span></div><div class="field"><span class="label">price</span><span class="value">$11.70</span></div><div class="field"><span class="label">category</span><span class="value">Brakes</span></div><div class="field"><span class="label">stock</span><span class="value">133</span></div></div></article>
+        <article class="product-card" id="P0093"><div class="badge">P0093</div><div class="name">Rear Spring Spacer</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0093</span></div><div class="field"><span class="label">name</span><span class="value">Rear Spring Spacer</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00093</span></div><div class="field"><span class="label">price</span><span class="value">$13.10</span></div><div class="field"><span class="label">category</span><span class="value">Suspension</span></div><div class="field"><span class="label">stock</span><span class="value">74</span></div></div></article>
+        <article class="product-card" id="P0094"><div class="badge">P0094</div><div class="name">Oil Cooler Seal</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0094</span></div><div class="field"><span class="label">name</span><span class="value">Oil Cooler Seal</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00094</span></div><div class="field"><span class="label">price</span><span class="value">$5.15</span></div><div class="field"><span class="label">category</span><span class="value">Engine</span></div><div class="field"><span class="label">stock</span><span class="value">168</span></div></div></article>
+        <article class="product-card" id="P0095"><div class="badge">P0095</div><div class="name">Panel Air Filter</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0095</span></div><div class="field"><span class="label">name</span><span class="value">Panel Air Filter</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00095</span></div><div class="field"><span class="label">price</span><span class="value">$8.85</span></div><div class="field"><span class="label">category</span><span class="value">Filters</span></div><div class="field"><span class="label">stock</span><span class="value">147</span></div></div></article>
+        <article class="product-card" id="P0096"><div class="badge">P0096</div><div class="name">Battery Hold-Down Clamp</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0096</span></div><div class="field"><span class="label">name</span><span class="value">Battery Hold-Down Clamp</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00096</span></div><div class="field"><span class="label">price</span><span class="value">$4.75</span></div><div class="field"><span class="label">category</span><span class="value">Electrical</span></div><div class="field"><span class="label">stock</span><span class="value">187</span></div></div></article>
+      </div>
+    </section>
+
+    <section class="page" id="page-5">
+      <div class="page-header">
+        <h2>Page 5 of 5</h2>
+        <div class="count">Products 97-120</div>
+      </div>
+      <div class="grid">
+        <article class="product-card" id="P0097"><div class="badge">P0097</div><div class="name">Rear Brake Caliper</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0097</span></div><div class="field"><span class="label">name</span><span class="value">Rear Brake Caliper</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00097</span></div><div class="field"><span class="label">price</span><span class="value">$36.10</span></div><div class="field"><span class="label">category</span><span class="value">Brakes</span></div><div class="field"><span class="label">stock</span><span class="value">45</span></div></div></article>
+        <article class="product-card" id="P0098"><div class="badge">P0098</div><div class="name">Front Spring Seat Pad</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0098</span></div><div class="field"><span class="label">name</span><span class="value">Front Spring Seat Pad</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00098</span></div><div class="field"><span class="label">price</span><span class="value">$6.55</span></div><div class="field"><span class="label">category</span><span class="value">Suspension</span></div><div class="field"><span class="label">stock</span><span class="value">120</span></div></div></article>
+        <article class="product-card" id="P0099"><div class="badge">P0099</div><div class="name">Throttle Position Sensor</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0099</span></div><div class="field"><span class="label">name</span><span class="value">Throttle Position Sensor</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00099</span></div><div class="field"><span class="label">price</span><span class="value">$19.05</span></div><div class="field"><span class="label">category</span><span class="value">Engine</span></div><div class="field"><span class="label">stock</span><span class="value">66</span></div></div></article>
+        <article class="product-card" id="P0100"><div class="badge">P0100</div><div class="name">Diesel Particulate Filter</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0100</span></div><div class="field"><span class="label">name</span><span class="value">Diesel Particulate Filter</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00100</span></div><div class="field"><span class="label">price</span><span class="value">$49.95</span></div><div class="field"><span class="label">category</span><span class="value">Filters</span></div><div class="field"><span class="label">stock</span><span class="value">28</span></div></div></article>
+        <article class="product-card" id="P0101"><div class="badge">P0101</div><div class="name">Tailgate Wiring Harness</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0101</span></div><div class="field"><span class="label">name</span><span class="value">Tailgate Wiring Harness</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00101</span></div><div class="field"><span class="label">price</span><span class="value">$22.75</span></div><div class="field"><span class="label">category</span><span class="value">Electrical</span></div><div class="field"><span class="label">stock</span><span class="value">93</span></div></div></article>
+        <article class="product-card" id="P0102"><div class="badge">P0102</div><div class="name">Brake Pedal Pad</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0102</span></div><div class="field"><span class="label">name</span><span class="value">Brake Pedal Pad</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00102</span></div><div class="field"><span class="label">price</span><span class="value">$3.95</span></div><div class="field"><span class="label">category</span><span class="value">Brakes</span></div><div class="field"><span class="label">stock</span><span class="value">201</span></div></div></article>
+        <article class="product-card" id="P0103"><div class="badge">P0103</div><div class="name">Shock Dust Boot</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0103</span></div><div class="field"><span class="label">name</span><span class="value">Shock Dust Boot</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00103</span></div><div class="field"><span class="label">price</span><span class="value">$7.10</span></div><div class="field"><span class="label">category</span><span class="value">Suspension</span></div><div class="field"><span class="label">stock</span><span class="value">137</span></div></div></article>
+        <article class="product-card" id="P0104"><div class="badge">P0104</div><div class="name">Crankcase Gasket Seal</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0104</span></div><div class="field"><span class="label">name</span><span class="value">Crankcase Gasket Seal</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00104</span></div><div class="field"><span class="label">price</span><span class="value">$15.35</span></div><div class="field"><span class="label">category</span><span class="value">Engine</span></div><div class="field"><span class="label">stock</span><span class="value">72</span></div></div></article>
+        <article class="product-card" id="P0105"><div class="badge">P0105</div><div class="name">Oil Filter Wrench Ring</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0105</span></div><div class="field"><span class="label">name</span><span class="value">Oil Filter Wrench Ring</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00105</span></div><div class="field"><span class="label">price</span><span class="value">$4.30</span></div><div class="field"><span class="label">category</span><span class="value">Filters</span></div><div class="field"><span class="label">stock</span><span class="value">212</span></div></div></article>
+        <article class="product-card" id="P0106"><div class="badge">P0106</div><div class="name">License Plate Light Socket</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0106</span></div><div class="field"><span class="label">name</span><span class="value">License Plate Light Socket</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00106</span></div><div class="field"><span class="label">price</span><span class="value">$5.40</span></div><div class="field"><span class="label">category</span><span class="value">Electrical</span></div><div class="field"><span class="label">stock</span><span class="value">166</span></div></div></article>
+        <article class="product-card" id="P0107"><div class="badge">P0107</div><div class="name">Brake Caliper Piston</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0107</span></div><div class="field"><span class="label">name</span><span class="value">Brake Caliper Piston</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00107</span></div><div class="field"><span class="label">price</span><span class="value">$13.80</span></div><div class="field"><span class="label">category</span><span class="value">Brakes</span></div><div class="field"><span class="label">stock</span><span class="value">59</span></div></div></article>
+        <article class="product-card" id="P0108"><div class="badge">P0108</div><div class="name">Rear Coil Over Kit</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0108</span></div><div class="field"><span class="label">name</span><span class="value">Rear Coil Over Kit</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00108</span></div><div class="field"><span class="label">price</span><span class="value">$38.25</span></div><div class="field"><span class="label">category</span><span class="value">Suspension</span></div><div class="field"><span class="label">stock</span><span class="value">34</span></div></div></article>
+        <article class="product-card" id="P0109"><div class="badge">P0109</div><div class="name">Intake Manifold Seal</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0109</span></div><div class="field"><span class="label">name</span><span class="value">Intake Manifold Seal</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00109</span></div><div class="field"><span class="label">price</span><span class="value">$9.75</span></div><div class="field"><span class="label">category</span><span class="value">Engine</span></div><div class="field"><span class="label">stock</span><span class="value">149</span></div></div></article>
+        <article class="product-card" id="P0110"><div class="badge">P0110</div><div class="name">Oil Filter Drain Valve</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0110</span></div><div class="field"><span class="label">name</span><span class="value">Oil Filter Drain Valve</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00110</span></div><div class="field"><span class="label">price</span><span class="value">$12.15</span></div><div class="field"><span class="label">category</span><span class="value">Filters</span></div><div class="field"><span class="label">stock</span><span class="value">127</span></div></div></article>
+        <article class="product-card" id="P0111"><div class="badge">P0111</div><div class="name">Back-Up Light Connector</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0111</span></div><div class="field"><span class="label">name</span><span class="value">Back-Up Light Connector</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00111</span></div><div class="field"><span class="label">price</span><span class="value">$6.65</span></div><div class="field"><span class="label">category</span><span class="value">Electrical</span></div><div class="field"><span class="label">stock</span><span class="value">155</span></div></div></article>
+        <article class="product-card" id="P0112"><div class="badge">P0112</div><div class="name">Brake Wear Indicator Clip</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0112</span></div><div class="field"><span class="label">name</span><span class="value">Brake Wear Indicator Clip</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00112</span></div><div class="field"><span class="label">price</span><span class="value">$3.15</span></div><div class="field"><span class="label">category</span><span class="value">Brakes</span></div><div class="field"><span class="label">stock</span><span class="value">208</span></div></div></article>
+        <article class="product-card" id="P0113"><div class="badge">P0113</div><div class="name">Control Arm Ball Seat</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0113</span></div><div class="field"><span class="label">name</span><span class="value">Control Arm Ball Seat</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00113</span></div><div class="field"><span class="label">price</span><span class="value">$16.40</span></div><div class="field"><span class="label">category</span><span class="value">Suspension</span></div><div class="field"><span class="label">stock</span><span class="value">91</span></div></div></article>
+        <article class="product-card" id="P0114"><div class="badge">P0114</div><div class="name">Engine Breather Cap</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0114</span></div><div class="field"><span class="label">name</span><span class="value">Engine Breather Cap</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00114</span></div><div class="field"><span class="label">price</span><span class="value">$7.95</span></div><div class="field"><span class="label">category</span><span class="value">Engine</span></div><div class="field"><span class="label">stock</span><span class="value">140</span></div></div></article>
+        <article class="product-card" id="P0115"><div class="badge">P0115</div><div class="name">Fuel Filter Seal Kit</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0115</span></div><div class="field"><span class="label">name</span><span class="value">Fuel Filter Seal Kit</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00115</span></div><div class="field"><span class="label">price</span><span class="value">$5.85</span></div><div class="field"><span class="label">category</span><span class="value">Filters</span></div><div class="field"><span class="label">stock</span><span class="value">173</span></div></div></article>
+        <article class="product-card" id="P0116"><div class="badge">P0116</div><div class="name">Interior Light Relay</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0116</span></div><div class="field"><span class="label">name</span><span class="value">Interior Light Relay</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00116</span></div><div class="field"><span class="label">price</span><span class="value">$8.65</span></div><div class="field"><span class="label">category</span><span class="value">Electrical</span></div><div class="field"><span class="label">stock</span><span class="value">99</span></div></div></article>
+        <article class="product-card" id="P0117"><div class="badge">P0117</div><div class="name">Brake Adjuster Kit</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0117</span></div><div class="field"><span class="label">name</span><span class="value">Brake Adjuster Kit</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00117</span></div><div class="field"><span class="label">price</span><span class="value">$10.95</span></div><div class="field"><span class="label">category</span><span class="value">Brakes</span></div><div class="field"><span class="label">stock</span><span class="value">121</span></div></div></article>
+        <article class="product-card" id="P0118"><div class="badge">P0118</div><div class="name">Rear Trailing Arm</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0118</span></div><div class="field"><span class="label">name</span><span class="value">Rear Trailing Arm</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00118</span></div><div class="field"><span class="label">price</span><span class="value">$41.85</span></div><div class="field"><span class="label">category</span><span class="value">Suspension</span></div><div class="field"><span class="label">stock</span><span class="value">37</span></div></div></article>
+        <article class="product-card" id="P0119"><div class="badge">P0119</div><div class="name">Intake Valve Seal</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0119</span></div><div class="field"><span class="label">name</span><span class="value">Intake Valve Seal</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00119</span></div><div class="field"><span class="label">price</span><span class="value">$6.90</span></div><div class="field"><span class="label">category</span><span class="value">Engine</span></div><div class="field"><span class="label">stock</span><span class="value">161</span></div></div></article>
+        <article class="product-card" id="P0120"><div class="badge">P0120</div><div class="name">Engine Air Cleaner Filter</div><div class="fields"><div class="field"><span class="label">id</span><span class="value">P0120</span></div><div class="field"><span class="label">name</span><span class="value">Engine Air Cleaner Filter</span></div><div class="field"><span class="label">sku</span><span class="value">SKU-00120</span></div><div class="field"><span class="label">price</span><span class="value">$17.35</span></div><div class="field"><span class="label">category</span><span class="value">Filters</span></div><div class="field"><span class="label">stock</span><span class="value">104</span></div></div></article>
+      </div>
+    </section>
+
+    <nav class="footer-nav" aria-label="Pagination">
+      <a href="#page-1">1</a>
+      <a href="#page-2">2</a>
+      <a href="#page-3">3</a>
+      <a href="#page-4">4</a>
+      <a href="#page-5">5</a>
+    </nav>
+  </div>
+</body>
+</html>

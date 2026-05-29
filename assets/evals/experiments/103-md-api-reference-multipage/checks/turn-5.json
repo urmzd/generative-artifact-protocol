@@ -1,0 +1,43 @@
+{
+  "turn": 5,
+  "checks": [
+    {
+      "kind": "contains",
+      "value": "## Page 7: Security",
+      "desc": "the new seventh page was added"
+    },
+    {
+      "kind": "contains",
+      "value": "### EP-701",
+      "desc": "first endpoint of the new page is present"
+    },
+    {
+      "kind": "contains",
+      "value": "### EP-715",
+      "desc": "last endpoint of the new page is present"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^## Page \\d+:",
+      "expected": 7,
+      "desc": "exactly 7 pages after adding the Security page"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^### EP-",
+      "expected": 105,
+      "desc": "90 prior endpoints preserved plus 15 new ones = 105 total"
+    },
+    {
+      "kind": "regex_count_at_least",
+      "pattern": "(?m)^### EP-7",
+      "min": 15,
+      "desc": "all 15 new EP-7xx endpoints present on the new page"
+    },
+    {
+      "kind": "absent",
+      "value": "`/v1/",
+      "desc": "version bump from turn 4 still holds; new endpoints also use /v2/"
+    }
+  ]
+}

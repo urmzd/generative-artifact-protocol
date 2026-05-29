@@ -1,0 +1,217 @@
+{
+  "base_turn0": {
+    "artifact_bytes": 5691,
+    "cached_input_tokens": 0,
+    "input_tokens": 138,
+    "latency_ms": 6987,
+    "median_itl_ms": 0.003208,
+    "output_tokens": 1621,
+    "ttft_ms": 5,
+    "ttlt_ms": 6446
+  },
+  "comparison": {
+    "input_token_savings_pct": 16.5,
+    "latency_savings_pct": 75.6,
+    "output_token_savings_pct": 80.5
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "cached_input_tokens": 1280,
+        "edit": "Add a new 'monitoring' service using Prometheus with a scrape config targeting a",
+        "failed": false,
+        "input_tokens": 1790,
+        "latency_ms": 7431,
+        "median_itl_ms": 0.0029170000000000003,
+        "output_bytes": 6562,
+        "output_tokens": 1847,
+        "ttft_ms": 0,
+        "ttlt_ms": 7121,
+        "turn": 1
+      },
+      {
+        "cached_input_tokens": 3328,
+        "edit": "Update the PostgreSQL service to use version 16 and add a health check that runs",
+        "failed": false,
+        "input_tokens": 3668,
+        "latency_ms": 8210,
+        "median_itl_ms": 0.003208,
+        "output_bytes": 6562,
+        "output_tokens": 1847,
+        "ttft_ms": 8,
+        "ttlt_ms": 7919,
+        "turn": 2
+      },
+      {
+        "cached_input_tokens": 5376,
+        "edit": "Add resource limits (CPU and memory) to every service: API gateway 0.5 CPU / 256",
+        "failed": false,
+        "input_tokens": 5564,
+        "latency_ms": 8825,
+        "median_itl_ms": 0.0027705,
+        "output_bytes": 7375,
+        "output_tokens": 2072,
+        "ttft_ms": 0,
+        "ttlt_ms": 8427,
+        "turn": 3
+      },
+      {
+        "cached_input_tokens": 7424,
+        "edit": "Add a new 'celery-worker' service that shares the same image as the notification",
+        "failed": false,
+        "input_tokens": 7668,
+        "latency_ms": 9904,
+        "median_itl_ms": 0.002375,
+        "output_bytes": 8310,
+        "output_tokens": 2336,
+        "ttft_ms": 10,
+        "ttlt_ms": 9530,
+        "turn": 4
+      }
+    ],
+    "total_cached_input_tokens": 17408,
+    "total_input_tokens": 18690,
+    "total_latency_ms": 34370,
+    "total_output_tokens": 8102
+  },
+  "experiment_id": "029-yaml-docker-compose-microservices",
+  "format": "text/x-yaml",
+  "gap_flow": {
+    "apply_success_rate": 1.0,
+    "envelope_parse_rate": 1.0,
+    "per_turn": [
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 0,
+        "edit": "Add a new 'monitoring' service using Prometheus with a scrape config targeting a",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 3412,
+        "latency_ms": 3358,
+        "median_itl_ms": 0.002604,
+        "output_bytes": 13491,
+        "output_tokens": 717,
+        "ttft_ms": 0,
+        "ttlt_ms": 2921,
+        "turn": 1
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 1792,
+        "edit": "Update the PostgreSQL service to use version 16 and add a health check that runs",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 4025,
+        "latency_ms": 1124,
+        "median_itl_ms": 0.003541,
+        "output_bytes": 13321,
+        "output_tokens": 144,
+        "ttft_ms": 6,
+        "ttlt_ms": 585,
+        "turn": 2
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 2816,
+        "edit": "Add resource limits (CPU and memory) to every service: API gateway 0.5 CPU / 256",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 3999,
+        "latency_ms": 2234,
+        "median_itl_ms": 0.003208,
+        "output_bytes": 14027,
+        "output_tokens": 454,
+        "ttft_ms": 25,
+        "ttlt_ms": 1814,
+        "turn": 3
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 0,
+        "edit": "Add a new 'celery-worker' service that shares the same image as the notification",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 4177,
+        "latency_ms": 1687,
+        "median_itl_ms": 0.003125,
+        "output_bytes": 14692,
+        "output_tokens": 264,
+        "ttft_ms": 2,
+        "ttlt_ms": 1211,
+        "turn": 4
+      }
+    ],
+    "total_cached_input_tokens": 4608,
+    "total_input_tokens": 15613,
+    "total_latency_ms": 8403,
+    "total_output_tokens": 1579
+  },
+  "gap_turn0": {
+    "artifact_bytes": 11027,
+    "cached_input_tokens": 0,
+    "input_tokens": 399,
+    "latency_ms": 12962,
+    "median_itl_ms": 0.0027080000000000003,
+    "output_tokens": 3143,
+    "ttft_ms": 0,
+    "ttlt_ms": 12600
+  },
+  "model": "gpt-5.4-mini",
+  "provider": "openai",
+  "quality": {
+    "mean_rouge_l": 0.3982,
+    "mean_sequence_similarity": 0.5674,
+    "mean_token_f1": 0.5704,
+    "per_turn": [
+      {
+        "base_char_count": 6562,
+        "char_delta_pct": -17.9,
+        "gap_char_count": 5386,
+        "lines_added": 119,
+        "lines_removed": 132,
+        "rouge_l": 0.3837,
+        "sequence_similarity": 0.5586,
+        "token_f1": 0.5619,
+        "turn": 1
+      },
+      {
+        "base_char_count": 6562,
+        "char_delta_pct": -18.0,
+        "gap_char_count": 5379,
+        "lines_added": 120,
+        "lines_removed": 133,
+        "rouge_l": 0.3812,
+        "sequence_similarity": 0.5586,
+        "token_f1": 0.5594,
+        "turn": 2
+      },
+      {
+        "base_char_count": 7375,
+        "char_delta_pct": -17.5,
+        "gap_char_count": 6085,
+        "lines_added": 136,
+        "lines_removed": 162,
+        "rouge_l": 0.4207,
+        "sequence_similarity": 0.5771,
+        "token_f1": 0.5912,
+        "turn": 3
+      },
+      {
+        "base_char_count": 8310,
+        "char_delta_pct": -24.4,
+        "gap_char_count": 6284,
+        "lines_added": 140,
+        "lines_removed": 188,
+        "rouge_l": 0.4071,
+        "sequence_similarity": 0.5752,
+        "token_f1": 0.5692,
+        "turn": 4
+      }
+    ]
+  },
+  "timestamp": "2026-05-29T02:58:54Z"
+}

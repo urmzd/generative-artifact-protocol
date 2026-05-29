@@ -1,0 +1,1 @@
+Across every record in every region, change the category value "consumable" to "supply". Every record that currently has category="consumable" must now have category="supply", and no record may keep category="consumable". Do not add, remove, or reorder any records and do not change any other field.

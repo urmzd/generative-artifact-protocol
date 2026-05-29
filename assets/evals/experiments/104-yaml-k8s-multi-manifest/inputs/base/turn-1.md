@@ -1,0 +1,1 @@
+In the `orders` group, change the Deployment named `orders-worker` to set `spec.replicas` to 6 (it was 2). Change only that one resource; leave every other resource, including its replica count, exactly as it was.

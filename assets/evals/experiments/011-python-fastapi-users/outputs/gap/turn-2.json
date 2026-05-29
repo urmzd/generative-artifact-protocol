@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "def list_users(db: Session, page: int = 1, size: int = 10, role: str | None = None, is_active: bool | None = None) -> tuple[list[User], int]:\n    offset = (page - 1) * size\n    query = db.query(User)\n\n    if role is not None:\n        query = query.filter(User.role == role)\n    if is_active is not None:\n        query = query.filter(User.is_active == is_active)\n\n    total = query.count()\n    users = query.order_by(User.id).offset(offset).limit(size).all()\n    return users, total",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "list-users-function"
+      }
+    }
+  ]
+}

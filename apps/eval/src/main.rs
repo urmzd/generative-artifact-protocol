@@ -1,4 +1,6 @@
+mod checks;
 mod client;
+mod cost;
 mod experiment;
 mod report;
 mod runner;
@@ -31,9 +33,15 @@ enum Command {
         #[arg(long)]
         id: Option<String>,
 
-        /// Which flows to run: base, gap, both
+        /// Which flows to run: base, stateless, gap, both (=base+gap),
+        /// abc (=base+stateless+gap, enables A/B/C decomposition), all
         #[arg(long, default_value = "both")]
         flow: String,
+
+        /// Re-run experiments even if metrics.json already exists (needed to
+        /// add newly-supported flows to previously-measured experiments)
+        #[arg(long)]
+        force: bool,
 
         /// Model name (e.g. gpt-4o-mini, gemini-2.5-flash)
         #[arg(long)]
@@ -77,6 +85,13 @@ enum Command {
         #[arg(long, default_value = "assets/evals/experiments")]
         experiments_dir: PathBuf,
     },
+
+    /// Re-evaluate correctness oracle checks (checks/turn-N.json) on completed runs
+    Checks {
+        /// Experiments directory
+        #[arg(long, default_value = "assets/evals/experiments")]
+        experiments_dir: PathBuf,
+    },
 }
 
 #[tokio::main]
@@ -97,6 +112,7 @@ async fn main() -> Result<()> {
             api_base,
             api_key,
             skip_eval,
+            force,
         } => {
             let api_key = api_key
                 .or_else(|| std::env::var("OPENAI_API_KEY").ok())
@@ -120,6 +136,7 @@ async fn main() -> Result<()> {
                 api_base,
                 api_key,
                 skip_eval,
+                force,
             };
 
             experiment::run_all(&config).await?;
@@ -135,6 +152,11 @@ async fn main() -> Result<()> {
 
         Command::Score { experiments_dir } => {
             scorer::score_all(&experiments_dir)?;
+            checks::score_checks_all(&experiments_dir)?;
+        }
+
+        Command::Checks { experiments_dir } => {
+            checks::score_checks_all(&experiments_dir)?;
         }
     }
 

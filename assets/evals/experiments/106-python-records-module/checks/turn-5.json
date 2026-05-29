@@ -1,0 +1,10 @@
+{
+  "turn": 5,
+  "checks": [
+    {"kind": "contains", "value": "REGION_OFFSHORE", "desc": "the new offshore region list constant is defined"},
+    {"kind": "contains", "value": "sku=\"OFS-102\"", "desc": "first offshore record (id=102) is present"},
+    {"kind": "contains", "value": "sku=\"OFS-121\"", "desc": "last offshore record (id=121) is present"},
+    {"kind": "regex_count", "pattern": "OFS-\\d{3}", "expected": 20, "desc": "exactly 20 offshore records added in the new region"},
+    {"kind": "regex_count", "pattern": "Record\\(", "expected": 120, "desc": "exactly 120 record instances after adding the 20-record offshore region (100 prior + 20)"}
+  ]
+}

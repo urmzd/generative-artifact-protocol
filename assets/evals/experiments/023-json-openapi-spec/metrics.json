@@ -1,0 +1,220 @@
+{
+  "base_turn0": {
+    "artifact_bytes": 26791,
+    "cached_input_tokens": 0,
+    "input_tokens": 161,
+    "latency_ms": 23645,
+    "median_itl_ms": 0.005375,
+    "output_tokens": 5475,
+    "ttft_ms": 0,
+    "ttlt_ms": 23300
+  },
+  "comparison": {
+    "input_token_savings_pct": 57.6,
+    "latency_savings_pct": 87.2,
+    "output_token_savings_pct": 89.8
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "cached_input_tokens": 5376,
+        "edit": "Add a new /wishlist endpoint group with POST /wishlist (add item), GET /wishlist",
+        "failed": false,
+        "input_tokens": 5682,
+        "latency_ms": 28523,
+        "median_itl_ms": 0.0037705,
+        "output_bytes": 32480,
+        "output_tokens": 6586,
+        "ttft_ms": 19,
+        "ttlt_ms": 28085,
+        "turn": 1
+      },
+      {
+        "cached_input_tokens": 12032,
+        "edit": "Update the Book schema to include a 'format' enum field with values 'hardcover',",
+        "failed": false,
+        "input_tokens": 12305,
+        "latency_ms": 16410,
+        "median_itl_ms": 0.003291,
+        "output_bytes": 15748,
+        "output_tokens": 3632,
+        "ttft_ms": 5,
+        "ttlt_ms": 15690,
+        "turn": 2
+      },
+      {
+        "cached_input_tokens": 15616,
+        "edit": "Add rate limiting information to the API info section: 100 requests per minute f",
+        "failed": false,
+        "input_tokens": 15967,
+        "latency_ms": 15139,
+        "median_itl_ms": 0.003,
+        "output_bytes": 15843,
+        "output_tokens": 3653,
+        "ttft_ms": 5,
+        "ttlt_ms": 14539,
+        "turn": 3
+      },
+      {
+        "cached_input_tokens": 19200,
+        "edit": "Add a new /search endpoint that accepts query, category, price_min, price_max, a",
+        "failed": false,
+        "input_tokens": 19649,
+        "latency_ms": 16080,
+        "median_itl_ms": 0.004229,
+        "output_bytes": 17057,
+        "output_tokens": 3934,
+        "ttft_ms": 0,
+        "ttlt_ms": 15583,
+        "turn": 4
+      }
+    ],
+    "total_cached_input_tokens": 52224,
+    "total_input_tokens": 53603,
+    "total_latency_ms": 76152,
+    "total_output_tokens": 17805
+  },
+  "experiment_id": "023-json-openapi-spec",
+  "format": "application/json",
+  "gap_flow": {
+    "apply_success_rate": 0.25,
+    "envelope_parse_rate": 1.0,
+    "per_turn": [
+      {
+        "apply_succeeded": false,
+        "cached_input_tokens": 0,
+        "edit": "Add a new /wishlist endpoint group with POST /wishlist (add item), GET /wishlist",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": true,
+        "failure_reason": "parse or apply failed",
+        "input_tokens": 5690,
+        "latency_ms": 4230,
+        "median_itl_ms": 0.003604,
+        "output_bytes": 25499,
+        "output_tokens": 817,
+        "ttft_ms": 38,
+        "ttlt_ms": 3859,
+        "turn": 1
+      },
+      {
+        "apply_succeeded": false,
+        "cached_input_tokens": 4864,
+        "edit": "Update the Book schema to include a 'format' enum field with values 'hardcover',",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": true,
+        "failure_reason": "parse or apply failed",
+        "input_tokens": 5681,
+        "latency_ms": 912,
+        "median_itl_ms": 0.003708,
+        "output_bytes": 25499,
+        "output_tokens": 110,
+        "ttft_ms": 34,
+        "ttlt_ms": 588,
+        "turn": 2
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 5376,
+        "edit": "Add rate limiting information to the API info section: 100 requests per minute f",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 5674,
+        "latency_ms": 796,
+        "median_itl_ms": 0.002875,
+        "output_bytes": 25454,
+        "output_tokens": 89,
+        "ttft_ms": 31,
+        "ttlt_ms": 407,
+        "turn": 3
+      },
+      {
+        "apply_succeeded": false,
+        "cached_input_tokens": 0,
+        "edit": "Add a new /search endpoint that accepts query, category, price_min, price_max, a",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": true,
+        "failure_reason": "parse or apply failed",
+        "input_tokens": 5661,
+        "latency_ms": 3809,
+        "median_itl_ms": 0.002292,
+        "output_bytes": 25454,
+        "output_tokens": 792,
+        "ttft_ms": 2,
+        "ttlt_ms": 3336,
+        "turn": 4
+      }
+    ],
+    "total_cached_input_tokens": 10240,
+    "total_input_tokens": 22706,
+    "total_latency_ms": 9747,
+    "total_output_tokens": 1808
+  },
+  "gap_turn0": {
+    "artifact_bytes": 25499,
+    "cached_input_tokens": 0,
+    "input_tokens": 263,
+    "latency_ms": 26601,
+    "median_itl_ms": 0.003459,
+    "output_tokens": 5201,
+    "ttft_ms": 0,
+    "ttlt_ms": 26211
+  },
+  "model": "gpt-5.4-mini",
+  "provider": "openai",
+  "quality": {
+    "mean_rouge_l": 0.2074,
+    "mean_sequence_similarity": 0.5092,
+    "mean_token_f1": 0.2349,
+    "per_turn": [
+      {
+        "base_char_count": 32480,
+        "char_delta_pct": -21.5,
+        "gap_char_count": 25499,
+        "lines_added": 190,
+        "lines_removed": 424,
+        "rouge_l": 0.7029,
+        "sequence_similarity": 0.7727,
+        "token_f1": 0.7589,
+        "turn": 1
+      },
+      {
+        "base_char_count": 15748,
+        "char_delta_pct": 61.9,
+        "gap_char_count": 25499,
+        "lines_added": 1020,
+        "lines_removed": 1,
+        "rouge_l": 0.055,
+        "sequence_similarity": 0.5102,
+        "token_f1": 0.0647,
+        "turn": 2
+      },
+      {
+        "base_char_count": 15843,
+        "char_delta_pct": 60.7,
+        "gap_char_count": 25454,
+        "lines_added": 1020,
+        "lines_removed": 1,
+        "rouge_l": 0.0358,
+        "sequence_similarity": 0.3763,
+        "token_f1": 0.0581,
+        "turn": 3
+      },
+      {
+        "base_char_count": 17057,
+        "char_delta_pct": 49.2,
+        "gap_char_count": 25454,
+        "lines_added": 1020,
+        "lines_removed": 1,
+        "rouge_l": 0.0357,
+        "sequence_similarity": 0.3775,
+        "token_f1": 0.0579,
+        "turn": 4
+      }
+    ]
+  },
+  "timestamp": "2026-05-29T02:54:31Z"
+}

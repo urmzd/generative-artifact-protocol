@@ -1,0 +1,21 @@
+{
+  "turn": 1,
+  "checks": [
+    {
+      "kind": "contains",
+      "value": "SKU-067",
+      "desc": "the targeted record rec-067 (SKU-067) still exists"
+    },
+    {
+      "kind": "contains",
+      "value": "249.95",
+      "desc": "rec-067 price was updated to 249.95"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "sku:\\s*\"SKU-",
+      "expected": 100,
+      "desc": "all 100 records preserved after a single-field price edit on page four"
+    }
+  ]
+}

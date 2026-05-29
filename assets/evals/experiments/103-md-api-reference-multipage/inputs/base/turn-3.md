@@ -1,0 +1,1 @@
+On Page 3: Compute, delete the endpoint EP-308 entirely, including its heading, method, path, parameters table, and response block. Do not renumber any other endpoints and do not remove anything else. This brings the total to 90 endpoints.

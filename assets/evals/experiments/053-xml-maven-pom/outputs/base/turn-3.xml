@@ -1,0 +1,247 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>3.3.5</version>
+    <relativePath/>
+  </parent>
+
+  <groupId>com.example</groupId>
+  <artifactId>spring-boot-web-app</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>spring-boot-web-app</name>
+  <description>Spring Boot 3 web application</description>
+  <packaging>jar</packaging>
+
+  <properties>
+    <java.version>21</java.version>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+    <maven.compiler.release>21</maven.compiler.release>
+
+    <lombok.version>1.18.34</lombok.version>
+    <mapstruct.version>1.6.2</mapstruct.version>
+    <springdoc-openapi.version>2.6.0</springdoc-openapi.version>
+    <testcontainers.version>1.20.2</testcontainers.version>
+    <jacoco.version>0.8.12</jacoco.version>
+    <caffeine.version>3.1.8</caffeine.version>
+    <jib-maven-plugin.version>3.4.4</jib-maven-plugin.version>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-cache</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.ben-manes.caffeine</groupId>
+      <artifactId>caffeine</artifactId>
+      <version>${caffeine.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+      <version>${mapstruct.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>${springdoc-openapi.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${testcontainers.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${testcontainers.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>jib-maven-plugin</artifactId>
+        <version>${jib-maven-plugin.version}</version>
+        <configuration>
+          <from>
+            <image>gcr.io/distroless/java21-debian12:nonroot</image>
+          </from>
+          <to>
+            <image>${project.artifactId}:${project.version}</image>
+          </to>
+          <container>
+            <mainClass>com.example.Application</mainClass>
+            <ports>
+              <port>8080</port>
+            </ports>
+            <creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+            <user>nonroot</user>
+          </container>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+          <release>${maven.compiler.release}</release>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+            <path>
+              <groupId>org.mapstruct</groupId>
+              <artifactId>mapstruct-processor</artifactId>
+              <version>${mapstruct.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>dev</id>
+      <properties>
+        <app.profile>dev</app.profile>
+        <spring.jpa.show-sql>true</spring.jpa.show-sql>
+        <spring.jpa.hibernate.ddl-auto>update</spring.jpa.hibernate.ddl-auto>
+        <logging.level.root>INFO</logging.level.root>
+        <server.port>8080</server.port>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>test</id>
+      <properties>
+        <app.profile>test</app.profile>
+        <spring.datasource.url>jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</spring.datasource.url>
+        <spring.datasource.driver-class-name>org.h2.Driver</spring.datasource.driver-class-name>
+        <spring.datasource.username>sa</spring.datasource.username>
+        <spring.datasource.password></spring.datasource.password>
+        <spring.jpa.database-platform>org.hibernate.dialect.H2Dialect</spring.jpa.database-platform>
+        <spring.jpa.hibernate.ddl-auto>create-drop</spring.jpa.hibernate.ddl-auto>
+        <spring.jpa.show-sql>false</spring.jpa.show-sql>
+        <spring.flyway.enabled>false</spring.flyway.enabled>
+        <testcontainers.enabled>false</testcontainers.enabled>
+        <logging.level.root>WARN</logging.level.root>
+        <logging.level.org.springframework>WARN</logging.level.org.springframework>
+        <logging.level.org.hibernate>WARN</logging.level.org.hibernate>
+        <logging.level.com.zaxxer.hikari>WARN</logging.level.com.zaxxer.hikari>
+        <server.port>0</server.port>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>staging</id>
+      <properties>
+        <app.profile>staging</app.profile>
+        <spring.jpa.show-sql>false</spring.jpa.show-sql>
+        <spring.jpa.hibernate.ddl-auto>validate</spring.jpa.hibernate.ddl-auto>
+        <logging.level.root>INFO</logging.level.root>
+        <server.port>8081</server.port>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>production</id>
+      <properties>
+        <app.profile>production</app.profile>
+        <spring.jpa.show-sql>false</spring.jpa.show-sql>
+        <spring.jpa.hibernate.ddl-auto>none</spring.jpa.hibernate.ddl-auto>
+        <logging.level.root>WARN</logging.level.root>
+        <server.port>8080</server.port>
+      </properties>
+    </profile>
+  </profiles>
+</project>

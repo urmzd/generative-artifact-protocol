@@ -1,0 +1,25 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "$425K",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "bar-mar-value"
+      }
+    },
+    {
+      "content": "$380K",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "bar-jul-value"
+      }
+    }
+  ]
+}

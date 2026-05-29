@@ -1,0 +1,27 @@
+{
+  "turn": 4,
+  "checks": [
+    {
+      "kind": "absent",
+      "value": "Filters",
+      "desc": "Bulk edit completeness: NO product still has category Filters; all were converted"
+    },
+    {
+      "kind": "contains",
+      "value": "Air Systems",
+      "desc": "New category label Air Systems is present"
+    },
+    {
+      "kind": "regex_count_at_least",
+      "pattern": "Air Systems",
+      "min": 1,
+      "desc": "At least one product now carries the Air Systems category"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "P0\\d{3}",
+      "expected": 120,
+      "desc": "Exactly 120 products preserved; a bulk field change must not add or drop products"
+    }
+  ]
+}

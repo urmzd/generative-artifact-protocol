@@ -1,0 +1,46 @@
+{
+  "turn": 3,
+  "checks": [
+    {
+      "kind": "regex_count",
+      "pattern": "(?i)INSERT\\s+INTO\\s+orders\\s*\\([^)]*\\)\\s*VALUES\\s*\\(\\s*15\\s*,",
+      "expected": 0,
+      "desc": "The orders row with id 15 has been deleted — no orders INSERT whose first VALUES column is 15 remains."
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?i)INSERT\\s+INTO",
+      "expected": 120,
+      "desc": "Total seed rows are exactly 120 after deleting one order (121 from turn 2 minus 1)."
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?i)INSERT\\s+INTO\\s+orders",
+      "expected": 39,
+      "desc": "orders table now has exactly 39 rows (40 original minus deleted order 15)."
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?i)INSERT\\s+INTO\\s+products",
+      "expected": 41,
+      "desc": "products table still has 41 rows — deleting an order did not touch products (including the turn-2 insert)."
+    },
+    {
+      "kind": "contains",
+      "value": "SKU-0041",
+      "desc": "The turn-2 inserted product 41 is still present — prior edits are not lost."
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?i)INSERT\\s+INTO\\s+orders\\s*\\([^)]*\\)\\s*VALUES\\s*\\(\\s*14\\s*,",
+      "expected": 1,
+      "desc": "Neighboring order id 14 (immediately before the deleted id 15) survives the delete untouched."
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?i)INSERT\\s+INTO\\s+orders\\s*\\([^)]*\\)\\s*VALUES\\s*\\(\\s*16\\s*,",
+      "expected": 1,
+      "desc": "Neighboring order id 16 (immediately after the deleted id 15) survives and was not renumbered to 15."
+    }
+  ]
+}

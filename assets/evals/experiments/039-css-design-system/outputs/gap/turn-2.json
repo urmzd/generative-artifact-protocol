@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "\n    <gap:target id=\"breadcrumbs-component-block\">\n      .breadcrumbs {\n        display: flex;\n        align-items: center;\n        gap: var(--space-2);\n        min-width: 0;\n        flex-wrap: wrap;\n      }\n\n      .breadcrumbs-item {\n        display: inline-flex;\n        align-items: center;\n        min-width: 0;\n      }\n\n      .breadcrumbs-link,\n      .breadcrumbs-current {\n        min-width: 0;\n        max-width: 100%;\n        overflow: hidden;\n        text-overflow: ellipsis;\n        white-space: nowrap;\n      }\n\n      .breadcrumbs-link {\n        color: var(--neutral-700);\n        font-weight: 500;\n      }\n\n      .breadcrumbs-link:hover {\n        color: var(--color-primary);\n        text-decoration: underline;\n      }\n\n      .breadcrumbs-current {\n        color: var(--neutral-900);\n        font-weight: 600;\n      }\n\n      .breadcrumbs-separator {\n        display: inline-flex;\n        align-items: center;\n        color: var(--neutral-400);\n        flex: 0 0 auto;\n      }\n\n      .breadcrumbs-item[aria-current=\"page\"] .breadcrumbs-current {\n        color: var(--color-primary);\n      }\n\n      @media (max-width: 576px) {\n        .breadcrumbs {\n          flex-wrap: nowrap;\n          overflow: hidden;\n        }\n\n        .breadcrumbs-item:first-child .breadcrumbs-link,\n        .breadcrumbs-item:first-child .breadcrumbs-current {\n          max-width: 8rem;\n        }\n\n        .breadcrumbs-item:not(:first-child):not(:last-child) .breadcrumbs-link,\n        .breadcrumbs-item:not(:first-child):not(:last-child) .breadcrumbs-current {\n          max-width: 6rem;\n        }\n\n        .breadcrumbs-item:last-child .breadcrumbs-link,\n        .breadcrumbs-item:last-child .breadcrumbs-current {\n          max-width: 10rem;\n        }\n      }\n    </gap:target>\n",
+      "op": "insert_before",
+      "target": {
+        "type": "id",
+        "value": "utility-classes-block"
+      }
+    }
+  ]
+}

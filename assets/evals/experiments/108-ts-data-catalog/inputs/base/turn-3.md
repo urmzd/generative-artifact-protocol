@@ -1,0 +1,1 @@
+Delete the record rec-050 (sku SKU-050, on pageThree) entirely. Remove its full object literal. Keep every other record unchanged; this removes one record from the catalog.

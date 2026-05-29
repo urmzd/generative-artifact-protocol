@@ -1,0 +1,151 @@
+<gap:target id="deployment-script">
+#!/usr/bin/env bash
+set -euo pipefail
+
+<gap:target id="ansi-colors">
+RED="<gap:target id="red-color">\\033[0;31m</gap:target>"
+GREEN="<gap:target id="green-color">\\033[0;32m</gap:target>"
+YELLOW="<gap:target id="yellow-color">\\033[1;33m</gap:target>"
+BLUE="<gap:target id="blue-color">\\033[0;34m</gap:target>"
+NC="<gap:target id="reset-color">\\033[0m</gap:target>"
+</gap:target>
+
+<gap:target id="configuration">
+APP_NAME="<gap:target id="app-name">my-node-app</gap:target>"
+SERVER_HOST="<gap:target id="server-host">deploy.example.com</gap:target>"
+SERVER_USER="<gap:target id="server-user">deploy</gap:target>"
+DEPLOY_PATH="<gap:target id="deploy-path">/var/www/my-node-app</gap:target>"
+NODE_VERSION="<gap:target id="node-version">18</gap:target>"
+BRANCH="<gap:target id="branch-name">main</gap:target>"
+HEALTHCHECK_URL="<gap:target id="healthcheck-url">https://example.com/health</gap:target>"
+PM2_APP_NAME="<gap:target id="pm2-app-name">my-node-app</gap:target>"
+
+<gap:target id="env-vars">
+declare -A ENV_VARS=(
+  ["NODE_ENV"]="<gap:target id="node-env">production</gap:target>"
+  ["PORT"]="<gap:target id="app-port">3000</gap:target>"
+  ["LOG_LEVEL"]="<gap:target id="log-level">info</gap:target>"
+)
+</gap:target>
+</gap:target>
+
+<gap:target id="paths">
+BUILD_DIR="<gap:target id="build-dir">dist</gap:target>"
+ARTIFACT_NAME="<gap:target id="artifact-name">${APP_NAME}-$(date +%Y%m%d%H%M%S).tar.gz</gap:target>"
+REMOTE_RELEASES_DIR="<gap:target id="remote-releases-dir">${DEPLOY_PATH}/releases</gap:target>"
+REMOTE_SHARED_DIR="<gap:target id="remote-shared-dir">${DEPLOY_PATH}/shared</gap:target>"
+REMOTE_CURRENT_LINK="<gap:target id="remote-current-link">${DEPLOY_PATH}/current</gap:target>"
+REMOTE_ARTIFACT_PATH="<gap:target id="remote-artifact-path">${REMOTE_RELEASES_DIR}/${ARTIFACT_NAME}</gap:target>"
+LOCAL_ARTIFACT_PATH="<gap:target id="local-artifact-path">./${ARTIFACT_NAME}</gap:target>"
+</gap:target>
+
+<gap:target id="helpers">
+log() { echo -e "${BLUE}[INFO]${NC} $*"; }
+success() { echo -e "${GREEN}[OK]${NC} $*"; }
+warn() { echo -e "${YELLOW}[WARN]${NC} $*"; }
+fail() { echo -e "${RED}[ERROR]${NC} $*"; }
+
+rollback() {
+  warn "Rollback triggered"
+  ssh "${SERVER_USER}@${SERVER_HOST}" "
+    set -e
+    if [ -L '${REMOTE_CURRENT_LINK}' ] && [ -f '${REMOTE_RELEASES_DIR}/previous_release' ]; then
+      PREV_RELEASE=\$(cat '${REMOTE_RELEASES_DIR}/previous_release')
+      ln -sfn \"${REMOTE_RELEASES_DIR}/\${PREV_RELEASE}\" '${REMOTE_CURRENT_LINK}'
+      pm2 restart '${PM2_APP_NAME}' || true
+      echo 'Rolled back to previous release: '\$PREV_RELEASE
+    else
+      echo 'No rollback target available'
+      exit 1
+    fi
+  "
+}
+
+trap 'fail "Deployment failed"; rollback; exit 1' ERR
+</gap:target>
+
+<gap:target id="pre-deploy-checks">log "Verifying SSH connectivity"
+run_cmd 'ssh -o BatchMode=yes -o ConnectTimeout=10 "${SERVER_USER}@${SERVER_HOST}" "echo connected"'</gap:target>
+
+<gap:target id="build">log "Installing dependencies"
+run_cmd 'npm ci'
+
+log "Running build"
+run_cmd 'npm run build'
+
+log "Creating tarball"
+run_cmd 'tar -czf "${LOCAL_ARTIFACT_PATH}" "${BUILD_DIR}" package.json package-lock.json'</gap:target>
+
+<gap:target id="deploy">log "Preparing remote directories"
+run_cmd 'for SERVER in "${SERVERS[@]}"; do ssh "${SERVER_USER}@${SERVER}" "set -e; mkdir -p '\''${REMOTE_RELEASES_DIR}'\'' '\''${REMOTE_SHARED_DIR}'\''"; done'
+
+log "Uploading artifact to all servers in parallel"
+run_cmd 'pids=(); for SERVER in "${SERVERS[@]}"; do rsync -az --delete "${LOCAL_ARTIFACT_PATH}" "${SERVER_USER}@${SERVER}:${REMOTE_ARTIFACT_PATH}" & pids+=("$!"); done; for pid in "${pids[@]}"; do wait "$pid"; done'
+
+log "Deploying on remote servers"
+run_cmd 'for SERVER in "${SERVERS[@]}"; do ssh "${SERVER_USER}@${SERVER}" "set -euo pipefail; RELEASE_NAME=\$(basename '\''${ARTIFACT_NAME}'\'' .tar.gz); RELEASE_DIR='\''${REMOTE_RELEASES_DIR}/'\''\${RELEASE_NAME}; mkdir -p \"$RELEASE_DIR\"; tar -xzf '\''${REMOTE_ARTIFACT_PATH}'\'' -C \"$RELEASE_DIR\"; rm -f '\''${REMOTE_ARTIFACT_PATH}'\''; cd \"$RELEASE_DIR\"; npm ci --omit=dev; cat > .env <<'"'"'EOF'"'"'; NODE_ENV=production; PORT=3000; LOG_LEVEL=info; EOF; if [ -f '\''${REMOTE_RELEASES_DIR}/current_release'\'' ]; then cp '\''${REMOTE_RELEASES_DIR}/current_release'\'' '\''${REMOTE_RELEASES_DIR}/previous_release'\''; fi; echo \"$RELEASE_NAME\" > '\''${REMOTE_RELEASES_DIR}/current_release'\''; if [ -f migrations.sh ]; then chmod +x migrations.sh; ./migrations.sh; elif npm run | grep -q '\''migrate'\''; then npm run migrate; fi; ln -sfn \"$RELEASE_DIR\" '\''${REMOTE_CURRENT_LINK}'\''; pm2 restart '\''${PM2_APP_NAME}'\'' --update-env || pm2 start ecosystem.config.js --only '\''${PM2_APP_NAME}'\'' --update-env; pm2 save"; done'</gap:target>
+
+<gap:target id="post-deploy-verification">log "Waiting for service to stabilize"
+run_cmd 'sleep 5'
+
+log "Checking health endpoint"
+run_cmd 'curl -fsS --max-time 10 "${HEALTHCHECK_URL}" >/dev/null'
+
+log "Showing recent logs"
+run_cmd 'ssh "${SERVER_USER}@${SERVER_HOST}" "pm2 logs '\''${PM2_APP_NAME}'\'' --lines 50 --nostream"'</gap:target>
+
+<gap:target id="main">
+<gap:target id="main-flow">
+pre_deploy() { :; }
+deploy_app() { :; }
+
+<gap:target id="run-sequence">
+pre_deploy_checks() {
+  <gap:target id="pre-deploy-checks-call">true</gap:target>
+}
+
+build_app() {
+  <gap:target id="build-call">true</gap:target>
+}
+
+deploy_remote() {
+  <gap:target id="deploy-call">true</gap:target>
+}
+
+verify_deploy() {
+  <gap:target id="post-deploy-verification-call">true</gap:target>
+}
+</gap:target>
+
+<gap:target id="execute">execute() {
+  pre_deploy_checks
+  build
+  deploy
+  post_deploy_verification
+}</gap:target>
+</gap:target>
+</gap:target>
+DRY_RUN=false
+
+run_cmd() {
+  if [[ "$DRY_RUN" == true ]]; then
+    printf '%s\n' "$*"
+  else
+    eval "$@"
+  fi
+}while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --dry-run)
+      DRY_RUN=true
+      shift
+      ;;
+    *)
+      echo "Unknown argument: $1" >&2
+      exit 1
+      ;;
+  esac
+done
+
+if [[ "$DRY_RUN" == true ]]; then
+  warn "Dry-run mode enabled: commands will be printed only"
+fi</gap:target>

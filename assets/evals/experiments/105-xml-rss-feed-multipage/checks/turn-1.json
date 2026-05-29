@@ -1,0 +1,21 @@
+{
+  "turn": 1,
+  "checks": [
+    {
+      "kind": "contains",
+      "value": "Quantum Chips Enter Mass Production",
+      "desc": "Item 67 title was updated to the new headline"
+    },
+    {
+      "kind": "contains",
+      "value": "dailybyte-0067",
+      "desc": "Item 67 still exists (its stable guid is preserved)"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "<guid",
+      "expected": 80,
+      "desc": "Feed still has exactly 80 items after a single-field edit; no collateral loss"
+    }
+  ]
+}

@@ -1,0 +1,181 @@
+{
+  "base_turn0": {
+    "artifact_bytes": 5948,
+    "cached_input_tokens": 0,
+    "input_tokens": 159,
+    "latency_ms": 7691,
+    "median_itl_ms": 0.003042,
+    "output_tokens": 1537,
+    "ttft_ms": 0,
+    "ttlt_ms": 7283
+  },
+  "comparison": {
+    "input_token_savings_pct": -17.8,
+    "latency_savings_pct": 54.1,
+    "output_token_savings_pct": 64.6
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "cached_input_tokens": 0,
+        "edit": "Add spring-boot-starter-cache and caffeine dependencies for local caching suppor",
+        "failed": false,
+        "input_tokens": 1717,
+        "latency_ms": 7376,
+        "median_itl_ms": 0.002458,
+        "output_bytes": 6314,
+        "output_tokens": 1634,
+        "ttft_ms": 0,
+        "ttlt_ms": 7097,
+        "turn": 1
+      },
+      {
+        "cached_input_tokens": 2816,
+        "edit": "Rewrite the profiles section to add a 'test' profile with H2 in-memory database,",
+        "failed": false,
+        "input_tokens": 3383,
+        "latency_ms": 2467,
+        "median_itl_ms": 0.00325,
+        "output_bytes": 2177,
+        "output_tokens": 531,
+        "ttft_ms": 4,
+        "ttlt_ms": 2205,
+        "turn": 2
+      },
+      {
+        "cached_input_tokens": 3328,
+        "edit": "Add the jib-maven-plugin to the build section for containerizing the application",
+        "failed": false,
+        "input_tokens": 3943,
+        "latency_ms": 8746,
+        "median_itl_ms": 0.003334,
+        "output_bytes": 8228,
+        "output_tokens": 2063,
+        "ttft_ms": 9,
+        "ttlt_ms": 8484,
+        "turn": 3
+      }
+    ],
+    "total_cached_input_tokens": 6144,
+    "total_input_tokens": 9043,
+    "total_latency_ms": 18589,
+    "total_output_tokens": 4228
+  },
+  "experiment_id": "053-xml-maven-pom",
+  "format": "application/xml",
+  "gap_flow": {
+    "apply_success_rate": 1.0,
+    "envelope_parse_rate": 1.0,
+    "per_turn": [
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 0,
+        "edit": "Add spring-boot-starter-cache and caffeine dependencies for local caching suppor",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 3315,
+        "latency_ms": 1589,
+        "median_itl_ms": 0.008042,
+        "output_bytes": 13042,
+        "output_tokens": 234,
+        "ttft_ms": 37,
+        "ttlt_ms": 1200,
+        "turn": 1
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 0,
+        "edit": "Rewrite the profiles section to add a 'test' profile with H2 in-memory database,",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 3476,
+        "latency_ms": 5012,
+        "median_itl_ms": 0.002958,
+        "output_bytes": 14634,
+        "output_tokens": 1021,
+        "ttft_ms": 3,
+        "ttlt_ms": 4538,
+        "turn": 2
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 2816,
+        "edit": "Add the jib-maven-plugin to the build section for containerizing the application",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 3860,
+        "latency_ms": 1923,
+        "median_itl_ms": 0.002791,
+        "output_bytes": 15150,
+        "output_tokens": 242,
+        "ttft_ms": 0,
+        "ttlt_ms": 819,
+        "turn": 3
+      }
+    ],
+    "total_cached_input_tokens": 2816,
+    "total_input_tokens": 10651,
+    "total_latency_ms": 8524,
+    "total_output_tokens": 1497
+  },
+  "gap_turn0": {
+    "artifact_bytes": 12435,
+    "cached_input_tokens": 0,
+    "input_tokens": 422,
+    "latency_ms": 12969,
+    "median_itl_ms": 0.0029165,
+    "output_tokens": 3056,
+    "ttft_ms": 0,
+    "ttlt_ms": 12683
+  },
+  "model": "gpt-5.4-mini",
+  "provider": "openai",
+  "quality": {
+    "mean_rouge_l": 0.3158,
+    "mean_sequence_similarity": 0.4903,
+    "mean_token_f1": 0.3342,
+    "per_turn": [
+      {
+        "base_char_count": 6314,
+        "char_delta_pct": -13.9,
+        "gap_char_count": 5437,
+        "lines_added": 250,
+        "lines_removed": 181,
+        "rouge_l": 0.4278,
+        "sequence_similarity": 0.5943,
+        "token_f1": 0.4278,
+        "turn": 1
+      },
+      {
+        "base_char_count": 2177,
+        "char_delta_pct": 184.2,
+        "gap_char_count": 6186,
+        "lines_added": 290,
+        "lines_removed": 50,
+        "rouge_l": 0.1481,
+        "sequence_similarity": 0.2994,
+        "token_f1": 0.1481,
+        "turn": 2
+      },
+      {
+        "base_char_count": 8228,
+        "char_delta_pct": -19.0,
+        "gap_char_count": 6668,
+        "lines_added": 289,
+        "lines_removed": 223,
+        "rouge_l": 0.3716,
+        "sequence_similarity": 0.5771,
+        "token_f1": 0.4266,
+        "turn": 3
+      }
+    ]
+  },
+  "timestamp": "2026-05-29T03:10:08Z",
+  "validity": {
+    "base_input_monotone": true,
+    "gap_run_degenerate": false
+  }
+}

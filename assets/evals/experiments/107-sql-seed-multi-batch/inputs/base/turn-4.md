@@ -1,0 +1,1 @@
+Change the status of EVERY remaining order in both order batches (Batch 5 and Batch 6) from 'pending' to 'shipped'. Every order row must now have status 'shipped'. Do not change any other column, and do not add or remove any rows.

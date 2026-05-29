@@ -1,0 +1,49 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "type Config struct {\n\t<gap:target id=\"server-address\">Addr</gap:target>            string\n\t<gap:target id=\"shutdown-timeout\">ShutdownTimeout</gap:target> time.Duration\n\t<gap:target id=\"rate-limit-rps\">RateLimitRPS</gap:target>      float64\n\t<gap:target id=\"rate-limit-burst\">RateLimitBurst</gap:target>  float64\n}\n\nfunc loadConfig() Config {\n\treturn Config{\n\t\tAddr:            getEnv(\"ADDR\", \":8080\"),\n\t\tShutdownTimeout: getEnvDuration(\"SHUTDOWN_TIMEOUT\", 10*time.Second),\n\t\tRateLimitRPS:    getEnvFloat(\"RATE_LIMIT_RPS\", 5),\n\t\tRateLimitBurst:  getEnvFloat(\"RATE_LIMIT_BURST\", 10),\n\t}\n}\n\nfunc getEnv(key, fallback string) string {\n\tif v := strings.TrimSpace(os.Getenv(key)); v != \"\" {\n\t\treturn v\n\t}\n\treturn fallback\n}\n\nfunc getEnvDuration(key string, fallback time.Duration) time.Duration {\n\tv := strings.TrimSpace(os.Getenv(key))\n\tif v == \"\" {\n\t\treturn fallback\n\t}\n\td, err := time.ParseDuration(v)\n\tif err != nil {\n\t\treturn fallback\n\t}\n\treturn d\n}\n\nfunc getEnvFloat(key string, fallback float64) float64 {\n\tv := strings.TrimSpace(os.Getenv(key))\n\tif v == \"\" {\n\t\treturn fallback\n\t}\n\tf, err := strconv.ParseFloat(v, 64)\n\tif err != nil || math.IsNaN(f) || math.IsInf(f, 0) {\n\t\treturn fallback\n\t}\n\treturn f\n}",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "config-block"
+      }
+    },
+    {
+      "content": "type URL struct {\n\t<gap:target id=\"url-code\">Code</gap:target>        string     `json:\"code\"`\n\t<gap:target id=\"url-original\">OriginalURL</gap:target> string     `json:\"original_url\"`\n\t<gap:target id=\"url-short\">ShortURL</gap:target>    string     `json:\"short_url\"`\n\t<gap:target id=\"url-created\">CreatedAt</gap:target>  time.Time  `json:\"created_at\"`\n\tExpiresAt   *time.Time `json:\"expires_at,omitempty\"`\n\t<gap:target id=\"url-clicks\">Clicks</gap:target>     int64      `json:\"clicks\"`\n}\n\ntype CreateRequest struct {\n\t<gap:target id=\"create-original-url\">OriginalURL</gap:target> string `json:\"original_url\"`\n}\n\ntype StatsResponse struct {\n\t<gap:target id=\"stats-code\">Code</gap:target>        string     `json:\"code\"`\n\t<gap:target id=\"stats-original\">OriginalURL</gap:target> string     `json:\"original_url\"`\n\t<gap:target id=\"stats-short\">ShortURL</gap:target>    string     `json:\"short_url\"`\n\t<gap:target id=\"stats-created\">CreatedAt</gap:target>  time.Time  `json:\"created_at\"`\n\tExpiresAt   *time.Time `json:\"expires_at,omitempty\"`\n\t<gap:target id=\"stats-clicks\">Clicks</gap:target>     int64      `json:\"clicks\"`\n}",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "model-block"
+      }
+    },
+    {
+      "content": "type Handler struct {\n\tstore   *Store\n\tbaseURL string\n}\n\nfunc (h *Handler) CreateShortURL(w http.ResponseWriter, r *http.Request) {\n\tif r.Method != http.MethodPost {\n\t\twriteError(w, http.StatusMethodNotAllowed, \"method not allowed\")\n\t\treturn\n\t}\n\n\tvar req CreateRequest\n\tif err := json.NewDecoder(r.Body).Decode(&req); err != nil {\n\t\twriteError(w, http.StatusBadRequest, \"invalid JSON\")\n\t\treturn\n\t}\n\tif strings.TrimSpace(req.OriginalURL) == \"\" {\n\t\twriteError(w, http.StatusBadRequest, \"original_url is required\")\n\t\treturn\n\t}\n\n\tu := h.store.Create(req.OriginalURL, h.baseURL)\n\twriteJSON(w, http.StatusCreated, u)\n}\n\nfunc (h *Handler) RedirectURL(w http.ResponseWriter, r *http.Request) {\n\tif r.Method != http.MethodGet {\n\t\twriteError(w, http.StatusMethodNotAllowed, \"method not allowed\")\n\t\treturn\n\t}\n\tcode := getCodeFromPath(r.URL.Path)\n\tif code == \"\" {\n\t\twriteError(w, http.StatusNotFound, \"not found\")\n\t\treturn\n\t}\n\n\tu, ok := h.store.IncrementClicks(code)\n\tif !ok {\n\t\twriteError(w, http.StatusNotFound, \"not found\")\n\t\treturn\n\t}\n\thttp.Redirect(w, r, u.OriginalURL, http.StatusFound)\n}\n\nfunc (h *Handler) GetStats(w http.ResponseWriter, r *http.Request) {\n\tif r.Method != http.MethodGet {\n\t\twriteError(w, http.StatusMethodNotAllowed, \"method not allowed\")\n\t\treturn\n\t}\n\tcode := getCodeFromPath(r.URL.Path)\n\tu, ok := h.store.Get(code)\n\tif !ok {\n\t\twriteError(w, http.StatusNotFound, \"not found\")\n\t\treturn\n\t}\n\twriteJSON(w, http.StatusOK, StatsResponse{\n\t\tCode:        u.Code,\n\t\tOriginalURL: u.OriginalURL,\n\t\tShortURL:    u.ShortURL,\n\t\tCreatedAt:   u.CreatedAt,\n\t\tExpiresAt:   u.ExpiresAt,\n\t\tClicks:      u.Clicks,\n\t})\n}\n\nfunc (h *Handler) ListURLs(w http.ResponseWriter, r *http.Request) {\n\tif r.Method != http.MethodGet {\n\t\twriteError(w, http.StatusMethodNotAllowed, \"method not allowed\")\n\t\treturn\n\t}\n\twriteJSON(w, http.StatusOK, h.store.List())\n}\n\nfunc (h *Handler) DeleteURL(w http.ResponseWriter, r *http.Request) {\n\tif r.Method != http.MethodDelete {\n\t\twriteError(w, http.StatusMethodNotAllowed, \"method not allowed\")\n\t\treturn\n\t}\n\tcode := getCodeFromPath(r.URL.Path)\n\tif code == \"\" {\n\t\twriteError(w, http.StatusNotFound, \"not found\")\n\t\treturn\n\t}\n\tif !h.store.Delete(code) {\n\t\twriteError(w, http.StatusNotFound, \"not found\")\n\t\treturn\n\t}\n\tw.WriteHeader(http.StatusNoContent)\n}\n\nfunc (h *Handler) ExpireURL(w http.ResponseWriter, r *http.Request) {\n\tif r.Method != http.MethodPatch {\n\t\twriteError(w, http.StatusMethodNotAllowed, \"method not allowed\")\n\t\treturn\n\t}\n\tcode := getCodeFromPath(strings.TrimSuffix(r.URL.Path, \"/expire\"))\n\tif code == \"\" {\n\t\twriteError(w, http.StatusNotFound, \"not found\")\n\t\treturn\n\t}\n\texpiresAt := time.Now().UTC()\n\tu, ok := h.store.SetExpiration(code, &expiresAt)\n\tif !ok {\n\t\twriteError(w, http.StatusNotFound, \"not found\")\n\t\treturn\n\t}\n\twriteJSON(w, http.StatusOK, u)\n}",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "handler-block"
+      }
+    },
+    {
+      "content": "type Store struct {\n\tmu   sync.RWMutex\n\turls map[string]*URL\n}\n\nfunc NewStore() *Store {\n\treturn &Store{urls: make(map[string]*URL)}\n}\n\nfunc (s *Store) Create(originalURL, baseURL string) *URL {\n\tcode := generateCode(8)\n\tnow := time.Now().UTC()\n\n\tu := &URL{\n\t\tCode:        code,\n\t\tOriginalURL: originalURL,\n\t\tShortURL:    strings.TrimRight(baseURL, \"/\") + \"/\" + code,\n\t\tCreatedAt:    now,\n\t\tClicks:      0,\n\t}\n\n\ts.mu.Lock()\n\ts.urls[code] = u\n\ts.mu.Unlock()\n\n\treturn u\n}\n\nfunc (s *Store) Get(code string) (*URL, bool) {\n\ts.mu.RLock()\n\tdefer s.mu.RUnlock()\n\tu, ok := s.urls[code]\n\tif !ok {\n\t\treturn nil, false\n\t}\n\tcopyURL := *u\n\treturn &copyURL, true\n}\n\nfunc (s *Store) IncrementClicks(code string) (*URL, bool) {\n\ts.mu.Lock()\n\tdefer s.mu.Unlock()\n\tu, ok := s.urls[code]\n\tif !ok {\n\t\treturn nil, false\n\t}\n\tu.Clicks++\n\tcopyURL := *u\n\treturn &copyURL, true\n}\n\nfunc (s *Store) SetExpiration(code string, expiresAt *time.Time) (*URL, bool) {\n\ts.mu.Lock()\n\tdefer s.mu.Unlock()\n\tu, ok := s.urls[code]\n\tif !ok {\n\t\treturn nil, false\n\t}\n\tu.ExpiresAt = expiresAt\n\tcopyURL := *u\n\treturn &copyURL, true\n}\n\nfunc (s *Store) Delete(code string) bool {\n\ts.mu.Lock()\n\tdefer s.mu.Unlock()\n\tif _, ok := s.urls[code]; !ok {\n\t\treturn false\n\t}\n\tdelete(s.urls, code)\n\treturn true\n}\n\nfunc (s *Store) List() []URL {\n\ts.mu.RLock()\n\tdefer s.mu.RUnlock()\n\tout := make([]URL, 0, len(s.urls))\n\tfor _, u := range s.urls {\n\t\tout = append(out, *u)\n\t}\n\treturn out\n}",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "store-block"
+      }
+    },
+    {
+      "content": "\tvar finalHandler http.Handler = mux\n\tfinalHandler = requestIDMiddleware(finalHandler)\n\tfinalHandler = loggingMiddleware(finalHandler)\n\tfinalHandler = corsMiddleware(finalHandler)\n\tfinalHandler = rateLimitMiddleware(5, 10)(finalHandler)\n",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "routing-block"
+      }
+    }
+  ]
+}

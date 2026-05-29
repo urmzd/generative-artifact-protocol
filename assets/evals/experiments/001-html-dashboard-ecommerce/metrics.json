@@ -1,0 +1,217 @@
+{
+  "base_turn0": {
+    "artifact_bytes": 33437,
+    "cached_input_tokens": 0,
+    "input_tokens": 161,
+    "latency_ms": 49853,
+    "median_itl_ms": 0.004583,
+    "output_tokens": 10421,
+    "ttft_ms": 16,
+    "ttlt_ms": 49296
+  },
+  "comparison": {
+    "input_token_savings_pct": 61.0,
+    "latency_savings_pct": 93.3,
+    "output_token_savings_pct": 94.8
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "cached_input_tokens": 0,
+        "edit": "Update the Total Revenue stat card to show $215,430 with a +12.3% trend indicato",
+        "failed": false,
+        "input_tokens": 10604,
+        "latency_ms": 46489,
+        "median_itl_ms": 0.00325,
+        "output_bytes": 33431,
+        "output_tokens": 10413,
+        "ttft_ms": 0,
+        "ttlt_ms": 45931,
+        "turn": 1
+      },
+      {
+        "cached_input_tokens": 20736,
+        "edit": "Add 15 new rows to the orders table with recent order data from March 2026",
+        "failed": false,
+        "input_tokens": 21042,
+        "latency_ms": 48781,
+        "median_itl_ms": 0.004,
+        "output_bytes": 35674,
+        "output_tokens": 11254,
+        "ttft_ms": 0,
+        "ttlt_ms": 48171,
+        "turn": 2
+      },
+      {
+        "cached_input_tokens": 32000,
+        "edit": "Change the primary accent color from blue to purple (#8b5cf6) across all element",
+        "failed": false,
+        "input_tokens": 32322,
+        "latency_ms": 46518,
+        "median_itl_ms": 0.006083,
+        "output_bytes": 35676,
+        "output_tokens": 11256,
+        "ttft_ms": 5,
+        "ttlt_ms": 46139,
+        "turn": 3
+      },
+      {
+        "cached_input_tokens": 43264,
+        "edit": "Add a new 'Recent Activity' section after the stats cards showing the last 10 us",
+        "failed": false,
+        "input_tokens": 43604,
+        "latency_ms": 52497,
+        "median_itl_ms": 0.00425,
+        "output_bytes": 39014,
+        "output_tokens": 12106,
+        "ttft_ms": 0,
+        "ttlt_ms": 51931,
+        "turn": 4
+      }
+    ],
+    "total_cached_input_tokens": 96000,
+    "total_input_tokens": 107572,
+    "total_latency_ms": 194285,
+    "total_output_tokens": 45029
+  },
+  "experiment_id": "001-html-dashboard-ecommerce",
+  "format": "text/html",
+  "gap_flow": {
+    "apply_success_rate": 1.0,
+    "envelope_parse_rate": 1.0,
+    "per_turn": [
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 0,
+        "edit": "Update the Total Revenue stat card to show $215,430 with a +12.3% trend indicato",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 11270,
+        "latency_ms": 1442,
+        "median_itl_ms": 0.007271,
+        "output_bytes": 37872,
+        "output_tokens": 191,
+        "ttft_ms": 4,
+        "ttlt_ms": 843,
+        "turn": 1
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 2816,
+        "edit": "Add 15 new rows to the orders table with recent order data from March 2026",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 11263,
+        "latency_ms": 5183,
+        "median_itl_ms": 0.0028335,
+        "output_bytes": 33111,
+        "output_tokens": 1045,
+        "ttft_ms": 108,
+        "ttlt_ms": 4602,
+        "turn": 2
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 7936,
+        "edit": "Change the primary accent color from blue to purple (#8b5cf6) across all element",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 9701,
+        "latency_ms": 1588,
+        "median_itl_ms": 0.005146,
+        "output_bytes": 32831,
+        "output_tokens": 227,
+        "ttft_ms": 0,
+        "ttlt_ms": 794,
+        "turn": 3
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 1792,
+        "edit": "Add a new 'Recent Activity' section after the stats cards showing the last 10 us",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 9686,
+        "latency_ms": 4886,
+        "median_itl_ms": 0.002583,
+        "output_bytes": 35661,
+        "output_tokens": 858,
+        "ttft_ms": 3,
+        "ttlt_ms": 3855,
+        "turn": 4
+      }
+    ],
+    "total_cached_input_tokens": 12544,
+    "total_input_tokens": 41920,
+    "total_latency_ms": 13099,
+    "total_output_tokens": 2321
+  },
+  "gap_turn0": {
+    "artifact_bytes": 37904,
+    "cached_input_tokens": 0,
+    "input_tokens": 430,
+    "latency_ms": 55477,
+    "median_itl_ms": 0.0047079999999999995,
+    "output_tokens": 11010,
+    "ttft_ms": 6,
+    "ttlt_ms": 54918
+  },
+  "model": "gpt-5.4-mini",
+  "provider": "openai",
+  "quality": {
+    "mean_rouge_l": 0.2962,
+    "mean_sequence_similarity": 0.6686,
+    "mean_token_f1": 0.3409,
+    "per_turn": [
+      {
+        "base_char_count": 33431,
+        "char_delta_pct": 10.4,
+        "gap_char_count": 36917,
+        "lines_added": 426,
+        "lines_removed": 665,
+        "rouge_l": 0.3115,
+        "sequence_similarity": 0.7151,
+        "token_f1": 0.3517,
+        "turn": 1
+      },
+      {
+        "base_char_count": 35674,
+        "char_delta_pct": -9.9,
+        "gap_char_count": 32156,
+        "lines_added": 399,
+        "lines_removed": 680,
+        "rouge_l": 0.3035,
+        "sequence_similarity": 0.6608,
+        "token_f1": 0.345,
+        "turn": 2
+      },
+      {
+        "base_char_count": 35676,
+        "char_delta_pct": -10.7,
+        "gap_char_count": 31876,
+        "lines_added": 396,
+        "lines_removed": 682,
+        "rouge_l": 0.2923,
+        "sequence_similarity": 0.6561,
+        "token_f1": 0.3333,
+        "turn": 3
+      },
+      {
+        "base_char_count": 39014,
+        "char_delta_pct": -11.2,
+        "gap_char_count": 34652,
+        "lines_added": 431,
+        "lines_removed": 551,
+        "rouge_l": 0.2775,
+        "sequence_similarity": 0.6423,
+        "token_f1": 0.3334,
+        "turn": 4
+      }
+    ]
+  },
+  "timestamp": "2026-05-29T02:44:00Z"
+}

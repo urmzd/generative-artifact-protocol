@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "cargo-toml",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "sqlx = { version = \"0.8\", features = [\"postgres\", \"runtime-tokio\"] }\nsea-orm = { version = \"0.12\", features = [\"sqlx-postgres\", \"runtime-tokio-rustls\"] }",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "dependency-reqwest"
+      }
+    }
+  ]
+}

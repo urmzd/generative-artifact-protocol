@@ -1,0 +1,27 @@
+{
+  "protocol": "gap",
+  "id": "rustfmt-config",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "body": "StdExternalCrate",
+      "content": null,
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "group-imports"
+      }
+    },
+    {
+      "body": "true",
+      "content": null,
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "reorder-imports"
+      }
+    }
+  ]
+}

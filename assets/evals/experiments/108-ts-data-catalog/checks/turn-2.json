@@ -1,0 +1,31 @@
+{
+  "turn": 2,
+  "checks": [
+    {
+      "kind": "contains",
+      "value": "rec-025b",
+      "desc": "the inserted record rec-025b is present"
+    },
+    {
+      "kind": "contains",
+      "value": "SKU-025B",
+      "desc": "the inserted record carries sku SKU-025B"
+    },
+    {
+      "kind": "contains",
+      "value": "Flagship Tablet Pro",
+      "desc": "the inserted record name is present"
+    },
+    {
+      "kind": "contains",
+      "value": "\"SKU-025\"",
+      "desc": "the anchor record rec-025 still exists (quoted literal so SKU-025B does not satisfy it)"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "sku:\\s*\"SKU-",
+      "expected": 101,
+      "desc": "exactly one record inserted: 100 original + 1 new = 101"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "turn": 1,
+  "checks": [
+    {
+      "kind": "contains",
+      "value": "1299.99",
+      "desc": "Product 27's new price 1299.99 is present after the single-field edit on a non-first batch."
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?i)INSERT\\s+INTO",
+      "expected": 120,
+      "desc": "Total seed rows remain exactly 120 (40 products + 40 users + 40 orders) — no collateral row loss from a single-field edit."
+    },
+    {
+      "kind": "regex_count_at_least",
+      "pattern": "(?i)INSERT\\s+INTO\\s+products",
+      "min": 40,
+      "desc": "All 40 product rows are still present after editing product 27."
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?i)CREATE\\s+TABLE",
+      "expected": 3,
+      "desc": "Schema is intact: products, users, orders CREATE TABLE statements all preserved."
+    }
+  ]
+}

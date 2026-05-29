@@ -1,0 +1,217 @@
+{
+  "base_turn0": {
+    "artifact_bytes": 21084,
+    "cached_input_tokens": 0,
+    "input_tokens": 158,
+    "latency_ms": 28805,
+    "median_itl_ms": 0.005458,
+    "output_tokens": 6785,
+    "ttft_ms": 12,
+    "ttlt_ms": 28309
+  },
+  "comparison": {
+    "input_token_savings_pct": 69.9,
+    "latency_savings_pct": 90.8,
+    "output_token_savings_pct": 92.4
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "cached_input_tokens": 0,
+        "edit": "Change the primary color from blue to indigo (#4f46e5) and update the secondary ",
+        "failed": false,
+        "input_tokens": 6985,
+        "latency_ms": 29066,
+        "median_itl_ms": 0.00275,
+        "output_bytes": 21083,
+        "output_tokens": 6777,
+        "ttft_ms": 0,
+        "ttlt_ms": 28495,
+        "turn": 1
+      },
+      {
+        "cached_input_tokens": 13568,
+        "edit": "Add a new 'breadcrumbs' component with separator chevrons, active state styling,",
+        "failed": false,
+        "input_tokens": 13793,
+        "latency_ms": 29944,
+        "median_itl_ms": 0.002417,
+        "output_bytes": 22796,
+        "output_tokens": 7271,
+        "ttft_ms": 0,
+        "ttlt_ms": 29228,
+        "turn": 2
+      },
+      {
+        "cached_input_tokens": 20736,
+        "edit": "Rewrite the buttons component section to add a new 'danger' button variant with ",
+        "failed": false,
+        "input_tokens": 21099,
+        "latency_ms": 28980,
+        "median_itl_ms": 0.0025840000000000004,
+        "output_bytes": 21636,
+        "output_tokens": 6929,
+        "ttft_ms": 4,
+        "ttlt_ms": 28552,
+        "turn": 3
+      },
+      {
+        "cached_input_tokens": 27904,
+        "edit": "Add a dark mode section using @media (prefers-color-scheme: dark) that inverts t",
+        "failed": false,
+        "input_tokens": 28061,
+        "latency_ms": 35583,
+        "median_itl_ms": 0.003292,
+        "output_bytes": 26868,
+        "output_tokens": 8507,
+        "ttft_ms": 5,
+        "ttlt_ms": 35157,
+        "turn": 4
+      }
+    ],
+    "total_cached_input_tokens": 62208,
+    "total_input_tokens": 69938,
+    "total_latency_ms": 123573,
+    "total_output_tokens": 29484
+  },
+  "experiment_id": "039-css-design-system",
+  "format": "text/css",
+  "gap_flow": {
+    "apply_success_rate": 1.0,
+    "envelope_parse_rate": 1.0,
+    "per_turn": [
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 0,
+        "edit": "Change the primary color from blue to indigo (#4f46e5) and update the secondary ",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 5026,
+        "latency_ms": 1155,
+        "median_itl_ms": 0.003229,
+        "output_bytes": 15983,
+        "output_tokens": 147,
+        "ttft_ms": 39,
+        "ttlt_ms": 765,
+        "turn": 1
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 0,
+        "edit": "Add a new 'breadcrumbs' component with separator chevrons, active state styling,",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 5014,
+        "latency_ms": 2749,
+        "median_itl_ms": 0.002959,
+        "output_bytes": 17750,
+        "output_tokens": 538,
+        "ttft_ms": 0,
+        "ttlt_ms": 2212,
+        "turn": 2
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 3840,
+        "edit": "Rewrite the buttons component section to add a new 'danger' button variant with ",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 5412,
+        "latency_ms": 3265,
+        "median_itl_ms": 0.001959,
+        "output_bytes": 18206,
+        "output_tokens": 709,
+        "ttft_ms": 0,
+        "ttlt_ms": 2796,
+        "turn": 3
+      },
+      {
+        "apply_succeeded": true,
+        "cached_input_tokens": 2816,
+        "edit": "Add a dark mode section using @media (prefers-color-scheme: dark) that inverts t",
+        "envelope_name": "edit",
+        "envelope_parsed": true,
+        "failed": false,
+        "input_tokens": 5586,
+        "latency_ms": 4243,
+        "median_itl_ms": 0.003209,
+        "output_bytes": 20408,
+        "output_tokens": 834,
+        "ttft_ms": 40,
+        "ttlt_ms": 3846,
+        "turn": 4
+      }
+    ],
+    "total_cached_input_tokens": 6656,
+    "total_input_tokens": 21038,
+    "total_latency_ms": 11412,
+    "total_output_tokens": 2228
+  },
+  "gap_turn0": {
+    "artifact_bytes": 15983,
+    "cached_input_tokens": 0,
+    "input_tokens": 421,
+    "latency_ms": 20633,
+    "median_itl_ms": 0.002521,
+    "output_tokens": 4746,
+    "ttft_ms": 10,
+    "ttlt_ms": 20277
+  },
+  "model": "gpt-5.4-mini",
+  "provider": "openai",
+  "quality": {
+    "mean_rouge_l": 0.3893,
+    "mean_sequence_similarity": 0.4863,
+    "mean_token_f1": 0.5206,
+    "per_turn": [
+      {
+        "base_char_count": 21083,
+        "char_delta_pct": -40.3,
+        "gap_char_count": 12581,
+        "lines_added": 464,
+        "lines_removed": 722,
+        "rouge_l": 0.4183,
+        "sequence_similarity": 0.5161,
+        "token_f1": 0.5121,
+        "turn": 1
+      },
+      {
+        "base_char_count": 22796,
+        "char_delta_pct": -37.3,
+        "gap_char_count": 14290,
+        "lines_added": 525,
+        "lines_removed": 803,
+        "rouge_l": 0.3929,
+        "sequence_similarity": 0.4944,
+        "token_f1": 0.5206,
+        "turn": 2
+      },
+      {
+        "base_char_count": 21636,
+        "char_delta_pct": -32.1,
+        "gap_char_count": 14692,
+        "lines_added": 548,
+        "lines_removed": 736,
+        "rouge_l": 0.4012,
+        "sequence_similarity": 0.4971,
+        "token_f1": 0.5401,
+        "turn": 3
+      },
+      {
+        "base_char_count": 26868,
+        "char_delta_pct": -37.1,
+        "gap_char_count": 16894,
+        "lines_added": 631,
+        "lines_removed": 895,
+        "rouge_l": 0.3449,
+        "sequence_similarity": 0.4374,
+        "token_f1": 0.5096,
+        "turn": 4
+      }
+    ]
+  },
+  "timestamp": "2026-05-29T03:00:43Z"
+}

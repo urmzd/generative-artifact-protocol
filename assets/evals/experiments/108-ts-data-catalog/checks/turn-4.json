@@ -1,0 +1,22 @@
+{
+  "turn": 4,
+  "checks": [
+    {
+      "kind": "contains",
+      "value": "clearance",
+      "desc": "the new bulk category value is present"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "category:\\s*\"clearance\"",
+      "expected": 100,
+      "desc": "every one of the 100 records had its category set to clearance"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "sku:\\s*\"SKU-",
+      "expected": 100,
+      "desc": "no records added or dropped during the bulk field edit: still 100"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "turn": 5,
+  "checks": [
+    {"kind": "valid_json", "desc": "artifact is still parseable JSON after appending a new page"},
+    {"kind": "regex_count", "pattern": "\"id\"\\s*:\\s*200[0-9]\\b|\"id\"\\s*:\\s*201[0-9]\\b|\"id\"\\s*:\\s*2020\\b", "expected": 20, "desc": "exactly 20 new users with ids in the 2001-2020 range were added"},
+    {"kind": "regex_count", "pattern": "\"id\"\\s*:\\s*2001\\b", "expected": 1, "desc": "first user of the new page (id 2001) is present"},
+    {"kind": "regex_count", "pattern": "\"id\"\\s*:\\s*2020\\b", "expected": 1, "desc": "last user of the new page (id 2020) is present"},
+    {"kind": "json_pointer_equals", "pointer": "/pagination/total", "value": 120, "desc": "total updated to 120"},
+    {"kind": "json_pointer_equals", "pointer": "/pagination/total_pages", "value": 6, "desc": "total_pages updated to 6"},
+    {"kind": "regex_count", "pattern": "\"active\"\\s*:\\s*true", "expected": 0, "desc": "still no active:true users — new page also active:false"},
+    {"kind": "regex_count", "pattern": "\"id\"\\s*:", "expected": 120, "desc": "exactly 120 user records (100 existing preserved + 20 appended)"}
+  ]
+}

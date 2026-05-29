@@ -1,0 +1,27 @@
+{
+  "turn": 2,
+  "checks": [
+    {
+      "kind": "contains",
+      "value": "catalog-scheduler-svc",
+      "desc": "the newly inserted Service catalog-scheduler-svc is present"
+    },
+    {
+      "kind": "contains",
+      "value": "app: catalog-scheduler",
+      "desc": "the new Service selector/label targets catalog-scheduler as instructed"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^kind:\\s*Service\\b",
+      "expected": 13,
+      "desc": "Service count rose from 12 to 13 after inserting exactly one new Service"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^kind:",
+      "expected": 41,
+      "desc": "total resource count is exactly 41 after inserting one item (was 40); no collateral loss of the other 40 resources"
+    }
+  ]
+}

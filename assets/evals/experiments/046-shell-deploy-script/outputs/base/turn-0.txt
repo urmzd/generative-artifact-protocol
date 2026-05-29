@@ -1,0 +1,364 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+IFS=$'\n\t'
+
+# =========================
+# Configuration
+# =========================
+APP_NAME="${APP_NAME:-my-node-app}"
+SERVER_HOST="${SERVER_HOST:-user@example.com}"
+SERVER_PORT="${SERVER_PORT:-22}"
+DEPLOY_PATH="${DEPLOY_PATH:-/var/www/${APP_NAME}}"
+RELEASES_DIR="${RELEASES_DIR:-${DEPLOY_PATH}/releases}"
+SHARED_DIR="${SHARED_DIR:-${DEPLOY_PATH}/shared}"
+CURRENT_LINK="${CURRENT_LINK:-${DEPLOY_PATH}/current}"
+HEALTHCHECK_URL="${HEALTHCHECK_URL:-http://localhost:3000/health}"
+NODE_VERSION="${NODE_VERSION:-18}"
+BRANCH="${BRANCH:-main}"
+PM2_APP_NAME="${PM2_APP_NAME:-${APP_NAME}}"
+REMOTE_TARBALL_DIR="${REMOTE_TARBALL_DIR:-/tmp}"
+LOCAL_BUILD_DIR="${LOCAL_BUILD_DIR:-./.deploy-build}"
+TARBALL_NAME="${TARBALL_NAME:-${APP_NAME}-$(date +%Y%m%d%H%M%S).tar.gz}"
+TARBALL_PATH="${LOCAL_BUILD_DIR}/${TARBALL_NAME}"
+
+# Env vars to write to remote .env file, format:
+# export DEPLOY_ENV_VARS=("KEY1=value1" "KEY2=value2")
+DEPLOY_ENV_VARS=("${DEPLOY_ENV_VARS[@]:-}")
+
+# =========================
+# Colored output
+# =========================
+if [[ -t 1 ]]; then
+  RED=$'\033[0;31m'
+  GREEN=$'\033[0;32m'
+  YELLOW=$'\033[1;33m'
+  BLUE=$'\033[0;34m'
+  RESET=$'\033[0m'
+else
+  RED=""
+  GREEN=""
+  YELLOW=""
+  BLUE=""
+  RESET=""
+fi
+
+log() { printf '%b\n' "${BLUE}==>${RESET} $*"; }
+ok() { printf '%b\n' "${GREEN}✔${RESET} $*"; }
+warn() { printf '%b\n' "${YELLOW}⚠${RESET} $*"; }
+err() { printf '%b\n' "${RED}✖${RESET} $*" >&2; }
+
+die() {
+  err "$*"
+  exit 1
+}
+
+trap 'err "Deployment failed at line $LINENO"; exit 1' ERR
+
+# =========================
+# Helpers
+# =========================
+command_exists() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+ssh_base() {
+  ssh -p "${SERVER_PORT}" -o BatchMode=yes -o StrictHostKeyChecking=accept-new "${SERVER_HOST}"
+}
+
+scp_base() {
+  scp -P "${SERVER_PORT}" -o BatchMode=yes -o StrictHostKeyChecking=accept-new
+}
+
+remote() {
+  ssh_base "bash -lc $(printf '%q' "$1")"
+}
+
+require_cmd() {
+  for cmd in "$@"; do
+    command_exists "$cmd" || die "Required command not found: ${cmd}"
+  done
+}
+
+cleanup_local() {
+  rm -rf "${LOCAL_BUILD_DIR}"
+}
+
+rollback_remote() {
+  local failed_release="$1"
+  log "Rolling back to previous release on remote server..."
+  remote "
+    set -euo pipefail
+    cd '${DEPLOY_PATH}'
+    if [ -L current ]; then
+      PREV_RELEASE=\$(ls -1dt releases/* 2>/dev/null | grep -v \"$(basename "${failed_release}")\" | head -n 1 || true)
+      if [ -n \"\${PREV_RELEASE}\" ]; then
+        ln -sfn \"\${PREV_RELEASE}\" current
+        if command -v pm2 >/dev/null 2>&1; then
+          pm2 reload '${PM2_APP_NAME}' --update-env || pm2 restart '${PM2_APP_NAME}' --update-env || true
+        fi
+        echo 'Rolled back to '\$(basename \"\${PREV_RELEASE}\")
+      else
+        echo 'No previous release available for rollback' >&2
+        exit 1
+      fi
+    fi
+  " || true
+}
+
+on_exit() {
+  local code=$?
+  if [[ $code -eq 0 ]]; then
+    cleanup_local
+  fi
+}
+trap on_exit EXIT
+
+# =========================
+# Pre-deploy checks
+# =========================
+check_git_clean() {
+  log "Checking git status..."
+  if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    die "Not inside a git repository"
+  fi
+
+  if [[ -n "$(git status --porcelain)" ]]; then
+    git status --short
+    die "Working tree is not clean"
+  fi
+  ok "Git working tree is clean"
+}
+
+check_branch() {
+  log "Checking current branch..."
+  local current_branch
+  current_branch="$(git rev-parse --abbrev-ref HEAD)"
+  [[ "${current_branch}" == "${BRANCH}" ]] || die "Current branch '${current_branch}' does not match required branch '${BRANCH}'"
+  ok "On branch ${BRANCH}"
+}
+
+run_tests() {
+  log "Running tests..."
+  if [[ -f package.json ]]; then
+    if npm test; then
+      ok "Tests passed"
+    else
+      die "Tests failed"
+    fi
+  else
+    die "package.json not found"
+  fi
+}
+
+check_ssh() {
+  log "Checking SSH connectivity to ${SERVER_HOST}..."
+  if ssh_base "echo connected" >/dev/null 2>&1; then
+    ok "SSH connectivity verified"
+  else
+    die "Unable to connect to ${SERVER_HOST} via SSH"
+  fi
+}
+
+# =========================
+# Build
+# =========================
+build_artifact() {
+  log "Building application locally..."
+  mkdir -p "${LOCAL_BUILD_DIR}"
+
+  if [[ -f .nvmrc ]]; then
+    local nvm_node
+    nvm_node="$(tr -d 'v[:space:]' < .nvmrc)"
+    if [[ "${nvm_node}" != "${NODE_VERSION}" ]]; then
+      warn ".nvmrc (${nvm_node}) differs from NODE_VERSION (${NODE_VERSION})"
+    fi
+  fi
+
+  npm ci
+  npm run build
+
+  log "Creating tarball..."
+  tar --exclude=".git" \
+      --exclude="${LOCAL_BUILD_DIR}" \
+      --exclude="node_modules" \
+      --exclude=".env" \
+      -czf "${TARBALL_PATH}" .
+
+  ok "Created tarball: ${TARBALL_PATH}"
+}
+
+# =========================
+# Deploy
+# =========================
+prepare_remote_dirs() {
+  log "Preparing remote directories..."
+  remote "
+    set -euo pipefail
+    mkdir -p '${RELEASES_DIR}' '${SHARED_DIR}'
+  "
+  ok "Remote directories ready"
+}
+
+sync_env_file() {
+  if [[ ${#DEPLOY_ENV_VARS[@]} -eq 0 ]]; then
+    warn "No DEPLOY_ENV_VARS provided; skipping remote .env generation"
+    return 0
+  fi
+
+  log "Uploading environment file..."
+  local env_tmp
+  env_tmp="$(mktemp)"
+  {
+    for kv in "${DEPLOY_ENV_VARS[@]}"; do
+      printf '%s\n' "${kv}"
+    done
+  } > "${env_tmp}"
+
+  scp_base "${env_tmp}" "${SERVER_HOST}:${SHARED_DIR}/.env"
+  rm -f "${env_tmp}"
+
+  remote "
+    set -euo pipefail
+    chmod 600 '${SHARED_DIR}/.env'
+  "
+  ok "Environment file uploaded"
+}
+
+upload_tarball() {
+  log "Uploading tarball to server..."
+  scp_base "${TARBALL_PATH}" "${SERVER_HOST}:${REMOTE_TARBALL_DIR}/${TARBALL_NAME}"
+  ok "Tarball uploaded"
+}
+
+extract_release() {
+  log "Extracting release on remote server..."
+  remote "
+    set -euo pipefail
+    RELEASE_DIR='${RELEASES_DIR}/$(date +%Y%m%d%H%M%S)-${APP_NAME}'
+    mkdir -p \"\${RELEASE_DIR}\"
+    tar -xzf '${REMOTE_TARBALL_DIR}/${TARBALL_NAME}' -C \"\${RELEASE_DIR}\"
+    ln -sfn '${SHARED_DIR}/.env' \"\${RELEASE_DIR}/.env\" || true
+    echo \"\${RELEASE_DIR}\"
+  " | tail -n 1
+}
+
+install_and_migrate() {
+  local release_dir="$1"
+  log "Installing production dependencies and running migrations..."
+  remote "
+    set -euo pipefail
+    cd '${release_dir}'
+    export NODE_ENV=production
+    if command -v nvm >/dev/null 2>&1; then
+      . \"\$HOME/.nvm/nvm.sh\"
+      nvm use '${NODE_VERSION}' >/dev/null
+    fi
+    npm ci --omit=dev
+    if npm run | grep -qE '(^| )migrate( |$)'; then
+      npm run migrate
+    elif npm run | grep -qE '(^| )db:migrate( |$)'; then
+      npm run db:migrate
+    else
+      echo 'No migration script found; skipping'
+    fi
+  "
+  ok "Dependencies installed and migrations completed"
+}
+
+swap_symlink_and_restart() {
+  local release_dir="$1"
+  log "Swapping current symlink and restarting PM2..."
+  remote "
+    set -euo pipefail
+    cd '${DEPLOY_PATH}'
+    ln -sfn '${release_dir}' current
+    if command -v pm2 >/dev/null 2>&1; then
+      cd current
+      pm2 startOrReload ecosystem.config.js --env production --update-env || pm2 reload '${PM2_APP_NAME}' --update-env || pm2 restart '${PM2_APP_NAME}' --update-env
+    else
+      echo 'PM2 not installed on remote server' >&2
+      exit 1
+    fi
+  "
+  ok "Symlink swapped and PM2 restarted"
+}
+
+health_check() {
+  log "Running health check..."
+  local max_attempts=20
+  local attempt=1
+  while [[ ${attempt} -le ${max_attempts} ]]; do
+    if ssh_base "curl -fsS '${HEALTHCHECK_URL}'" >/dev/null 2>&1; then
+      ok "Health check passed"
+      return 0
+    fi
+    warn "Health check attempt ${attempt}/${max_attempts} failed; retrying..."
+    sleep 3
+    attempt=$((attempt + 1))
+  done
+  return 1
+}
+
+tail_logs() {
+  log "Tailing PM2 logs..."
+  remote "
+    set -euo pipefail
+    if command -v pm2 >/dev/null 2>&1; then
+      pm2 logs '${PM2_APP_NAME}' --lines 50 --nostream
+    else
+      echo 'PM2 not installed on remote server' >&2
+      exit 1
+    fi
+  " || true
+}
+
+deploy() {
+  local release_dir
+
+  check_git_clean
+  check_branch
+  run_tests
+  check_ssh
+  build_artifact
+  prepare_remote_dirs
+  sync_env_file
+  upload_tarball
+  release_dir="$(extract_release)"
+  [[ -n "${release_dir}" ]] || die "Failed to determine remote release directory"
+  install_and_migrate "${release_dir}"
+
+  local previous_release
+  previous_release="$(ssh_base "bash -lc 'cd \"${DEPLOY_PATH}\" && readlink -f current 2>/dev/null || true'")"
+
+  if swap_symlink_and_restart "${release_dir}"; then
+    if health_check; then
+      ok "Deployment successful"
+      tail_logs
+      return 0
+    fi
+  fi
+
+  err "Post-deploy verification failed"
+  if [[ -n "${previous_release}" ]]; then
+    warn "Attempting rollback..."
+    remote "
+      set -euo pipefail
+      cd '${DEPLOY_PATH}'
+      ln -sfn '${previous_release}' current
+      if command -v pm2 >/dev/null 2>&1; then
+        pm2 reload '${PM2_APP_NAME}' --update-env || pm2 restart '${PM2_APP_NAME}' --update-env || true
+      fi
+    " || true
+  fi
+
+  tail_logs
+  die "Deployment failed and rollback attempted"
+}
+
+main() {
+  require_cmd git npm tar ssh scp curl
+  deploy
+}
+
+main "$@"

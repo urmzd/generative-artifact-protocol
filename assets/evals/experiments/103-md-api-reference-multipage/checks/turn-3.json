@@ -1,0 +1,32 @@
+{
+  "turn": 3,
+  "checks": [
+    {
+      "kind": "absent",
+      "value": "### EP-308",
+      "desc": "the deleted endpoint EP-308 heading is gone"
+    },
+    {
+      "kind": "contains",
+      "value": "### EP-307",
+      "desc": "the neighbouring endpoint EP-307 is untouched"
+    },
+    {
+      "kind": "contains",
+      "value": "### EP-309",
+      "desc": "the neighbouring endpoint EP-309 is untouched (no renumbering)"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^### EP-",
+      "expected": 90,
+      "desc": "exactly one endpoint removed from the prior 91; total back to 90"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "(?m)^## Page \\d+:",
+      "expected": 6,
+      "desc": "still 6 pages after the middle deletion"
+    }
+  ]
+}

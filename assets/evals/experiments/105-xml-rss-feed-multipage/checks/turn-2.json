@@ -1,0 +1,26 @@
+{
+  "turn": 2,
+  "checks": [
+    {
+      "kind": "contains",
+      "value": "dailybyte-0081",
+      "desc": "The newly inserted item (guid dailybyte-0081) is present"
+    },
+    {
+      "kind": "contains",
+      "value": "Breaking: Open Source Foundation Launches",
+      "desc": "The inserted item carries the specified title"
+    },
+    {
+      "kind": "contains",
+      "value": "dailybyte-0021",
+      "desc": "Existing item 21 (before which the new item was inserted) is still present"
+    },
+    {
+      "kind": "regex_count",
+      "pattern": "<guid",
+      "expected": 81,
+      "desc": "Feed now has exactly 81 items after inserting one new item"
+    }
+  ]
+}

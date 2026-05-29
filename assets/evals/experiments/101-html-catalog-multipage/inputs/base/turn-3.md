@@ -1,0 +1,1 @@
+Delete product P0055 from page 3 entirely. Do not renumber any other products. The catalog now has 120 products total.

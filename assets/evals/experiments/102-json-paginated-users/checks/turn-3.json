@@ -1,0 +1,11 @@
+{
+  "turn": 3,
+  "checks": [
+    {"kind": "valid_json", "desc": "artifact is still parseable JSON after the delete"},
+    {"kind": "regex_count", "pattern": "\"id\"\\s*:\\s*53\\b", "expected": 0, "desc": "the user with id 53 was removed — no id:53 record remains"},
+    {"kind": "regex_count", "pattern": "\"id\"\\s*:\\s*1001\\b", "expected": 1, "desc": "the user inserted last turn (id 1001) is still present — only id 53 was deleted"},
+    {"kind": "regex_count", "pattern": "\"id\"\\s*:\\s*45\\b", "expected": 1, "desc": "neighboring user id 45 untouched by the delete"},
+    {"kind": "json_pointer_equals", "pointer": "/pagination/total", "value": 100, "desc": "total back to 100 after the delete"},
+    {"kind": "regex_count", "pattern": "\"id\"\\s*:", "expected": 100, "desc": "exactly 100 user records after deleting one from 101 — no collateral loss"}
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "protocol": "gap",
+  "id": "edit",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "- <gap:target id=\"usage-example-squash\">dbmigrate squash</gap:target>: squash multiple migrations\n- <gap:target id=\"usage-example-diff\">dbmigrate diff</gap:target>: show pending changes",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "usage-example-rollback-to"
+      }
+    }
+  ]
+}

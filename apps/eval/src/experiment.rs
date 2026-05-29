@@ -18,6 +18,9 @@ pub struct RunConfig {
     pub api_base: String,
     pub api_key: String,
     pub skip_eval: bool,
+    /// Re-run even if `metrics.json` already exists (needed to add new flows to
+    /// experiments measured under an older harness).
+    pub force: bool,
 }
 
 #[derive(Debug)]
@@ -47,6 +50,13 @@ pub struct Metrics {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub gap_turn0: Option<TurnMetrics>,
 
+    /// Spec Scenario B (stateless full regen) — the steelman baseline. Present
+    /// only when the `stateless`/`abc`/`all` flow is run.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stateless_turn0: Option<TurnMetrics>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stateless_flow: Option<FlowMetrics>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     pub default_flow: Option<FlowMetrics>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -54,6 +64,13 @@ pub struct Metrics {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub comparison: Option<Comparison>,
+    /// A/B/C savings decomposition (requires the stateless flow).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub decomposition: Option<Decomposition>,
+    /// Run-validity gates — a run that trips these must be excluded from
+    /// headline aggregates.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub validity: Option<Validity>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub token_table: Option<serde_json::Value>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -64,6 +81,8 @@ pub struct Metrics {
 pub struct TurnMetrics {
     pub input_tokens: u64,
     pub output_tokens: u64,
+    #[serde(default)]
+    pub cached_input_tokens: u64,
     pub latency_ms: u64,
     pub artifact_bytes: usize,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -80,6 +99,8 @@ pub struct TurnResult {
     pub edit: String,
     pub input_tokens: u64,
     pub output_tokens: u64,
+    #[serde(default)]
+    pub cached_input_tokens: u64,
     pub latency_ms: u64,
     pub output_bytes: usize,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -105,6 +126,8 @@ pub struct FlowMetrics {
     pub per_turn: Vec<TurnResult>,
     pub total_input_tokens: u64,
     pub total_output_tokens: u64,
+    #[serde(default)]
+    pub total_cached_input_tokens: u64,
     pub total_latency_ms: u64,
 }
 
@@ -121,6 +144,36 @@ pub struct Comparison {
     pub output_token_savings_pct: f64,
     pub input_token_savings_pct: f64,
     pub latency_savings_pct: f64,
+}
+
+/// A/B/C token-savings decomposition (init-inclusive). `B vs A` isolates the
+/// input/statelessness win (a technique available to anyone); `C vs B` isolates
+/// GAP's defensible output-envelope win. All MEASURED from token counts.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Decomposition {
+    /// Input-token savings of going stateless (Scenario B vs A).
+    pub input_savings_b_vs_a_pct: f64,
+    /// Output-token savings of edit envelopes (Scenario C vs B) — the win no
+    /// caching can erase.
+    pub output_savings_c_vs_b_pct: f64,
+    /// Input-token savings of GAP vs the naive conversation (C vs A).
+    pub input_savings_c_vs_a_pct: f64,
+    /// Output-token savings of GAP vs the naive conversation (C vs A).
+    pub output_savings_c_vs_a_pct: f64,
+}
+
+/// Run-validity gates. These catch degenerate runs that otherwise report fake
+/// savings (e.g. the committed `026`: all applies failed, artifact frozen, yet
+/// 70.6% "output savings"). A tripped gate means the run is headline-excluded.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Validity {
+    /// True if the GAP flow's `output_bytes` never changed across edit turns
+    /// (every edit was a no-op — usually because all applies failed).
+    pub gap_run_degenerate: bool,
+    /// True iff the base (Scenario A) per-turn input is non-decreasing, as it
+    /// must be for an append-only conversation. False ⇒ the provider reports
+    /// post-cache token counts and the raw input axis is not interpretable.
+    pub base_input_monotone: bool,
 }
 
 /// Map MIME type → file extension.
@@ -265,8 +318,8 @@ pub async fn run_all(config: &RunConfig) -> Result<()> {
     let total = experiments.len();
     for (i, exp) in experiments.iter().enumerate() {
         let metrics_path = exp.dir.join("metrics.json");
-        if metrics_path.exists() {
-            eprintln!("[{}/{}] skip {} (metrics.json exists)", i + 1, total, exp.id);
+        if metrics_path.exists() && !config.force {
+            eprintln!("[{}/{}] skip {} (metrics.json exists; use --force to re-run)", i + 1, total, exp.id);
             continue;
         }
 
@@ -282,6 +335,9 @@ pub async fn run_all(config: &RunConfig) -> Result<()> {
             if let Err(e) = scorer::score_experiment(&exp.dir) {
                 eprintln!("  → scoring failed: {e}");
             }
+            if let Err(e) = crate::checks::score_checks(&exp.dir) {
+                eprintln!("  → checks scoring failed: {e}");
+            }
         }
     }
 
@@ -289,12 +345,18 @@ pub async fn run_all(config: &RunConfig) -> Result<()> {
 }
 
 async fn run_single(client: &OpenAIClient, exp: &Experiment, flow: &str) -> Result<Metrics> {
-    let run_base = flow == "both" || flow == "base";
-    let run_gap = flow == "both" || flow == "gap";
+    // Flow selection. `both` = base+gap (legacy); `abc` adds the stateless
+    // Scenario-B baseline so input vs output savings can be decomposed; `all`
+    // is currently an alias for `abc`.
+    let run_base = matches!(flow, "both" | "base" | "abc" | "all");
+    let run_stateless = matches!(flow, "stateless" | "abc" | "all");
+    let run_gap = matches!(flow, "both" | "gap" | "abc" | "all");
 
     let base_out = exp.dir.join("outputs/base");
+    let stateless_out = exp.dir.join("outputs/stateless");
     let gap_out = exp.dir.join("outputs/gap");
     fs::create_dir_all(&base_out)?;
+    fs::create_dir_all(&stateless_out)?;
     fs::create_dir_all(&gap_out)?;
 
     let mut metrics = Metrics {
@@ -305,14 +367,19 @@ async fn run_single(client: &OpenAIClient, exp: &Experiment, flow: &str) -> Resu
         format: exp.format.clone(),
         base_turn0: None,
         gap_turn0: None,
+        stateless_turn0: None,
+        stateless_flow: None,
         default_flow: None,
         gap_flow: None,
         comparison: None,
+        decomposition: None,
+        validity: None,
         token_table: None,
         quality: None,
     };
 
-    // Base flow
+    // Base flow (Scenario A)
+    let mut base_artifact: Option<String> = None;
     if run_base {
         eprintln!("  base flow...");
         let (base_t0, base_turns) = runner::run_base_flow(
@@ -320,8 +387,26 @@ async fn run_single(client: &OpenAIClient, exp: &Experiment, flow: &str) -> Resu
             &base_out, &exp.ext,
         ).await?;
         let base_flow = to_flow_metrics(&base_turns);
+        // Reuse the base turn-0 artifact as the shared plain baseline for the
+        // stateless flow (the marked GAP turn-0 is kept separate by design).
+        base_artifact = fs::read_to_string(base_out.join(format!("turn-0{}", exp.ext))).ok();
         metrics.base_turn0 = Some(base_t0);
         metrics.default_flow = Some(base_flow);
+    }
+
+    // Stateless full-regen flow (Scenario B — the steelman baseline)
+    if run_stateless {
+        eprintln!("  stateless flow...");
+        let seed = match (&base_artifact, &metrics.base_turn0) {
+            (Some(a), Some(t0)) => Some((a.clone(), t0.clone())),
+            _ => None,
+        };
+        let (s_t0, s_turns) = runner::run_stateless_flow(
+            client, &exp.base_system, &exp.turn0_prompt, &exp.edit_prompts,
+            &stateless_out, &exp.ext, seed,
+        ).await?;
+        metrics.stateless_turn0 = Some(s_t0);
+        metrics.stateless_flow = Some(to_flow_metrics(&s_turns));
     }
 
     // GAP flow
@@ -368,13 +453,67 @@ async fn run_single(client: &OpenAIClient, exp: &Experiment, flow: &str) -> Resu
         });
     }
 
+    // A/B/C decomposition (init-inclusive). Requires all three flows.
+    if let (Some(a), Some(b), Some(c)) =
+        (&metrics.default_flow, &metrics.stateless_flow, &metrics.gap_flow)
+    {
+        let a_in = flow_total_input(&metrics.base_turn0, a);
+        let a_out = flow_total_output(&metrics.base_turn0, a);
+        let b_in = flow_total_input(&metrics.stateless_turn0, b);
+        let b_out = flow_total_output(&metrics.stateless_turn0, b);
+        let c_in = flow_total_input(&metrics.gap_turn0, &c.flow);
+        let c_out = flow_total_output(&metrics.gap_turn0, &c.flow);
+
+        let pct = |base: f64, new: f64| if base > 0.0 { round1((1.0 - new / base) * 100.0) } else { 0.0 };
+        metrics.decomposition = Some(Decomposition {
+            input_savings_b_vs_a_pct: pct(a_in, b_in),
+            output_savings_c_vs_b_pct: pct(b_out, c_out),
+            input_savings_c_vs_a_pct: pct(a_in, c_in),
+            output_savings_c_vs_a_pct: pct(a_out, c_out),
+        });
+    }
+
+    // Run-validity gates.
+    let gap_degenerate = metrics.gap_flow.as_ref().is_some_and(|g| {
+        let edits = &g.flow.per_turn;
+        edits.len() > 1 && edits.iter().all(|t| t.output_bytes == edits[0].output_bytes)
+    });
+    let base_monotone = metrics.default_flow.as_ref().map_or(true, |b| {
+        b.per_turn
+            .windows(2)
+            .all(|w| w[1].input_tokens >= w[0].input_tokens)
+    });
+    if metrics.gap_flow.is_some() || metrics.default_flow.is_some() {
+        metrics.validity = Some(Validity {
+            gap_run_degenerate: gap_degenerate,
+            base_input_monotone: base_monotone,
+        });
+        if gap_degenerate {
+            eprintln!("  ⚠ GAP run degenerate (artifact never changed — all edits no-ops); excluded from headline");
+        }
+        if !base_monotone {
+            eprintln!("  ⚠ base input non-monotone (provider reports post-cache token counts)");
+        }
+    }
+
     Ok(metrics)
+}
+
+/// Init-inclusive total input tokens for a flow (turn-0 + edit turns).
+fn flow_total_input(turn0: &Option<TurnMetrics>, flow: &FlowMetrics) -> f64 {
+    turn0.as_ref().map_or(0.0, |t| t.input_tokens as f64) + flow.total_input_tokens as f64
+}
+
+/// Init-inclusive total output tokens for a flow (turn-0 + edit turns).
+fn flow_total_output(turn0: &Option<TurnMetrics>, flow: &FlowMetrics) -> f64 {
+    turn0.as_ref().map_or(0.0, |t| t.output_tokens as f64) + flow.total_output_tokens as f64
 }
 
 fn to_flow_metrics(turns: &[TurnResult]) -> FlowMetrics {
     FlowMetrics {
         total_input_tokens: turns.iter().map(|t| t.input_tokens).sum(),
         total_output_tokens: turns.iter().map(|t| t.output_tokens).sum(),
+        total_cached_input_tokens: turns.iter().map(|t| t.cached_input_tokens).sum(),
         total_latency_ms: turns.iter().map(|t| t.latency_ms).sum(),
         per_turn: turns.to_vec(),
     }

@@ -1,366 +1,737 @@
 {
-"meta": {
-"request_id": "a1b2c3d4e5f67890",
-"timestamp": "2024-05-21T10:30:00Z",
-"api_version": "v2.1"
-},
-"data": [
-{
-"id": 1001,
-"email": "alex.rivera@examplecorp.com",
-"first_name": "Alex",
-"last_name": "Rivera",
-"avatar_url": "http://cdn.example.com/avatars/1001.jpg",
-"role": "Software Engineer",
-"department": "Technology",
-"is_active": true,
-"created_at": "2018-03-15T09:00:00Z",
-"last_login_at": "2024-05-21T10:25:12Z",
-"preferences": {
-"theme": "dark",
-"notifications": true,
-"timezone": "America/Los_Angeles"
+  "data": [
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1001.jpg",
+      "created_at": "2024-02-14T09:15:22Z",
+      "department": "Product",
+      "email": "sarah.johnson@example.com",
+      "first_name": "Sarah",
+      "id": 1001,
+      "is_active": true,
+      "last_login_at": "2026-05-28T18:04:11Z",
+      "last_name": "Johnson",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "America/New_York"
+      },
+      "role": "product_manager"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1002.jpg",
+      "created_at": "2023-11-03T13:42:08Z",
+      "department": "Engineering",
+      "email": "michael.chen@example.com",
+      "first_name": "Michael",
+      "id": 1002,
+      "is_active": true,
+      "last_login_at": "2026-05-29T07:18:45Z",
+      "last_name": "Chen",
+      "preferences": {
+        "email_notifications": false,
+        "language": "en",
+        "theme": "dark",
+        "timezone": "America/Los_Angeles"
+      },
+      "role": "engineer"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1003.jpg",
+      "created_at": "2024-06-21T08:05:17Z",
+      "department": "Design",
+      "email": "emily.rodriguez@example.com",
+      "first_name": "Emily",
+      "id": 1003,
+      "is_active": true,
+      "last_login_at": "2026-05-27T16:40:09Z",
+      "last_name": "Rodriguez",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "Europe/London"
+      },
+      "role": "designer"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1004.jpg",
+      "created_at": "2022-09-12T11:30:54Z",
+      "department": "Sales",
+      "email": "david.patel@example.com",
+      "first_name": "David",
+      "id": 1004,
+      "is_active": true,
+      "last_login_at": "2026-05-29T09:02:33Z",
+      "last_name": "Patel",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "dark",
+        "timezone": "Asia/Kolkata"
+      },
+      "role": "sales_manager"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1005.jpg",
+      "created_at": "2021-05-18T15:25:31Z",
+      "department": "Support",
+      "email": "olivia.wilson@example.com",
+      "first_name": "Olivia",
+      "id": 1005,
+      "is_active": false,
+      "last_login_at": "2026-04-11T12:19:56Z",
+      "last_name": "Wilson",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "America/Chicago"
+      },
+      "role": "customer_success"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1006.jpg",
+      "created_at": "2023-01-27T10:11:43Z",
+      "department": "Support",
+      "email": "james.anderson@example.com",
+      "first_name": "James",
+      "id": 1006,
+      "is_active": true,
+      "last_login_at": "2026-05-29T11:15:20Z",
+      "last_name": "Anderson",
+      "preferences": {
+        "email_notifications": false,
+        "language": "en",
+        "theme": "light",
+        "timezone": "America/Denver"
+      },
+      "role": "support_agent"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1007.jpg",
+      "created_at": "2024-03-09T07:48:12Z",
+      "department": "Finance",
+      "email": "isabella.thompson@example.com",
+      "first_name": "Isabella",
+      "id": 1007,
+      "is_active": true,
+      "last_login_at": "2026-05-28T21:33:04Z",
+      "last_name": "Thompson",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "dark",
+        "timezone": "Europe/Berlin"
+      },
+      "role": "analyst"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1008.jpg",
+      "created_at": "2022-12-01T14:22:19Z",
+      "department": "Infrastructure",
+      "email": "benjamin.moore@example.com",
+      "first_name": "Benjamin",
+      "id": 1008,
+      "is_active": true,
+      "last_login_at": "2026-05-29T08:47:52Z",
+      "last_name": "Moore",
+      "preferences": {
+        "email_notifications": false,
+        "language": "en",
+        "theme": "dark",
+        "timezone": "UTC"
+      },
+      "role": "devops_engineer"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1009.jpg",
+      "created_at": "2023-08-16T09:55:41Z",
+      "department": "Human Resources",
+      "email": "mia.taylor@example.com",
+      "first_name": "Mia",
+      "id": 1009,
+      "is_active": true,
+      "last_login_at": "2026-05-29T10:03:27Z",
+      "last_name": "Taylor",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "America/Toronto"
+      },
+      "role": "hr_generalist"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1010.jpg",
+      "created_at": "2024-01-05T12:16:09Z",
+      "department": "Engineering",
+      "email": "ethan.white@example.com",
+      "first_name": "Ethan",
+      "id": 1010,
+      "is_active": true,
+      "last_login_at": "2026-05-28T19:27:18Z",
+      "last_name": "White",
+      "preferences": {
+        "email_notifications": false,
+        "language": "en",
+        "theme": "dark",
+        "timezone": "America/Phoenix"
+      },
+      "role": "engineer"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1011.jpg",
+      "created_at": "2022-06-29T16:08:33Z",
+      "department": "Marketing",
+      "email": "ava.harris@example.com",
+      "first_name": "Ava",
+      "id": 1011,
+      "is_active": true,
+      "last_login_at": "2026-05-27T14:21:10Z",
+      "last_name": "Harris",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "Europe/Paris"
+      },
+      "role": "marketing_manager"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1012.jpg",
+      "created_at": "2021-10-08T10:44:50Z",
+      "department": "Finance",
+      "email": "noah.martin@example.com",
+      "first_name": "Noah",
+      "id": 1012,
+      "is_active": false,
+      "last_login_at": "2026-03-14T17:08:02Z",
+      "last_name": "Martin",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "America/New_York"
+      },
+      "role": "accountant"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1013.jpg",
+      "created_at": "2024-10-02T06:23:15Z",
+      "department": "Engineering",
+      "email": "sophia.garcia@example.com",
+      "first_name": "Sophia",
+      "id": 1013,
+      "is_active": true,
+      "last_login_at": "2026-05-29T06:58:44Z",
+      "last_name": "Garcia",
+      "preferences": {
+        "email_notifications": false,
+        "language": "en",
+        "theme": "dark",
+        "timezone": "America/Santiago"
+      },
+      "role": "qa_engineer"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1014.jpg",
+      "created_at": "2023-04-19T13:12:29Z",
+      "department": "Operations",
+      "email": "william.clark@example.com",
+      "first_name": "William",
+      "id": 1014,
+      "is_active": true,
+      "last_login_at": "2026-05-28T23:51:03Z",
+      "last_name": "Clark",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "America/Chicago"
+      },
+      "role": "operations_manager"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1015.jpg",
+      "created_at": "2022-03-11T08:36:07Z",
+      "department": "Human Resources",
+      "email": "amelia.lewis@example.com",
+      "first_name": "Amelia",
+      "id": 1015,
+      "is_active": true,
+      "last_login_at": "2026-05-29T12:02:14Z",
+      "last_name": "Lewis",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "Europe/Dublin"
+      },
+      "role": "recruiter"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1016.jpg",
+      "created_at": "2024-04-25T17:09:46Z",
+      "department": "Engineering",
+      "email": "elijah.walker@example.com",
+      "first_name": "Elijah",
+      "id": 1016,
+      "is_active": true,
+      "last_login_at": "2026-05-29T13:18:55Z",
+      "last_name": "Walker",
+      "preferences": {
+        "email_notifications": false,
+        "language": "en",
+        "theme": "dark",
+        "timezone": "America/Los_Angeles"
+      },
+      "role": "engineer"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1017.jpg",
+      "created_at": "2023-07-07T09:19:38Z",
+      "department": "Marketing",
+      "email": "harper.young@example.com",
+      "first_name": "Harper",
+      "id": 1017,
+      "is_active": true,
+      "last_login_at": "2026-05-28T15:44:26Z",
+      "last_name": "Young",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "Europe/Amsterdam"
+      },
+      "role": "content_strategist"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1018.jpg",
+      "created_at": "2022-11-23T15:28:03Z",
+      "department": "Analytics",
+      "email": "lucas.king@example.com",
+      "first_name": "Lucas",
+      "id": 1018,
+      "is_active": true,
+      "last_login_at": "2026-05-29T05:41:39Z",
+      "last_name": "King",
+      "preferences": {
+        "email_notifications": false,
+        "language": "en",
+        "theme": "dark",
+        "timezone": "America/Denver"
+      },
+      "role": "data_analyst"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1019.jpg",
+      "created_at": "2021-12-30T10:07:25Z",
+      "department": "Operations",
+      "email": "charlotte.wright@example.com",
+      "first_name": "Charlotte",
+      "id": 1019,
+      "is_active": false,
+      "last_login_at": "2026-02-18T18:29:14Z",
+      "last_name": "Wright",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "Australia/Sydney"
+      },
+      "role": "office_manager"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1020.jpg",
+      "created_at": "2023-03-14T11:53:10Z",
+      "department": "Support",
+      "email": "henry.lopez@example.com",
+      "first_name": "Henry",
+      "id": 1020,
+      "is_active": true,
+      "last_login_at": "2026-05-29T08:12:07Z",
+      "last_name": "Lopez",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "dark",
+        "timezone": "America/Chicago"
+      },
+      "role": "support_agent"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1021.jpg",
+      "created_at": "2024-08-08T07:34:52Z",
+      "department": "Finance",
+      "email": "evelyn.hill@example.com",
+      "first_name": "Evelyn",
+      "id": 1021,
+      "is_active": true,
+      "last_login_at": "2026-05-28T22:09:31Z",
+      "last_name": "Hill",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "Europe/Madrid"
+      },
+      "role": "finance_manager"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1022.jpg",
+      "created_at": "2022-08-26T18:06:44Z",
+      "department": "Security",
+      "email": "sebastian.scott@example.com",
+      "first_name": "Sebastian",
+      "id": 1022,
+      "is_active": true,
+      "last_login_at": "2026-05-29T01:27:58Z",
+      "last_name": "Scott",
+      "preferences": {
+        "email_notifications": false,
+        "language": "en",
+        "theme": "dark",
+        "timezone": "UTC"
+      },
+      "role": "security_engineer"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1023.jpg",
+      "created_at": "2024-05-30T09:08:16Z",
+      "department": "Operations",
+      "email": "grace.adams@example.com",
+      "first_name": "Grace",
+      "id": 1023,
+      "is_active": true,
+      "last_login_at": "2026-05-28T20:16:40Z",
+      "last_name": "Adams",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "America/New_York"
+      },
+      "role": "project_coordinator"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1024.jpg",
+      "created_at": "2023-09-15T14:49:37Z",
+      "department": "Engineering",
+      "email": "jack.baker@example.com",
+      "first_name": "Jack",
+      "id": 1024,
+      "is_active": true,
+      "last_login_at": "2026-05-29T10:51:12Z",
+      "last_name": "Baker",
+      "preferences": {
+        "email_notifications": false,
+        "language": "en",
+        "theme": "dark",
+        "timezone": "America/Los_Angeles"
+      },
+      "role": "engineer"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1025.jpg",
+      "created_at": "2024-12-04T10:20:11Z",
+      "department": "Engineering",
+      "email": "lily.gonzalez@example.com",
+      "first_name": "Lily",
+      "id": 1025,
+      "is_active": true,
+      "last_login_at": "2026-05-27T19:33:59Z",
+      "last_name": "Gonzalez",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "America/Bogota"
+      },
+      "role": "qa_engineer"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1026.jpg",
+      "created_at": "2022-05-04T08:14:29Z",
+      "department": "Engineering",
+      "email": "daniel.nelson@example.com",
+      "first_name": "Daniel",
+      "id": 1026,
+      "is_active": true,
+      "last_login_at": "2026-05-29T09:36:48Z",
+      "last_name": "Nelson",
+      "preferences": {
+        "email_notifications": false,
+        "language": "en",
+        "theme": "dark",
+        "timezone": "Europe/Stockholm"
+      },
+      "role": "solutions_architect"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1027.jpg",
+      "created_at": "2021-07-21T13:05:55Z",
+      "department": "Marketing",
+      "email": "zoe.carter@example.com",
+      "first_name": "Zoe",
+      "id": 1027,
+      "is_active": false,
+      "last_login_at": "2026-01-09T16:11:23Z",
+      "last_name": "Carter",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "America/Los_Angeles"
+      },
+      "role": "marketing_specialist"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1028.jpg",
+      "created_at": "2023-10-10T12:32:47Z",
+      "department": "Sales",
+      "email": "owen.mitchell@example.com",
+      "first_name": "Owen",
+      "id": 1028,
+      "is_active": true,
+      "last_login_at": "2026-05-29T11:44:05Z",
+      "last_name": "Mitchell",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "dark",
+        "timezone": "America/Denver"
+      },
+      "role": "sales_representative"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1029.jpg",
+      "created_at": "2020-11-06T09:41:18Z",
+      "department": "Administration",
+      "email": "nora.perez@example.com",
+      "first_name": "Nora",
+      "id": 1029,
+      "is_active": true,
+      "last_login_at": "2026-05-29T12:58:19Z",
+      "last_name": "Perez",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "America/New_York"
+      },
+      "role": "administrator"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1030.jpg",
+      "created_at": "2024-07-17T16:27:36Z",
+      "department": "Engineering",
+      "email": "samuel.turner@example.com",
+      "first_name": "Samuel",
+      "id": 1030,
+      "is_active": true,
+      "last_login_at": "2026-05-28T17:05:42Z",
+      "last_name": "Turner",
+      "preferences": {
+        "email_notifications": false,
+        "language": "en",
+        "theme": "dark",
+        "timezone": "America/Chicago"
+      },
+      "role": "engineer"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1031.jpg",
+      "created_at": "2024-09-12T08:14:21Z",
+      "department": "Finance",
+      "email": "ava.murphy@example.com",
+      "first_name": "Ava",
+      "id": 1031,
+      "is_active": true,
+      "last_login_at": "2026-05-29T13:40:12Z",
+      "last_name": "Murphy",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "America/New_York"
+      },
+      "role": "billing_admin"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1032.jpg",
+      "created_at": "2023-12-04T11:22:09Z",
+      "department": "Customer Success",
+      "email": "logan.brooks@example.com",
+      "first_name": "Logan",
+      "id": 1032,
+      "is_active": true,
+      "last_login_at": "2026-05-29T13:12:45Z",
+      "last_name": "Brooks",
+      "preferences": {
+        "email_notifications": false,
+        "language": "en",
+        "theme": "dark",
+        "timezone": "America/Chicago"
+      },
+      "role": "support_agent"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1033.jpg",
+      "created_at": "2024-02-28T09:05:33Z",
+      "department": "Finance",
+      "email": "emma.reed@example.com",
+      "first_name": "Emma",
+      "id": 1033,
+      "is_active": true,
+      "last_login_at": "2026-05-29T12:41:28Z",
+      "last_name": "Reed",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "Europe/London"
+      },
+      "role": "billing_admin"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1034.jpg",
+      "created_at": "2023-06-19T14:18:07Z",
+      "department": "Customer Success",
+      "email": "noah.foster@example.com",
+      "first_name": "Noah",
+      "id": 1034,
+      "is_active": true,
+      "last_login_at": "2026-05-29T11:58:03Z",
+      "last_name": "Foster",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "dark",
+        "timezone": "America/Los_Angeles"
+      },
+      "role": "support_agent"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1035.jpg",
+      "created_at": "2024-11-07T07:46:55Z",
+      "department": "Finance",
+      "email": "sophia.hughes@example.com",
+      "first_name": "Sophia",
+      "id": 1035,
+      "is_active": true,
+      "last_login_at": "2026-05-29T10:22:19Z",
+      "last_name": "Hughes",
+      "preferences": {
+        "email_notifications": false,
+        "language": "en",
+        "theme": "light",
+        "timezone": "America/Toronto"
+      },
+      "role": "billing_admin"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1036.jpg",
+      "created_at": "2022-10-21T10:33:44Z",
+      "department": "Customer Success",
+      "email": "jackson.price@example.com",
+      "first_name": "Jackson",
+      "id": 1036,
+      "is_active": true,
+      "last_login_at": "2026-05-29T09:14:36Z",
+      "last_name": "Price",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "dark",
+        "timezone": "UTC"
+      },
+      "role": "support_agent"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1037.jpg",
+      "created_at": "2023-02-15T13:09:26Z",
+      "department": "Finance",
+      "email": "mia.edwards@example.com",
+      "first_name": "Mia",
+      "id": 1037,
+      "is_active": true,
+      "last_login_at": "2026-05-29T08:55:11Z",
+      "last_name": "Edwards",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "Europe/Amsterdam"
+      },
+      "role": "billing_admin"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1038.jpg",
+      "created_at": "2024-05-03T16:41:08Z",
+      "department": "Customer Success",
+      "email": "ethan.cole@example.com",
+      "first_name": "Ethan",
+      "id": 1038,
+      "is_active": true,
+      "last_login_at": "2026-05-29T13:05:52Z",
+      "last_name": "Cole",
+      "preferences": {
+        "email_notifications": false,
+        "language": "en",
+        "theme": "dark",
+        "timezone": "America/Denver"
+      },
+      "role": "support_agent"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1039.jpg",
+      "created_at": "2021-09-30T12:27:19Z",
+      "department": "Finance",
+      "email": "isabella.howard@example.com",
+      "first_name": "Isabella",
+      "id": 1039,
+      "is_active": true,
+      "last_login_at": "2026-05-29T12:16:04Z",
+      "last_name": "Howard",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "dark",
+        "timezone": "Asia/Kolkata"
+      },
+      "role": "billing_admin"
+    },
+    {
+      "avatar_url": "https://cdn.example.com/avatars/1040.jpg",
+      "created_at": "2023-04-27T09:50:14Z",
+      "department": "Customer Success",
+      "email": "lucas.patterson@example.com",
+      "first_name": "Lucas",
+      "id": 1040,
+      "is_active": true,
+      "last_login_at": "2026-05-29T10:48:37Z",
+      "last_name": "Patterson",
+      "preferences": {
+        "email_notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "America/Phoenix"
+      },
+      "role": "support_agent"
+    }
+  ],
+  "meta": {
+    "api_version": "v1",
+    "request_id": "req_8f3c2a91d4b64f1f",
+    "timestamp": "2026-05-29T14:22:31Z"
+  },
+  "pagination": {
+    "has_next": true,
+    "has_prev": false,
+    "page": 1,
+    "per_page": 30,
+    "total": 243,
+    "total_pages": 9
+  }
 }
-},
-{
-"id": 1002,
-"email": "maria.garza@examplecorp.com",
-"first_name": "Maria",
-"last_name": "Garza",
-"avatar_url": "http://cdn.example.com/avatars/1002.jpg",
-"role": "Product Manager",
-"department": "Product",
-"is_active": true,
-"created_at": "2019-11-20T14:30:00Z",
-"last_login_at": "2024-05-21T10:20:05Z",
-"preferences": {
-"theme": "light",
-"notifications": true,
-"timezone": "America/Los_Angeles"
-}
-},
-{
-"id": 1003,
-"email": "david.chen@examplecorp.com",
-"first_name": "David",
-"last_name": "Chen",
-"avatar_url": "http://cdn.example.com/avatars/1003.jpg",
-"role": "UX Designer",
-"department": "Design",
-"is_active": true,
-"created_at": "2021-07-01T11:15:00Z",
-"last_login_at": "2024-05-21T09:55:30Z",
-"preferences": {
-"theme": "system",
-"notifications": false,
-"timezone": "Asia/Shanghai"
-}
-},
-{
-"id": 1004,
-"email": "sarah.oconnell@examplecorp.com",
-"first_name": "Sarah",
-"last_name": "O'Connell",
-"avatar_url": "http://cdn.example.com/avatars/1004.jpg",
-"role": "HR Specialist",
-"department": "Human Resources",
-"is_active": true,
-"created_at": "2017-01-10T08:45:00Z",
-"last_login_at": "2024-05-21T10:15:00Z",
-"preferences": {
-"theme": "light",
-"notifications": true,
-"timezone": "Europe/Dublin"
-}
-},
-{
-"id": 1005,
-"email": "jorge.vega@examplecorp.com",
-"first_name": "Jorge",
-"last_name": "Vega",
-"avatar_url": "http://cdn.example.com/avatars/1005.jpg",
-"role": "Data Scientist",
-"department": "Technology",
-"is_active": true,
-"created_at": "2020-04-22T16:00:00Z",
-"last_login_at": "2024-05-21T10:28:40Z",
-"preferences": {
-"theme": "dark",
-"notifications": true,
-"timezone": "America/Mexico_City"
-}
-},
-{
-"id": 1006,
-"email": "emily.jones@examplecorp.com",
-"first_name": "Emily",
-"last_name": "Jones",
-"avatar_url": "http://cdn.example.com/avatars/1006.jpg",
-"role": "Marketing Coordinator",
-"department": "Marketing",
-"is_active": true,
-"created_at": "2022-09-01T10:10:00Z",
-"last_login_at": "2024-05-21T08:50:10Z",
-"preferences": {
-"theme": "light",
-"notifications": true,
-"timezone": "America/New_York"
-}
-},
-{
-"id": 1007,
-"email": "robert.kim@examplecorp.com",
-"first_name": "Robert",
-"last_name": "Kim",
-"avatar_url": "http://cdn.example.com/avatars/1007.jpg",
-"role": "Financial Analyst",
-"department": "Finance",
-"is_active": true,
-"created_at": "2016-05-20T12:00:00Z",
-"last_login_at": "2024-05-21T09:30:00Z",
-"preferences": {
-"theme": "dark",
-"notifications": false,
-"timezone": "Asia/Seoul"
-}
-},
-{
-"id": 1008,
-"email": "laura.martin@examplecorp.com",
-"first_name": "Laura",
-"last_name": "Martin",
-"avatar_url": "http://cdn.example.com/avatars/1008.jpg",
-"role": "Project Manager",
-"department": "Technology",
-"is_active": true,
-"created_at": "2020-11-05T13:40:00Z",
-"last_login_at": "2024-05-21T10:22:15Z",
-"preferences": {
-"theme": "system",
-"notifications": true,
-"timezone": "America/Los_Angeles"
-}
-},
-{
-"id": 1009,
-"email": "james.wilson@examplecorp.com",
-"first_name": "James",
-"last_name": "Wilson",
-"avatar_url": "http://cdn.example.com/avatars/1009.jpg",
-"role": "Sales Representative",
-"department": "Sales",
-"is_active": true,
-"created_at": "2021-02-14T10:00:00Z",
-"last_login_at": "2024-05-21T10:05:00Z",
-"preferences": {
-"theme": "light",
-"notifications": true,
-"timezone": "America/New_York"
-}
-},
-{
-"id": 1010,
-"email": "olivia.wright@examplecorp.com",
-"first_name": "Olivia",
-"last_name": "Wright",
-"avatar_url": "http://cdn.example.com/avatars/1010.jpg",
-"role": "Content Creator",
-"department": "Marketing",
-"is_active": true,
-"created_at": "2022-10-30T09:30:00Z",
-"last_login_at": "2024-05-21T09:45:00Z",
-"preferences": {
-"theme": "dark",
-"notifications": false,
-"timezone": "America/New_York"
-}
-},
-{
-"id": 1011,
-"email": "liam.harris@examplecorp.com",
-"first_name": "Liam",
-"last_name": "Harris",
-"avatar_url": "http://cdn.example.com/avatars/1011.jpg",
-"role": "Cloud Architect",
-"department": "Technology",
-"is_active": true,
-"created_at": "2019-08-15T11:20:00Z",
-"last_login_at": "2024-05-21T10:18:30Z",
-"preferences": {
-"theme": "dark",
-"notifications": true,
-"timezone": "America/Chicago"
-}
-},
-{
-"id": 1012,
-"email": "sophia.adams@examplecorp.com",
-"first_name": "Sophia",
-"last_name": "Adams",
-"avatar_url": "http://cdn.example.com/avatars/1012.jpg",
-"role": "Recruiter",
-"department": "Human Resources",
-"is_active": true,
-"created_at": "2021-12-01T14:00:00Z",
-"last_login_at": "2024-05-21T09:35:10Z",
-"preferences": {
-"theme": "light",
-"notifications": true,
-"timezone": "America/New_York"
-}
-},
-{
-"id": 1013,
-"email": "noah.jackson@examplecorp.com",
-"first_name": "Noah",
-"last_name": "Jackson",
-"avatar_url": "http://cdn.example.com/avatars/1013.jpg",
-"role": "Financial Analyst",
-"department": "Finance",
-"is_active": true,
-"created_at": "2018-10-05T09:00:00Z",
-"last_login_at": "2024-05-21T09:15:00Z",
-"preferences": {
-"theme": "system",
-"notifications": false,
-"timezone": "America/Chicago"
-}
-},
-{
-"id": 1014,
-"email": "isaac.wright@examplecorp.com",
-"first_name": "Isaac",
-"last_name": "Wright",
-"avatar_url": "http://cdn.example.com/avatars/1014.jpg",
-"role": "Software Engineer",
-"department": "Technology",
-"is_active": true,
-"created_at": "2022-03-25T15:30:00Z",
-"last_login_at": "2024-05-21T10:24:00Z",
-"preferences": {
-"theme": "dark",
-"notifications": true,
-"timezone": "America/Los_Angeles"
-}
-},
-{
-"id": 1015,
-"email": "ava.thompson@examplecorp.com",
-"first_name": "Ava",
-"last_name": "Thompson",
-"avatar_url": "http://cdn.example.com/avatars/1015.jpg",
-"role": "Graphic Designer",
-"department": "Design",
-"is_active": true,
-"created_at": "2020-12-15T11:00:00Z",
-"last_login_at": "2024-05-21T08:30:00Z",
-"preferences": {
-"theme": "light",
-"notifications": true,
-"timezone": "America/New_York"
-}
-},
-{
-"id": 1016,
-"email": "william.brown@examplecorp.com",
-"first_name": "William",
-"last_name": "Brown",
-"avatar_url": "http://cdn.example.com/avatars/1016.jpg",
-"role": "Account Executive",
-"department": "Sales",
-"is_active": true,
-"created_at": "2019-06-01T09:00:00Z",
-"last_login_at": "2024-05-21T09:50:00Z",
-"preferences": {
-"theme": "system",
-"notifications": true,
-"timezone": "America/Chicago"
-}
-},
-{
-"id": 1017,
-"email": "chloe.patel@examplecorp.com",
-"first_name": "Chloe",
-"last_name": "Patel",
-"avatar_url": "http://cdn.example.com/avatars/1017.jpg",
-"role": "Marketing Analyst",
-"department": "Marketing",
-"is_active": true,
-"created_at": "2021-04-01T12:00:00Z",
-"last_login_at": "2024-05-21T10:28:00Z",
-"preferences": {
-"theme": "dark",
-"notifications": true,
-"timezone": "Asia/Kolkata"
-}
-},
-{
-"id": 1018,
-"email": "daniel.lee@examplecorp.com",
-"first_name": "Daniel",
-"last_name": "Lee",
-"avatar_url": "http://cdn.example.com/avatars/1018.jpg",
-"role": "DevOps Engineer",
-"department": "Technology",
-"is_active": true,
-"created_at": "2021-09-10T13:00:00Z",
-"last_login_at": "2024-05-21T10:10:00Z",
-"preferences": {
-"theme": "dark",
-"notifications": true,
-"timezone": "Asia/Los_Angeles"
-}
-},
-{
-"id": 1019,
-"email": "grace.harris@examplecorp.com",
-"first_name": "Grace",
-"last_name": "Harris",
-"avatar_url": "http://cdn.example.com/avatars/1019.jpg",
-"role": "HR Generalist",
-"department": "Human Resources",
-"is_active": true,
-"created_at": "2022-11-15T09:00:00Z",
-"last_login_at": "2024-05-21T09:58:00Z",
-"preferences": {
-"theme": "light",
-"notifications": true,
-"timezone": "America/New_York"
-}
-},
-{
-"id": 1020,
-"email": "michael.scott@examplecorp.com",
-"first_name": "Michael",
-"last_name": "Scott",
-"avatar_url": "http://cdn.example.com/avatars/1020.jpg",
-"role": "Director of Operations",
-"department": "Operations",
-"is_active": true,
-"created_at": "2015-06-25T14:20:00Z",
-"last_login_at": "2024-05-21T10:29:00Z",
-"preferences": {
-"theme": "system",
-"notifications": true,
-"timezone": "America/New_York"
-}
-},
-{
-"id": 1021,
-"email": "jessica.wang@examplecorp.com",
-"first_name": "Jessica",
-"last_name": "Wang",
-"avatar_url": "http://cdn.example.com/avatars/1021.jpg",
-"role": "Business Analyst",
-"department": "Finance",
-"is_active": true,
-"created_at": "2020-01-30T10:00:00Z",
-"last_login_at": "2024-05-21T09:40:00Z",
-"preferences": {
-"theme": "dark",
-"notifications": true,
-"timezone": "America/Shanghai"
-}
-},
-{
-"id": 1022, "description": "Example placeholder entry."}

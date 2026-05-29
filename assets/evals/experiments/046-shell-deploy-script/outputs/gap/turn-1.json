@@ -1,0 +1,89 @@
+{
+  "protocol": "gap",
+  "id": "deployment-script",
+  "version": 1,
+  "name": "edit",
+  "meta": {},
+  "content": [
+    {
+      "content": "DRY_RUN=false\n\nrun_cmd() {\n  if [[ \"$DRY_RUN\" == true ]]; then\n    printf '%s\\n' \"$*\"\n  else\n    eval \"$@\"\n  fi\n}",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "deployment-script"
+      }
+    },
+    {
+      "content": "while [[ $# -gt 0 ]]; do\n  case \"$1\" in\n    --dry-run)\n      DRY_RUN=true\n      shift\n      ;;\n    *)\n      echo \"Unknown argument: $1\" >&2\n      exit 1\n      ;;\n  esac\ndone\n\nif [[ \"$DRY_RUN\" == true ]]; then\n  warn \"Dry-run mode enabled: commands will be printed only\"\nfi",
+      "op": "insert_after",
+      "target": {
+        "type": "id",
+        "value": "deployment-script"
+      }
+    },
+    {
+      "content": "log \"Checking git status\"\nrun_cmd 'git status --porcelain | grep -q . && exit 1'",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "pre-deploy-checks"
+      }
+    },
+    {
+      "content": "log \"Checking current branch\"\nrun_cmd 'CURRENT_BRANCH=\"$(git rev-parse --abbrev-ref HEAD)\"'\nrun_cmd '[[ \"${CURRENT_BRANCH}\" != \"${BRANCH}\" ]] && exit 1'",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "pre-deploy-checks"
+      }
+    },
+    {
+      "content": "log \"Running tests\"\nrun_cmd 'npm test'",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "pre-deploy-checks"
+      }
+    },
+    {
+      "content": "log \"Verifying SSH connectivity\"\nrun_cmd 'ssh -o BatchMode=yes -o ConnectTimeout=10 \"${SERVER_USER}@${SERVER_HOST}\" \"echo connected\"'",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "pre-deploy-checks"
+      }
+    },
+    {
+      "content": "log \"Installing dependencies\"\nrun_cmd 'npm ci'\n\nlog \"Running build\"\nrun_cmd 'npm run build'\n\nlog \"Creating tarball\"\nrun_cmd 'tar -czf \"${LOCAL_ARTIFACT_PATH}\" \"${BUILD_DIR}\" package.json package-lock.json'",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "build"
+      }
+    },
+    {
+      "content": "log \"Preparing remote directories\"\nrun_cmd 'ssh \"${SERVER_USER}@${SERVER_HOST}\" \"set -e; mkdir -p '\\''${REMOTE_RELEASES_DIR}'\\'' '\\''${REMOTE_SHARED_DIR}'\\''\"'\n\nlog \"Uploading artifact\"\nrun_cmd 'scp \"${LOCAL_ARTIFACT_PATH}\" \"${SERVER_USER}@${SERVER_HOST}:${REMOTE_ARTIFACT_PATH}\"'\n\nlog \"Deploying on remote server\"\nrun_cmd 'ssh \"${SERVER_USER}@${SERVER_HOST}\" \"set -euo pipefail; RELEASE_NAME=\\$(basename '\\''${ARTIFACT_NAME}'\\'' .tar.gz); RELEASE_DIR='\\''${REMOTE_RELEASES_DIR}/'\\''\\${RELEASE_NAME}; mkdir -p \\\"\\$RELEASE_DIR\\\"; tar -xzf '\\''${REMOTE_ARTIFACT_PATH}'\\'' -C \\\"\\$RELEASE_DIR\\\"; rm -f '\\''${REMOTE_ARTIFACT_PATH}'\\''; cd \\\"\\$RELEASE_DIR\\\"; npm ci --omit=dev; cat > .env <<'\"'\"'EOF'\"'\"'; NODE_ENV=production; PORT=3000; LOG_LEVEL=info; EOF; if [ -f '\\''${REMOTE_RELEASES_DIR}/current_release'\\'' ]; then cp '\\''${REMOTE_RELEASES_DIR}/current_release'\\'' '\\''${REMOTE_RELEASES_DIR}/previous_release'\\''; fi; echo \\\"\\$RELEASE_NAME\\\" > '\\''${REMOTE_RELEASES_DIR}/current_release'\\''; if [ -f migrations.sh ]; then chmod +x migrations.sh; ./migrations.sh; elif npm run | grep -q '\\''migrate'\\''; then npm run migrate; fi; ln -sfn \\\"\\$RELEASE_DIR\\\" '\\''${REMOTE_CURRENT_LINK}'\\''; pm2 restart '\\''${PM2_APP_NAME}'\\'' --update-env || pm2 start ecosystem.config.js --only '\\''${PM2_APP_NAME}'\\'' --update-env; pm2 save\"'",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "deploy"
+      }
+    },
+    {
+      "content": "log \"Waiting for service to stabilize\"\nrun_cmd 'sleep 5'\n\nlog \"Checking health endpoint\"\nrun_cmd 'curl -fsS --max-time 10 \"${HEALTHCHECK_URL}\" >/dev/null'\n\nlog \"Showing recent logs\"\nrun_cmd 'ssh \"${SERVER_USER}@${SERVER_HOST}\" \"pm2 logs '\\''${PM2_APP_NAME}'\\'' --lines 50 --nostream\"'",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "post-deploy-verification"
+      }
+    },
+    {
+      "content": "execute() {\n  pre_deploy_checks\n  build\n  deploy\n  post_deploy_verification\n}",
+      "op": "replace",
+      "target": {
+        "type": "id",
+        "value": "execute"
+      }
+    }
+  ]
+}

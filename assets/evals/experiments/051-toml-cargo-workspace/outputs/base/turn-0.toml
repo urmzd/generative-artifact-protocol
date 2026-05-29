@@ -1,0 +1,66 @@
+[workspace]
+members = ["cli", "core", "utils"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+description = "A CLI tool for data processing and orchestration"
+license = "MIT"
+authors = ["Your Name <you@example.com>"]
+repository = "https://github.com/yourname/dataforge"
+
+[workspace.dependencies]
+clap = { version = "4.5", features = ["derive", "env"] }
+serde = { version = "1.0", features = ["derive"] }
+tokio = { version = "1.38", features = ["full"] }
+anyhow = "1.0"
+tracing = "0.1"
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json"] }
+criterion = { version = "0.5", default-features = false }
+tempfile = "3.10"
+mockito = "1.5"
+
+[profile.release]
+lto = true
+strip = "symbols"
+codegen-units = 1
+opt-level = 3
+
+[package]
+name = "dataforge"
+version.workspace = true
+edition.workspace = true
+description.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+publish = false
+
+[features]
+default = ["full"]
+full = ["clap", "serde", "tokio", "anyhow", "tracing", "reqwest"]
+minimal = []
+cli = ["full"]
+
+[dependencies]
+clap = { workspace = true, optional = true }
+serde = { workspace = true, optional = true }
+tokio = { workspace = true, optional = true }
+anyhow = { workspace = true, optional = true }
+tracing = { workspace = true, optional = true }
+reqwest = { workspace = true, optional = true }
+
+[dev-dependencies]
+criterion = { workspace = true }
+tempfile = { workspace = true }
+mockito = { workspace = true }
+
+[[bin]]
+name = "dataforge"
+path = "cli/src/main.rs"
+
+[lib]
+name = "dataforge"
+path = "core/src/lib.rs"
+crate-type = ["rlib"]
