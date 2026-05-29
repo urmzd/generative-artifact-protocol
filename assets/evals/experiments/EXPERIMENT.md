@@ -1,229 +1,143 @@
-# GAP Conversation Benchmark Experiment
+# GAP Conversation Benchmark
 
-## Hypothesis
+This suite measures the Generative Artifact Protocol against full-regeneration
+baselines on real, multi-turn LLM edit sessions. Each experiment is a directory;
+the eval CLI (`apps/eval`, binary `gap-eval`) runs the flows, scores them, and
+writes a `metrics.json`. `gap-eval report` aggregates them into a markdown report.
 
-The Generative Artifact Protocol reduces token cost and latency for multi-turn artifact editing compared to the default full-regeneration approach. Specifically:
+## Hypotheses
 
-1. **Output tokens decrease 90-99%** on edit turns (diff/section envelopes vs full artifact)
-2. **Input tokens stay bounded** — GAP context does not grow with conversation history
-3. **Cumulative cost breaks even after one edit** — the protocol overhead (larger system prompt) is recovered
-4. **Apply engine adds negligible latency** — envelope resolution is ~2μs, dominated by LLM time
-5. **Envelope reliability is measurable** — the maintain context can produce valid, applicable envelopes
+1. **Output tokens drop 90–99%** on edit turns — envelopes carry only the change, not the artifact.
+2. **Input is bounded** — the stateless maintain context reads `instructions + current artifact`, not the growing conversation.
+3. **Output savings survive prompt caching** — caching mostly erases the baseline's *input* disadvantage, but output tokens are never cached and dominate cost, so GAP's edge persists.
+4. **Apply is effectively free** — envelope resolution is ~2 µs, dominated by LLM time.
+5. **Reliability and correctness are measurable** — and gated by the producer's system prompt (see below).
 
 ## Design
 
-### Shared Turn 0
+### Three flows, identical edits
 
-Both flows start from the **same artifact**. The creation prompt is run once. The resulting artifact is used as the starting point for both the default and GAP edit flows. This eliminates variance in the baseline and ensures edits operate on identical content.
+Every experiment runs the same turn-0 creation and the same edit instructions through up to three flows (`--flow base|stateless|gap|both|abc|all`):
 
-### Two Flows, Same Edits
-
-Each experiment runs the same sequence of follow-up edits through both flows:
-
-**Default flow** — single-thread conversation:
-- System prompt: `"You produce {format} artifacts. Output raw code only."`
-- Turn 0: creation prompt → full artifact (shared)
-- Turn N: full conversation history + edit instruction → full artifact regeneration
-- Context grows with every turn (prior artifacts accumulate in message history)
-
-**GAP flow** — stateless dispatch:
-- Turn 0: same creation prompt → same artifact (shared)
-- Turn N: fresh maintain context call with:
-  - System prompt: GAP spec excerpt (~350 tokens, describes envelope format)
-  - Artifact injection: current artifact revision (not conversation history)
-  - Edit instruction: same edit as default flow
-  - Output: JSON envelope (diff or section operations)
-  - Apply: deterministic engine resolves envelope → new artifact revision
-
-### Controlled Variables
-
-| Variable | Value | Rationale |
-|---|---|---|
-| Model | Same for both flows | Eliminates model capability differences |
-| Temperature | 0 (or lowest available) | Maximizes reproducibility |
-| Seed | Fixed per experiment | Deterministic where supported |
-| Edit instructions | Identical text | Same task, different execution |
-| Starting artifact | Shared (run once) | No variance in baseline |
-| System prompt | **NOT controlled** — this IS the independent variable | The GAP system prompt is larger; this cost is the protocol overhead |
-
-### Independent Variable
-
-The **system prompt and conversation structure** differ between flows. This is the intervention being tested:
-
-- Default: minimal system prompt + growing conversation context
-- GAP: spec-aware system prompt + bounded artifact injection
-
-The GAP system prompt is intentionally **not optimized** — it uses a straightforward spec excerpt, not a hand-tuned minimal prompt. This represents what a real user would start with (suboptimal prompting baseline).
-
-### Dependent Variables (Measured)
-
-| Metric | Unit | Per-turn | Cumulative |
+| Flow | Scenario | Context per edit turn | Output |
 |---|---|---|---|
-| `input_tokens` | count | YES | YES |
-| `output_tokens` | count | YES | YES |
-| `llm_latency_ms` | milliseconds | YES | YES |
-| `apply_latency_us` | microseconds | YES (GAP only) | YES |
-| `envelope_parsed` | boolean | YES (GAP only) | success rate |
-| `apply_succeeded` | boolean | YES (GAP only) | success rate |
-| `output_bytes` | bytes | YES | — |
+| **base** | **A** | full conversation history (all prior artifacts + messages accumulate) | full artifact, regenerated |
+| **stateless** | **B** | `system + current artifact + edit` (fresh each turn) | full artifact, regenerated |
+| **gap** | **C** | `GAP maintain prompt + current artifact + edit` (fresh each turn) | a JSON **edit envelope**, applied by the engine |
 
-### Fairness Guarantees
+This separates the two effects that a naive "GAP vs base" comparison conflates:
 
-1. **Shared baseline**: Turn 0 runs once and is reused. Both flows edit the same artifact.
-2. **Same model + params**: Identical LLM configuration for both flows.
-3. **Protocol overhead measured honestly**: The GAP system prompt's token cost is reported separately as `system_prompt_tokens`. It is NOT hidden or excluded from totals.
-4. **Failures counted**: If the GAP flow produces an unparseable envelope or the apply engine rejects it, this is recorded as a failure — not silently retried or discarded.
-5. **No prompt optimization**: The GAP system prompt is a naive spec excerpt. Future work can measure the impact of prompt engineering, but the baseline experiment uses the straightforward version.
-6. **Sequential execution**: Both flows run sequentially (not interleaved) to avoid resource contention affecting latency measurements.
+- **B vs A — the statelessness/input win.** Any baseline can drop the growing history; this is not unique to GAP.
+- **C vs B — GAP's defensible output win.** Holding statelessness constant, the only difference is full regeneration vs a small envelope. This is the protocol's contribution.
 
-## Directory Structure
+The report renders this as the **A/B/C decomposition** (only when the stateless flow is run, i.e. `--flow abc`/`all`).
 
-Each experiment produces:
+> **Turn 0.** The `base` and `stateless` flows operate on the same plain creation artifact. The `gap` flow's turn-0 carries `<gap:target>` markers (or is structured for JSON-Pointer targeting), so it is a slightly larger, instrumented variant — that marker overhead is reported honestly, not hidden.
+
+### The system prompt is the independent variable
+
+GAP defines a wire format; the **producer's system prompts** decide whether a model uses it well — and whether edits are even *correct*. Each experiment carries two GAP prompts:
+
+- `inputs/gap/init-system.md` — **synthesis** prompt. Must elicit fine-grained, role-based markers (text/markup) or clean pointer-addressable JSON. A weak prompt ("wrap updatable values") collapses the artifact into one coarse marker; a later edit then targets that coarse region and replaces — **destroying** — everything else, while `apply` reports success. Strengthening this prompt alone took a complex HTML case from 1 marker (correctness ≈ 0) to 58 markers (correct, surgical edits) at the *same* ~99% output savings.
+- `inputs/gap/maintain-system.md` — **edit** prompt. References existing target IDs / pointers, puts replacement text in each op's `content` field, never re-emits the full artifact.
+
+**Targeting is format-aware** (the apply engine supports both):
+
+| Artifact family | Mode | Synthesis output |
+|---|---|---|
+| HTML, code, Markdown, YAML, XML, SVG, CSS, … | `<gap:target>` markers | instrumented text |
+| `application/json` | JSON Pointer (RFC 6901) | clean JSON, no markers |
+
+### Controlled variables
+
+| Variable | Value |
+|---|---|
+| Model | same for all flows (eliminates capability differences) |
+| Temperature | `0` for chat models; **omitted** for reasoning models (o-series, gpt-5 family) which reject it |
+| Seed | `42` where the provider supports it |
+| Edit instructions | byte-identical across flows |
+| Transient failures | retried with exponential backoff (429 / 5xx) so one blip doesn't abort a run |
+
+The GAP system prompt is the intervention and is **not** held constant — its token cost is the protocol overhead and is reported, not excluded.
+
+## Directory layout
 
 ```
-{NNN}-{prompt-id}/
-├── shared/
-│   ├── prompt.md                    # creation prompt (identical for both)
-│   └── artifact.{ext}              # turn-0 artifact (shared baseline)
+<NNN>-<name>/
+├── README.md                       # "**Format:** <mime>" line is parsed by the runner
 ├── inputs/
-│   ├── default/
-│   │   ├── system.md               # default system prompt
-│   │   ├── turn-1.md               # full context + edit (shows growing input)
-│   │   ├── turn-2.md               # full context + edit (even larger)
-│   │   └── ...
+│   ├── base/system.md              # "You produce <mime> artifacts. Output raw code only."
+│   ├── base/turn-0.md              # creation prompt
+│   ├── base/turn-1.md … turn-N.md  # one edit instruction per file
 │   └── gap/
-│       ├── system.md               # GAP system prompt (spec excerpt)
-│       ├── turn-1.md               # artifact injection + edit intent (bounded)
-│       ├── turn-2.md               # artifact injection + edit intent (bounded)
-│       └── ...
+│       ├── init-system.md          # synthesis prompt (markers OR pointer mode)
+│       └── maintain-system.md      # edit prompt
+├── checks/turn-1.json … turn-N.json  # correctness oracles (optional, see below)
 ├── outputs/
-│   ├── default/
-│   │   ├── turn-1.{ext}            # full artifact (regenerated)
-│   │   ├── turn-2.{ext}            # full artifact (regenerated)
-│   │   └── ...
-│   └── gap/
-│       ├── turn-1.json             # GAP envelope (raw LLM output)
-│       ├── turn-1.{ext}            # resolved artifact (after apply engine)
-│       ├── turn-2.json
-│       ├── turn-2.{ext}
-│       └── ...
-└── metrics.json                     # all measurements
+│   ├── base/turn-k.<ext>           # regenerated artifact per turn (Scenario A)
+│   ├── stateless/turn-k.<ext>      # regenerated artifact per turn (Scenario B, --flow abc/all)
+│   └── gap/turn-k.json + turn-k.<ext>  # envelope + resolved artifact per turn (Scenario C)
+└── metrics.json                    # all measurements (written by the runner)
 ```
 
-## Metrics Schema
+## Correctness oracles (high-fidelity scoring)
+
+Reliability metrics like "apply succeeded" only check that the engine ran — they do **not** notice a successfully-applied edit that emptied the document. `checks/turn-N.json` closes that gap with deterministic assertions evaluated against the produced artifact (GAP **and** base, on identical oracles):
 
 ```json
 {
-  "experiment_id": "001-html-dashboard-ecommerce",
-  "prompt_id": "html-dashboard-ecommerce",
-  "model": "qwen3.5:4b",
-  "provider": "ollama",
-  "seed": 42,
-  "temperature": 0,
-  "timestamp": "2026-04-02T10:00:00Z",
-
-  "shared": {
-    "creation_input_tokens": 525,
-    "creation_output_tokens": 10000,
-    "creation_latency_ms": 45000,
-    "artifact_bytes": 8192
-  },
-
-  "default_flow": {
-    "system_prompt_tokens": 25,
-    "per_turn": [
-      {
-        "turn": 1,
-        "edit": "Update revenue to $215,430",
-        "input_tokens": 10800,
-        "output_tokens": 10200,
-        "latency_ms": 48000,
-        "output_bytes": 8250
-      }
-    ],
-    "total_input_tokens": 10800,
-    "total_output_tokens": 10200,
-    "total_latency_ms": 48000
-  },
-
-  "gap_flow": {
-    "system_prompt_tokens": 350,
-    "per_turn": [
-      {
-        "turn": 1,
-        "edit": "Update revenue to $215,430",
-        "input_tokens": 10600,
-        "output_tokens": 150,
-        "latency_ms": 3200,
-        "output_bytes": 200,
-        "envelope_parsed": true,
-        "apply_succeeded": true,
-        "apply_latency_us": 2,
-        "envelope_name": "diff",
-        "envelope_ops_count": 1
-      }
-    ],
-    "total_input_tokens": 10600,
-    "total_output_tokens": 150,
-    "total_latency_ms": 3200,
-    "envelope_parse_rate": 1.0,
-    "apply_success_rate": 1.0
-  },
-
-  "comparison": {
-    "output_token_savings_pct": 98.5,
-    "input_token_savings_pct": 1.9,
-    "latency_savings_pct": 93.3,
-    "break_even_turn": 1,
-    "protocol_overhead_tokens": 325,
-    "protocol_overhead_amortized_by_turn": 1
-  }
+  "turn": 3,
+  "checks": [
+    {"kind": "valid_json"},
+    {"kind": "contains", "value": "$215,430"},
+    {"kind": "absent",   "value": "$182,000"},
+    {"kind": "regex_count", "pattern": "\"id\"\\s*:", "expected": 100},
+    {"kind": "regex_count_at_least", "pattern": "<tr", "min": 40},
+    {"kind": "json_pointer_equals", "pointer": "/pagination/page", "value": 3}
+  ]
 }
 ```
 
-### Comparison Fields
+The `regex_count` "exact item count" assertion is the key signal — it catches a run that applied cleanly but dropped the other items. The runner writes a `correctness {pass_rate, base_pass_rate, per_turn}` block; the report shows GAP vs base correctness per experiment. Re-run standalone with `gap-eval checks` / `just checks`.
 
-- `output_token_savings_pct`: `(default_out - gap_out) / default_out * 100`
-- `input_token_savings_pct`: `(default_in - gap_in) / default_in * 100` — may be negative on turn 1 (GAP system prompt is larger) but positive on later turns (default context grows)
-- `break_even_turn`: the turn at which GAP's cumulative total tokens first dip below default's
-- `protocol_overhead_tokens`: `gap_system_prompt_tokens - default_system_prompt_tokens` — the fixed cost of teaching the LLM the protocol
-- `protocol_overhead_amortized_by_turn`: the turn at which cumulative output token savings exceed the protocol overhead
+## Dependent variables (measured)
 
-## Interpreting Results
+| Metric | Per turn | Notes |
+|---|---|---|
+| `input_tokens`, `output_tokens` | ✓ | from provider usage |
+| `cached_input_tokens` | ✓ | prompt-cache hits; powers the cache-on vs cache-off cost model |
+| `latency_ms`, `ttft_ms`, `ttlt_ms`, `median_itl_ms` | ✓ | wall-clock + streaming timings |
+| `envelope_parsed`, `apply_succeeded` | ✓ (GAP) | wire-level reliability |
+| `mean_sequence_similarity`, `token_f1`, `rouge_l` | aggregate | similarity of GAP result to the baseline |
+| correctness `pass_rate` / `base_pass_rate` | ✓ | from `checks/` oracles |
 
-### What success looks like
+The report derives: output/input savings, **A/B/C decomposition**, **caching-aware, init-inclusive cost** (each flow priced under three regimes — `off`, `observed`, and a steelman `theoretical-best` that caches the baseline fully and GAP not — plus the **break-even turn**), an **agent-loop / orchestrator-context** projection (Effect 2), latency summaries, run-validity gates (e.g. degenerate GAP runs are flagged and excluded from headlines), and the correctness table. Full methodology and the "when GAP is *not* worth it" loss region: [`apps/eval/STEELMAN.md`](../../../apps/eval/STEELMAN.md).
 
-- Output token savings >90% on edit turns
-- Input tokens flat across turns for GAP, growing for default
-- Break-even at turn 1 or 2
-- Envelope parse rate >80% (model can produce valid JSON)
-- Apply success rate >70% (model produces correct search targets)
+## Multi-item / multi-page experiments (`101`–`108`)
 
-### What failure looks like
+Beyond the per-format basics, experiments `101`–`108` stress **large, paginated artifacts** — 80–200 items across multiple pages — across HTML, JSON (pointer mode), Markdown, YAML, XML/RSS, Python, SQL, and TypeScript. Their five edit turns exercise the hard cases: change one field of an item on a deep page, insert at a position, delete from the middle, **bulk-change a field across all items**, and add a whole new page. Each turn has a `checks/turn-N.json` that pins the exact post-edit item count, so collateral loss is caught immediately.
 
-- Envelope parse rate <50% → model can't reliably produce the protocol format
-- Apply success rate <50% → model hallucinates search targets
-- No break-even within the conversation → protocol overhead never recovered
-- GAP latency higher than default → structured output constraint slows generation
+## Interpreting results
 
-### What to investigate
+**Success:** output savings > 90% on edit turns; flat GAP input vs growing base input; parse rate > 80%; **correctness on par with the base flow** (GAP didn't trade fidelity for tokens); positive C-vs-B output decomposition.
 
-- Which edit types produce the best savings (small value changes vs section rewrites)?
-- Does model size affect envelope reliability? (4b vs 9b vs larger)
-- How does artifact size affect the savings curve?
-- Does the GAP system prompt need optimization, or is naive prompting sufficient?
+**Failure / investigate:** correctness ≪ base correctness ⇒ edits are dropping or corrupting content (usually a too-coarse synthesis prompt — fix `init-system.md`); parse rate < 50% ⇒ the model can't produce the envelope format; degenerate GAP run (artifact never changed) ⇒ "savings" are illusory and the run is excluded.
 
 ## Running
 
-```bash
-# Single experiment
-just bench-single n=1
+```sh
+# All experiments, both base and GAP flows
+just run model="gpt-5.4-mini"
 
-# All experiments (requires Ollama running)
-just bench
+# A single experiment with the full A/B/C decomposition
+just run id="102-json-paginated-users" flow="abc" model="gpt-5.4-mini"
 
-# With a different model
-just bench model=qwen3.5:9b
+# Aggregate report (token savings, cache-aware cost, decomposition, correctness)
+just report
 
-# Results in benches/data/experiments/
+# Re-score quality + correctness on completed runs without re-calling the LLM
+just score
+just checks
 ```
+
+Any OpenAI-compatible endpoint works (`GAP_API_BASE` / `GAP_API_KEY`, falls back to `OPENAI_API_KEY`) — see the README's "Running evals on a free tier".
