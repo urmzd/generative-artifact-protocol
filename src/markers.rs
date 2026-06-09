@@ -6,6 +6,11 @@
 
 use anyhow::{bail, Context, Result};
 use regex::Regex;
+use std::sync::LazyLock;
+
+// Compiled once — extract_targets runs on every apply() via the handle build.
+static TARGET_OPEN_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r#"<gap:target id="([^"]+)">"#).expect("valid regex"));
 
 /// Build start and end markers for a target ID.
 ///
@@ -59,11 +64,7 @@ fn find_matching_close(content: &str, content_start: usize) -> Option<usize> {
 ///
 /// Returns `(content_start, content_end)` — byte offsets between markers (exclusive of markers).
 /// Handles nested `<gap:target>` elements via depth counting.
-pub fn find_target_range(
-    content: &str,
-    target_id: &str,
-    format: &str,
-) -> Result<(usize, usize)> {
+pub fn find_target_range(content: &str, target_id: &str, format: &str) -> Result<(usize, usize)> {
     let (start_marker, _) = markers_for(target_id, format)?;
     let si = content
         .find(&start_marker)
@@ -100,8 +101,8 @@ pub fn extract_targets(content: &str, format: &str) -> Vec<String> {
     if format == "application/json" {
         return Vec::new();
     }
-    let re = Regex::new(r#"<gap:target id="([^"]+)">"#).expect("valid regex");
-    re.captures_iter(content)
+    TARGET_OPEN_RE
+        .captures_iter(content)
         .map(|cap| cap[1].to_string())
         .collect()
 }
@@ -138,23 +139,31 @@ mod tests {
 
     #[test]
     fn test_find_target_range_nested_inner() {
-        let content = r#"<gap:target id="outer"><gap:target id="inner">val</gap:target></gap:target>"#;
+        let content =
+            r#"<gap:target id="outer"><gap:target id="inner">val</gap:target></gap:target>"#;
         let (start, end) = find_target_range(content, "inner", "text/html").unwrap();
         assert_eq!(&content[start..end], "val");
     }
 
     #[test]
     fn test_find_target_range_nested_outer() {
-        let content = r#"<gap:target id="outer"><gap:target id="inner">val</gap:target></gap:target>"#;
+        let content =
+            r#"<gap:target id="outer"><gap:target id="inner">val</gap:target></gap:target>"#;
         let (start, end) = find_target_range(content, "outer", "text/html").unwrap();
-        assert_eq!(&content[start..end], r#"<gap:target id="inner">val</gap:target>"#);
+        assert_eq!(
+            &content[start..end],
+            r#"<gap:target id="inner">val</gap:target>"#
+        );
     }
 
     #[test]
     fn test_find_target_range_inclusive() {
         let content = r#"before<gap:target id="x">data</gap:target>after"#;
         let (start, end) = find_target_range_inclusive(content, "x", "text/html").unwrap();
-        assert_eq!(&content[start..end], r#"<gap:target id="x">data</gap:target>"#);
+        assert_eq!(
+            &content[start..end],
+            r#"<gap:target id="x">data</gap:target>"#
+        );
     }
 
     #[test]
@@ -165,8 +174,12 @@ mod tests {
 
     #[test]
     fn test_extract_targets_nested() {
-        let content = r#"<gap:target id="outer"><gap:target id="inner">v</gap:target></gap:target>"#;
-        assert_eq!(extract_targets(content, "text/html"), vec!["outer", "inner"]);
+        let content =
+            r#"<gap:target id="outer"><gap:target id="inner">v</gap:target></gap:target>"#;
+        assert_eq!(
+            extract_targets(content, "text/html"),
+            vec!["outer", "inner"]
+        );
     }
 
     #[test]

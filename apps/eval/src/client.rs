@@ -36,6 +36,22 @@ pub struct StreamResult {
     pub ttft_ms: Option<u64>,
     pub ttlt_ms: Option<u64>,
     pub median_itl_ms: Option<f64>,
+    /// True when the request only succeeded after at least one retry. Retried
+    /// turns carry backoff sleep in their wall-clock and must be excluded from
+    /// latency aggregates.
+    pub retried: bool,
+}
+
+/// Pop complete `\n`-terminated lines off `buf`, leaving any trailing partial
+/// line in place. Splitting at line boundaries (not chunk boundaries) keeps
+/// multi-byte UTF-8 sequences that straddle network chunks intact.
+fn drain_lines(buf: &mut Vec<u8>) -> Vec<String> {
+    let mut lines = Vec::new();
+    while let Some(pos) = buf.iter().position(|&b| b == b'\n') {
+        let line: Vec<u8> = buf.drain(..=pos).collect();
+        lines.push(String::from_utf8_lossy(&line).trim().to_string());
+    }
+    lines
 }
 
 #[derive(Debug, Deserialize)]
@@ -124,9 +140,11 @@ impl OpenAIClient {
         // backoff. Low-tier keys return spurious 429 `insufficient_quota` under
         // burst; without this a single blip aborts a multi-hour suite run.
         const MAX_ATTEMPTS: u32 = 6;
-        let resp;
         let mut attempt: u32 = 0;
-        loop {
+        let (resp, t0, retried) = loop {
+            // TTFT is anchored here, immediately before the request goes out,
+            // so it includes connection setup, upload, queueing, and prefill.
+            let t0 = Instant::now();
             let send_result = self
                 .client
                 .post(&url)
@@ -146,8 +164,7 @@ impl OpenAIClient {
 
             attempt += 1;
             if !retryable || attempt >= MAX_ATTEMPTS {
-                resp = send_result?;
-                break;
+                break (send_result?, t0, attempt > 1);
             }
 
             // Honor Retry-After when present, else exponential backoff: 1,2,4,8,16s.
@@ -162,15 +179,13 @@ impl OpenAIClient {
                 "    transient API failure (attempt {attempt}/{MAX_ATTEMPTS}), retrying in {backoff_secs}s"
             );
             tokio::time::sleep(std::time::Duration::from_secs(backoff_secs)).await;
-        }
+        };
 
         if !resp.status().is_success() {
             let status = resp.status();
             let body = resp.text().await.unwrap_or_default();
             return Err(anyhow!("API error {status}: {body}"));
         }
-
-        let t0 = Instant::now();
         let mut chunks: Vec<String> = Vec::new();
         let mut timestamps: Vec<Instant> = Vec::new();
         let mut input_tokens: u64 = 0;
@@ -178,16 +193,13 @@ impl OpenAIClient {
         let mut cached_input_tokens: u64 = 0;
 
         let mut stream = resp.bytes_stream();
-        let mut buffer = String::new();
+        let mut buffer: Vec<u8> = Vec::new();
 
         while let Some(chunk) = stream.next().await {
             let bytes = chunk?;
-            buffer.push_str(&String::from_utf8_lossy(&bytes));
+            buffer.extend_from_slice(&bytes);
 
-            while let Some(line_end) = buffer.find('\n') {
-                let line = buffer[..line_end].trim().to_string();
-                buffer = buffer[line_end + 1..].to_string();
-
+            for line in drain_lines(&mut buffer) {
                 if line.is_empty() || line == "data: [DONE]" {
                     continue;
                 }
@@ -223,16 +235,34 @@ impl OpenAIClient {
 
         let text = chunks.concat();
 
-        let ttft_ms = timestamps.first().map(|t| t.duration_since(t0).as_millis() as u64);
-        let ttlt_ms = timestamps.last().map(|t| t.duration_since(t0).as_millis() as u64);
-        let median_itl_ms = if timestamps.len() > 1 {
+        // Some OpenAI-compatible providers buffer the whole completion and
+        // emit it as one or two giant chunks (emulated streaming). The first
+        // chunk then arrives near the end, so TTFT and ITL are meaningless;
+        // null them rather than publish them. TTLT (when the last token
+        // reached the client) is still real. Threshold: real token streaming
+        // never averages >100 tokens per content delta.
+        let emulated = output_tokens > 100 && (timestamps.len() as u64) < output_tokens / 100;
+
+        let ttft_ms = if emulated {
+            None
+        } else {
+            timestamps
+                .first()
+                .map(|t| t.duration_since(t0).as_millis() as u64)
+        };
+        let ttlt_ms = timestamps
+            .last()
+            .map(|t| t.duration_since(t0).as_millis() as u64);
+        let median_itl_ms = if emulated {
+            None
+        } else if timestamps.len() > 1 {
             let mut intervals: Vec<f64> = timestamps
                 .windows(2)
                 .map(|w| w[1].duration_since(w[0]).as_secs_f64() * 1000.0)
                 .collect();
             intervals.sort_by(|a, b| a.partial_cmp(b).unwrap());
             let mid = intervals.len() / 2;
-            Some(if intervals.len() % 2 == 0 {
+            Some(if intervals.len().is_multiple_of(2) {
                 (intervals[mid - 1] + intervals[mid]) / 2.0
             } else {
                 intervals[mid]
@@ -249,6 +279,96 @@ impl OpenAIClient {
             ttft_ms,
             ttlt_ms,
             median_itl_ms,
+            retried,
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use wiremock::matchers::{method, path};
+    use wiremock::{Mock, MockServer, ResponseTemplate};
+
+    #[test]
+    fn drain_lines_reassembles_multibyte_utf8_split_across_chunks() {
+        let payload = "data: {\"x\":\"héllo wörld ✓\"}\n";
+        let bytes = payload.as_bytes();
+        // Split mid-'é' (a two-byte sequence): the old per-chunk lossy decode
+        // turned both halves into U+FFFD.
+        let split = payload.find('é').unwrap() + 1;
+        let mut buf: Vec<u8> = Vec::new();
+        buf.extend_from_slice(&bytes[..split]);
+        assert!(drain_lines(&mut buf).is_empty());
+        buf.extend_from_slice(&bytes[split..]);
+        let lines = drain_lines(&mut buf);
+        assert_eq!(lines, vec![payload.trim().to_string()]);
+        assert!(buf.is_empty());
+    }
+
+    #[test]
+    fn drain_lines_keeps_trailing_partial_line() {
+        let mut buf = b"data: a\ndata: b".to_vec();
+        assert_eq!(drain_lines(&mut buf), vec!["data: a".to_string()]);
+        assert_eq!(buf, b"data: b".to_vec());
+    }
+
+    const SSE_BODY: &str = concat!(
+        "data: {\"choices\":[{\"delta\":{\"content\":\"hé\"}}]}\n\n",
+        "data: {\"choices\":[{\"delta\":{\"content\":\"llo\"}}]}\n\n",
+        "data: {\"choices\":[],\"usage\":{\"prompt_tokens\":7,\"completion_tokens\":2}}\n\n",
+        "data: [DONE]\n\n",
+    );
+
+    fn test_messages() -> Vec<Message> {
+        vec![Message {
+            role: "user".into(),
+            content: "x".into(),
+        }]
+    }
+
+    #[tokio::test]
+    async fn chat_stream_parses_sse_and_reports_no_retry() {
+        let server = MockServer::start().await;
+        Mock::given(method("POST"))
+            .and(path("/chat/completions"))
+            .respond_with(ResponseTemplate::new(200).set_body_raw(SSE_BODY, "text/event-stream"))
+            .mount(&server)
+            .await;
+
+        let client = OpenAIClient::new(server.uri(), "k".into(), "test-model".into());
+        let res = client.chat_stream(&test_messages(), None).await.unwrap();
+        assert_eq!(res.text, "héllo");
+        assert_eq!(res.input_tokens, 7);
+        assert_eq!(res.output_tokens, 2);
+        assert!(!res.retried);
+        assert!(res.ttft_ms.is_some());
+        assert!(res.ttlt_ms.is_some());
+    }
+
+    #[tokio::test]
+    async fn chat_stream_flags_retried_after_429() {
+        let server = MockServer::start().await;
+        Mock::given(method("POST"))
+            .and(path("/chat/completions"))
+            .respond_with(ResponseTemplate::new(429))
+            .up_to_n_times(1)
+            .expect(1)
+            .mount(&server)
+            .await;
+        Mock::given(method("POST"))
+            .and(path("/chat/completions"))
+            .respond_with(ResponseTemplate::new(200).set_body_raw(SSE_BODY, "text/event-stream"))
+            .expect(1)
+            .mount(&server)
+            .await;
+
+        let client = OpenAIClient::new(server.uri(), "k".into(), "test-model".into());
+        let res = client.chat_stream(&test_messages(), None).await.unwrap();
+        assert_eq!(res.text, "héllo");
+        assert!(res.retried);
+        // TTFT is anchored at the successful attempt's send, not at the start
+        // of the retry loop: it must not contain the 1 s backoff sleep.
+        assert!(res.ttft_ms.unwrap() < 1000);
     }
 }

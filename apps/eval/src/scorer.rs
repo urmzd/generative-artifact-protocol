@@ -1,13 +1,12 @@
 //! Content quality scoring — LCS, token F1, ROUGE-L.
 
 use anyhow::Result;
-use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
 
-use crate::experiment::format_to_ext;
+use crate::experiment::{format_to_ext, strip_gap_markers};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TurnQuality {
@@ -30,14 +29,8 @@ pub struct ExperimentQuality {
     pub mean_rouge_l: f64,
 }
 
-/// Strip `<gap:target ...>` and `</gap:target>` markers.
-fn strip_gap_markers(text: &str) -> String {
-    let re = Regex::new(r"</?gap:target[^>]*>").unwrap();
-    re.replace_all(text, "").to_string()
-}
-
-/// Character-level LCS length (space-optimized).
-fn lcs_len(a: &[char], b: &[char]) -> usize {
+/// LCS length over any comparable token sequence (space-optimized).
+fn lcs_len<T: PartialEq>(a: &[T], b: &[T]) -> usize {
     let (m, n) = (a.len(), b.len());
     if m == 0 || n == 0 {
         return 0;
@@ -71,9 +64,7 @@ fn sequence_similarity(a: &str, b: &str) -> f64 {
 
 /// Word-level tokenization.
 fn tokenize(text: &str) -> Vec<String> {
-    text.split_whitespace()
-        .map(|w| w.to_lowercase())
-        .collect()
+    text.split_whitespace().map(|w| w.to_lowercase()).collect()
 }
 
 /// Token F1: word-level precision/recall F1.
@@ -88,10 +79,14 @@ fn token_f1(reference: &str, hypothesis: &str) -> f64 {
         return 0.0;
     }
 
-    let ref_counts: HashMap<&str, usize> =
-        ref_tokens.iter().fold(HashMap::new(), |mut m, t| { *m.entry(t.as_str()).or_default() += 1; m });
-    let hyp_counts: HashMap<&str, usize> =
-        hyp_tokens.iter().fold(HashMap::new(), |mut m, t| { *m.entry(t.as_str()).or_default() += 1; m });
+    let ref_counts: HashMap<&str, usize> = ref_tokens.iter().fold(HashMap::new(), |mut m, t| {
+        *m.entry(t.as_str()).or_default() += 1;
+        m
+    });
+    let hyp_counts: HashMap<&str, usize> = hyp_tokens.iter().fold(HashMap::new(), |mut m, t| {
+        *m.entry(t.as_str()).or_default() += 1;
+        m
+    });
 
     let common: usize = ref_counts
         .iter()
@@ -108,28 +103,6 @@ fn token_f1(reference: &str, hypothesis: &str) -> f64 {
     }
 }
 
-/// Word-level LCS length.
-fn word_lcs_len(a: &[String], b: &[String]) -> usize {
-    let (m, n) = (a.len(), b.len());
-    if m == 0 || n == 0 {
-        return 0;
-    }
-    let mut prev = vec![0usize; n + 1];
-    let mut curr = vec![0usize; n + 1];
-    for i in 1..=m {
-        for j in 1..=n {
-            curr[j] = if a[i - 1] == b[j - 1] {
-                prev[j - 1] + 1
-            } else {
-                prev[j].max(curr[j - 1])
-            };
-        }
-        std::mem::swap(&mut prev, &mut curr);
-        curr.fill(0);
-    }
-    prev[n]
-}
-
 /// ROUGE-L: word-level LCS F1.
 fn rouge_l(reference: &str, hypothesis: &str) -> f64 {
     let ref_words = tokenize(reference);
@@ -142,7 +115,7 @@ fn rouge_l(reference: &str, hypothesis: &str) -> f64 {
         return 0.0;
     }
 
-    let lcs = word_lcs_len(&ref_words, &hyp_words);
+    let lcs = lcs_len(&ref_words, &hyp_words);
     let precision = lcs as f64 / hyp_words.len() as f64;
     let recall = lcs as f64 / ref_words.len() as f64;
 
@@ -155,10 +128,14 @@ fn rouge_l(reference: &str, hypothesis: &str) -> f64 {
 
 /// Line diff stats.
 fn line_diff(base: &str, gap: &str) -> (usize, usize) {
-    let base_lines: HashMap<&str, usize> =
-        base.lines().fold(HashMap::new(), |mut m, l| { *m.entry(l).or_default() += 1; m });
-    let gap_lines: HashMap<&str, usize> =
-        gap.lines().fold(HashMap::new(), |mut m, l| { *m.entry(l).or_default() += 1; m });
+    let base_lines: HashMap<&str, usize> = base.lines().fold(HashMap::new(), |mut m, l| {
+        *m.entry(l).or_default() += 1;
+        m
+    });
+    let gap_lines: HashMap<&str, usize> = gap.lines().fold(HashMap::new(), |mut m, l| {
+        *m.entry(l).or_default() += 1;
+        m
+    });
 
     let mut added = 0usize;
     let mut removed = 0usize;
@@ -220,7 +197,8 @@ pub fn score_experiment(exp_dir: &Path) -> Result<()> {
         let base_chars = base_text.len();
         let gap_chars = gap_text.len();
         let char_delta = if base_chars > 0 {
-            ((gap_chars as f64 - base_chars as f64) / base_chars as f64 * 100.0 * 10.0).round() / 10.0
+            ((gap_chars as f64 - base_chars as f64) / base_chars as f64 * 100.0 * 10.0).round()
+                / 10.0
         } else {
             0.0
         };
@@ -246,7 +224,9 @@ pub fn score_experiment(exp_dir: &Path) -> Result<()> {
 
     let n = per_turn.len() as f64;
     let quality = ExperimentQuality {
-        mean_sequence_similarity: round4(per_turn.iter().map(|t| t.sequence_similarity).sum::<f64>() / n),
+        mean_sequence_similarity: round4(
+            per_turn.iter().map(|t| t.sequence_similarity).sum::<f64>() / n,
+        ),
         mean_token_f1: round4(per_turn.iter().map(|t| t.token_f1).sum::<f64>() / n),
         mean_rouge_l: round4(per_turn.iter().map(|t| t.rouge_l).sum::<f64>() / n),
         per_turn,
@@ -275,4 +255,69 @@ pub fn score_all(experiments_dir: &Path) -> Result<()> {
     }
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn close(a: f64, b: f64) -> bool {
+        (a - b).abs() < 1e-9
+    }
+
+    #[test]
+    fn lcs_len_known_values() {
+        // Classic example: LCS("ABCBDAB", "BDCABA") = "BCBA" (or "BDAB"), len 4.
+        let a: Vec<char> = "ABCBDAB".chars().collect();
+        let b: Vec<char> = "BDCABA".chars().collect();
+        assert_eq!(lcs_len(&a, &b), 4);
+
+        // Same algorithm over word tokens (was a duplicated function).
+        let a = ["a", "b", "c"];
+        let b = ["b", "c", "d"];
+        assert_eq!(lcs_len(&a, &b), 2);
+
+        assert_eq!(lcs_len::<char>(&[], &['x']), 0);
+    }
+
+    #[test]
+    fn sequence_similarity_known_values() {
+        // LCS("abcd", "abed") = "abd" (3): 2*3 / (4+4) = 0.75 exactly.
+        assert!(close(sequence_similarity("abcd", "abed"), 0.75));
+        assert!(close(sequence_similarity("same", "same"), 1.0));
+        assert!(close(sequence_similarity("", ""), 1.0));
+        assert!(close(sequence_similarity("abc", ""), 0.0));
+    }
+
+    #[test]
+    fn token_f1_known_values() {
+        // ref {the, cat, sat}, hyp {the, cat}: P = 1, R = 2/3, F1 = 0.8.
+        assert!(close(token_f1("the cat sat", "the cat"), 0.8));
+        // Bag-of-words: word order does not matter.
+        assert!(close(token_f1("a b c", "c b a"), 1.0));
+        // Tokenization lowercases.
+        assert!(close(token_f1("Hello WORLD", "hello world"), 1.0));
+        assert!(close(token_f1("", ""), 1.0));
+        assert!(close(token_f1("a", ""), 0.0));
+        assert!(close(token_f1("a b", "c d"), 0.0));
+    }
+
+    #[test]
+    fn rouge_l_known_values() {
+        // LCS = "the cat on mat" (4 words): P = 4/4, R = 4/6, F1 = 0.8.
+        assert!(close(
+            rouge_l("the cat sat on the mat", "the cat on mat"),
+            0.8
+        ));
+        // Unlike token F1, ROUGE-L is order-sensitive: LCS("a b c", "c b a") = 1.
+        assert!(close(rouge_l("a b c", "c b a"), 1.0 / 3.0));
+        assert!(close(rouge_l("", ""), 1.0));
+        assert!(close(rouge_l("a", ""), 0.0));
+    }
+
+    #[test]
+    fn line_diff_counts_added_and_removed() {
+        let (added, removed) = line_diff("a\nb\nc", "a\nb\nd\ne");
+        assert_eq!((added, removed), (2, 1));
+    }
 }

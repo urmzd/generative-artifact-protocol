@@ -107,6 +107,11 @@
 ### Breaking Changes
 
 - fix apply engine delete, add tests, restructure into uv workspace (#5) ([4c710d7](https://github.com/urmzd/generative-artifact-protocol/commit/4c710d74390994b13eef7c1b82f8ee8f28f1bfb6))
+- Renamed from Agent-Artifact Protocol (AAP) to Generative Artifact Protocol (GAP)
+- Wire markers: `<aap:target>` → `<gap:target>`
+- Protocol version: `aap/0.1` → `gap/0.1`
+- Python packages: `aap-core`, `aap-evals`, `aap-cli` → `gap-core`, `gap-evals`, `gap-cli`
+- Rust crate: `generative-artifact-protocol` (lib name `gap`)
 
 ### Documentation
 
@@ -115,16 +120,6 @@
 
 [Full Changelog](https://github.com/urmzd/generative-artifact-protocol/compare/v0.12.0...v0.13.0)
 
-
-## Unreleased
-
-### Breaking Changes
-
-- Renamed from Agent-Artifact Protocol (AAP) to Generative Artifact Protocol (GAP)
-- Wire markers: `<aap:target>` → `<gap:target>`
-- Protocol version: `aap/0.1` → `gap/0.1`
-- Python packages: `aap-core`, `aap-evals`, `aap-cli` → `gap-core`, `gap-evals`, `gap-cli`
-- Rust crate: `generative-artifact-protocol` (lib name `gap`)
 
 ## 0.12.0 (2026-04-03)
 

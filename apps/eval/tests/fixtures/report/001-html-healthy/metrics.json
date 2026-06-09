@@ -1,0 +1,134 @@
+{
+  "experiment_id": "001-html-healthy",
+  "model": "test-model",
+  "provider": "openai",
+  "timestamp": "2026-06-09T00:00:00Z",
+  "format": "text/html",
+  "base_turn0": {
+    "input_tokens": 500,
+    "output_tokens": 2000,
+    "cached_input_tokens": 0,
+    "latency_ms": 8000,
+    "artifact_bytes": 9000,
+    "ttft_ms": 900,
+    "ttlt_ms": 7800
+  },
+  "gap_turn0": {
+    "input_tokens": 800,
+    "output_tokens": 2100,
+    "cached_input_tokens": 0,
+    "latency_ms": 8500,
+    "artifact_bytes": 9400,
+    "ttft_ms": 950,
+    "ttlt_ms": 8300
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "change the revenue number",
+        "input_tokens": 2600,
+        "output_tokens": 2000,
+        "cached_input_tokens": 0,
+        "latency_ms": 9000,
+        "output_bytes": 9050,
+        "ttft_ms": 1000,
+        "ttlt_ms": 8800,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "add a row to the table",
+        "input_tokens": 4700,
+        "output_tokens": 2050,
+        "cached_input_tokens": 1024,
+        "latency_ms": 9500,
+        "output_bytes": 9200,
+        "ttft_ms": 1100,
+        "ttlt_ms": 9300,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 7300,
+    "total_output_tokens": 4050,
+    "total_cached_input_tokens": 1024,
+    "total_latency_ms": 18500
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "change the revenue number",
+        "input_tokens": 2900,
+        "output_tokens": 60,
+        "cached_input_tokens": 0,
+        "latency_ms": 1800,
+        "output_bytes": 9420,
+        "ttft_ms": 1200,
+        "ttlt_ms": 1600,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "add a row to the table",
+        "input_tokens": 2950,
+        "output_tokens": 140,
+        "cached_input_tokens": 0,
+        "latency_ms": 2200,
+        "output_bytes": 9600,
+        "ttft_ms": 1250,
+        "ttlt_ms": 2000,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 5850,
+    "total_output_tokens": 200,
+    "total_cached_input_tokens": 0,
+    "total_latency_ms": 4000,
+    "envelope_parse_rate": 1.0,
+    "apply_success_rate": 1.0
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  },
+  "quality": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "sequence_similarity": 0.97,
+        "token_f1": 0.95,
+        "rouge_l": 0.94,
+        "base_char_count": 9050,
+        "gap_char_count": 9420,
+        "char_delta_pct": 4.1,
+        "lines_added": 2,
+        "lines_removed": 1
+      },
+      {
+        "turn": 2,
+        "sequence_similarity": 0.96,
+        "token_f1": 0.93,
+        "rouge_l": 0.92,
+        "base_char_count": 9200,
+        "gap_char_count": 9600,
+        "char_delta_pct": 4.3,
+        "lines_added": 3,
+        "lines_removed": 0
+      }
+    ],
+    "mean_sequence_similarity": 0.965,
+    "mean_token_f1": 0.94,
+    "mean_rouge_l": 0.93
+  }
+}

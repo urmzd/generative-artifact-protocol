@@ -4,6 +4,12 @@ build:
 test:
     cargo test
 
+# Format check, lints, and tests (same gate as CI)
+check:
+    cargo fmt --check
+    cargo clippy --workspace --all-targets -- -D warnings
+    cargo test --workspace
+
 # Rust criterion micro-benchmarks (apply engine speed)
 bench:
     cargo bench
@@ -14,18 +20,24 @@ build-eval:
 
 # Run benchmark experiments. flow ∈ base|stateless|gap|both|abc|all
 run count="0" model="" id="" flow="both" api-base="" api-key="": build-eval
-    ./target/release/gap-eval run \
-        --experiments-dir assets/evals/experiments \
-        $(if [ "{{model}}" != "" ]; then echo "--model {{model}}"; fi) \
-        $(if [ "{{count}}" != "0" ]; then echo "--count {{count}}"; fi) \
-        $(if [ "{{id}}" != "" ]; then echo "--id {{id}}"; fi) \
-        --flow {{flow}} \
-        $(if [ "{{api-base}}" != "" ]; then echo "--api-base {{api-base}}"; fi) \
-        $(if [ "{{api-key}}" != "" ]; then echo "--api-key {{api-key}}"; fi)
+    #!/usr/bin/env sh
+    set -eu
+    set -- run --experiments-dir assets/evals/experiments --flow '{{flow}}'
+    [ '{{count}}' = "0" ] || set -- "$@" --count '{{count}}'
+    [ -z '{{model}}' ] || set -- "$@" --model '{{model}}'
+    [ -z '{{id}}' ] || set -- "$@" --id '{{id}}'
+    [ -z '{{api-base}}' ] || set -- "$@" --api-base '{{api-base}}'
+    [ -z '{{api-key}}' ] || set -- "$@" --api-key '{{api-key}}'
+    ./target/release/gap-eval "$@"
 
-# Generate report from experiment metrics
+# Regenerate the committed experiment report from metrics.json files
 report: build-eval
-    ./target/release/gap-eval report --experiments-dir assets/evals/experiments
+    ./target/release/gap-eval report --experiments-dir assets/evals/experiments --output assets/evals/experiments/results.md
+    @echo "wrote assets/evals/experiments/results.md"
+
+# Payload-size table (wire + content bytes) from the apply-engine fixtures
+payload-report: build-eval
+    ./target/release/gap-eval payload-report
 
 # Retroactive quality scoring
 score: build-eval

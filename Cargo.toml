@@ -24,14 +24,19 @@ homepage = "https://github.com/urmzd/generative-artifact-protocol"
 readme = "README.md"
 keywords = ["gap", "llm", "artifact", "apply-engine", "generative"]
 categories = ["text-processing"]
+# benches/ is excluded because the fixtures it reads live in the excluded
+# assets/ tree; published-crate benches could never run.
 exclude = [
   "apps/",
   "assets/",
+  "benches/",
+  "skills/",
   "spec/",
-  "scripts/",
+  ".envrc",
   ".github/",
-  ".githooks/",
+  "AGENTS.md",
   "justfile",
+  "llms.txt",
   "sr.yaml",
   "target/",
 ]
@@ -47,11 +52,6 @@ serde.workspace = true
 serde_json.workspace = true
 regex.workspace = true
 sha2 = "0.10"
-tracing.workspace = true
-tracing-subscriber.workspace = true
-tracing-opentelemetry = "0.29"
-opentelemetry = "0.28"
-opentelemetry_sdk = "0.28"
 
 [features]
 default = []

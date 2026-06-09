@@ -1,13 +1,21 @@
 //! Experiment loading and orchestration.
 
 use anyhow::{Context, Result};
+use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::sync::LazyLock;
 
+use crate::checks::Correctness;
 use crate::client::OpenAIClient;
 use crate::runner;
-use crate::scorer;
+use crate::scorer::{self, ExperimentQuality};
+
+static THINK_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"(?s)<think>.*?</think>").expect("valid regex"));
+static GAP_MARKER_RE: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"</?gap:target[^>]*>").expect("valid regex"));
 
 pub struct RunConfig {
     pub experiments_dir: PathBuf,
@@ -73,8 +81,12 @@ pub struct Metrics {
     pub validity: Option<Validity>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub token_table: Option<serde_json::Value>,
+    /// Content-quality scores, written by `scorer::score_experiment` after a run.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub quality: Option<serde_json::Value>,
+    pub quality: Option<ExperimentQuality>,
+    /// Correctness-oracle results, written by `checks::score_checks` after a run.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub correctness: Option<Correctness>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -109,6 +121,12 @@ pub struct TurnResult {
     pub ttlt_ms: Option<u64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub median_itl_ms: Option<f64>,
+    /// True when the request succeeded only after retries; the turn's
+    /// wall-clock contains backoff sleep and is excluded from latency
+    /// aggregates. Absent in metrics recorded before 2026-06-09 (those also
+    /// predate the TTFT re-anchor; see the report's latency section).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub retried: Option<bool>,
     pub failed: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub failure_reason: Option<String>,
@@ -213,22 +231,16 @@ fn parse_format(readme: &str) -> String {
 
 /// Load a single experiment from its directory.
 fn load_experiment(dir: &Path, spec_init: &str, spec_maintain: &str) -> Result<Experiment> {
-    let id = dir
-        .file_name()
-        .unwrap()
-        .to_string_lossy()
-        .to_string();
+    let id = dir.file_name().unwrap().to_string_lossy().to_string();
 
-    let readme = fs::read_to_string(dir.join("README.md"))
-        .unwrap_or_default();
+    let readme = fs::read_to_string(dir.join("README.md")).unwrap_or_default();
     let format = parse_format(&readme);
     let ext = format_to_ext(&format).to_string();
 
     let base_input = dir.join("inputs/base");
     let gap_input = dir.join("inputs/gap");
 
-    let base_system = fs::read_to_string(base_input.join("system.md"))
-        .unwrap_or_default();
+    let base_system = fs::read_to_string(base_input.join("system.md")).unwrap_or_default();
 
     let gap_init_system = fs::read_to_string(gap_input.join("init-system.md"))
         .unwrap_or_else(|_| format!("{base_system}\n\n{spec_init}"));
@@ -236,8 +248,8 @@ fn load_experiment(dir: &Path, spec_init: &str, spec_maintain: &str) -> Result<E
     let gap_maintain_system = fs::read_to_string(gap_input.join("maintain-system.md"))
         .unwrap_or_else(|_| format!("{base_system}\n\n{spec_maintain}"));
 
-    let turn0_prompt = fs::read_to_string(base_input.join("turn-0.md"))
-        .context("missing turn-0.md")?;
+    let turn0_prompt =
+        fs::read_to_string(base_input.join("turn-0.md")).context("missing turn-0.md")?;
 
     let mut edit_prompts = Vec::new();
     for i in 1.. {
@@ -290,15 +302,20 @@ pub fn clean_artifact(text: &str) -> String {
     if s.ends_with("```") {
         s = s[..s.len() - 3].trim_end().to_string();
     }
-    let re = regex::Regex::new(r"(?s)<think>.*?</think>").unwrap();
-    re.replace_all(&s, "").trim().to_string()
+    THINK_RE.replace_all(&s, "").trim().to_string()
+}
+
+/// Strip `<gap:target ...>` and `</gap:target>` markers.
+pub fn strip_gap_markers(text: &str) -> String {
+    GAP_MARKER_RE.replace_all(text, "").to_string()
 }
 
 /// Run all experiments.
 pub async fn run_all(config: &RunConfig) -> Result<()> {
     let spec_dir = config.experiments_dir.parent().unwrap_or(Path::new("."));
     let spec_init = fs::read_to_string(spec_dir.join("gap-spec-init.md")).unwrap_or_default();
-    let spec_maintain = fs::read_to_string(spec_dir.join("gap-spec-maintain.md")).unwrap_or_default();
+    let spec_maintain =
+        fs::read_to_string(spec_dir.join("gap-spec-maintain.md")).unwrap_or_default();
 
     let mut experiments = load_experiments(&config.experiments_dir, &spec_init, &spec_maintain)?;
 
@@ -319,7 +336,12 @@ pub async fn run_all(config: &RunConfig) -> Result<()> {
     for (i, exp) in experiments.iter().enumerate() {
         let metrics_path = exp.dir.join("metrics.json");
         if metrics_path.exists() && !config.force {
-            eprintln!("[{}/{}] skip {} (metrics.json exists; use --force to re-run)", i + 1, total, exp.id);
+            eprintln!(
+                "[{}/{}] skip {} (metrics.json exists; use --force to re-run)",
+                i + 1,
+                total,
+                exp.id
+            );
             continue;
         }
 
@@ -376,6 +398,7 @@ async fn run_single(client: &OpenAIClient, exp: &Experiment, flow: &str) -> Resu
         validity: None,
         token_table: None,
         quality: None,
+        correctness: None,
     };
 
     // Base flow (Scenario A)
@@ -383,9 +406,14 @@ async fn run_single(client: &OpenAIClient, exp: &Experiment, flow: &str) -> Resu
     if run_base {
         eprintln!("  base flow...");
         let (base_t0, base_turns) = runner::run_base_flow(
-            client, &exp.base_system, &exp.turn0_prompt, &exp.edit_prompts,
-            &base_out, &exp.ext,
-        ).await?;
+            client,
+            &exp.base_system,
+            &exp.turn0_prompt,
+            &exp.edit_prompts,
+            &base_out,
+            &exp.ext,
+        )
+        .await?;
         let base_flow = to_flow_metrics(&base_turns);
         // Reuse the base turn-0 artifact as the shared plain baseline for the
         // stateless flow (the marked GAP turn-0 is kept separate by design).
@@ -402,9 +430,15 @@ async fn run_single(client: &OpenAIClient, exp: &Experiment, flow: &str) -> Resu
             _ => None,
         };
         let (s_t0, s_turns) = runner::run_stateless_flow(
-            client, &exp.base_system, &exp.turn0_prompt, &exp.edit_prompts,
-            &stateless_out, &exp.ext, seed,
-        ).await?;
+            client,
+            &exp.base_system,
+            &exp.turn0_prompt,
+            &exp.edit_prompts,
+            &stateless_out,
+            &exp.ext,
+            seed,
+        )
+        .await?;
         metrics.stateless_turn0 = Some(s_t0);
         metrics.stateless_flow = Some(to_flow_metrics(&s_turns));
     }
@@ -412,20 +446,30 @@ async fn run_single(client: &OpenAIClient, exp: &Experiment, flow: &str) -> Resu
     // GAP flow
     if run_gap {
         eprintln!("  gap flow...");
-        let (gap_t0, gap_turns) = runner::run_gap_flow(
-            client, &exp.gap_init_system, &exp.gap_maintain_system,
-            &exp.turn0_prompt, &exp.edit_prompts,
-            &exp.format, &gap_out, &exp.ext,
-        ).await?;
+        let (gap_t0, gap_turns) = runner::run_gap_flow(client, exp, &gap_out).await?;
 
         let total_turns = gap_turns.len() as f64;
-        let parsed = gap_turns.iter().filter(|t| t.envelope_parsed == Some(true)).count() as f64;
-        let applied = gap_turns.iter().filter(|t| t.apply_succeeded == Some(true)).count() as f64;
+        let parsed = gap_turns
+            .iter()
+            .filter(|t| t.envelope_parsed == Some(true))
+            .count() as f64;
+        let applied = gap_turns
+            .iter()
+            .filter(|t| t.apply_succeeded == Some(true))
+            .count() as f64;
 
         let gap_flow = GapFlowMetrics {
             flow: to_flow_metrics(&gap_turns),
-            envelope_parse_rate: if total_turns > 0.0 { parsed / total_turns } else { 0.0 },
-            apply_success_rate: if total_turns > 0.0 { applied / total_turns } else { 0.0 },
+            envelope_parse_rate: if total_turns > 0.0 {
+                parsed / total_turns
+            } else {
+                0.0
+            },
+            apply_success_rate: if total_turns > 0.0 {
+                applied / total_turns
+            } else {
+                0.0
+            },
         };
         metrics.gap_turn0 = Some(gap_t0);
         metrics.gap_flow = Some(gap_flow);
@@ -443,20 +487,28 @@ async fn run_single(client: &OpenAIClient, exp: &Experiment, flow: &str) -> Resu
         metrics.comparison = Some(Comparison {
             output_token_savings_pct: if base_out_tokens > 0.0 {
                 round1((1.0 - gap_out_tokens / base_out_tokens) * 100.0)
-            } else { 0.0 },
+            } else {
+                0.0
+            },
             input_token_savings_pct: if base_in_tokens > 0.0 {
                 round1((1.0 - gap_in_tokens / base_in_tokens) * 100.0)
-            } else { 0.0 },
+            } else {
+                0.0
+            },
             latency_savings_pct: if base_latency > 0.0 {
                 round1((1.0 - gap_latency / base_latency) * 100.0)
-            } else { 0.0 },
+            } else {
+                0.0
+            },
         });
     }
 
     // A/B/C decomposition (init-inclusive). Requires all three flows.
-    if let (Some(a), Some(b), Some(c)) =
-        (&metrics.default_flow, &metrics.stateless_flow, &metrics.gap_flow)
-    {
+    if let (Some(a), Some(b), Some(c)) = (
+        &metrics.default_flow,
+        &metrics.stateless_flow,
+        &metrics.gap_flow,
+    ) {
         let a_in = flow_total_input(&metrics.base_turn0, a);
         let a_out = flow_total_output(&metrics.base_turn0, a);
         let b_in = flow_total_input(&metrics.stateless_turn0, b);
@@ -464,7 +516,13 @@ async fn run_single(client: &OpenAIClient, exp: &Experiment, flow: &str) -> Resu
         let c_in = flow_total_input(&metrics.gap_turn0, &c.flow);
         let c_out = flow_total_output(&metrics.gap_turn0, &c.flow);
 
-        let pct = |base: f64, new: f64| if base > 0.0 { round1((1.0 - new / base) * 100.0) } else { 0.0 };
+        let pct = |base: f64, new: f64| {
+            if base > 0.0 {
+                round1((1.0 - new / base) * 100.0)
+            } else {
+                0.0
+            }
+        };
         metrics.decomposition = Some(Decomposition {
             input_savings_b_vs_a_pct: pct(a_in, b_in),
             output_savings_c_vs_b_pct: pct(b_out, c_out),
@@ -476,9 +534,12 @@ async fn run_single(client: &OpenAIClient, exp: &Experiment, flow: &str) -> Resu
     // Run-validity gates.
     let gap_degenerate = metrics.gap_flow.as_ref().is_some_and(|g| {
         let edits = &g.flow.per_turn;
-        edits.len() > 1 && edits.iter().all(|t| t.output_bytes == edits[0].output_bytes)
+        edits.len() > 1
+            && edits
+                .iter()
+                .all(|t| t.output_bytes == edits[0].output_bytes)
     });
-    let base_monotone = metrics.default_flow.as_ref().map_or(true, |b| {
+    let base_monotone = metrics.default_flow.as_ref().is_none_or(|b| {
         b.per_turn
             .windows(2)
             .all(|w| w[1].input_tokens >= w[0].input_tokens)
