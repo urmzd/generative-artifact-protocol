@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.16.1 (2026-06-09)
+
+### Bug Fixes
+
+- **eval**: honest aggregates, working benches, measurement corrections, typed report (#12) ([410fbc8](https://github.com/urmzd/generative-artifact-protocol/commit/410fbc854c425e9ecd60c51dcf68c04852c0c793))
+
+[Full Changelog](https://github.com/urmzd/generative-artifact-protocol/compare/v0.16.0...v0.16.1)
+
+
 ## 0.16.0 (2026-05-25)
 
 ### Features
