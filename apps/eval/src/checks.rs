@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::Path;
 
-use crate::experiment::format_to_ext;
+use crate::experiment::{format_to_ext, strip_gap_markers};
 
 /// A single assertion oracle. Tagged by `kind` in JSON.
 ///
@@ -74,18 +74,6 @@ impl Check {
             Check::JsonPointerEquals { .. } => "json_pointer_equals",
         }
     }
-
-    /// Optional human-authored description.
-    pub fn desc(&self) -> Option<&str> {
-        match self {
-            Check::ValidJson { desc }
-            | Check::Contains { desc, .. }
-            | Check::Absent { desc, .. }
-            | Check::RegexCount { desc, .. }
-            | Check::RegexCountAtLeast { desc, .. }
-            | Check::JsonPointerEquals { desc, .. } => desc.as_deref(),
-        }
-    }
 }
 
 /// The set of checks to run for a single turn.
@@ -144,7 +132,9 @@ pub fn evaluate_check(check: &Check, artifact: &str) -> (bool, String) {
             }
         }
 
-        Check::RegexCount { pattern, expected, .. } => {
+        Check::RegexCount {
+            pattern, expected, ..
+        } => {
             let re = match Regex::new(pattern) {
                 Ok(re) => re,
                 Err(e) => return (false, format!("invalid regex {pattern:?}: {e}")),
@@ -153,7 +143,10 @@ pub fn evaluate_check(check: &Check, artifact: &str) -> (bool, String) {
             if count == *expected {
                 (true, format!("{pattern:?} matched {count} time(s)"))
             } else {
-                (false, format!("{pattern:?} matched {count} time(s), expected {expected}"))
+                (
+                    false,
+                    format!("{pattern:?} matched {count} time(s), expected {expected}"),
+                )
             }
         }
 
@@ -164,9 +157,15 @@ pub fn evaluate_check(check: &Check, artifact: &str) -> (bool, String) {
             };
             let count = re.find_iter(artifact).count();
             if count >= *min {
-                (true, format!("{pattern:?} matched {count} time(s) (>= {min})"))
+                (
+                    true,
+                    format!("{pattern:?} matched {count} time(s) (>= {min})"),
+                )
             } else {
-                (false, format!("{pattern:?} matched {count} time(s), expected >= {min}"))
+                (
+                    false,
+                    format!("{pattern:?} matched {count} time(s), expected >= {min}"),
+                )
             }
         }
 
@@ -176,22 +175,12 @@ pub fn evaluate_check(check: &Check, artifact: &str) -> (bool, String) {
                 Err(e) => return (false, format!("not valid JSON: {e}")),
             };
             match parsed.pointer(pointer) {
-                Some(actual) if actual == value => {
-                    (true, format!("{pointer} == {value}"))
-                }
+                Some(actual) if actual == value => (true, format!("{pointer} == {value}")),
                 Some(actual) => (false, format!("{pointer} == {actual}, expected {value}")),
                 None => (false, format!("{pointer} not present")),
             }
         }
     }
-}
-
-/// Strip `<gap:target ...>` and `</gap:target>` markers.
-///
-/// Kept local to mirror `scorer.rs` (the function there is private).
-fn strip_gap_markers(text: &str) -> String {
-    let re = Regex::new(r"</?gap:target[^>]*>").unwrap();
-    re.replace_all(text, "").to_string()
 }
 
 fn round4(v: f64) -> f64 {
@@ -326,4 +315,181 @@ pub fn score_checks_all(dir: &Path) -> Result<()> {
     }
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    fn pass(check: &Check, artifact: &str) -> bool {
+        evaluate_check(check, artifact).0
+    }
+
+    #[test]
+    fn valid_json_check() {
+        let c = Check::ValidJson { desc: None };
+        assert!(pass(&c, r#"{"a": 1}"#));
+        assert!(pass(&c, "[1, 2, 3]"));
+        assert!(!pass(&c, "<html></html>"));
+        assert!(!pass(&c, r#"{"a": 1,}"#));
+    }
+
+    #[test]
+    fn contains_check() {
+        let c = Check::Contains {
+            value: "<h1>".into(),
+            desc: None,
+        };
+        assert!(pass(&c, "<h1>Title</h1>"));
+        // Literal substring, case-sensitive — no regex semantics.
+        assert!(!pass(&c, "<H1>Title</H1>"));
+        assert!(!pass(&c, "no heading"));
+    }
+
+    #[test]
+    fn absent_check() {
+        let c = Check::Absent {
+            value: "deleted-item".into(),
+            desc: None,
+        };
+        assert!(pass(&c, "clean artifact"));
+        assert!(!pass(&c, "still has deleted-item here"));
+    }
+
+    #[test]
+    fn regex_count_check() {
+        let c = Check::RegexCount {
+            pattern: "<li>".into(),
+            expected: 3,
+            desc: None,
+        };
+        assert!(pass(&c, "<li>a</li><li>b</li><li>c</li>"));
+        // Collateral-loss detector: one item dropped must fail.
+        assert!(!pass(&c, "<li>a</li><li>b</li>"));
+        // Expecting zero matches passes on no match.
+        let zero = Check::RegexCount {
+            pattern: "x".into(),
+            expected: 0,
+            desc: None,
+        };
+        assert!(pass(&zero, "abc"));
+    }
+
+    #[test]
+    fn regex_count_invalid_pattern_fails_not_panics() {
+        let c = Check::RegexCount {
+            pattern: "(unclosed".into(),
+            expected: 1,
+            desc: None,
+        };
+        let (ok, reason) = evaluate_check(&c, "anything");
+        assert!(!ok);
+        assert!(reason.contains("invalid regex"), "{reason}");
+    }
+
+    #[test]
+    fn regex_count_at_least_check() {
+        let c = Check::RegexCountAtLeast {
+            pattern: r"\d+".into(),
+            min: 2,
+            desc: None,
+        };
+        assert!(pass(&c, "1 and 2 and 3"));
+        assert!(pass(&c, "1 and 2"));
+        assert!(!pass(&c, "only 1"));
+    }
+
+    #[test]
+    fn json_pointer_equals_strings_and_arrays() {
+        let artifact = r#"{"name": "widget", "items": [{"id": "a"}, {"id": "b"}]}"#;
+        let eq = |pointer: &str, value: serde_json::Value| Check::JsonPointerEquals {
+            pointer: pointer.into(),
+            value,
+            desc: None,
+        };
+        assert!(pass(&eq("/name", json!("widget")), artifact));
+        assert!(!pass(&eq("/name", json!("gadget")), artifact));
+        assert!(pass(&eq("/items/1/id", json!("b")), artifact));
+        // Missing pointer fails rather than erroring.
+        assert!(!pass(&eq("/missing", json!(1)), artifact));
+        // Non-JSON artifact fails every pointer check.
+        assert!(!pass(&eq("/name", json!("widget")), "not json"));
+    }
+
+    #[test]
+    fn json_pointer_equals_numeric_types_are_strict() {
+        let artifact = r#"{"age": 30, "score": 1.5}"#;
+        let eq = |pointer: &str, value: serde_json::Value| Check::JsonPointerEquals {
+            pointer: pointer.into(),
+            value,
+            desc: None,
+        };
+        assert!(pass(&eq("/age", json!(30)), artifact));
+        assert!(pass(&eq("/score", json!(1.5)), artifact));
+        // serde_json numbers are typed: 30 (integer) != 30.0 (float), and a
+        // string "30" never equals the number 30. Check authors must match
+        // the artifact's JSON type exactly.
+        assert!(!pass(&eq("/age", json!(30.0)), artifact));
+        assert!(!pass(&eq("/age", json!("30")), artifact));
+    }
+
+    #[test]
+    fn turn_checks_parse_from_tagged_json() {
+        let raw = r#"{
+            "turn": 2,
+            "checks": [
+                {"kind": "contains", "value": "<h1>", "desc": "has a heading"},
+                {"kind": "regex_count", "pattern": "<li>", "expected": 4},
+                {"kind": "json_pointer_equals", "pointer": "/name", "value": "widget"}
+            ]
+        }"#;
+        let tc: TurnChecks = serde_json::from_str(raw).unwrap();
+        assert_eq!(tc.turn, 2);
+        let kinds: Vec<&str> = tc.checks.iter().map(|c| c.kind()).collect();
+        assert_eq!(
+            kinds,
+            vec!["contains", "regex_count", "json_pointer_equals"]
+        );
+    }
+
+    #[test]
+    fn missing_artifact_fails_every_check() {
+        let tc = TurnChecks {
+            turn: 1,
+            checks: vec![
+                Check::ValidJson { desc: None },
+                Check::Contains {
+                    value: "x".into(),
+                    desc: None,
+                },
+            ],
+        };
+        let result = evaluate_turn(&tc, None);
+        assert_eq!((result.passed, result.total), (0, 2));
+        assert!(result
+            .checks
+            .iter()
+            .all(|c| c.reason == "artifact not found"));
+    }
+
+    #[test]
+    fn pass_rate_over_all_checks() {
+        let tc = TurnChecks {
+            turn: 1,
+            checks: vec![
+                Check::Contains {
+                    value: "a".into(),
+                    desc: None,
+                },
+                Check::Contains {
+                    value: "z".into(),
+                    desc: None,
+                },
+            ],
+        };
+        let per_turn = vec![evaluate_turn(&tc, Some("a b c"))];
+        assert_eq!(pass_rate(&per_turn), 0.5);
+        assert_eq!(pass_rate(&[]), 0.0);
+    }
 }

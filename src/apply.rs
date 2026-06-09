@@ -8,7 +8,7 @@
 use anyhow::{bail, Context, Result};
 
 use crate::gap::{
-    Artifact, EditOp, Envelope, HandleContentItem, Name, OpType, Meta, SynthesizeContentItem,
+    Artifact, EditOp, Envelope, HandleContentItem, Meta, Name, OpType, SynthesizeContentItem,
     Target, TargetInfo, PROTOCOL_VERSION,
 };
 
@@ -25,7 +25,7 @@ pub trait Resolve {
     fn insert(&self, content: &mut Self::Content, pos: usize, text: &str);
     fn delete(&self, content: &mut Self::Content, start: usize, end: usize);
     fn to_string(&self, content: &Self::Content) -> String;
-    fn from_string(&self, s: &str) -> Self::Content;
+    fn content_from_str(&self, s: &str) -> Self::Content;
 }
 
 // ── Text resolver ────────────────────────────────────────────────────────
@@ -72,7 +72,7 @@ impl Resolve for TextResolver {
         content.clone()
     }
 
-    fn from_string(&self, s: &str) -> String {
+    fn content_from_str(&self, s: &str) -> String {
         s.to_string()
     }
 }
@@ -95,11 +95,16 @@ fn build_handle_envelope(artifact: &Artifact) -> Result<Envelope> {
     let targets = if target_ids.is_empty() {
         None
     } else {
-        Some(target_ids.into_iter().map(|id| TargetInfo {
-            id,
-            label: None,
-            accepts: None,
-        }).collect())
+        Some(
+            target_ids
+                .into_iter()
+                .map(|id| TargetInfo {
+                    id,
+                    label: None,
+                    accepts: None,
+                })
+                .collect(),
+        )
     };
     let handle = HandleContentItem {
         id: artifact.id.clone(),
@@ -120,19 +125,13 @@ fn build_handle_envelope(artifact: &Artifact) -> Result<Envelope> {
             checksum: None,
             state: None,
         },
-        content: vec![
-            serde_json::to_value(handle).context("failed to serialize handle")?
-        ],
+        content: vec![serde_json::to_value(handle).context("failed to serialize handle")?],
     })
 }
 
 /// Stateless apply: `f(artifact?, envelope) → (Artifact, Handle)`.
 pub fn apply(artifact: Option<&Artifact>, envelope: &Envelope) -> Result<(Artifact, Envelope)> {
-    let format = envelope
-        .meta
-        .format
-        .as_deref()
-        .unwrap_or("text/html");
+    let format = envelope.meta.format.as_deref().unwrap_or("text/html");
 
     let resolver = TextResolver {
         format: format.to_string(),
@@ -186,7 +185,7 @@ pub fn apply_edit<R: Resolve<Content = String>>(
     base: &str,
     operations: &[EditOp],
 ) -> Result<String> {
-    let mut content = resolver.from_string(base);
+    let mut content = resolver.content_from_str(base);
 
     for (i, op) in operations.iter().enumerate() {
         // All ops target content between markers (exclusive range).
@@ -266,7 +265,11 @@ fn apply_edit_pointers(base: &str, operations: &[EditOp]) -> Result<String> {
                     .as_array_mut()
                     .context("insert requires array parent")?;
                 let index: usize = key.parse().context("insert requires numeric array index")?;
-                let insert_at = if op.op == OpType::InsertAfter { index + 1 } else { index };
+                let insert_at = if op.op == OpType::InsertAfter {
+                    index + 1
+                } else {
+                    index
+                };
                 // `Vec::insert` panics if the position is past the end; the apply
                 // engine is a pure fn that must return errors, never panic. A model
                 // can emit an out-of-bounds index, so bounds-check explicitly.
@@ -302,8 +305,12 @@ fn remove_child(parent: &mut serde_json::Value, key: &str) -> Result<()> {
             bail!("key not found: {unescaped}");
         }
     } else if let Some(arr) = parent.as_array_mut() {
-        let index: usize = unescaped.parse().with_context(|| format!("expected array index: {unescaped}"))?;
-        if index >= arr.len() { bail!("array index out of bounds: {index}"); }
+        let index: usize = unescaped
+            .parse()
+            .with_context(|| format!("expected array index: {unescaped}"))?;
+        if index >= arr.len() {
+            bail!("array index out of bounds: {index}");
+        }
         arr.remove(index);
     } else {
         bail!("parent is neither object nor array");
@@ -322,8 +329,10 @@ mod tests {
             version,
             name: Name::Synthesize,
             meta: Meta {
-                    format: Some("text/html".to_string()),
-                tokens_used: None, checksum: None, state: None,
+                format: Some("text/html".to_string()),
+                tokens_used: None,
+                checksum: None,
+                state: None,
             },
             content: vec![serde_json::json!({ "body": body })],
         }
@@ -336,15 +345,24 @@ mod tests {
             version,
             name: Name::Edit,
             meta: Meta {
-                    format: Some("text/html".to_string()),
-                tokens_used: None, checksum: None, state: None,
+                format: Some("text/html".to_string()),
+                tokens_used: None,
+                checksum: None,
+                state: None,
             },
-            content: ops.iter().map(|o| serde_json::to_value(o).unwrap()).collect(),
+            content: ops
+                .iter()
+                .map(|o| serde_json::to_value(o).unwrap())
+                .collect(),
         }
     }
 
-    fn id_target(id: &str) -> Target { Target::Id(id.to_string()) }
-    fn ptr_target(p: &str) -> Target { Target::Pointer(p.to_string()) }
+    fn id_target(id: &str) -> Target {
+        Target::Id(id.to_string())
+    }
+    fn ptr_target(p: &str) -> Target {
+        Target::Pointer(p.to_string())
+    }
 
     #[test]
     fn test_synthesize() {
@@ -361,11 +379,15 @@ mod tests {
         let env = synth_env("t", 1, r#"<gap:target id="rev">$12,340</gap:target>"#);
         let (art, _) = apply(None, &env).unwrap();
 
-        let edit = edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace,
-            target: id_target("rev"),
-            content: Some("$15,720".to_string()),
-        }]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: id_target("rev"),
+                content: Some("$15,720".to_string()),
+            }],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         assert!(art2.body.contains("$15,720"));
         assert!(!art2.body.contains("$12,340"));
@@ -377,14 +399,27 @@ mod tests {
         // Spec §4.2: "For delete, the content between markers is removed
         // (markers are preserved). Markers themselves are never moved or
         // removed by edit operations."
-        let env = synth_env("t", 1, r#"before<gap:target id="tmp">remove</gap:target>after"#);
+        let env = synth_env(
+            "t",
+            1,
+            r#"before<gap:target id="tmp">remove</gap:target>after"#,
+        );
         let (art, _) = apply(None, &env).unwrap();
 
-        let edit = edit_env("t", 2, vec![EditOp {
-            op: OpType::Delete, target: id_target("tmp"), content: None,
-        }]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Delete,
+                target: id_target("tmp"),
+                content: None,
+            }],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
-        assert_eq!(art2.body, r#"before<gap:target id="tmp"></gap:target>after"#);
+        assert_eq!(
+            art2.body,
+            r#"before<gap:target id="tmp"></gap:target>after"#
+        );
     }
 
     #[test]
@@ -392,10 +427,15 @@ mod tests {
         let env = synth_env("t", 1, r#"<gap:target id="list">item1</gap:target>"#);
         let (art, _) = apply(None, &env).unwrap();
 
-        let edit = edit_env("t", 2, vec![EditOp {
-            op: OpType::InsertAfter, target: id_target("list"),
-            content: Some(", item2".to_string()),
-        }]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::InsertAfter,
+                target: id_target("list"),
+                content: Some(", item2".to_string()),
+            }],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         assert!(art2.body.contains("item1, item2"));
     }
@@ -405,10 +445,15 @@ mod tests {
         let body = r#"<gap:target id="outer"><h2>Stats</h2><gap:target id="val">100</gap:target></gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
-        let edit = edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace, target: id_target("val"),
-            content: Some("200".to_string()),
-        }]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: id_target("val"),
+                content: Some("200".to_string()),
+            }],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         assert!(art2.body.contains("200"));
         assert!(art2.body.contains("<h2>Stats</h2>"));
@@ -451,10 +496,15 @@ mod tests {
         let base = r#"{"name": "Alice", "age": 30}"#;
         let (art, _) = apply(None, &synth_env("t", 1, base)).unwrap();
 
-        let mut edit = edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace, target: ptr_target("/name"),
-            content: Some(r#""Bob""#.to_string()),
-        }]);
+        let mut edit = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: ptr_target("/name"),
+                content: Some(r#""Bob""#.to_string()),
+            }],
+        );
         edit.meta.format = Some("application/json".to_string());
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         let parsed: serde_json::Value = serde_json::from_str(&art2.body).unwrap();
@@ -467,9 +517,15 @@ mod tests {
         let base = r#"{"name": "Alice", "temp": true}"#;
         let (art, _) = apply(None, &synth_env("t", 1, base)).unwrap();
 
-        let mut edit = edit_env("t", 2, vec![EditOp {
-            op: OpType::Delete, target: ptr_target("/temp"), content: None,
-        }]);
+        let mut edit = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Delete,
+                target: ptr_target("/temp"),
+                content: None,
+            }],
+        );
         edit.meta.format = Some("application/json".to_string());
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         let parsed: serde_json::Value = serde_json::from_str(&art2.body).unwrap();
@@ -480,10 +536,14 @@ mod tests {
     fn test_handle_is_not_input() {
         let env = Envelope {
             protocol: PROTOCOL_VERSION.to_string(),
-            id: "t".to_string(), version: 1, name: Name::Handle,
+            id: "t".to_string(),
+            version: 1,
+            name: Name::Handle,
             meta: Meta {
                 format: None,
-                tokens_used: None, checksum: None, state: None,
+                tokens_used: None,
+                checksum: None,
+                state: None,
             },
             content: vec![],
         };
@@ -507,10 +567,15 @@ mod tests {
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
         // Replace outer with content that drops inner
-        let edit = edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace, target: id_target("outer"),
-            content: Some("no nested targets here".to_string()),
-        }]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: id_target("outer"),
+                content: Some("no nested targets here".to_string()),
+            }],
+        );
         let (_, handle) = apply(Some(&art), &edit).unwrap();
         let item: crate::gap::HandleContentItem =
             serde_json::from_value(handle.content[0].clone()).unwrap();
@@ -538,10 +603,15 @@ mod tests {
         let env = synth_env("t", 1, r#"<gap:target id="list">item1</gap:target>"#);
         let (art, _) = apply(None, &env).unwrap();
 
-        let edit = edit_env("t", 2, vec![EditOp {
-            op: OpType::InsertBefore, target: id_target("list"),
-            content: Some("item0, ".to_string()),
-        }]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::InsertBefore,
+                target: id_target("list"),
+                content: Some("item0, ".to_string()),
+            }],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         assert!(art2.body.contains("item0, item1"));
         assert!(art2.body.contains(r#"<gap:target id="list">"#));
@@ -552,10 +622,15 @@ mod tests {
         let env = synth_env("t", 1, r#"<gap:target id="val">old</gap:target>"#);
         let (art, _) = apply(None, &env).unwrap();
 
-        let edit = edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace, target: id_target("val"),
-            content: Some("".to_string()),
-        }]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: id_target("val"),
+                content: Some("".to_string()),
+            }],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         assert_eq!(art2.body, r#"<gap:target id="val"></gap:target>"#);
     }
@@ -565,10 +640,15 @@ mod tests {
         let env = synth_env("t", 1, r#"<gap:target id="val">old</gap:target>"#);
         let (art, _) = apply(None, &env).unwrap();
 
-        let edit = edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace, target: id_target("val"),
-            content: None,
-        }]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: id_target("val"),
+                content: None,
+            }],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         assert_eq!(art2.body, r#"<gap:target id="val"></gap:target>"#);
     }
@@ -579,19 +659,30 @@ mod tests {
         let body = r#"<gap:target id="msg">hello</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
-        let delete = edit_env("t", 2, vec![EditOp {
-            op: OpType::Delete, target: id_target("msg"), content: None,
-        }]);
+        let delete = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Delete,
+                target: id_target("msg"),
+                content: None,
+            }],
+        );
         let (art2, _) = apply(Some(&art), &delete).unwrap();
         assert!(art2.body.contains(r#"<gap:target id="msg">"#));
         assert!(art2.body.contains("</gap:target>"));
         assert!(!art2.body.contains("hello"));
 
         // Can still replace into the now-empty target.
-        let replace = edit_env("t", 3, vec![EditOp {
-            op: OpType::Replace, target: id_target("msg"),
-            content: Some("world".to_string()),
-        }]);
+        let replace = edit_env(
+            "t",
+            3,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: id_target("msg"),
+                content: Some("world".to_string()),
+            }],
+        );
         let (art3, _) = apply(Some(&art2), &replace).unwrap();
         assert!(art3.body.contains("world"));
     }
@@ -602,9 +693,15 @@ mod tests {
         let body = r#"<gap:target id="msg">hello</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
-        let delete = edit_env("t", 2, vec![EditOp {
-            op: OpType::Delete, target: id_target("msg"), content: None,
-        }]);
+        let delete = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Delete,
+                target: id_target("msg"),
+                content: None,
+            }],
+        );
         let (_, handle) = apply(Some(&art), &delete).unwrap();
         let item: crate::gap::HandleContentItem =
             serde_json::from_value(handle.content[0].clone()).unwrap();
@@ -619,10 +716,22 @@ mod tests {
         let body = r#"<gap:target id="x">old</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
-        let edit = edit_env("t", 2, vec![
-            EditOp { op: OpType::Delete, target: id_target("x"), content: None },
-            EditOp { op: OpType::InsertAfter, target: id_target("x"), content: Some("new".to_string()) },
-        ]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![
+                EditOp {
+                    op: OpType::Delete,
+                    target: id_target("x"),
+                    content: None,
+                },
+                EditOp {
+                    op: OpType::InsertAfter,
+                    target: id_target("x"),
+                    content: Some("new".to_string()),
+                },
+            ],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         assert!(art2.body.contains("new"));
         assert!(!art2.body.contains("old"));
@@ -633,10 +742,22 @@ mod tests {
         let body = r#"<gap:target id="a">1</gap:target><gap:target id="b">2</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
-        let edit = edit_env("t", 2, vec![
-            EditOp { op: OpType::Replace, target: id_target("a"), content: Some("X".to_string()) },
-            EditOp { op: OpType::Replace, target: id_target("b"), content: Some("Y".to_string()) },
-        ]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![
+                EditOp {
+                    op: OpType::Replace,
+                    target: id_target("a"),
+                    content: Some("X".to_string()),
+                },
+                EditOp {
+                    op: OpType::Replace,
+                    target: id_target("b"),
+                    content: Some("Y".to_string()),
+                },
+            ],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         assert!(art2.body.contains("X"));
         assert!(art2.body.contains("Y"));
@@ -649,10 +770,15 @@ mod tests {
         let body = r#"<gap:target id="a">val</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
-        let edit = edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace, target: id_target("nonexistent"),
-            content: Some("x".to_string()),
-        }]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: id_target("nonexistent"),
+                content: Some("x".to_string()),
+            }],
+        );
         assert!(apply(Some(&art), &edit).is_err());
     }
 
@@ -662,10 +788,15 @@ mod tests {
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
         // Edit the innermost target.
-        let edit = edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace, target: id_target("l3"),
-            content: Some("shallow".to_string()),
-        }]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: id_target("l3"),
+                content: Some("shallow".to_string()),
+            }],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         assert!(art2.body.contains("shallow"));
         // Outer markers still intact.
@@ -679,10 +810,15 @@ mod tests {
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
         // Replace middle sibling.
-        let edit = edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace, target: id_target("b"),
-            content: Some("X".to_string()),
-        }]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: id_target("b"),
+                content: Some("X".to_string()),
+            }],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         assert!(art2.body.contains(r#"<gap:target id="a">1</gap:target>"#));
         assert!(art2.body.contains(r#"<gap:target id="b">X</gap:target>"#));
@@ -695,10 +831,15 @@ mod tests {
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
         let new_content = r#"<gap:target id="inner">nested</gap:target>"#;
-        let edit = edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace, target: id_target("section"),
-            content: Some(new_content.to_string()),
-        }]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: id_target("section"),
+                content: Some(new_content.to_string()),
+            }],
+        );
         let (_, handle) = apply(Some(&art), &edit).unwrap();
         let item: crate::gap::HandleContentItem =
             serde_json::from_value(handle.content[0].clone()).unwrap();
@@ -712,20 +853,30 @@ mod tests {
         let body = r#"<gap:target id="empty"></gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
-        let edit = edit_env("t", 2, vec![EditOp {
-            op: OpType::InsertAfter, target: id_target("empty"),
-            content: Some("filled".to_string()),
-        }]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::InsertAfter,
+                target: id_target("empty"),
+                content: Some("filled".to_string()),
+            }],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         assert!(art2.body.contains("filled"));
     }
 
     #[test]
     fn test_edit_without_base_artifact_fails() {
-        let edit = edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace, target: id_target("x"),
-            content: Some("y".to_string()),
-        }]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: id_target("x"),
+                content: Some("y".to_string()),
+            }],
+        );
         assert!(apply(None, &edit).is_err());
     }
 
@@ -733,9 +884,15 @@ mod tests {
     fn test_synthesize_empty_content_array_fails() {
         let env = Envelope {
             protocol: PROTOCOL_VERSION.to_string(),
-            id: "t".to_string(), version: 1, name: Name::Synthesize,
-            meta: Meta { format: Some("text/html".to_string()),
-                tokens_used: None, checksum: None, state: None },
+            id: "t".to_string(),
+            version: 1,
+            name: Name::Synthesize,
+            meta: Meta {
+                format: Some("text/html".to_string()),
+                tokens_used: None,
+                checksum: None,
+                state: None,
+            },
             content: vec![],
         };
         assert!(apply(None, &env).is_err());
@@ -755,8 +912,15 @@ mod tests {
     fn test_default_format_is_html() {
         let env = Envelope {
             protocol: PROTOCOL_VERSION.to_string(),
-            id: "t".to_string(), version: 1, name: Name::Synthesize,
-            meta: Meta { format: None, tokens_used: None, checksum: None, state: None },
+            id: "t".to_string(),
+            version: 1,
+            name: Name::Synthesize,
+            meta: Meta {
+                format: None,
+                tokens_used: None,
+                checksum: None,
+                state: None,
+            },
             content: vec![serde_json::json!({ "body": "<div>hi</div>" })],
         };
         let (art, _) = apply(None, &env).unwrap();
@@ -777,10 +941,22 @@ mod tests {
         let body = r#"<gap:target id="a">old</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
-        let edit = edit_env("t", 2, vec![
-            EditOp { op: OpType::Replace, target: id_target("a"), content: Some("new".to_string()) },
-            EditOp { op: OpType::Replace, target: id_target("missing"), content: Some("x".to_string()) },
-        ]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![
+                EditOp {
+                    op: OpType::Replace,
+                    target: id_target("a"),
+                    content: Some("new".to_string()),
+                },
+                EditOp {
+                    op: OpType::Replace,
+                    target: id_target("missing"),
+                    content: Some("x".to_string()),
+                },
+            ],
+        );
         assert!(apply(Some(&art), &edit).is_err());
         // Original artifact body is unchanged (we still have the immutable ref).
         assert_eq!(art.body, body);
@@ -792,10 +968,22 @@ mod tests {
         let body = r#"<gap:target id="list">a</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
-        let edit = edit_env("t", 2, vec![
-            EditOp { op: OpType::InsertAfter, target: id_target("list"), content: Some("b".to_string()) },
-            EditOp { op: OpType::InsertAfter, target: id_target("list"), content: Some("c".to_string()) },
-        ]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![
+                EditOp {
+                    op: OpType::InsertAfter,
+                    target: id_target("list"),
+                    content: Some("b".to_string()),
+                },
+                EditOp {
+                    op: OpType::InsertAfter,
+                    target: id_target("list"),
+                    content: Some("c".to_string()),
+                },
+            ],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         assert!(art2.body.contains("abc"));
     }
@@ -805,25 +993,46 @@ mod tests {
         let body = r#"<gap:target id="mid">M</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
-        let edit = edit_env("t", 2, vec![
-            EditOp { op: OpType::InsertBefore, target: id_target("mid"), content: Some("B".to_string()) },
-            EditOp { op: OpType::InsertAfter, target: id_target("mid"), content: Some("A".to_string()) },
-        ]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![
+                EditOp {
+                    op: OpType::InsertBefore,
+                    target: id_target("mid"),
+                    content: Some("B".to_string()),
+                },
+                EditOp {
+                    op: OpType::InsertAfter,
+                    target: id_target("mid"),
+                    content: Some("A".to_string()),
+                },
+            ],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         assert!(art2.body.contains("BMA"));
     }
 
     #[test]
     fn test_delete_nested_inner_preserves_outer() {
-        let body = r#"<gap:target id="outer">pre<gap:target id="inner">val</gap:target>post</gap:target>"#;
+        let body =
+            r#"<gap:target id="outer">pre<gap:target id="inner">val</gap:target>post</gap:target>"#;
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
-        let edit = edit_env("t", 2, vec![EditOp {
-            op: OpType::Delete, target: id_target("inner"), content: None,
-        }]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Delete,
+                target: id_target("inner"),
+                content: None,
+            }],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         // Inner markers preserved but content gone, outer intact.
-        assert!(art2.body.contains(r#"<gap:target id="inner"></gap:target>"#));
+        assert!(art2
+            .body
+            .contains(r#"<gap:target id="inner"></gap:target>"#));
         assert!(art2.body.contains("pre"));
         assert!(art2.body.contains("post"));
         assert!(art2.body.contains(r#"<gap:target id="outer">"#));
@@ -849,10 +1058,15 @@ mod tests {
         let body = "<gap:target id=\"code\">line1\nline2\nline3</gap:target>";
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
-        let edit = edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace, target: id_target("code"),
-            content: Some("replaced\ncontent".to_string()),
-        }]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: id_target("code"),
+                content: Some("replaced\ncontent".to_string()),
+            }],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         assert!(art2.body.contains("replaced\ncontent"));
         assert!(!art2.body.contains("line1"));
@@ -877,10 +1091,15 @@ mod tests {
         let base = r#"{"a": {"b": {"c": 1}}}"#;
         let (art, _) = apply(None, &json_synth_env("t", 1, base)).unwrap();
 
-        let edit = json_edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace, target: ptr_target("/a/b/c"),
-            content: Some("42".to_string()),
-        }]);
+        let edit = json_edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: ptr_target("/a/b/c"),
+                content: Some("42".to_string()),
+            }],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         let v: serde_json::Value = serde_json::from_str(&art2.body).unwrap();
         assert_eq!(v["a"]["b"]["c"], 42);
@@ -891,10 +1110,15 @@ mod tests {
         let base = r#"{"items": [10, 20, 30]}"#;
         let (art, _) = apply(None, &json_synth_env("t", 1, base)).unwrap();
 
-        let edit = json_edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace, target: ptr_target("/items/1"),
-            content: Some("99".to_string()),
-        }]);
+        let edit = json_edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: ptr_target("/items/1"),
+                content: Some("99".to_string()),
+            }],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         let v: serde_json::Value = serde_json::from_str(&art2.body).unwrap();
         assert_eq!(v["items"], serde_json::json!([10, 99, 30]));
@@ -905,9 +1129,15 @@ mod tests {
         let base = r#"{"items": [1, 2, 3]}"#;
         let (art, _) = apply(None, &json_synth_env("t", 1, base)).unwrap();
 
-        let edit = json_edit_env("t", 2, vec![EditOp {
-            op: OpType::Delete, target: ptr_target("/items/1"), content: None,
-        }]);
+        let edit = json_edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Delete,
+                target: ptr_target("/items/1"),
+                content: None,
+            }],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         let v: serde_json::Value = serde_json::from_str(&art2.body).unwrap();
         assert_eq!(v["items"], serde_json::json!([1, 3]));
@@ -918,10 +1148,15 @@ mod tests {
         let base = r#"{"items": [1, 2, 3]}"#;
         let (art, _) = apply(None, &json_synth_env("t", 1, base)).unwrap();
 
-        let edit = json_edit_env("t", 2, vec![EditOp {
-            op: OpType::InsertBefore, target: ptr_target("/items/1"),
-            content: Some("99".to_string()),
-        }]);
+        let edit = json_edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::InsertBefore,
+                target: ptr_target("/items/1"),
+                content: Some("99".to_string()),
+            }],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         let v: serde_json::Value = serde_json::from_str(&art2.body).unwrap();
         assert_eq!(v["items"], serde_json::json!([1, 99, 2, 3]));
@@ -932,10 +1167,15 @@ mod tests {
         let base = r#"{"items": [1, 2, 3]}"#;
         let (art, _) = apply(None, &json_synth_env("t", 1, base)).unwrap();
 
-        let edit = json_edit_env("t", 2, vec![EditOp {
-            op: OpType::InsertAfter, target: ptr_target("/items/1"),
-            content: Some("99".to_string()),
-        }]);
+        let edit = json_edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::InsertAfter,
+                target: ptr_target("/items/1"),
+                content: Some("99".to_string()),
+            }],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         let v: serde_json::Value = serde_json::from_str(&art2.body).unwrap();
         assert_eq!(v["items"], serde_json::json!([1, 2, 99, 3]));
@@ -946,10 +1186,22 @@ mod tests {
         let base = r#"{"name": "Alice", "age": 30, "city": "NYC"}"#;
         let (art, _) = apply(None, &json_synth_env("t", 1, base)).unwrap();
 
-        let edit = json_edit_env("t", 2, vec![
-            EditOp { op: OpType::Replace, target: ptr_target("/name"), content: Some(r#""Bob""#.to_string()) },
-            EditOp { op: OpType::Delete, target: ptr_target("/city"), content: None },
-        ]);
+        let edit = json_edit_env(
+            "t",
+            2,
+            vec![
+                EditOp {
+                    op: OpType::Replace,
+                    target: ptr_target("/name"),
+                    content: Some(r#""Bob""#.to_string()),
+                },
+                EditOp {
+                    op: OpType::Delete,
+                    target: ptr_target("/city"),
+                    content: None,
+                },
+            ],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         let v: serde_json::Value = serde_json::from_str(&art2.body).unwrap();
         assert_eq!(v["name"], "Bob");
@@ -962,10 +1214,15 @@ mod tests {
         let base = r#"{"a": 1}"#;
         let (art, _) = apply(None, &json_synth_env("t", 1, base)).unwrap();
 
-        let edit = json_edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace, target: ptr_target("/nonexistent"),
-            content: Some("1".to_string()),
-        }]);
+        let edit = json_edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: ptr_target("/nonexistent"),
+                content: Some("1".to_string()),
+            }],
+        );
         assert!(apply(Some(&art), &edit).is_err());
     }
 
@@ -975,18 +1232,28 @@ mod tests {
         let base = r#"{"a/b": 1, "c~d": 2}"#;
         let (art, _) = apply(None, &json_synth_env("t", 1, base)).unwrap();
 
-        let edit = json_edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace, target: ptr_target("/a~1b"),
-            content: Some("10".to_string()),
-        }]);
+        let edit = json_edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: ptr_target("/a~1b"),
+                content: Some("10".to_string()),
+            }],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         let v: serde_json::Value = serde_json::from_str(&art2.body).unwrap();
         assert_eq!(v["a/b"], 10);
 
-        let edit2 = json_edit_env("t", 3, vec![EditOp {
-            op: OpType::Replace, target: ptr_target("/c~0d"),
-            content: Some("20".to_string()),
-        }]);
+        let edit2 = json_edit_env(
+            "t",
+            3,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: ptr_target("/c~0d"),
+                content: Some("20".to_string()),
+            }],
+        );
         let (art3, _) = apply(Some(&art2), &edit2).unwrap();
         let v2: serde_json::Value = serde_json::from_str(&art3.body).unwrap();
         assert_eq!(v2["c~d"], 20);
@@ -998,10 +1265,15 @@ mod tests {
         let base = r#"{"a": {"b": 1}}"#;
         let (art, _) = apply(None, &json_synth_env("t", 1, base)).unwrap();
 
-        let edit = json_edit_env("t", 2, vec![EditOp {
-            op: OpType::InsertBefore, target: ptr_target("/a/b"),
-            content: Some("2".to_string()),
-        }]);
+        let edit = json_edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::InsertBefore,
+                target: ptr_target("/a/b"),
+                content: Some("2".to_string()),
+            }],
+        );
         assert!(apply(Some(&art), &edit).is_err());
     }
 
@@ -1010,9 +1282,15 @@ mod tests {
         let base = r#"{"a": 1}"#;
         let (art, _) = apply(None, &json_synth_env("t", 1, base)).unwrap();
 
-        let edit = json_edit_env("t", 2, vec![EditOp {
-            op: OpType::Delete, target: ptr_target(""), content: None,
-        }]);
+        let edit = json_edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Delete,
+                target: ptr_target(""),
+                content: None,
+            }],
+        );
         assert!(apply(Some(&art), &edit).is_err());
     }
 
@@ -1021,9 +1299,15 @@ mod tests {
         let base = r#"{"items": [1, 2]}"#;
         let (art, _) = apply(None, &json_synth_env("t", 1, base)).unwrap();
 
-        let edit = json_edit_env("t", 2, vec![EditOp {
-            op: OpType::Delete, target: ptr_target("/items/5"), content: None,
-        }]);
+        let edit = json_edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Delete,
+                target: ptr_target("/items/5"),
+                content: None,
+            }],
+        );
         assert!(apply(Some(&art), &edit).is_err());
     }
 
@@ -1034,16 +1318,26 @@ mod tests {
         let (art, _) = apply(None, &json_synth_env("t", 1, base)).unwrap();
 
         // insert_after index 9 → insert_at 10, far past len 2.
-        let edit = json_edit_env("t", 2, vec![EditOp {
-            op: OpType::InsertAfter, target: ptr_target("/items/9"),
-            content: Some("99".to_string()),
-        }]);
+        let edit = json_edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::InsertAfter,
+                target: ptr_target("/items/9"),
+                content: Some("99".to_string()),
+            }],
+        );
         assert!(apply(Some(&art), &edit).is_err());
         // Appending exactly at len (insert_before index == len) stays valid.
-        let edit_ok = json_edit_env("t", 2, vec![EditOp {
-            op: OpType::InsertBefore, target: ptr_target("/items/2"),
-            content: Some("3".to_string()),
-        }]);
+        let edit_ok = json_edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::InsertBefore,
+                target: ptr_target("/items/2"),
+                content: Some("3".to_string()),
+            }],
+        );
         let (art2, _) = apply(Some(&art), &edit_ok).unwrap();
         let v: serde_json::Value = serde_json::from_str(&art2.body).unwrap();
         assert_eq!(v["items"], serde_json::json!([1, 2, 3]));
@@ -1054,10 +1348,15 @@ mod tests {
         let base = r#"{"config": null}"#;
         let (art, _) = apply(None, &json_synth_env("t", 1, base)).unwrap();
 
-        let edit = json_edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace, target: ptr_target("/config"),
-            content: Some(r#"{"host": "localhost", "port": 5432}"#.to_string()),
-        }]);
+        let edit = json_edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: ptr_target("/config"),
+                content: Some(r#"{"host": "localhost", "port": 5432}"#.to_string()),
+            }],
+        );
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         let v: serde_json::Value = serde_json::from_str(&art2.body).unwrap();
         assert_eq!(v["config"]["host"], "localhost");
@@ -1069,10 +1368,15 @@ mod tests {
         let base = r#"{"a": 1}"#;
         let (art, _) = apply(None, &json_synth_env("t", 1, base)).unwrap();
 
-        let edit = json_edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace, target: ptr_target("/a"),
-            content: Some("not valid json".to_string()),
-        }]);
+        let edit = json_edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: ptr_target("/a"),
+                content: Some("not valid json".to_string()),
+            }],
+        );
         assert!(apply(Some(&art), &edit).is_err());
     }
 
@@ -1082,10 +1386,15 @@ mod tests {
         let body = "not json at all";
         let (art, _) = apply(None, &synth_env("t", 1, body)).unwrap();
 
-        let edit = json_edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace, target: ptr_target("/field"),
-            content: Some("1".to_string()),
-        }]);
+        let edit = json_edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: ptr_target("/field"),
+                content: Some("1".to_string()),
+            }],
+        );
         assert!(apply(Some(&art), &edit).is_err());
     }
 
@@ -1094,10 +1403,22 @@ mod tests {
         let base = r#"{"a": 1, "b": 2}"#;
         let (art, _) = apply(None, &json_synth_env("t", 1, base)).unwrap();
 
-        let edit = json_edit_env("t", 2, vec![
-            EditOp { op: OpType::Replace, target: ptr_target("/a"), content: Some("10".to_string()) },
-            EditOp { op: OpType::Replace, target: ptr_target("/missing"), content: Some("1".to_string()) },
-        ]);
+        let edit = json_edit_env(
+            "t",
+            2,
+            vec![
+                EditOp {
+                    op: OpType::Replace,
+                    target: ptr_target("/a"),
+                    content: Some("10".to_string()),
+                },
+                EditOp {
+                    op: OpType::Replace,
+                    target: ptr_target("/missing"),
+                    content: Some("1".to_string()),
+                },
+            ],
+        );
         assert!(apply(Some(&art), &edit).is_err());
         // Original artifact unchanged.
         let v: serde_json::Value = serde_json::from_str(&art.body).unwrap();
@@ -1114,10 +1435,15 @@ mod tests {
         let (art, _) = apply(None, &env).unwrap();
         assert_eq!(art.format, "text/x-python");
 
-        let mut edit = edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace, target: id_target("imports"),
-            content: Some("import sys".to_string()),
-        }]);
+        let mut edit = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: id_target("imports"),
+                content: Some("import sys".to_string()),
+            }],
+        );
         edit.meta.format = Some("text/x-python".to_string());
         let (art2, _) = apply(Some(&art), &edit).unwrap();
         assert!(art2.body.contains("import sys"));
@@ -1128,10 +1454,15 @@ mod tests {
     #[test]
     fn test_store_edit_without_synthesize_fails() {
         let mut store = crate::store::ArtifactStore::new(10);
-        let edit = edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace, target: id_target("x"),
-            content: Some("y".to_string()),
-        }]);
+        let edit = edit_env(
+            "t",
+            2,
+            vec![EditOp {
+                op: OpType::Replace,
+                target: id_target("x"),
+                content: Some("y".to_string()),
+            }],
+        );
         assert!(store.apply(&edit).is_err());
     }
 

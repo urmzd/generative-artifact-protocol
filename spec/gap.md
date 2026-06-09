@@ -3,6 +3,7 @@
 **Version**: 0.1
 **Status**: Draft — subject to breaking changes
 **Date**: 2026-04-02
+**Revision history**: this document is versioned with the reference implementation. Normative changes since the 2026-04-02 draft ship in crate releases and are recorded in the [CHANGELOG](../CHANGELOG.md); the wire identifier stays `gap/0.1` until the next wire-breaking revision.
 
 ## 1. Introduction
 

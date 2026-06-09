@@ -62,23 +62,19 @@ The GAP system prompt is the intervention and is **not** held constant — its t
 
 ## Directory layout
 
-```
-<NNN>-<name>/
-├── README.md                       # "**Format:** <mime>" line is parsed by the runner
-├── inputs/
-│   ├── base/system.md              # "You produce <mime> artifacts. Output raw code only."
-│   ├── base/turn-0.md              # creation prompt
-│   ├── base/turn-1.md … turn-N.md  # one edit instruction per file
-│   └── gap/
-│       ├── init-system.md          # synthesis prompt (markers OR pointer mode)
-│       └── maintain-system.md      # edit prompt
-├── checks/turn-1.json … turn-N.json  # correctness oracles (optional, see below)
-├── outputs/
-│   ├── base/turn-k.<ext>           # regenerated artifact per turn (Scenario A)
-│   ├── stateless/turn-k.<ext>      # regenerated artifact per turn (Scenario B, --flow abc/all)
-│   └── gap/turn-k.json + turn-k.<ext>  # envelope + resolved artifact per turn (Scenario C)
-└── metrics.json                    # all measurements (written by the runner)
-```
+Each experiment directory `<NNN>-<name>/` contains:
+
+- `README.md`: the `**Format:** <mime>` line is parsed by the runner
+- `inputs/base/system.md`: "You produce \<mime\> artifacts. Output raw code only."
+- `inputs/base/turn-0.md`: creation prompt
+- `inputs/base/turn-1.md` … `turn-N.md`: one edit instruction per file
+- `inputs/gap/init-system.md`: synthesis prompt (markers OR pointer mode)
+- `inputs/gap/maintain-system.md`: edit prompt
+- `checks/turn-1.json` … `turn-N.json`: correctness oracles (optional, see below)
+- `outputs/base/turn-k.<ext>`: regenerated artifact per turn (Scenario A)
+- `outputs/stateless/turn-k.<ext>`: regenerated artifact per turn (Scenario B, `--flow abc`/`all`)
+- `outputs/gap/turn-k.json` + `turn-k.<ext>`: envelope + resolved artifact per turn (Scenario C)
+- `metrics.json`: all measurements (written by the runner)
 
 ## Correctness oracles (high-fidelity scoring)
 
@@ -126,11 +122,11 @@ Beyond the per-format basics, experiments `101`–`108` stress **large, paginate
 ## Running
 
 ```sh
-# All experiments, both base and GAP flows
-just run model="gpt-5.4-mini"
+# All experiments, both base and GAP flows (count 0 = all)
+just run 0 "gpt-5.4-mini"
 
 # A single experiment with the full A/B/C decomposition
-just run id="102-json-paginated-users" flow="abc" model="gpt-5.4-mini"
+just run 0 "gpt-5.4-mini" "102-json-paginated-users" abc
 
 # Aggregate report (token savings, cache-aware cost, decomposition, correctness)
 just report

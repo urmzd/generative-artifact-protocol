@@ -2,6 +2,7 @@ mod checks;
 mod client;
 mod cost;
 mod experiment;
+mod payload;
 mod report;
 mod runner;
 mod scorer;
@@ -50,7 +51,11 @@ enum Command {
         /// OpenAI-compatible API base URL. Works with Gemini, Groq, Cerebras,
         /// OpenRouter, Mistral, GitHub Models, etc. — see README "Running evals
         /// on a free tier" for endpoints.
-        #[arg(long, env = "GAP_API_BASE", default_value = "https://api.openai.com/v1")]
+        #[arg(
+            long,
+            env = "GAP_API_BASE",
+            default_value = "https://api.openai.com/v1"
+        )]
         api_base: String,
 
         /// API key. Falls back to OPENAI_API_KEY, then GEMINI_API_KEY /
@@ -91,6 +96,14 @@ enum Command {
         /// Experiments directory
         #[arg(long, default_value = "assets/evals/experiments")]
         experiments_dir: PathBuf,
+    },
+
+    /// Payload-size table (wire/content bytes per envelope family) from the
+    /// apply-engine fixtures
+    PayloadReport {
+        /// Apply-engine fixtures directory
+        #[arg(long, default_value = "assets/evals/apply-engine")]
+        fixtures_dir: PathBuf,
     },
 }
 
@@ -157,6 +170,10 @@ async fn main() -> Result<()> {
 
         Command::Checks { experiments_dir } => {
             checks::score_checks_all(&experiments_dir)?;
+        }
+
+        Command::PayloadReport { fixtures_dir } => {
+            payload::generate(&fixtures_dir)?;
         }
     }
 

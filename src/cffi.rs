@@ -61,9 +61,7 @@ pub unsafe extern "C" fn gap_free_string(s: *mut c_char) {
 
 fn resolve(op_json: &str, art_json: Option<&str>) -> anyhow::Result<String> {
     let envelope: Envelope = serde_json::from_str(op_json)?;
-    let artifact = art_json
-        .map(serde_json::from_str::<Artifact>)
-        .transpose()?;
+    let artifact = art_json.map(serde_json::from_str::<Artifact>).transpose()?;
     let (result_artifact, handle) = apply::apply(artifact.as_ref(), &envelope)?;
     Ok(serde_json::to_string(&serde_json::json!({
         "artifact": result_artifact,

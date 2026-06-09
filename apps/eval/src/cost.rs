@@ -34,18 +34,42 @@ pub fn price_for(model: &str) -> Price {
     let m = model.to_lowercase();
     // gpt-5 family: cached input billed at 10% of input (90% discount).
     if m.contains("gpt-5.4-mini") || m.contains("gpt-5-mini") {
-        Price { input: 0.25, cached_in: 0.025, output: 2.00 }
+        Price {
+            input: 0.25,
+            cached_in: 0.025,
+            output: 2.00,
+        }
     } else if m.contains("gpt-5.4-nano") || m.contains("gpt-5-nano") {
-        Price { input: 0.05, cached_in: 0.005, output: 0.40 }
+        Price {
+            input: 0.05,
+            cached_in: 0.005,
+            output: 0.40,
+        }
     } else if m.contains("gpt-5") {
-        Price { input: 1.25, cached_in: 0.125, output: 10.00 }
+        Price {
+            input: 1.25,
+            cached_in: 0.125,
+            output: 10.00,
+        }
     } else if m.contains("gpt-4o-mini") {
-        Price { input: 0.15, cached_in: 0.075, output: 0.60 }
+        Price {
+            input: 0.15,
+            cached_in: 0.075,
+            output: 0.60,
+        }
     } else if m.contains("gpt-4o") {
-        Price { input: 2.50, cached_in: 1.25, output: 10.00 }
+        Price {
+            input: 2.50,
+            cached_in: 1.25,
+            output: 10.00,
+        }
     } else {
         // Unknown model: assume input=cached (no caching benefit) and 4x output.
-        Price { input: 1.0, cached_in: 1.0, output: 4.0 }
+        Price {
+            input: 1.0,
+            cached_in: 1.0,
+            output: 4.0,
+        }
     }
 }
 
@@ -148,7 +172,11 @@ pub fn break_even(base: &[f64], gap: &[f64]) -> Option<usize> {
 
 /// Savings percentage of `gap` relative to `base` (positive = GAP cheaper).
 pub fn savings_pct(base: f64, gap: f64) -> f64 {
-    if base > 0.0 { (1.0 - gap / base) * 100.0 } else { 0.0 }
+    if base > 0.0 {
+        (1.0 - gap / base) * 100.0
+    } else {
+        0.0
+    }
 }
 
 /// Effect-2 (orchestrator context separation) projection — the tool-use win.
@@ -203,22 +231,40 @@ pub fn agent_loop(versions: &[f64], handle: f64, extra_turns: usize) -> AgentLoo
     // GAP: a single handle, re-read each turn.
     let gap_input = turns as f64 * handle;
 
-    AgentLoop { turns, accumulate_input, keep_latest_input, gap_input, rereads_avoided: turns }
+    AgentLoop {
+        turns,
+        accumulate_input,
+        keep_latest_input,
+        gap_input,
+        rereads_avoided: turns,
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    const P: Price = Price { input: 3.0, cached_in: 0.3, output: 15.0 };
+    const P: Price = Price {
+        input: 3.0,
+        cached_in: 0.3,
+        output: 15.0,
+    };
 
     fn t(input: f64, output: f64) -> Turn {
-        Turn { input, cached: 0.0, output }
+        Turn {
+            input,
+            cached: 0.0,
+            output,
+        }
     }
 
     #[test]
     fn off_regime_ignores_cache() {
-        let turn = Turn { input: 1000.0, cached: 800.0, output: 100.0 };
+        let turn = Turn {
+            input: 1000.0,
+            cached: 800.0,
+            output: 100.0,
+        };
         // cache Off: all 1000 input at full rate + output.
         let expect = (1000.0 * 3.0 + 100.0 * 15.0) / 1e6;
         assert!((turn_cost(turn, None, P, Cache::Off, false) - expect).abs() < 1e-12);
@@ -226,7 +272,11 @@ mod tests {
 
     #[test]
     fn observed_regime_uses_reported_cache() {
-        let turn = Turn { input: 1000.0, cached: 800.0, output: 100.0 };
+        let turn = Turn {
+            input: 1000.0,
+            cached: 800.0,
+            output: 100.0,
+        };
         let expect = (200.0 * 3.0 + 800.0 * 0.3 + 100.0 * 15.0) / 1e6;
         assert!((turn_cost(turn, None, P, Cache::Observed, false) - expect).abs() < 1e-12);
     }
@@ -236,7 +286,7 @@ mod tests {
         // Append-only conversation: turn 0 then turn 1.
         let t0 = t(500.0, 2000.0); // init
         let t1 = t(2600.0, 2000.0); // re-reads system+artifact+asst, +small edit
-        // turn 1 cached = t0.input + t0.output = 2500; fresh = 100.
+                                    // turn 1 cached = t0.input + t0.output = 2500; fresh = 100.
         let prev = Some(t0);
         let cached = cached_for(t1, prev, Cache::TheoreticalBest, true);
         assert_eq!(cached, 2500.0);
@@ -247,7 +297,11 @@ mod tests {
     #[test]
     fn theoretical_best_stateless_falls_back_to_observed() {
         let prev = Some(t(500.0, 2000.0));
-        let turn = Turn { input: 2600.0, cached: 0.0, output: 30.0 };
+        let turn = Turn {
+            input: 2600.0,
+            cached: 0.0,
+            output: 30.0,
+        };
         // not growing -> cached stays at observed (0).
         let cached = cached_for(turn, prev, Cache::TheoreticalBest, false);
         assert_eq!(cached, 0.0);
@@ -287,22 +341,29 @@ mod tests {
         let gap = vec![t(500.0, 2000.0), t(2500.0, 30.0), t(2530.0, 30.0)];
         let base_cost = flow_cost(&base, P, Cache::TheoreticalBest, true);
         let gap_cost = flow_cost(&gap, P, Cache::Off, false);
-        assert!(gap_cost < base_cost, "GAP must be cheaper than a perfectly-cached baseline");
+        assert!(
+            gap_cost < base_cost,
+            "GAP must be cheaper than a perfectly-cached baseline"
+        );
 
         // The un-erasable mechanism: the baseline's cost is dominated by output
         // tokens, which no cache can discount. Sum output cost across both flows.
         const SCALE: f64 = 1_000_000.0;
         let out_cost = |ts: &[Turn]| ts.iter().map(|t| t.output * P.output / SCALE).sum::<f64>();
         // With a perfectly hot cache the baseline's bill is mostly output...
-        assert!(out_cost(&base) / base_cost > 0.5,
+        assert!(
+            out_cost(&base) / base_cost > 0.5,
             "perfectly-cached baseline cost should be output-dominated (got {:.0}%)",
-            out_cost(&base) / base_cost * 100.0);
+            out_cost(&base) / base_cost * 100.0
+        );
         // ...and GAP slashes exactly that term on the edit turns (init is a wash).
         let base_edit_out = out_cost(&base[1..]);
         let gap_edit_out = out_cost(&gap[1..]);
-        assert!(savings_pct(base_edit_out, gap_edit_out) > 95.0,
+        assert!(
+            savings_pct(base_edit_out, gap_edit_out) > 95.0,
             "GAP edit-turn output-cost savings should exceed 95% (got {:.1}%)",
-            savings_pct(base_edit_out, gap_edit_out));
+            savings_pct(base_edit_out, gap_edit_out)
+        );
     }
 
     #[test]
@@ -324,7 +385,10 @@ mod tests {
             flow_cost(&base, P, Cache::TheoreticalBest, true),
             flow_cost(&gap, P, Cache::Off, false),
         );
-        assert!(s10 > s2, "10-edit savings ({s10:.1}%) should exceed 2-edit savings ({s2:.1}%)");
+        assert!(
+            s10 > s2,
+            "10-edit savings ({s10:.1}%) should exceed 2-edit savings ({s2:.1}%)"
+        );
     }
 
     #[test]
@@ -347,8 +411,10 @@ mod tests {
         let a10 = agent_loop(&versions, 20.0, 10);
         let acc_growth = a10.accumulate_input / a5.accumulate_input;
         let gap_growth = a10.gap_input / a5.gap_input;
-        assert!(acc_growth > gap_growth,
-            "Accumulate should grow faster than GAP (acc {acc_growth:.2}× vs gap {gap_growth:.2}×)");
+        assert!(
+            acc_growth > gap_growth,
+            "Accumulate should grow faster than GAP (acc {acc_growth:.2}× vs gap {gap_growth:.2}×)"
+        );
     }
 
     #[test]

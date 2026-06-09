@@ -5,6 +5,13 @@ on:
     branches: [main]
   workflow_call:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   rust:
     name: Rust
@@ -13,14 +20,25 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
 
       - uses: Swatinem/rust-cache@v2
 
+      - name: Format
+        run: cargo fmt --check
+
       - name: Build
         run: cargo build
+
+      - name: Lint
+        run: cargo clippy --workspace --all-targets -- -D warnings
 
       - name: Test
         run: cargo test
 
       - name: Verify benchmarks compile
         run: cargo bench --no-run
+
+      - name: Execute one bench case (fixture path guard)
+        run: cargo bench --bench gap -- --quick "edit_section_single/case_0001"

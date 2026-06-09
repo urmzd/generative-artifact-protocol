@@ -5,8 +5,8 @@ use std::collections::HashMap;
 use anyhow::{bail, Context, Result};
 use sha2::{Digest, Sha256};
 
-use crate::gap::{Artifact, Envelope, Name};
 use crate::apply;
+use crate::gap::{Artifact, Envelope, Name};
 
 /// In-memory versioned artifact store.
 #[derive(Debug, Default)]
@@ -34,11 +34,14 @@ impl ArtifactStore {
     /// Apply an envelope. Returns (Artifact, Handle).
     pub fn apply(&mut self, envelope: &Envelope) -> Result<(Artifact, Envelope)> {
         if envelope.name != Name::Synthesize {
+            let Some(prev) = envelope.version.checked_sub(1) else {
+                bail!("invalid envelope version 0: version must be >= 1");
+            };
             if let Some(current) = self.current_version(&envelope.id) {
-                if current != envelope.version - 1 {
+                if current != prev {
                     bail!(
-                        "version conflict: stored={current}, envelope={}, expected={}",
-                        envelope.version, envelope.version - 1
+                        "version conflict: stored={current}, envelope={}, expected={prev}",
+                        envelope.version
                     );
                 }
             } else {
@@ -93,14 +96,17 @@ mod tests {
     fn make_meta(fmt: &str) -> Meta {
         Meta {
             format: Some(fmt.to_string()),
-            tokens_used: None, checksum: None, state: None,
+            tokens_used: None,
+            checksum: None,
+            state: None,
         }
     }
 
     fn synth_env(id: &str, version: u64, body: &str) -> Envelope {
         Envelope {
             protocol: PROTOCOL_VERSION.to_string(),
-            id: id.to_string(), version,
+            id: id.to_string(),
+            version,
             name: Name::Synthesize,
             meta: make_meta("text/html"),
             content: vec![serde_json::json!({ "body": body })],
@@ -110,10 +116,14 @@ mod tests {
     fn edit_env(id: &str, version: u64, ops: Vec<EditOp>) -> Envelope {
         Envelope {
             protocol: PROTOCOL_VERSION.to_string(),
-            id: id.to_string(), version,
+            id: id.to_string(),
+            version,
             name: Name::Edit,
             meta: make_meta("text/html"),
-            content: ops.iter().map(|o| serde_json::to_value(o).unwrap()).collect(),
+            content: ops
+                .iter()
+                .map(|o| serde_json::to_value(o).unwrap())
+                .collect(),
         }
     }
 
@@ -121,15 +131,27 @@ mod tests {
     fn test_synthesize_then_edit() {
         let mut store = ArtifactStore::new(10);
 
-        let (art, handle) = store.apply(&synth_env("t", 1, r#"<gap:target id="msg">hello</gap:target>"#)).unwrap();
-        assert_eq!(art.body.contains("hello"), true);
+        let (art, handle) = store
+            .apply(&synth_env(
+                "t",
+                1,
+                r#"<gap:target id="msg">hello</gap:target>"#,
+            ))
+            .unwrap();
+        assert!(art.body.contains("hello"));
         assert_eq!(handle.name, Name::Handle);
 
-        let (art2, _) = store.apply(&edit_env("t", 2, vec![EditOp {
-            op: OpType::Replace,
-            target: Target::Id("msg".to_string()),
-            content: Some("world".to_string()),
-        }])).unwrap();
+        let (art2, _) = store
+            .apply(&edit_env(
+                "t",
+                2,
+                vec![EditOp {
+                    op: OpType::Replace,
+                    target: Target::Id("msg".to_string()),
+                    content: Some("world".to_string()),
+                }],
+            ))
+            .unwrap();
         assert!(art2.body.contains("world"));
         assert_eq!(store.current_version("t"), Some(2));
     }
@@ -139,6 +161,14 @@ mod tests {
         let mut store = ArtifactStore::new(10);
         store.apply(&synth_env("t", 1, "content")).unwrap();
         assert!(store.apply(&edit_env("t", 6, vec![])).is_err());
+    }
+
+    #[test]
+    fn test_version_zero_edit_is_error() {
+        let mut store = ArtifactStore::new(10);
+        store.apply(&synth_env("t", 1, "content")).unwrap();
+        let err = store.apply(&edit_env("t", 0, vec![])).unwrap_err();
+        assert!(err.to_string().contains("version must be >= 1"));
     }
 
     #[test]
