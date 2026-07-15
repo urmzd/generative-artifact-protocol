@@ -27,6 +27,11 @@ type Config struct {
 
 var thinkRE = regexp.MustCompile(`(?s)<think>.*?</think>`)
 
+const (
+	maxSynthesisAttempts = 2
+	maxEditAttempts      = 3
+)
+
 func Run(ctx context.Context, cfg Config) error {
 	experiments, err := evalset.LoadExperiments(cfg.ExperimentsDir)
 	if err != nil {
@@ -214,84 +219,25 @@ func runGAPFlow(ctx context.Context, client *Client, exp evalset.ExperimentInput
 		return TurnMetrics{}, nil, err
 	}
 	ext := formatToExt(exp.Format)
-	start := time.Now()
-	result, err := client.Chat(ctx, []Message{
-		{Role: "system", Content: exp.GAPInitSystem},
-		{Role: "user", Content: exp.Turns[0].Prompt},
-	}, false)
+	t0, artifact, err := runGAPSynthesis(ctx, client, exp)
 	if err != nil {
 		return TurnMetrics{}, nil, err
 	}
-	artifact := cleanArtifact(result.Text)
 	if err := writeText(filepath.Join(outDir, "turn-0"+ext), artifact); err != nil {
 		return TurnMetrics{}, nil, err
 	}
-	t0 := turnMetrics(result, start, artifact)
 
 	var turns []TurnResult
 	version := uint64(1)
 	for _, turn := range exp.Turns[1:] {
-		user := fmt.Sprintf("## Current Artifact\n\n```\n%s\n```\n\n## Edit Instruction\n\n%s\n\n## Required Output\n\nReturn exactly one JSON GAP edit envelope with `name` set to `edit` and `content` set to an array of edit operations. Each operation must have `op`, `target`, and `content`. Put replacement text in the operation `content` field.", artifact, turn.Prompt)
-		start := time.Now()
-		result, err := client.Chat(ctx, []Message{
-			{Role: "system", Content: exp.GAPMaintain},
-			{Role: "user", Content: user},
-		}, true)
-		tr := turnResult(turn, result, start, artifact)
-		parsed := false
-		applied := false
-		envelopeName := ""
-		if err != nil {
-			reason := err.Error()
-			tr.Failed = true
-			tr.FailureReason = &reason
-		} else {
-			envelopeText := cleanArtifact(result.Text)
-			envelope, parseErr := gap.EnvelopeFromJSON([]byte(extractJSONObject(envelopeText)))
-			if parseErr != nil {
-				reason := "envelope parse failed: " + parseErr.Error()
-				tr.Failed = true
-				tr.FailureReason = &reason
-				_ = writeText(envelopePath(outDir, turn.Turn, ext), envelopeText)
-			} else {
-				parsed = true
-				envelope = normalizeEnvelope(envelope, exp, version+1)
-				envelopeName = string(envelope.Name)
-				_ = writeJSON(envelopePath(outDir, turn.Turn, ext), envelope)
-				if envelope.Name != gap.NameEdit || len(envelope.Content) == 0 {
-					reason := fmt.Sprintf("invalid envelope: name=%q content_items=%d", envelope.Name, len(envelope.Content))
-					tr.Failed = true
-					tr.FailureReason = &reason
-					tr.EnvelopeParsed = &parsed
-					tr.ApplySucceeded = &applied
-					tr.EnvelopeName = &envelopeName
-					turns = append(turns, tr)
-					if err := writeText(filepath.Join(outDir, fmt.Sprintf("turn-%d%s", turn.Turn, ext)), artifact); err != nil {
-						return t0, turns, err
-					}
-					continue
-				}
-				newArtifact, _, applyErr := gap.Apply(&gap.Artifact{
-					ID:      exp.ExperimentID,
-					Version: version,
-					Format:  exp.Format,
-					Body:    artifact,
-				}, envelope)
-				if applyErr != nil {
-					reason := "apply failed: " + applyErr.Error()
-					tr.Failed = true
-					tr.FailureReason = &reason
-				} else {
-					artifact = newArtifact.Body
-					version = newArtifact.Version
-					applied = true
-					tr.OutputBytes = len(artifact)
-				}
-			}
+		tr, nextArtifact, nextVersion, envelope, envelopeText := runGAPEditTurn(ctx, client, exp, artifact, version, turn)
+		if envelope != nil {
+			_ = writeJSON(envelopePath(outDir, turn.Turn, ext), *envelope)
+		} else if envelopeText != "" {
+			_ = writeText(envelopePath(outDir, turn.Turn, ext), envelopeText)
 		}
-		tr.EnvelopeParsed = &parsed
-		tr.ApplySucceeded = &applied
-		tr.EnvelopeName = &envelopeName
+		artifact = nextArtifact
+		version = nextVersion
 		if err := writeText(filepath.Join(outDir, fmt.Sprintf("turn-%d%s", turn.Turn, ext)), artifact); err != nil {
 			return t0, turns, err
 		}
@@ -300,16 +246,152 @@ func runGAPFlow(ctx context.Context, client *Client, exp evalset.ExperimentInput
 	return t0, turns, nil
 }
 
+func runGAPSynthesis(ctx context.Context, client *Client, exp evalset.ExperimentInput) (TurnMetrics, string, error) {
+	start := time.Now()
+	messages := []Message{
+		{Role: "system", Content: exp.GAPInitSystem},
+		{Role: "user", Content: exp.Turns[0].Prompt},
+	}
+	var aggregate ChatResult
+	var artifact string
+	var lastErr error
+	for attempt := 0; attempt < maxSynthesisAttempts; attempt++ {
+		result, err := client.Chat(ctx, messages, false)
+		addChatResult(&aggregate, result)
+		if err != nil {
+			return TurnMetrics{}, "", err
+		}
+		artifact = cleanArtifact(result.Text)
+		if err := validateSynthesisArtifact(artifact, exp.Format); err == nil {
+			return turnMetrics(aggregate, start, artifact), artifact, nil
+		} else {
+			lastErr = err
+			messages = append(messages,
+				Message{Role: "assistant", Content: result.Text},
+				Message{Role: "user", Content: synthesisRepairPrompt(artifact, exp.Format, err)},
+			)
+		}
+	}
+	if lastErr != nil {
+		return turnMetrics(aggregate, start, artifact), artifact, nil
+	}
+	return turnMetrics(aggregate, start, artifact), artifact, nil
+}
+
+func runGAPEditTurn(ctx context.Context, client *Client, exp evalset.ExperimentInput, artifact string, version uint64, turn evalset.TurnInput) (TurnResult, string, uint64, *gap.Envelope, string) {
+	start := time.Now()
+	messages := []Message{
+		{Role: "system", Content: exp.GAPMaintain},
+		{Role: "user", Content: editPrompt(artifact, exp.Format, turn.Prompt)},
+	}
+	var aggregate ChatResult
+	var parsed bool
+	var applied bool
+	var envelopeName string
+	var repairAttempts int
+	var lastErr error
+	var validationErr error
+	var lastEnvelope *gap.Envelope
+	var lastEnvelopeText string
+
+	for attempt := 0; attempt < maxEditAttempts; attempt++ {
+		result, err := client.Chat(ctx, messages, true)
+		addChatResult(&aggregate, result)
+		if err != nil {
+			lastErr = err
+			break
+		}
+		envelopeText := cleanArtifact(result.Text)
+		lastEnvelopeText = envelopeText
+		envelope, parseErr := gap.EnvelopeFromJSON([]byte(extractJSONObject(envelopeText)))
+		if parseErr != nil {
+			lastErr = fmt.Errorf("envelope parse failed: %w", parseErr)
+			validationErr = lastErr
+			repairAttempts++
+			messages = appendRepairMessages(messages, result.Text, artifact, exp.Format, turn.Prompt, lastErr)
+			continue
+		}
+		parsed = true
+		envelope = normalizeEnvelope(envelope, exp, version+1)
+		envelopeName = string(envelope.Name)
+		lastEnvelope = &envelope
+		if err := validateEnvelope(artifact, exp.Format, envelope); err != nil {
+			lastErr = err
+			validationErr = err
+			repairAttempts++
+			messages = appendRepairMessages(messages, result.Text, artifact, exp.Format, turn.Prompt, err)
+			continue
+		}
+		newArtifact, _, applyErr := gap.Apply(&gap.Artifact{
+			ID:      exp.ExperimentID,
+			Version: version,
+			Format:  exp.Format,
+			Body:    artifact,
+		}, envelope)
+		if applyErr != nil {
+			lastErr = fmt.Errorf("apply failed: %w", applyErr)
+			validationErr = lastErr
+			repairAttempts++
+			messages = appendRepairMessages(messages, result.Text, artifact, exp.Format, turn.Prompt, lastErr)
+			continue
+		}
+		tr := turnResult(turn, aggregate, start, newArtifact.Body)
+		tr.EnvelopeParsed = &parsed
+		applied = true
+		tr.ApplySucceeded = &applied
+		tr.EnvelopeName = &envelopeName
+		tr.RepairAttempts = repairAttempts
+		if validationErr != nil {
+			value := validationErr.Error()
+			tr.ValidationError = &value
+		}
+		tr.OutputBytes = len(newArtifact.Body)
+		return tr, newArtifact.Body, newArtifact.Version, &envelope, lastEnvelopeText
+	}
+
+	tr := turnResult(turn, aggregate, start, artifact)
+	tr.Failed = true
+	if lastErr != nil {
+		reason := lastErr.Error()
+		if !strings.HasPrefix(reason, "apply failed:") && !strings.HasPrefix(reason, "envelope parse failed:") {
+			reason = "validation failed: " + reason
+		}
+		tr.FailureReason = &reason
+	}
+	tr.EnvelopeParsed = &parsed
+	tr.ApplySucceeded = &applied
+	tr.EnvelopeName = &envelopeName
+	tr.RepairAttempts = repairAttempts
+	if validationErr != nil {
+		value := validationErr.Error()
+		tr.ValidationError = &value
+	}
+	return tr, artifact, version, lastEnvelope, lastEnvelopeText
+}
+
+func appendRepairMessages(messages []Message, assistantText string, artifact string, format string, instruction string, err error) []Message {
+	return append(messages,
+		Message{Role: "assistant", Content: assistantText},
+		Message{Role: "user", Content: repairPrompt(artifact, format, instruction, err)},
+	)
+}
+
+func addChatResult(total *ChatResult, result ChatResult) {
+	total.Text = result.Text
+	total.InputTokens += result.InputTokens
+	total.OutputTokens += result.OutputTokens
+	total.CachedInputTokens += result.CachedInputTokens
+	total.Retried = total.Retried || result.Retried
+}
+
 func normalizeEnvelope(envelope gap.Envelope, exp evalset.ExperimentInput, version uint64) gap.Envelope {
 	envelope.Protocol = gap.ProtocolVersion
 	envelope.ID = exp.ExperimentID
 	if envelope.Version < version {
 		envelope.Version = version
 	}
-	if envelope.Meta.Format == nil || *envelope.Meta.Format == "" {
-		format := exp.Format
-		envelope.Meta.Format = &format
-	}
+	format := exp.Format
+	envelope.Meta.Format = &format
 	return envelope
 }
 
@@ -388,6 +470,8 @@ func reliability(turns []TurnResult) *Reliability {
 		switch {
 		case strings.HasPrefix(reason, "envelope parse failed"):
 			report.ParseMissCount++
+		case strings.HasPrefix(reason, "validation failed"):
+			report.ValidationMissCount++
 		case strings.HasPrefix(reason, "invalid envelope"):
 			report.InvalidEnvelopeCount++
 		case strings.HasPrefix(reason, "apply failed"):

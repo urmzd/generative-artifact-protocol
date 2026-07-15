@@ -41,6 +41,8 @@ type TurnResult struct {
 	EnvelopeParsed    *bool   `json:"envelope_parsed,omitempty"`
 	ApplySucceeded    *bool   `json:"apply_succeeded,omitempty"`
 	EnvelopeName      *string `json:"envelope_name,omitempty"`
+	RepairAttempts    int     `json:"repair_attempts,omitempty"`
+	ValidationError   *string `json:"validation_error,omitempty"`
 }
 
 type FlowMetrics struct {
@@ -75,6 +77,7 @@ type Reliability struct {
 	MissCount            int            `json:"miss_count"`
 	MissRate             float64        `json:"miss_rate"`
 	ParseMissCount       int            `json:"parse_miss_count"`
+	ValidationMissCount  int            `json:"validation_miss_count"`
 	InvalidEnvelopeCount int            `json:"invalid_envelope_count"`
 	ApplyMissCount       int            `json:"apply_miss_count"`
 	RequestFailureCount  int            `json:"request_failure_count"`

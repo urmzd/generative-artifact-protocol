@@ -74,6 +74,77 @@ func TestRunGAPFlowWithMockProvider(t *testing.T) {
 	}
 }
 
+func TestRunGAPFlowRepairsInvalidTarget(t *testing.T) {
+	root := t.TempDir()
+	expDir := filepath.Join(root, "001-html-smoke")
+	writeFixture(t, filepath.Join(expDir, "README.md"), "# Experiment: smoke\n\n**Format:** text/html | **Size:** small | **Edits:** 1\n\n**Expected sections:** msg\n")
+	writeFixture(t, filepath.Join(expDir, "inputs/base/system.md"), "You produce HTML.")
+	writeFixture(t, filepath.Join(expDir, "inputs/base/turn-0.md"), "Create greeting.")
+	writeFixture(t, filepath.Join(expDir, "inputs/base/turn-1.md"), "Change hello to world.")
+	writeFixture(t, filepath.Join(expDir, "inputs/gap/init-system.md"), "Create marked HTML.")
+	writeFixture(t, filepath.Join(expDir, "inputs/gap/maintain-system.md"), "Return a GAP edit envelope.")
+
+	var calls atomic.Int64
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var req map[string]any
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			t.Fatalf("decode request: %v", err)
+		}
+		call := calls.Add(1)
+		switch call {
+		case 1:
+			writeChatResponse(t, w, `<gap:target id="msg">hello</gap:target>`, 10, 8)
+		case 2:
+			messages := req["messages"].([]any)
+			last := messages[len(messages)-1].(map[string]any)["content"].(string)
+			if !strings.Contains(last, "list_targets() returned") || !strings.Contains(last, "- msg: hello") {
+				t.Fatalf("edit request missing target inventory: %s", last)
+			}
+			writeChatResponse(t, w, `{"protocol":"gap/0.1","id":"001-html-smoke","version":2,"name":"edit","meta":{"format":"text/html"},"content":[{"op":"replace","target":{"type":"id","value":"missing"},"content":"world"}]}`, 12, 6)
+		case 3:
+			messages := req["messages"].([]any)
+			last := messages[len(messages)-1].(map[string]any)["content"].(string)
+			if !strings.Contains(last, "Supervisor Tool Error") || !strings.Contains(last, `validate_target("missing") failed`) {
+				t.Fatalf("repair request missing validation error: %s", last)
+			}
+			writeChatResponse(t, w, `{"protocol":"gap/0.1","id":"001-html-smoke","version":2,"name":"edit","meta":{"format":"text/html"},"content":[{"op":"replace","target":{"type":"id","value":"msg"},"content":"world"}]}`, 14, 7)
+		default:
+			t.Fatalf("unexpected call %d", call)
+		}
+	}))
+	defer server.Close()
+
+	err := Run(context.Background(), Config{
+		ExperimentsDir: root,
+		Flow:           "gap",
+		Model:          "mock",
+		APIBase:        server.URL,
+		APIKey:         "test-key",
+		Force:          true,
+	})
+	if err != nil {
+		t.Fatalf("Run: %v", err)
+	}
+
+	output, err := os.ReadFile(filepath.Join(expDir, "outputs/gap/turn-1.html"))
+	if err != nil {
+		t.Fatalf("read output: %v", err)
+	}
+	if !strings.Contains(string(output), "world") {
+		t.Fatalf("output = %q", output)
+	}
+	metrics, err := os.ReadFile(filepath.Join(expDir, "metrics.json"))
+	if err != nil {
+		t.Fatalf("read metrics: %v", err)
+	}
+	if !strings.Contains(string(metrics), `"repair_attempts": 1`) {
+		t.Fatalf("metrics missing repair attempt: %s", metrics)
+	}
+	if !strings.Contains(string(metrics), `"apply_success_rate": 1`) {
+		t.Fatalf("metrics missing apply success: %s", metrics)
+	}
+}
+
 func TestFillDerivedReportsMissEconomics(t *testing.T) {
 	parsed := true
 	applied := false
