@@ -12,7 +12,7 @@
 
 <!-- How was this tested? -->
 
-- [ ] `cargo test` passes
+- [ ] `go test ./...` passes
 - [ ] Tests added or updated for the change
 - [ ] Docs updated (README, AGENTS.md, skills) if behavior or interface changed
 

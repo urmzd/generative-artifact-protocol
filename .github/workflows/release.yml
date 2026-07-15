@@ -34,19 +34,11 @@ jobs:
           fetch-depth: 0
           token: ${{ steps.app-token.outputs.token }}
 
-      - uses: dtolnay/rust-toolchain@stable
-
-      - uses: Swatinem/rust-cache@v2
-
-      - uses: rust-lang/crates-io-auth-action@v1
-        id: auth
-
-      - name: Update Cargo.lock
-        run: cargo update --workspace
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
 
       - uses: urmzd/sr@v8
         id: sr
-        env:
-          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
         with:
           github-token: ${{ steps.app-token.outputs.token }}

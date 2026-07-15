@@ -3,7 +3,7 @@
 **Version**: 0.1
 **Status**: Draft — subject to breaking changes
 **Date**: 2026-04-02
-**Revision history**: this document is versioned with the reference implementation. Normative changes since the 2026-04-02 draft ship in crate releases and are recorded in the [CHANGELOG](../CHANGELOG.md); the wire identifier stays `gap/0.1` until the next wire-breaking revision.
+**Revision history**: this document is versioned with the reference implementation. Normative changes since the 2026-04-02 draft ship in module releases and are recorded in the [CHANGELOG](../CHANGELOG.md); the wire identifier stays `gap/0.1` until the next wire-breaking revision.
 
 ## 1. Introduction
 
@@ -655,7 +655,7 @@ The three variables that determine actual dollar savings are all model-specific:
 
 **Model cost per token.** The maintain context does not require a frontier model — it needs recall (find the right location in the artifact) and structured output (emit valid envelope JSON). Smaller, cheaper models excel at this constrained task. When the maintain model is cheaper than the orchestrator, the savings multiply beyond what output token reduction alone provides.
 
-> **Non-normative note:** Implementations SHOULD report both output token reduction (model-independent) and estimated cost savings (model-dependent) in their benchmarks. Payload byte reduction (as measured by the Rust apply engine) is a useful proxy for output token reduction but not identical — envelope JSON overhead adds a small constant.
+> **Non-normative note:** Implementations SHOULD report both output token reduction (model-independent) and estimated cost savings (model-dependent) in their benchmarks. Payload byte reduction is a useful proxy for output token reduction but not identical — envelope JSON overhead adds a small constant.
 
 #### 7.1.4 Anti-Hallucination Properties
 
@@ -965,4 +965,4 @@ Empirical measurements from the reference implementation using a 40KB HTML dashb
 | Update all CSS colors | ~10,000 | ~700 | 93.0% |
 | Rewrite one section | ~10,000 | ~1,000 | 90.0% |
 
-*Values are approximate; run `cargo bench --bench gap` for current apply engine measurements.*
+*Values are approximate; benchmark the current apply engine implementation for fresh local measurements.*
