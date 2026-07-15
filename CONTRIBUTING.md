@@ -9,6 +9,7 @@ git clone https://github.com/urmzd/generative-artifact-protocol
 cd generative-artifact-protocol
 just build   # compile the Go package
 just test    # run unit tests
+just evalset # regenerate the SAIGE eval observation set
 just check   # format check, vet, and tests (same gate as CI)
 ```
 
@@ -19,7 +20,9 @@ just check   # format check, vet, and tests (same gate as CI)
 - `apply.go`: stateless apply engine
 - `store.go`: versioned artifact store
 - `markers.go`: section marker utilities
+- `evalset/`: SAIGE eval observation loader and committed-metrics scorers
 - `assets/evals/`: evaluation datasets and experiments
+- `assets/evals/saige/`: generated SAIGE observation set
 - `assets/evals/experiments/go.mod`: module boundary that keeps generated fixtures out of root tests
 - `spec/gap.md`: the protocol specification (wire version `gap/0.1`)
 - `spec/gap-sse.md`: SSE wire format binding
@@ -32,7 +35,7 @@ just check   # format check, vet, and tests (same gate as CI)
 
 - **Apply engine** (`apply.go`): stateless function that resolves envelopes. Keep it pure: no I/O, no side effects.
 - **Store** (`store.go`): versioned artifact store with control-plane envelopes.
-- **Eval assets** (`assets/evals/`): committed datasets and measured reports. Do not hand-edit measured numbers.
+- **Eval assets** (`assets/evals/`): committed datasets and measured reports. Do not hand-edit measured numbers or generated SAIGE observations; run `just evalset`.
 - **New recipes**: add them to `justfile` with a comment describing what they do.
 
 ## Pull requests
@@ -43,7 +46,7 @@ just check   # format check, vet, and tests (same gate as CI)
 
 ## Code style
 
-- Go: run `gofmt -w *.go *_test.go` before committing.
+- Go: run `gofmt -w *.go *_test.go evalset/*.go internal/evalsetgen/*.go` before committing.
 
 ## License
 

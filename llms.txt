@@ -8,7 +8,8 @@
 - [AGENTS.md](AGENTS.md): Architecture, commands, and conventions for AI agents
 - [GAP specification](spec/gap.md): Normative wire format, envelopes, conformance levels
 - [GAP-SSE binding](spec/gap-sse.md): SSE transport binding for streaming envelopes
-- [Experiment methodology](assets/evals/experiments/EXPERIMENT.md): Historical eval dataset layout and validity gates
+- [Experiment methodology](assets/evals/experiments/EXPERIMENT.md): Eval dataset layout and validity gates
+- [SAIGE eval set](assets/evals/saige/README.md): Generated SAIGE observations for the GAP corpus
 
 ## Key Files
 
@@ -16,5 +17,7 @@
 - [apply.go](apply.go): Stateless `Apply(base, envelope)` implementation
 - [markers.go](markers.go): `<gap:target>` marker resolution
 - [store.go](store.go): Versioned in-memory artifact store
+- [evalset](evalset/): Loader and committed-metrics scorers for `github.com/urmzd/saige/eval`
+- [observations.json](assets/evals/saige/observations.json): Generated SAIGE observation set
 - [artifact envelope schema](spec/schemas/artifact-envelope.json): JSON Schema for the envelope wire format
 - [results.md](assets/evals/experiments/results.md): Historical aggregated measurements

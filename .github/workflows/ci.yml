@@ -24,7 +24,12 @@ jobs:
           go-version-file: go.mod
 
       - name: Format
-        run: test -z "$(gofmt -l *.go)"
+        run: test -z "$(gofmt -l *.go evalset/*.go internal/evalsetgen/*.go)"
+
+      - name: Eval set
+        run: |
+          go run ./internal/evalsetgen
+          git diff --exit-code -- assets/evals/saige/observations.json
 
       - name: Vet
         run: go vet ./...
