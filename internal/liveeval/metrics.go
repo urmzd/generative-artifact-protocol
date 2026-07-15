@@ -14,6 +14,8 @@ type Metrics struct {
 	GAPFlow       *GapFlowMetrics `json:"gap_flow,omitempty"`
 	Comparison    *Comparison     `json:"comparison,omitempty"`
 	Decomposition *Decomposition  `json:"decomposition,omitempty"`
+	Reliability   *Reliability    `json:"reliability,omitempty"`
+	Economics     *Economics      `json:"economics,omitempty"`
 	Validity      *Validity       `json:"validity,omitempty"`
 }
 
@@ -66,6 +68,49 @@ type Decomposition struct {
 	OutputSavingsCVsBPct float64 `json:"output_savings_c_vs_b_pct"`
 	InputSavingsCVsAPct  float64 `json:"input_savings_c_vs_a_pct"`
 	OutputSavingsCVsAPct float64 `json:"output_savings_c_vs_a_pct"`
+}
+
+type Reliability struct {
+	EditTurns            int            `json:"edit_turns"`
+	MissCount            int            `json:"miss_count"`
+	MissRate             float64        `json:"miss_rate"`
+	ParseMissCount       int            `json:"parse_miss_count"`
+	InvalidEnvelopeCount int            `json:"invalid_envelope_count"`
+	ApplyMissCount       int            `json:"apply_miss_count"`
+	RequestFailureCount  int            `json:"request_failure_count"`
+	UnknownMissCount     int            `json:"unknown_miss_count"`
+	ByReason             map[string]int `json:"by_reason,omitempty"`
+}
+
+type Economics struct {
+	FallbackAssumption           string              `json:"fallback_assumption"`
+	MeasuredTotalTokenSavingsPct float64             `json:"measured_total_token_savings_pct"`
+	FallbackAdjusted             *FallbackAdjusted   `json:"fallback_adjusted,omitempty"`
+	Amortized                    *AmortizedEconomics `json:"amortized,omitempty"`
+}
+
+type FallbackAdjusted struct {
+	InputTokens               uint64  `json:"input_tokens"`
+	OutputTokens              uint64  `json:"output_tokens"`
+	TotalTokens               uint64  `json:"total_tokens"`
+	MissAttemptInputTokens    uint64  `json:"miss_attempt_input_tokens"`
+	MissAttemptOutputTokens   uint64  `json:"miss_attempt_output_tokens"`
+	MissAttemptTotalTokens    uint64  `json:"miss_attempt_total_tokens"`
+	FallbackRetryInputTokens  uint64  `json:"fallback_retry_input_tokens"`
+	FallbackRetryOutputTokens uint64  `json:"fallback_retry_output_tokens"`
+	FallbackRetryTotalTokens  uint64  `json:"fallback_retry_total_tokens"`
+	InputTokenSavingsPct      float64 `json:"input_token_savings_pct"`
+	OutputTokenSavingsPct     float64 `json:"output_token_savings_pct"`
+	TotalTokenSavingsPct      float64 `json:"total_token_savings_pct"`
+}
+
+type AmortizedEconomics struct {
+	EditTurns                            int     `json:"edit_turns"`
+	BaseInitInclusiveTokens              uint64  `json:"base_init_inclusive_tokens"`
+	GAPInitInclusiveTokens               uint64  `json:"gap_init_inclusive_tokens"`
+	FallbackInitInclusiveTokens          uint64  `json:"fallback_init_inclusive_tokens"`
+	MeasuredInitInclusiveTokenSavingsPct float64 `json:"measured_init_inclusive_token_savings_pct"`
+	FallbackInitInclusiveTokenSavingsPct float64 `json:"fallback_init_inclusive_token_savings_pct"`
 }
 
 type Validity struct {

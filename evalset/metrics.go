@@ -29,6 +29,19 @@ type Metrics struct {
 		PassRate     float64 `json:"pass_rate"`
 		BasePassRate float64 `json:"base_pass_rate"`
 	} `json:"correctness,omitempty"`
+	Reliability *struct {
+		MissRate float64 `json:"miss_rate"`
+	} `json:"reliability,omitempty"`
+	Economics *struct {
+		MeasuredTotalTokenSavingsPct float64 `json:"measured_total_token_savings_pct"`
+		FallbackAdjusted             *struct {
+			OutputTokenSavingsPct float64 `json:"output_token_savings_pct"`
+			TotalTokenSavingsPct  float64 `json:"total_token_savings_pct"`
+		} `json:"fallback_adjusted,omitempty"`
+		Amortized *struct {
+			FallbackInitInclusiveTokenSavingsPct float64 `json:"fallback_init_inclusive_token_savings_pct"`
+		} `json:"amortized,omitempty"`
+	} `json:"economics,omitempty"`
 }
 
 func CommittedMetricsSubject() saigeeval.Subject {
@@ -81,6 +94,36 @@ func MetricsScorers() []saigeeval.Scorer {
 				return 0, false
 			}
 			return m.Comparison.LatencySavingsPct / 100, true
+		}),
+		metricScorer("total_token_savings", func(m Metrics) (float64, bool) {
+			if m.Economics == nil {
+				return 0, false
+			}
+			return m.Economics.MeasuredTotalTokenSavingsPct / 100, true
+		}),
+		metricScorer("fallback_output_token_savings", func(m Metrics) (float64, bool) {
+			if m.Economics == nil || m.Economics.FallbackAdjusted == nil {
+				return 0, false
+			}
+			return m.Economics.FallbackAdjusted.OutputTokenSavingsPct / 100, true
+		}),
+		metricScorer("fallback_total_token_savings", func(m Metrics) (float64, bool) {
+			if m.Economics == nil || m.Economics.FallbackAdjusted == nil {
+				return 0, false
+			}
+			return m.Economics.FallbackAdjusted.TotalTokenSavingsPct / 100, true
+		}),
+		metricScorer("fallback_amortized_token_savings", func(m Metrics) (float64, bool) {
+			if m.Economics == nil || m.Economics.Amortized == nil {
+				return 0, false
+			}
+			return m.Economics.Amortized.FallbackInitInclusiveTokenSavingsPct / 100, true
+		}),
+		metricScorer("gap_miss_rate", func(m Metrics) (float64, bool) {
+			if m.Reliability == nil {
+				return 0, false
+			}
+			return m.Reliability.MissRate, true
 		}),
 		metricScorer("gap_envelope_parse_rate", func(m Metrics) (float64, bool) {
 			if m.GAPFlow == nil {

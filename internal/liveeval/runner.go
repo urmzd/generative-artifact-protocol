@@ -345,6 +345,10 @@ func fillDerived(metrics *Metrics) {
 			InputTokenSavingsPct:  pct(metrics.DefaultFlow.TotalInputTokens, metrics.GAPFlow.TotalInputTokens),
 			LatencySavingsPct:     pct(metrics.DefaultFlow.TotalLatencyMillis, metrics.GAPFlow.TotalLatencyMillis),
 		}
+		metrics.Economics = economics(metrics.BaseTurn0, metrics.GAPTurn0, metrics.DefaultFlow, metrics.GAPFlow)
+	}
+	if metrics.GAPFlow != nil {
+		metrics.Reliability = reliability(metrics.GAPFlow.PerTurn)
 	}
 	if metrics.DefaultFlow != nil && metrics.StatelessFlow != nil && metrics.GAPFlow != nil {
 		aIn, aOut := initInclusive(metrics.BaseTurn0, metrics.DefaultFlow)
@@ -364,6 +368,114 @@ func fillDerived(metrics *Metrics) {
 				inputMonotone(metrics.DefaultFlow.PerTurn),
 		}
 	}
+}
+
+func reliability(turns []TurnResult) *Reliability {
+	report := &Reliability{
+		EditTurns: len(turns),
+		ByReason:  map[string]int{},
+	}
+	for _, turn := range turns {
+		if !turn.Failed {
+			continue
+		}
+		report.MissCount++
+		reason := ""
+		if turn.FailureReason != nil {
+			reason = *turn.FailureReason
+			report.ByReason[reason]++
+		}
+		switch {
+		case strings.HasPrefix(reason, "envelope parse failed"):
+			report.ParseMissCount++
+		case strings.HasPrefix(reason, "invalid envelope"):
+			report.InvalidEnvelopeCount++
+		case strings.HasPrefix(reason, "apply failed"):
+			report.ApplyMissCount++
+		case turn.EnvelopeParsed != nil && !*turn.EnvelopeParsed:
+			report.RequestFailureCount++
+		case boolValue(turn.EnvelopeParsed) && !boolValue(turn.ApplySucceeded):
+			report.ApplyMissCount++
+		default:
+			report.UnknownMissCount++
+		}
+	}
+	if report.MissCount == 0 {
+		report.ByReason = nil
+	}
+	if report.EditTurns > 0 {
+		report.MissRate = round1(float64(report.MissCount)/float64(report.EditTurns)*100) / 100
+	}
+	return report
+}
+
+func economics(baseTurn0 *TurnMetrics, gapTurn0 *TurnMetrics, baseFlow *FlowMetrics, gapFlow *GapFlowMetrics) *Economics {
+	baseIn, baseOut, gapIn, gapOut := alignedTotals(baseFlow.PerTurn, gapFlow.PerTurn)
+	fallbackIn, fallbackOut := gapIn, gapOut
+	var missAttemptIn, missAttemptOut, retryIn, retryOut uint64
+	for i, gapTurn := range gapFlow.PerTurn {
+		if i >= len(baseFlow.PerTurn) || !gapTurn.Failed {
+			continue
+		}
+		baseTurn := baseFlow.PerTurn[i]
+		missAttemptIn += gapTurn.InputTokens
+		missAttemptOut += gapTurn.OutputTokens
+		retryIn += baseTurn.InputTokens
+		retryOut += baseTurn.OutputTokens
+		fallbackIn += baseTurn.InputTokens
+		fallbackOut += baseTurn.OutputTokens
+	}
+
+	baseTotal := baseIn + baseOut
+	gapTotal := gapIn + gapOut
+	fallbackTotal := fallbackIn + fallbackOut
+	econ := &Economics{
+		FallbackAssumption:           "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+		MeasuredTotalTokenSavingsPct: pct(baseTotal, gapTotal),
+		FallbackAdjusted: &FallbackAdjusted{
+			InputTokens:               fallbackIn,
+			OutputTokens:              fallbackOut,
+			TotalTokens:               fallbackTotal,
+			MissAttemptInputTokens:    missAttemptIn,
+			MissAttemptOutputTokens:   missAttemptOut,
+			MissAttemptTotalTokens:    missAttemptIn + missAttemptOut,
+			FallbackRetryInputTokens:  retryIn,
+			FallbackRetryOutputTokens: retryOut,
+			FallbackRetryTotalTokens:  retryIn + retryOut,
+			InputTokenSavingsPct:      pct(baseIn, fallbackIn),
+			OutputTokenSavingsPct:     pct(baseOut, fallbackOut),
+			TotalTokenSavingsPct:      pct(baseTotal, fallbackTotal),
+		},
+	}
+	if baseTurn0 != nil && gapTurn0 != nil {
+		baseSession := baseTotal + baseTurn0.InputTokens + baseTurn0.OutputTokens
+		gapSession := gapTotal + gapTurn0.InputTokens + gapTurn0.OutputTokens
+		fallbackSession := fallbackTotal + gapTurn0.InputTokens + gapTurn0.OutputTokens
+		econ.Amortized = &AmortizedEconomics{
+			EditTurns:                            len(gapFlow.PerTurn),
+			BaseInitInclusiveTokens:              baseSession,
+			GAPInitInclusiveTokens:               gapSession,
+			FallbackInitInclusiveTokens:          fallbackSession,
+			MeasuredInitInclusiveTokenSavingsPct: pct(baseSession, gapSession),
+			FallbackInitInclusiveTokenSavingsPct: pct(baseSession, fallbackSession),
+		}
+	}
+	return econ
+}
+
+func alignedTotals(baseTurns []TurnResult, gapTurns []TurnResult) (uint64, uint64, uint64, uint64) {
+	var baseIn, baseOut, gapIn, gapOut uint64
+	limit := len(baseTurns)
+	if len(gapTurns) < limit {
+		limit = len(gapTurns)
+	}
+	for i := 0; i < limit; i++ {
+		baseIn += baseTurns[i].InputTokens
+		baseOut += baseTurns[i].OutputTokens
+		gapIn += gapTurns[i].InputTokens
+		gapOut += gapTurns[i].OutputTokens
+	}
+	return baseIn, baseOut, gapIn, gapOut
 }
 
 func filterExperiments(experiments []evalset.ExperimentInput, id string, count int) []evalset.ExperimentInput {

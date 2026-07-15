@@ -26,3 +26,7 @@ just check                         # full repository gate, including evalset dri
   `outputs/` into the selected experiment directory.
 - SAIGE consumers can read the generated observations and score metrics with
   `evalset.MetricsScorers()`.
+- Report raw `comparison` savings together with `reliability` and `economics`.
+  The honest product view is fallback-adjusted savings, miss rate, and
+  correctness. A missed GAP edit costs the failed envelope attempt and usually a
+  full-regeneration fallback retry.

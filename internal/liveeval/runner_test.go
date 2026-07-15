@@ -74,6 +74,56 @@ func TestRunGAPFlowWithMockProvider(t *testing.T) {
 	}
 }
 
+func TestFillDerivedReportsMissEconomics(t *testing.T) {
+	parsed := true
+	applied := false
+	reason := "apply failed: missing target msg"
+	metrics := Metrics{
+		BaseTurn0: &TurnMetrics{InputTokens: 50, OutputTokens: 50},
+		GAPTurn0:  &TurnMetrics{InputTokens: 60, OutputTokens: 60},
+		DefaultFlow: &FlowMetrics{
+			PerTurn: []TurnResult{
+				{InputTokens: 100, OutputTokens: 100},
+				{InputTokens: 100, OutputTokens: 100},
+			},
+			TotalInputTokens:  200,
+			TotalOutputTokens: 200,
+		},
+		GAPFlow: &GapFlowMetrics{
+			FlowMetrics: FlowMetrics{
+				PerTurn: []TurnResult{
+					{InputTokens: 20, OutputTokens: 10},
+					{InputTokens: 20, OutputTokens: 5, Failed: true, FailureReason: &reason, EnvelopeParsed: &parsed, ApplySucceeded: &applied},
+				},
+				TotalInputTokens:  40,
+				TotalOutputTokens: 15,
+			},
+		},
+	}
+
+	fillDerived(&metrics)
+
+	if metrics.Reliability == nil || metrics.Reliability.MissCount != 1 {
+		t.Fatalf("reliability = %#v, want one miss", metrics.Reliability)
+	}
+	if metrics.Reliability.ApplyMissCount != 1 || metrics.Reliability.MissRate != 0.5 {
+		t.Fatalf("reliability = %#v, want one apply miss at 50%%", metrics.Reliability)
+	}
+	if metrics.Economics == nil || metrics.Economics.FallbackAdjusted == nil {
+		t.Fatalf("economics missing: %#v", metrics.Economics)
+	}
+	fallback := metrics.Economics.FallbackAdjusted
+	if fallback.MissAttemptTotalTokens != 25 || fallback.FallbackRetryTotalTokens != 200 {
+		t.Fatalf("fallback = %#v, want miss tax 25 and retry 200", fallback)
+	}
+	if fallback.TotalTokenSavingsPct != 36.3 {
+		t.Fatalf("fallback total savings = %f, want 36.3", fallback.TotalTokenSavingsPct)
+	}
+	if metrics.Economics.Amortized == nil || metrics.Economics.Amortized.FallbackInitInclusiveTokenSavingsPct != 25 {
+		t.Fatalf("amortized = %#v, want fallback init-inclusive savings 25", metrics.Economics.Amortized)
+	}
+}
+
 func writeFixture(t *testing.T, path string, value string) {
 	t.Helper()
 	if err := os.MkdirAll(filepath.Dir(path), 0o750); err != nil {
