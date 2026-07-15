@@ -1,0 +1,159 @@
+{
+  "experiment_id": "006-html-portfolio",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:04:51Z",
+  "format": "text/html",
+  "base_turn0": {
+    "input_tokens": 132,
+    "output_tokens": 1319,
+    "latency_ms": 11395,
+    "artifact_bytes": 5030
+  },
+  "gap_turn0": {
+    "input_tokens": 209,
+    "output_tokens": 1608,
+    "latency_ms": 15798,
+    "artifact_bytes": 5596
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the developer name to 'Jordan Rivera' and title to 'Cloud Infrastructure ",
+        "input_tokens": 1476,
+        "output_tokens": 1318,
+        "cached_input_tokens": 1408,
+        "latency_ms": 10912,
+        "output_bytes": 5047,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Replace the projects grid with 8 project cards instead of 6, adding 'Kubernetes ",
+        "input_tokens": 2835,
+        "output_tokens": 1461,
+        "cached_input_tokens": 2688,
+        "latency_ms": 11807,
+        "output_bytes": 5685,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new 'Blog' section after projects showing the 3 most recent blog post prev",
+        "input_tokens": 4329,
+        "output_tokens": 1688,
+        "cached_input_tokens": 4224,
+        "latency_ms": 13355,
+        "output_bytes": 6654,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 8640,
+    "total_output_tokens": 4467,
+    "total_cached_input_tokens": 8320,
+    "total_latency_ms": 36074
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the developer name to 'Jordan Rivera' and title to 'Cloud Infrastructure ",
+        "input_tokens": 1930,
+        "output_tokens": 84,
+        "latency_ms": 1340,
+        "output_bytes": 5609,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Replace the projects grid with 8 project cards instead of 6, adding 'Kubernetes ",
+        "input_tokens": 1946,
+        "output_tokens": 329,
+        "latency_ms": 3814,
+        "output_bytes": 6546,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new 'Blog' section after projects showing the 3 most recent blog post prev",
+        "input_tokens": 2190,
+        "output_tokens": 384,
+        "cached_input_tokens": 1024,
+        "latency_ms": 4581,
+        "output_bytes": 6546,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: projects",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 6066,
+    "total_output_tokens": 797,
+    "total_cached_input_tokens": 1024,
+    "total_latency_ms": 9735,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.6666666666666666
+  },
+  "comparison": {
+    "output_token_savings_pct": 82.2,
+    "input_token_savings_pct": 29.8,
+    "latency_savings_pct": 73
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 1,
+    "miss_rate": 0.33299999999999996,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 1,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: projects": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 47.6,
+    "fallback_adjusted": {
+      "input_tokens": 10395,
+      "output_tokens": 2485,
+      "total_tokens": 12880,
+      "miss_attempt_input_tokens": 2190,
+      "miss_attempt_output_tokens": 384,
+      "miss_attempt_total_tokens": 2574,
+      "fallback_retry_input_tokens": 4329,
+      "fallback_retry_output_tokens": 1688,
+      "fallback_retry_total_tokens": 6017,
+      "input_token_savings_pct": -20.3,
+      "output_token_savings_pct": 44.4,
+      "total_token_savings_pct": 1.7
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 14558,
+      "gap_init_inclusive_tokens": 8680,
+      "fallback_init_inclusive_tokens": 14697,
+      "measured_init_inclusive_token_savings_pct": 40.4,
+      "fallback_init_inclusive_token_savings_pct": -1
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

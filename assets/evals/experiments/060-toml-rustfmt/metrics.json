@@ -1,0 +1,130 @@
+{
+  "experiment_id": "060-toml-rustfmt",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:16:22Z",
+  "format": "text/x-toml",
+  "base_turn0": {
+    "input_tokens": 68,
+    "output_tokens": 104,
+    "latency_ms": 1478,
+    "artifact_bytes": 395
+  },
+  "gap_turn0": {
+    "input_tokens": 142,
+    "output_tokens": 228,
+    "latency_ms": 2347,
+    "artifact_bytes": 790
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change max_width to 120 and add wrap_comments = true and format_code_in_doc_comm",
+        "input_tokens": 200,
+        "output_tokens": 109,
+        "latency_ms": 1358,
+        "output_bytes": 416,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Add group_imports = 'StdExternalCrate' and reorder_imports = true settings",
+        "input_tokens": 335,
+        "output_tokens": 113,
+        "latency_ms": 1260,
+        "output_bytes": 430,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 535,
+    "total_output_tokens": 222,
+    "total_latency_ms": 2618
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change max_width to 120 and add wrap_comments = true and format_code_in_doc_comm",
+        "input_tokens": 554,
+        "output_tokens": 112,
+        "latency_ms": 1667,
+        "output_bytes": 790,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 2: target not found: start marker not found for target: wrap-comments",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Add group_imports = 'StdExternalCrate' and reorder_imports = true settings",
+        "input_tokens": 552,
+        "output_tokens": 100,
+        "latency_ms": 1616,
+        "output_bytes": 808,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 1106,
+    "total_output_tokens": 212,
+    "total_latency_ms": 3283,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.5
+  },
+  "comparison": {
+    "output_token_savings_pct": 4.5,
+    "input_token_savings_pct": -106.7,
+    "latency_savings_pct": -25.4
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 1,
+    "miss_rate": 0.5,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 1,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 2: target not found: start marker not found for target: wrap-comments": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": -74.1,
+    "fallback_adjusted": {
+      "input_tokens": 1306,
+      "output_tokens": 321,
+      "total_tokens": 1627,
+      "miss_attempt_input_tokens": 554,
+      "miss_attempt_output_tokens": 112,
+      "miss_attempt_total_tokens": 666,
+      "fallback_retry_input_tokens": 200,
+      "fallback_retry_output_tokens": 109,
+      "fallback_retry_total_tokens": 309,
+      "input_token_savings_pct": -144.1,
+      "output_token_savings_pct": -44.6,
+      "total_token_savings_pct": -114.9
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 929,
+      "gap_init_inclusive_tokens": 1688,
+      "fallback_init_inclusive_tokens": 1997,
+      "measured_init_inclusive_token_savings_pct": -81.7,
+      "fallback_init_inclusive_token_savings_pct": -115
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

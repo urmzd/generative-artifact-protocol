@@ -1,0 +1,153 @@
+{
+  "experiment_id": "066-python-fastapi-auth",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:19:38Z",
+  "format": "text/x-python",
+  "base_turn0": {
+    "input_tokens": 132,
+    "output_tokens": 984,
+    "latency_ms": 9421,
+    "artifact_bytes": 4458
+  },
+  "gap_turn0": {
+    "input_tokens": 208,
+    "output_tokens": 722,
+    "latency_ms": 7232,
+    "artifact_bytes": 3189
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the config section to change the access token expiry to 15 minutes and th",
+        "input_tokens": 1147,
+        "output_tokens": 998,
+        "cached_input_tokens": 1024,
+        "latency_ms": 9017,
+        "output_bytes": 4506,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Add a new POST /auth/change-password route that requires the current password an",
+        "input_tokens": 2175,
+        "output_tokens": 1295,
+        "cached_input_tokens": 2048,
+        "latency_ms": 13202,
+        "output_bytes": 5884,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the dependencies section to add an 'require_verified_email' dependency t",
+        "input_tokens": 3505,
+        "output_tokens": 1385,
+        "cached_input_tokens": 3328,
+        "latency_ms": 14758,
+        "output_bytes": 6331,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 6827,
+    "total_output_tokens": 3678,
+    "total_cached_input_tokens": 6400,
+    "total_latency_ms": 36977
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the config section to change the access token expiry to 15 minutes and th",
+        "input_tokens": 1051,
+        "output_tokens": 79,
+        "latency_ms": 1660,
+        "output_bytes": 3104,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Add a new POST /auth/change-password route that requires the current password an",
+        "input_tokens": 1029,
+        "output_tokens": 112,
+        "latency_ms": 1836,
+        "output_bytes": 3349,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the dependencies section to add an 'require_verified_email' dependency t",
+        "input_tokens": 1080,
+        "output_tokens": 368,
+        "latency_ms": 4205,
+        "output_bytes": 3633,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 3160,
+    "total_output_tokens": 559,
+    "total_latency_ms": 7701,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 84.8,
+    "input_token_savings_pct": 53.7,
+    "latency_savings_pct": 79.2
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 64.6,
+    "fallback_adjusted": {
+      "input_tokens": 3160,
+      "output_tokens": 559,
+      "total_tokens": 3719,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 53.7,
+      "output_token_savings_pct": 84.8,
+      "total_token_savings_pct": 64.6
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 11621,
+      "gap_init_inclusive_tokens": 4649,
+      "fallback_init_inclusive_tokens": 4649,
+      "measured_init_inclusive_token_savings_pct": 60,
+      "fallback_init_inclusive_token_savings_pct": 60
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

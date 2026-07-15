@@ -1,0 +1,152 @@
+{
+  "experiment_id": "016-python-websocket-chat",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:19:37Z",
+  "format": "text/x-python",
+  "base_turn0": {
+    "input_tokens": 119,
+    "output_tokens": 788,
+    "latency_ms": 7883,
+    "artifact_bytes": 3555
+  },
+  "gap_turn0": {
+    "input_tokens": 195,
+    "output_tokens": 745,
+    "latency_ms": 8138,
+    "artifact_bytes": 3408
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'ReactionMessage' model with fields: message_id, user_id, emoji, and t",
+        "input_tokens": 936,
+        "output_tokens": 912,
+        "latency_ms": 9733,
+        "output_bytes": 4137,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the broadcast method in ConnectionManager to support broadcasting only t",
+        "input_tokens": 1873,
+        "output_tokens": 920,
+        "cached_input_tokens": 1792,
+        "latency_ms": 10024,
+        "output_bytes": 4189,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new handler for 'pin_message' that allows users to pin a message in a room",
+        "input_tokens": 2826,
+        "output_tokens": 1056,
+        "cached_input_tokens": 2688,
+        "latency_ms": 12698,
+        "output_bytes": 4800,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 5635,
+    "total_output_tokens": 2888,
+    "total_cached_input_tokens": 4480,
+    "total_latency_ms": 32455
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'ReactionMessage' model with fields: message_id, user_id, emoji, and t",
+        "input_tokens": 1072,
+        "output_tokens": 91,
+        "latency_ms": 1279,
+        "output_bytes": 3514,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the broadcast method in ConnectionManager to support broadcasting only t",
+        "input_tokens": 1095,
+        "output_tokens": 104,
+        "latency_ms": 1339,
+        "output_bytes": 2809,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new handler for 'pin_message' that allows users to pin a message in a room",
+        "input_tokens": 948,
+        "output_tokens": 167,
+        "latency_ms": 2140,
+        "output_bytes": 3209,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 3115,
+    "total_output_tokens": 362,
+    "total_latency_ms": 4758,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 87.5,
+    "input_token_savings_pct": 44.7,
+    "latency_savings_pct": 85.3
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 59.2,
+    "fallback_adjusted": {
+      "input_tokens": 3115,
+      "output_tokens": 362,
+      "total_tokens": 3477,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 44.7,
+      "output_token_savings_pct": 87.5,
+      "total_token_savings_pct": 59.2
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 9430,
+      "gap_init_inclusive_tokens": 4417,
+      "fallback_init_inclusive_tokens": 4417,
+      "measured_init_inclusive_token_savings_pct": 53.2,
+      "fallback_init_inclusive_token_savings_pct": 53.2
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

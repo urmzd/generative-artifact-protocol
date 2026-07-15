@@ -1,0 +1,135 @@
+{
+  "experiment_id": "069-go-config-parser",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:22:09Z",
+  "format": "text/x-go",
+  "base_turn0": {
+    "input_tokens": 134,
+    "output_tokens": 1541,
+    "latency_ms": 15436,
+    "artifact_bytes": 5662
+  },
+  "gap_turn0": {
+    "input_tokens": 210,
+    "output_tokens": 869,
+    "latency_ms": 8089,
+    "artifact_bytes": 3118
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'SMTP' sub-config to the types section with fields: host, port, userna",
+        "input_tokens": 1712,
+        "output_tokens": 2183,
+        "cached_input_tokens": 1536,
+        "latency_ms": 22322,
+        "output_bytes": 7943,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the validation to add a custom validator that checks the database DSN for",
+        "input_tokens": 3932,
+        "output_tokens": 2251,
+        "cached_input_tokens": 3840,
+        "latency_ms": 21398,
+        "output_bytes": 8155,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 5644,
+    "total_output_tokens": 4434,
+    "total_cached_input_tokens": 5376,
+    "total_latency_ms": 43720
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'SMTP' sub-config to the types section with fields: host, port, userna",
+        "input_tokens": 1200,
+        "output_tokens": 226,
+        "latency_ms": 2764,
+        "output_bytes": 3118,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: smtp-config",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the validation to add a custom validator that checks the database DSN for",
+        "input_tokens": 1199,
+        "output_tokens": 92,
+        "cached_input_tokens": 1024,
+        "latency_ms": 1365,
+        "output_bytes": 3212,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 2399,
+    "total_output_tokens": 318,
+    "total_cached_input_tokens": 1024,
+    "total_latency_ms": 4129,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.5
+  },
+  "comparison": {
+    "output_token_savings_pct": 92.8,
+    "input_token_savings_pct": 57.5,
+    "latency_savings_pct": 90.6
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 1,
+    "miss_rate": 0.5,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 1,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: smtp-config": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 73,
+    "fallback_adjusted": {
+      "input_tokens": 4111,
+      "output_tokens": 2501,
+      "total_tokens": 6612,
+      "miss_attempt_input_tokens": 1200,
+      "miss_attempt_output_tokens": 226,
+      "miss_attempt_total_tokens": 1426,
+      "fallback_retry_input_tokens": 1712,
+      "fallback_retry_output_tokens": 2183,
+      "fallback_retry_total_tokens": 3895,
+      "input_token_savings_pct": 27.2,
+      "output_token_savings_pct": 43.6,
+      "total_token_savings_pct": 34.4
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 11753,
+      "gap_init_inclusive_tokens": 3796,
+      "fallback_init_inclusive_tokens": 7691,
+      "measured_init_inclusive_token_savings_pct": 67.7,
+      "fallback_init_inclusive_token_savings_pct": 34.6
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "experiment_id": "071-python-orm-models",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T18:22:37Z",
+  "format": "text/x-python",
+  "base_turn0": {
+    "input_tokens": 133,
+    "output_tokens": 997,
+    "latency_ms": 15962,
+    "artifact_bytes": 4511
+  },
+  "gap_turn0": {
+    "input_tokens": 209,
+    "output_tokens": 1283,
+    "latency_ms": 26605,
+    "artifact_bytes": 5034
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'Revision' model that stores article version history with fields: id, ",
+        "input_tokens": 1173,
+        "output_tokens": 117,
+        "cached_input_tokens": 1024,
+        "latency_ms": 2664,
+        "output_bytes": 538,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the queries section to add a 'full_text_search' function that uses Postg",
+        "input_tokens": 1325,
+        "output_tokens": 188,
+        "cached_input_tokens": 1152,
+        "latency_ms": 3276,
+        "output_bytes": 795,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new migration helper that adds a 'published_at' column to the articles tab",
+        "input_tokens": 1553,
+        "output_tokens": 93,
+        "cached_input_tokens": 1408,
+        "latency_ms": 5730,
+        "output_bytes": 477,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 4051,
+    "total_output_tokens": 398,
+    "total_cached_input_tokens": 3584,
+    "total_latency_ms": 11670
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'Revision' model that stores article version history with fields: id, ",
+        "input_tokens": 2590,
+        "output_tokens": 229,
+        "latency_ms": 4524,
+        "output_bytes": 5639,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the queries section to add a 'full_text_search' function that uses Postg",
+        "input_tokens": 2807,
+        "output_tokens": 98,
+        "latency_ms": 2660,
+        "output_bytes": 5301,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new migration helper that adds a 'published_at' column to the articles tab",
+        "input_tokens": 2723,
+        "output_tokens": 124,
+        "cached_input_tokens": 1024,
+        "latency_ms": 2444,
+        "output_bytes": 5559,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 8120,
+    "total_output_tokens": 451,
+    "total_cached_input_tokens": 1024,
+    "total_latency_ms": 9628,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": -13.3,
+    "input_token_savings_pct": -100.4,
+    "latency_savings_pct": 17.5
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "validation_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": -92.7,
+    "fallback_adjusted": {
+      "input_tokens": 8120,
+      "output_tokens": 451,
+      "total_tokens": 8571,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": -100.4,
+      "output_token_savings_pct": -13.3,
+      "total_token_savings_pct": -92.7
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 5579,
+      "gap_init_inclusive_tokens": 10063,
+      "fallback_init_inclusive_tokens": 10063,
+      "measured_init_inclusive_token_savings_pct": -80.4,
+      "fallback_init_inclusive_token_savings_pct": -80.4
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

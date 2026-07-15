@@ -1,0 +1,126 @@
+{
+  "experiment_id": "073-yaml-terraform-vars",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:29:34Z",
+  "format": "text/x-yaml",
+  "base_turn0": {
+    "input_tokens": 135,
+    "output_tokens": 381,
+    "latency_ms": 5019,
+    "artifact_bytes": 1056
+  },
+  "gap_turn0": {
+    "input_tokens": 210,
+    "output_tokens": 776,
+    "latency_ms": 8093,
+    "artifact_bytes": 2396
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the environment name to 'production', region to 'us-west-2', and add a 'c",
+        "input_tokens": 554,
+        "output_tokens": 389,
+        "latency_ms": 5423,
+        "output_bytes": 1096,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Change the compute instance type to 'c6g.xlarge' (ARM-based) and update the AMI ",
+        "input_tokens": 985,
+        "output_tokens": 403,
+        "latency_ms": 5426,
+        "output_bytes": 1124,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 1539,
+    "total_output_tokens": 792,
+    "total_latency_ms": 10849
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the environment name to 'production', region to 'us-west-2', and add a 'c",
+        "input_tokens": 1111,
+        "output_tokens": 111,
+        "latency_ms": 1948,
+        "output_bytes": 2445,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Change the compute instance type to 'c6g.xlarge' (ARM-based) and update the AMI ",
+        "input_tokens": 1123,
+        "output_tokens": 149,
+        "latency_ms": 1943,
+        "output_bytes": 2448,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 2234,
+    "total_output_tokens": 260,
+    "total_latency_ms": 3891,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 67.2,
+    "input_token_savings_pct": -45.2,
+    "latency_savings_pct": 64.1
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": -7,
+    "fallback_adjusted": {
+      "input_tokens": 2234,
+      "output_tokens": 260,
+      "total_tokens": 2494,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": -45.2,
+      "output_token_savings_pct": 67.2,
+      "total_token_savings_pct": -7
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 2847,
+      "gap_init_inclusive_tokens": 3480,
+      "fallback_init_inclusive_tokens": 3480,
+      "measured_init_inclusive_token_savings_pct": -22.2,
+      "fallback_init_inclusive_token_savings_pct": -22.2
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

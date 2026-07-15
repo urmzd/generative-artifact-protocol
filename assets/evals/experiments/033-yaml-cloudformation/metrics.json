@@ -1,0 +1,179 @@
+{
+  "experiment_id": "033-yaml-cloudformation",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:43:52Z",
+  "format": "text/x-yaml",
+  "base_turn0": {
+    "input_tokens": 148,
+    "output_tokens": 2082,
+    "latency_ms": 22993,
+    "artifact_bytes": 7530
+  },
+  "gap_turn0": {
+    "input_tokens": 223,
+    "output_tokens": 2146,
+    "latency_ms": 21326,
+    "artifact_bytes": 7245
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new ElastiCache Redis cluster resource in a private subnet with 2 cache no",
+        "input_tokens": 2262,
+        "output_tokens": 2378,
+        "latency_ms": 24775,
+        "output_bytes": 8702,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the Auto Scaling Group to use a target tracking scaling policy based on A",
+        "input_tokens": 4676,
+        "output_tokens": 2379,
+        "cached_input_tokens": 4608,
+        "latency_ms": 23296,
+        "output_bytes": 8704,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new 'environment' parameter with allowed values 'dev', 'staging', 'prod' a",
+        "input_tokens": 7103,
+        "output_tokens": 2413,
+        "cached_input_tokens": 6912,
+        "latency_ms": 26470,
+        "output_bytes": 8838,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 4,
+        "edit": "Add an S3 bucket resource for static assets with CloudFront distribution and OAI",
+        "input_tokens": 9542,
+        "output_tokens": 2898,
+        "cached_input_tokens": 9472,
+        "latency_ms": 33281,
+        "output_bytes": 11052,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 23583,
+    "total_output_tokens": 10068,
+    "total_cached_input_tokens": 20992,
+    "total_latency_ms": 107822
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new ElastiCache Redis cluster resource in a private subnet with 2 cache no",
+        "input_tokens": 2476,
+        "output_tokens": 226,
+        "latency_ms": 2736,
+        "output_bytes": 7808,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the Auto Scaling Group to use a target tracking scaling policy based on A",
+        "input_tokens": 2630,
+        "output_tokens": 96,
+        "cached_input_tokens": 2176,
+        "latency_ms": 1535,
+        "output_bytes": 7656,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new 'environment' parameter with allowed values 'dev', 'staging', 'prod' a",
+        "input_tokens": 2605,
+        "output_tokens": 125,
+        "cached_input_tokens": 1024,
+        "latency_ms": 1590,
+        "output_bytes": 7416,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 4,
+        "edit": "Add an S3 bucket resource for static assets with CloudFront distribution and OAI",
+        "input_tokens": 2525,
+        "output_tokens": 364,
+        "latency_ms": 4755,
+        "output_bytes": 8574,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 10236,
+    "total_output_tokens": 811,
+    "total_cached_input_tokens": 3200,
+    "total_latency_ms": 10616,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 91.9,
+    "input_token_savings_pct": 56.6,
+    "latency_savings_pct": 90.2
+  },
+  "reliability": {
+    "edit_turns": 4,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 67.2,
+    "fallback_adjusted": {
+      "input_tokens": 10236,
+      "output_tokens": 811,
+      "total_tokens": 11047,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 56.6,
+      "output_token_savings_pct": 91.9,
+      "total_token_savings_pct": 67.2
+    },
+    "amortized": {
+      "edit_turns": 4,
+      "base_init_inclusive_tokens": 35881,
+      "gap_init_inclusive_tokens": 13416,
+      "fallback_init_inclusive_tokens": 13416,
+      "measured_init_inclusive_token_savings_pct": 62.6,
+      "fallback_init_inclusive_token_savings_pct": 62.6
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

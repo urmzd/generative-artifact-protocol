@@ -1,141 +1,128 @@
 {
+  "experiment_id": "056-ruby-rails-model",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:14:47Z",
+  "format": "text/x-ruby",
   "base_turn0": {
-    "artifact_bytes": 3855,
-    "cached_input_tokens": 0,
-    "input_tokens": 152,
-    "latency_ms": 5721,
-    "median_itl_ms": 0.0065205,
-    "output_tokens": 1044,
-    "ttft_ms": 6,
-    "ttlt_ms": 5381
+    "input_tokens": 153,
+    "output_tokens": 488,
+    "latency_ms": 5185,
+    "artifact_bytes": 1833
   },
-  "comparison": {
-    "input_token_savings_pct": -3.9,
-    "latency_savings_pct": 71.9,
-    "output_token_savings_pct": 88.0
+  "gap_turn0": {
+    "input_tokens": 414,
+    "output_tokens": 589,
+    "latency_ms": 6112,
+    "artifact_bytes": 2398
   },
   "default_flow": {
     "per_turn": [
       {
-        "cached_input_tokens": 0,
+        "turn": 1,
         "edit": "Add a new 'has_many :refunds' association and a 'refund!' method that creates a ",
-        "failed": false,
-        "input_tokens": 1235,
-        "latency_ms": 4676,
-        "median_itl_ms": 0.002417,
-        "output_bytes": 4289,
-        "output_tokens": 1157,
-        "ttft_ms": 0,
-        "ttlt_ms": 4355,
-        "turn": 1
+        "input_tokens": 681,
+        "output_tokens": 547,
+        "latency_ms": 5255,
+        "output_bytes": 2050,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 1792,
+        "turn": 2,
         "edit": "Update the scopes section to add a 'by_payment_method' scope that accepts :credi",
-        "failed": false,
-        "input_tokens": 2428,
-        "latency_ms": 5120,
-        "median_itl_ms": 0.003896,
-        "output_bytes": 4698,
-        "output_tokens": 1266,
-        "ttft_ms": 2,
-        "ttlt_ms": 4698,
-        "turn": 2
+        "input_tokens": 1265,
+        "output_tokens": 573,
+        "cached_input_tokens": 1152,
+        "latency_ms": 5461,
+        "output_bytes": 2146,
+        "retried": false,
+        "failed": false
       }
     ],
-    "total_cached_input_tokens": 1792,
-    "total_input_tokens": 3663,
-    "total_latency_ms": 9796,
-    "total_output_tokens": 2423
+    "total_input_tokens": 1946,
+    "total_output_tokens": 1120,
+    "total_cached_input_tokens": 1152,
+    "total_latency_ms": 10716
   },
-  "experiment_id": "056-ruby-rails-model",
-  "format": "text/x-ruby",
   "gap_flow": {
-    "apply_success_rate": 1.0,
-    "envelope_parse_rate": 1.0,
     "per_turn": [
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
+        "turn": 1,
         "edit": "Add a new 'has_many :refunds' association and a 'refund!' method that creates a ",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
+        "input_tokens": 926,
+        "output_tokens": 123,
+        "latency_ms": 2283,
+        "output_bytes": 2538,
+        "retried": false,
         "failed": false,
-        "input_tokens": 1869,
-        "latency_ms": 1188,
-        "median_itl_ms": 0.00425,
-        "output_bytes": 5983,
-        "output_tokens": 165,
-        "ttft_ms": 1,
-        "ttlt_ms": 813,
-        "turn": 1
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       },
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
+        "turn": 2,
         "edit": "Update the scopes section to add a 'by_payment_method' scope that accepts :credi",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
+        "input_tokens": 957,
+        "output_tokens": 79,
+        "latency_ms": 1198,
+        "output_bytes": 2266,
+        "retried": false,
         "failed": false,
-        "input_tokens": 1937,
-        "latency_ms": 1560,
-        "median_itl_ms": 0.00975,
-        "output_bytes": 6185,
-        "output_tokens": 126,
-        "ttft_ms": 39,
-        "ttlt_ms": 1148,
-        "turn": 2
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       }
     ],
-    "total_cached_input_tokens": 0,
-    "total_input_tokens": 3806,
-    "total_latency_ms": 2748,
-    "total_output_tokens": 291
+    "total_input_tokens": 1883,
+    "total_output_tokens": 202,
+    "total_latency_ms": 3481,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
   },
-  "gap_turn0": {
-    "artifact_bytes": 5734,
-    "cached_input_tokens": 0,
-    "input_tokens": 413,
-    "latency_ms": 8502,
-    "median_itl_ms": 0.0025835,
-    "output_tokens": 1592,
-    "ttft_ms": 0,
-    "ttlt_ms": 8174
+  "comparison": {
+    "output_token_savings_pct": 82,
+    "input_token_savings_pct": 3.2,
+    "latency_savings_pct": 67.5
   },
-  "model": "gpt-5.4-mini",
-  "provider": "openai",
-  "quality": {
-    "mean_rouge_l": 0.3657,
-    "mean_sequence_similarity": 0.5335,
-    "mean_token_f1": 0.4019,
-    "per_turn": [
-      {
-        "base_char_count": 4289,
-        "char_delta_pct": -50.3,
-        "gap_char_count": 2130,
-        "lines_added": 77,
-        "lines_removed": 124,
-        "rouge_l": 0.3785,
-        "sequence_similarity": 0.5372,
-        "token_f1": 0.4111,
-        "turn": 1
-      },
-      {
-        "base_char_count": 4698,
-        "char_delta_pct": -52.7,
-        "gap_char_count": 2221,
-        "lines_added": 77,
-        "lines_removed": 135,
-        "rouge_l": 0.3528,
-        "sequence_similarity": 0.5298,
-        "token_f1": 0.3926,
-        "turn": 2
-      }
-    ]
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
   },
-  "timestamp": "2026-05-29T03:12:29Z",
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 32,
+    "fallback_adjusted": {
+      "input_tokens": 1883,
+      "output_tokens": 202,
+      "total_tokens": 2085,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 3.2,
+      "output_token_savings_pct": 82,
+      "total_token_savings_pct": 32
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 3707,
+      "gap_init_inclusive_tokens": 3088,
+      "fallback_init_inclusive_tokens": 3088,
+      "measured_init_inclusive_token_savings_pct": 16.7,
+      "fallback_init_inclusive_token_savings_pct": 16.7
+    }
+  },
   "validity": {
-    "base_input_monotone": true,
-    "gap_run_degenerate": false
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
   }
 }

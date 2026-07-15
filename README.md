@@ -112,6 +112,7 @@ For edit envelopes, the store enforces `stored_version == envelope.version - 1`.
 | `just build` | Compile the Go package |
 | `just test` | Run Go tests |
 | `just evalset` | Regenerate SAIGE observations from the GAP eval corpus |
+| `just report` | Regenerate eval economics and reliability report from `metrics.json` files |
 | `just run` | Run live OpenAI-compatible eval experiments |
 | `just check` | Run formatting, vet, and tests |
 
@@ -121,7 +122,8 @@ Equivalent direct commands:
 go test ./...
 go vet ./...
 go run ./internal/evalsetgen
-test -z "$(gofmt -l *.go cmd/gap-eval/*.go evalset/*.go internal/evalsetgen/*.go internal/liveeval/*.go)"
+go run ./internal/evalreport
+test -z "$(gofmt -l *.go cmd/gap-eval/*.go evalset/*.go internal/evalsetgen/*.go internal/evalreport/*.go internal/liveeval/*.go)"
 ```
 
 ## Evaluation Corpus
@@ -130,7 +132,11 @@ The eval corpus remains under [`assets/evals/`](assets/evals/). The runnable rep
 
 Read the benchmark numbers as a risk profile, not a blanket claim that GAP always wins. Raw `comparison` savings measure the protocol attempt itself. New live runs also report `reliability` and `economics` blocks: miss counts/rates, fallback-adjusted savings, retry tax, and init-inclusive amortized savings. If a GAP edit misses, production systems should expect to pay for the failed envelope attempt and then fall back to full regeneration; if an edit applies but corrupts content, only correctness oracles catch it.
 
-The previous Rust eval binary and benchmark harness have been removed in favor of the Go runner and SAIGE eval integration. Committed `metrics.json` and `results.md` files are measured artifacts: do not hand-edit measured numbers. Regenerate the SAIGE observation set with `just evalset` after changing experiment prompts or metadata.
+The current `gpt-4o-mini` metrics set has 96 metrics files, of which 67 are comparable non-degenerate base-vs-GAP economics runs. In that comparable set, fallback-adjusted edit-token savings are 37.8%, init-inclusive fallback savings are 34.0%, and the miss rate is 14.9%. The strongest savings appear in artifacts above roughly 2 KB, repeated records/pages, dashboards, feeds, catalogs, API payloads, and code files with stable section boundaries. Tiny configs and one-off edits can lose because marker, supervisor inventory, and envelope overhead exceed the full-regeneration baseline.
+
+The runner now treats target discovery as part of the supervisor loop. For non-JSON artifacts it inventories valid `<gap:target>` IDs with `list_targets()`. For JSON artifacts it inventories valid JSON Pointers with `list_paths()`. Generated envelopes are validated before apply; invented targets or invalid paths are rejected and repaired before they can become apply misses.
+
+The previous Rust eval binary and benchmark harness have been removed in favor of the Go runner and SAIGE eval integration. Committed `metrics.json` and `results.md` files are measured artifacts: do not hand-edit measured numbers. Regenerate the SAIGE observation set with `just evalset` after changing experiment prompts or metadata, and regenerate measured result tables with `just report` after changing committed metrics.
 
 ## License
 

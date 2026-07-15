@@ -1,178 +1,152 @@
 {
+  "experiment_id": "019-js-express-api",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:23:23Z",
+  "format": "text/javascript",
   "base_turn0": {
-    "artifact_bytes": 17012,
-    "cached_input_tokens": 0,
-    "input_tokens": 111,
-    "latency_ms": 20166,
-    "median_itl_ms": 0.004417,
-    "output_tokens": 4444,
-    "ttft_ms": 0,
-    "ttlt_ms": 19796
+    "input_tokens": 112,
+    "output_tokens": 794,
+    "latency_ms": 8564,
+    "artifact_bytes": 3009
   },
-  "comparison": {
-    "input_token_savings_pct": 12.3,
-    "latency_savings_pct": 91.3,
-    "output_token_savings_pct": 92.8
+  "gap_turn0": {
+    "input_tokens": 375,
+    "output_tokens": 1156,
+    "latency_ms": 10036,
+    "artifact_bytes": 4398
   },
   "default_flow": {
     "per_turn": [
       {
-        "cached_input_tokens": 4352,
+        "turn": 1,
         "edit": "Add a new 'labels' field to the Task model with an array of strings, and add a P",
-        "failed": false,
-        "input_tokens": 4590,
-        "latency_ms": 22628,
-        "median_itl_ms": 0.0038545,
-        "output_bytes": 18618,
-        "output_tokens": 4846,
-        "ttft_ms": 20,
-        "ttlt_ms": 21812,
-        "turn": 1
+        "input_tokens": 942,
+        "output_tokens": 929,
+        "latency_ms": 7410,
+        "output_bytes": 3526,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 8960,
+        "turn": 2,
         "edit": "Rewrite the auth token verification middleware to support both Bearer tokens and",
-        "failed": false,
-        "input_tokens": 9465,
-        "latency_ms": 23057,
-        "median_itl_ms": 0.004354,
-        "output_bytes": 18908,
-        "output_tokens": 4926,
-        "ttft_ms": 0,
-        "ttlt_ms": 22205,
-        "turn": 2
-      },
-      {
-        "cached_input_tokens": 14080,
-        "edit": "Add a new route POST /projects/:id/archive that marks a project as archived and ",
-        "failed": false,
-        "input_tokens": 14423,
-        "latency_ms": 24429,
-        "median_itl_ms": 0.002875,
-        "output_bytes": 19942,
-        "output_tokens": 5190,
-        "ttft_ms": 3,
-        "ttlt_ms": 24068,
-        "turn": 3
-      }
-    ],
-    "total_cached_input_tokens": 27392,
-    "total_input_tokens": 28478,
-    "total_latency_ms": 70114,
-    "total_output_tokens": 14962
-  },
-  "experiment_id": "019-js-express-api",
-  "format": "text/javascript",
-  "gap_flow": {
-    "apply_success_rate": 0.6666666666666666,
-    "envelope_parse_rate": 1.0,
-    "per_turn": [
-      {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
-        "edit": "Add a new 'labels' field to the Task model with an array of strings, and add a P",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
-        "failed": false,
-        "input_tokens": 8228,
-        "latency_ms": 1589,
-        "median_itl_ms": 0.005375,
-        "output_bytes": 28521,
-        "output_tokens": 256,
-        "ttft_ms": 27,
-        "ttlt_ms": 1158,
-        "turn": 1
-      },
-      {
-        "apply_succeeded": false,
+        "input_tokens": 1901,
+        "output_tokens": 1031,
         "cached_input_tokens": 1792,
-        "edit": "Rewrite the auth token verification middleware to support both Bearer tokens and",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
-        "failed": true,
-        "failure_reason": "parse or apply failed",
-        "input_tokens": 8374,
-        "latency_ms": 2933,
-        "median_itl_ms": 0.0035205,
-        "output_bytes": 28521,
-        "output_tokens": 573,
-        "ttft_ms": 28,
-        "ttlt_ms": 2314,
-        "turn": 2
+        "latency_ms": 8143,
+        "output_bytes": 3909,
+        "retried": false,
+        "failed": false
       },
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 7936,
+        "turn": 3,
         "edit": "Add a new route POST /projects/:id/archive that marks a project as archived and ",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
-        "failed": false,
-        "input_tokens": 8377,
-        "latency_ms": 1571,
-        "median_itl_ms": 0.011584,
-        "output_bytes": 29151,
-        "output_tokens": 248,
-        "ttft_ms": 55,
-        "ttlt_ms": 1215,
-        "turn": 3
+        "input_tokens": 2965,
+        "output_tokens": 1153,
+        "cached_input_tokens": 2816,
+        "latency_ms": 9668,
+        "output_bytes": 4397,
+        "retried": false,
+        "failed": false
       }
     ],
-    "total_cached_input_tokens": 9728,
-    "total_input_tokens": 24979,
-    "total_latency_ms": 6093,
-    "total_output_tokens": 1077
+    "total_input_tokens": 5808,
+    "total_output_tokens": 3113,
+    "total_cached_input_tokens": 4608,
+    "total_latency_ms": 25221
   },
-  "gap_turn0": {
-    "artifact_bytes": 27936,
-    "cached_input_tokens": 0,
-    "input_tokens": 374,
-    "latency_ms": 35319,
-    "median_itl_ms": 0.005958000000000001,
-    "output_tokens": 7955,
-    "ttft_ms": 4,
-    "ttlt_ms": 34998
-  },
-  "model": "gpt-5.4-mini",
-  "provider": "openai",
-  "quality": {
-    "mean_rouge_l": 0.2845,
-    "mean_sequence_similarity": 0.4149,
-    "mean_token_f1": 0.4154,
+  "gap_flow": {
     "per_turn": [
       {
-        "base_char_count": 18618,
-        "char_delta_pct": -54.7,
-        "gap_char_count": 8437,
-        "lines_added": 192,
-        "lines_removed": 469,
-        "rouge_l": 0.2866,
-        "sequence_similarity": 0.4157,
-        "token_f1": 0.414,
-        "turn": 1
+        "turn": 1,
+        "edit": "Add a new 'labels' field to the Task model with an array of strings, and add a P",
+        "input_tokens": 1490,
+        "output_tokens": 188,
+        "latency_ms": 1997,
+        "output_bytes": 3803,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       },
       {
-        "base_char_count": 18908,
-        "char_delta_pct": -55.4,
-        "gap_char_count": 8437,
-        "lines_added": 192,
-        "lines_removed": 478,
-        "rouge_l": 0.2848,
-        "sequence_similarity": 0.4137,
-        "token_f1": 0.4115,
-        "turn": 2
+        "turn": 2,
+        "edit": "Rewrite the auth token verification middleware to support both Bearer tokens and",
+        "input_tokens": 1325,
+        "output_tokens": 277,
+        "latency_ms": 3582,
+        "output_bytes": 4129,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       },
       {
-        "base_char_count": 19942,
-        "char_delta_pct": -54.5,
-        "gap_char_count": 9067,
-        "lines_added": 202,
-        "lines_removed": 498,
-        "rouge_l": 0.2822,
-        "sequence_similarity": 0.4153,
-        "token_f1": 0.4208,
-        "turn": 3
+        "turn": 3,
+        "edit": "Add a new route POST /projects/:id/archive that marks a project as archived and ",
+        "input_tokens": 1423,
+        "output_tokens": 174,
+        "latency_ms": 1978,
+        "output_bytes": 4560,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       }
-    ]
+    ],
+    "total_input_tokens": 4238,
+    "total_output_tokens": 639,
+    "total_latency_ms": 7557,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
   },
-  "timestamp": "2026-05-29T02:50:05Z"
+  "comparison": {
+    "output_token_savings_pct": 79.5,
+    "input_token_savings_pct": 27,
+    "latency_savings_pct": 70
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 45.3,
+    "fallback_adjusted": {
+      "input_tokens": 4238,
+      "output_tokens": 639,
+      "total_tokens": 4877,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 27,
+      "output_token_savings_pct": 79.5,
+      "total_token_savings_pct": 45.3
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 9827,
+      "gap_init_inclusive_tokens": 6408,
+      "fallback_init_inclusive_tokens": 6408,
+      "measured_init_inclusive_token_savings_pct": 34.8,
+      "fallback_init_inclusive_token_savings_pct": 34.8
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
 }

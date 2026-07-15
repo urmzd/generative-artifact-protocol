@@ -1,182 +1,161 @@
 {
+  "experiment_id": "026-json-api-response-users",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:31:51Z",
+  "format": "application/json",
   "base_turn0": {
-    "artifact_bytes": 16123,
-    "cached_input_tokens": 0,
-    "input_tokens": 123,
-    "latency_ms": 21923,
-    "median_itl_ms": 0.004458,
-    "output_tokens": 4911,
-    "ttft_ms": 3,
-    "ttlt_ms": 21620
+    "input_tokens": 124,
+    "output_tokens": 4305,
+    "latency_ms": 39329,
+    "artifact_bytes": 13976
   },
-  "comparison": {
-    "input_token_savings_pct": 45.7,
-    "latency_savings_pct": 76.9,
-    "output_token_savings_pct": 81.2
+  "gap_turn0": {
+    "input_tokens": 226,
+    "output_tokens": 4340,
+    "latency_ms": 34645,
+    "artifact_bytes": 13864
   },
   "default_flow": {
     "per_turn": [
       {
-        "cached_input_tokens": 1792,
+        "turn": 1,
         "edit": "Add 10 more users to the data array with roles 'billing_admin' and 'support_agen",
-        "failed": false,
-        "input_tokens": 5070,
-        "latency_ms": 27180,
-        "median_itl_ms": 0.0029579999999999997,
-        "output_bytes": 22552,
-        "output_tokens": 6835,
-        "ttft_ms": 10,
-        "ttlt_ms": 26863,
-        "turn": 1
+        "input_tokens": 4467,
+        "output_tokens": 5277,
+        "cached_input_tokens": 4352,
+        "latency_ms": 52464,
+        "output_bytes": 17189,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 11520,
+        "turn": 2,
         "edit": "Update the pagination to show page 3 of 12 with per_page set to 30 and update ha",
-        "failed": false,
-        "input_tokens": 11938,
-        "latency_ms": 26685,
-        "median_itl_ms": 0.003292,
-        "output_bytes": 22552,
-        "output_tokens": 6835,
-        "ttft_ms": 0,
-        "ttlt_ms": 26214,
-        "turn": 2
+        "input_tokens": 9778,
+        "output_tokens": 5277,
+        "cached_input_tokens": 9600,
+        "latency_ms": 53153,
+        "output_bytes": 17189,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 18176,
+        "turn": 3,
         "edit": "Add a 'team_id' and 'team_name' field to each user object, with users grouped in",
-        "failed": false,
-        "input_tokens": 18813,
-        "latency_ms": 30081,
-        "median_itl_ms": 0.0043749999999999995,
-        "output_bytes": 24796,
-        "output_tokens": 7507,
-        "ttft_ms": 0,
-        "ttlt_ms": 29741,
-        "turn": 3
+        "input_tokens": 15096,
+        "output_tokens": 5869,
+        "cached_input_tokens": 14976,
+        "latency_ms": 56053,
+        "output_bytes": 19142,
+        "retried": false,
+        "failed": false
       }
     ],
-    "total_cached_input_tokens": 31488,
-    "total_input_tokens": 35821,
-    "total_latency_ms": 83946,
-    "total_output_tokens": 21177
+    "total_input_tokens": 29341,
+    "total_output_tokens": 16423,
+    "total_cached_input_tokens": 28928,
+    "total_latency_ms": 161670
   },
-  "experiment_id": "026-json-api-response-users",
-  "format": "application/json",
   "gap_flow": {
-    "apply_success_rate": 0.6666666666666666,
-    "envelope_parse_rate": 1.0,
     "per_turn": [
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
+        "turn": 1,
         "edit": "Add 10 more users to the data array with roles 'billing_admin' and 'support_agen",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
-        "failed": false,
-        "input_tokens": 5414,
-        "latency_ms": 7750,
-        "median_itl_ms": 0.0035,
-        "output_bytes": 21677,
-        "output_tokens": 1676,
-        "ttft_ms": 0,
-        "ttlt_ms": 7386,
-        "turn": 1
-      },
-      {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
-        "edit": "Update the pagination to show page 3 of 12 with per_page set to 30 and update ha",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
-        "failed": false,
-        "input_tokens": 7014,
-        "latency_ms": 1195,
-        "median_itl_ms": 0.0028959999999999997,
-        "output_bytes": 21677,
-        "output_tokens": 143,
-        "ttft_ms": 39,
-        "ttlt_ms": 669,
-        "turn": 2
-      },
-      {
-        "apply_succeeded": false,
-        "cached_input_tokens": 5888,
-        "edit": "Add a 'team_id' and 'team_name' field to each user object, with users grouped in",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
+        "input_tokens": 4880,
+        "output_tokens": 1697,
+        "latency_ms": 16771,
+        "output_bytes": 13864,
+        "retried": false,
         "failed": true,
-        "failure_reason": "parse or apply failed",
-        "input_tokens": 7021,
-        "latency_ms": 10424,
-        "median_itl_ms": 0.002792,
-        "output_bytes": 21677,
-        "output_tokens": 2171,
-        "ttft_ms": 44,
-        "ttlt_ms": 10004,
-        "turn": 3
+        "failure_reason": "apply failed: insert index 31 out of bounds for array of len 30",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the pagination to show page 3 of 12 with per_page set to 30 and update ha",
+        "input_tokens": 4877,
+        "output_tokens": 242,
+        "cached_input_tokens": 4224,
+        "latency_ms": 3944,
+        "output_bytes": 13864,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Add a 'team_id' and 'team_name' field to each user object, with users grouped in",
+        "input_tokens": 4884,
+        "output_tokens": 1719,
+        "latency_ms": 16345,
+        "output_bytes": 13864,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: array index out of bounds: 30",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
       }
     ],
-    "total_cached_input_tokens": 5888,
-    "total_input_tokens": 19449,
-    "total_latency_ms": 19369,
-    "total_output_tokens": 3990
+    "total_input_tokens": 14641,
+    "total_output_tokens": 3658,
+    "total_cached_input_tokens": 4224,
+    "total_latency_ms": 37060,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.3333333333333333
   },
-  "gap_turn0": {
-    "artifact_bytes": 16328,
-    "cached_input_tokens": 0,
-    "input_tokens": 225,
-    "latency_ms": 23041,
-    "median_itl_ms": 0.003812,
-    "output_tokens": 4934,
-    "ttft_ms": 0,
-    "ttlt_ms": 22710
+  "comparison": {
+    "output_token_savings_pct": 77.7,
+    "input_token_savings_pct": 50.1,
+    "latency_savings_pct": 77.1
   },
-  "model": "gpt-5.4-mini",
-  "provider": "openai",
-  "quality": {
-    "mean_rouge_l": 0.3803,
-    "mean_sequence_similarity": 0.6163,
-    "mean_token_f1": 0.7367,
-    "per_turn": [
-      {
-        "base_char_count": 22552,
-        "char_delta_pct": -3.9,
-        "gap_char_count": 21677,
-        "lines_added": 319,
-        "lines_removed": 355,
-        "rouge_l": 0.3872,
-        "sequence_similarity": 0.6185,
-        "token_f1": 0.75,
-        "turn": 1
-      },
-      {
-        "base_char_count": 22552,
-        "char_delta_pct": -3.9,
-        "gap_char_count": 21677,
-        "lines_added": 318,
-        "lines_removed": 354,
-        "rouge_l": 0.3879,
-        "sequence_similarity": 0.6186,
-        "token_f1": 0.7507,
-        "turn": 2
-      },
-      {
-        "base_char_count": 24796,
-        "char_delta_pct": -12.6,
-        "gap_char_count": 21677,
-        "lines_added": 318,
-        "lines_removed": 438,
-        "rouge_l": 0.3659,
-        "sequence_similarity": 0.6118,
-        "token_f1": 0.7093,
-        "turn": 3
-      }
-    ]
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 2,
+    "miss_rate": 0.667,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 2,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: array index out of bounds: 30": 1,
+      "apply failed: insert index 31 out of bounds for array of len 30": 1
+    }
   },
-  "timestamp": "2026-05-29T03:17:44Z",
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 60,
+    "fallback_adjusted": {
+      "input_tokens": 34204,
+      "output_tokens": 14804,
+      "total_tokens": 49008,
+      "miss_attempt_input_tokens": 9764,
+      "miss_attempt_output_tokens": 3416,
+      "miss_attempt_total_tokens": 13180,
+      "fallback_retry_input_tokens": 19563,
+      "fallback_retry_output_tokens": 11146,
+      "fallback_retry_total_tokens": 30709,
+      "input_token_savings_pct": -16.6,
+      "output_token_savings_pct": 9.9,
+      "total_token_savings_pct": -7.1
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 50193,
+      "gap_init_inclusive_tokens": 22865,
+      "fallback_init_inclusive_tokens": 53574,
+      "measured_init_inclusive_token_savings_pct": 54.4,
+      "fallback_init_inclusive_token_savings_pct": -6.7
+    }
+  },
   "validity": {
-    "base_input_monotone": true,
-    "gap_run_degenerate": true
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
   }
 }

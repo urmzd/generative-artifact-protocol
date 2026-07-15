@@ -1,0 +1,153 @@
+{
+  "experiment_id": "065-html-email-newsletter",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:18:15Z",
+  "format": "text/html",
+  "base_turn0": {
+    "input_tokens": 122,
+    "output_tokens": 1516,
+    "latency_ms": 13988,
+    "artifact_bytes": 7602
+  },
+  "gap_turn0": {
+    "input_tokens": 199,
+    "output_tokens": 1505,
+    "latency_ms": 17632,
+    "artifact_bytes": 5292
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the issue number to '#47' and the date to 'March 28, 2026'",
+        "input_tokens": 1667,
+        "output_tokens": 1516,
+        "cached_input_tokens": 1536,
+        "latency_ms": 15357,
+        "output_bytes": 7600,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the featured article to be about 'AI-Powered Code Review: How We Cut Bug",
+        "input_tokens": 3218,
+        "output_tokens": 1531,
+        "cached_input_tokens": 3072,
+        "latency_ms": 15009,
+        "output_bytes": 7678,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Add a 'Quick Tips' section between the featured article and the article cards sh",
+        "input_tokens": 4782,
+        "output_tokens": 1667,
+        "cached_input_tokens": 4608,
+        "latency_ms": 16002,
+        "output_bytes": 8400,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 9667,
+    "total_output_tokens": 4714,
+    "total_cached_input_tokens": 9216,
+    "total_latency_ms": 46368
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the issue number to '#47' and the date to 'March 28, 2026'",
+        "input_tokens": 1831,
+        "output_tokens": 88,
+        "latency_ms": 1323,
+        "output_bytes": 5293,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the featured article to be about 'AI-Powered Code Review: How We Cut Bug",
+        "input_tokens": 1839,
+        "output_tokens": 117,
+        "latency_ms": 1639,
+        "output_bytes": 5353,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Add a 'Quick Tips' section between the featured article and the article cards sh",
+        "input_tokens": 1852,
+        "output_tokens": 173,
+        "latency_ms": 2251,
+        "output_bytes": 5685,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 5522,
+    "total_output_tokens": 378,
+    "total_latency_ms": 5213,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 92,
+    "input_token_savings_pct": 42.9,
+    "latency_savings_pct": 88.8
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 59,
+    "fallback_adjusted": {
+      "input_tokens": 5522,
+      "output_tokens": 378,
+      "total_tokens": 5900,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 42.9,
+      "output_token_savings_pct": 92,
+      "total_token_savings_pct": 59
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 16019,
+      "gap_init_inclusive_tokens": 7604,
+      "fallback_init_inclusive_tokens": 7604,
+      "measured_init_inclusive_token_savings_pct": 52.5,
+      "fallback_init_inclusive_token_savings_pct": 52.5
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

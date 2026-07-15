@@ -1,217 +1,189 @@
 {
+  "experiment_id": "029-yaml-docker-compose-microservices",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:39:52Z",
+  "format": "text/x-yaml",
   "base_turn0": {
-    "artifact_bytes": 5691,
-    "cached_input_tokens": 0,
-    "input_tokens": 138,
-    "latency_ms": 6987,
-    "median_itl_ms": 0.003208,
-    "output_tokens": 1621,
-    "ttft_ms": 5,
-    "ttlt_ms": 6446
+    "input_tokens": 139,
+    "output_tokens": 575,
+    "latency_ms": 5407,
+    "artifact_bytes": 2042
   },
-  "comparison": {
-    "input_token_savings_pct": 16.5,
-    "latency_savings_pct": 75.6,
-    "output_token_savings_pct": 80.5
+  "gap_turn0": {
+    "input_tokens": 400,
+    "output_tokens": 1043,
+    "latency_ms": 10476,
+    "artifact_bytes": 3666
   },
   "default_flow": {
     "per_turn": [
       {
-        "cached_input_tokens": 1280,
+        "turn": 1,
         "edit": "Add a new 'monitoring' service using Prometheus with a scrape config targeting a",
-        "failed": false,
-        "input_tokens": 1790,
-        "latency_ms": 7431,
-        "median_itl_ms": 0.0029170000000000003,
-        "output_bytes": 6562,
-        "output_tokens": 1847,
-        "ttft_ms": 0,
-        "ttlt_ms": 7121,
-        "turn": 1
+        "input_tokens": 746,
+        "output_tokens": 764,
+        "latency_ms": 7599,
+        "output_bytes": 2749,
+        "retried": false,
+        "failed": false
       },
       {
+        "turn": 2,
+        "edit": "Update the PostgreSQL service to use version 16 and add a health check that runs",
+        "input_tokens": 1542,
+        "output_tokens": 804,
+        "cached_input_tokens": 1408,
+        "latency_ms": 7590,
+        "output_bytes": 2865,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Add resource limits (CPU and memory) to every service: API gateway 0.5 CPU / 256",
+        "input_tokens": 2396,
+        "output_tokens": 1013,
+        "cached_input_tokens": 2304,
+        "latency_ms": 10328,
+        "output_bytes": 3657,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 4,
+        "edit": "Add a new 'celery-worker' service that shares the same image as the notification",
+        "input_tokens": 3442,
+        "output_tokens": 1144,
         "cached_input_tokens": 3328,
-        "edit": "Update the PostgreSQL service to use version 16 and add a health check that runs",
-        "failed": false,
-        "input_tokens": 3668,
-        "latency_ms": 8210,
-        "median_itl_ms": 0.003208,
-        "output_bytes": 6562,
-        "output_tokens": 1847,
-        "ttft_ms": 8,
-        "ttlt_ms": 7919,
-        "turn": 2
-      },
-      {
-        "cached_input_tokens": 5376,
-        "edit": "Add resource limits (CPU and memory) to every service: API gateway 0.5 CPU / 256",
-        "failed": false,
-        "input_tokens": 5564,
-        "latency_ms": 8825,
-        "median_itl_ms": 0.0027705,
-        "output_bytes": 7375,
-        "output_tokens": 2072,
-        "ttft_ms": 0,
-        "ttlt_ms": 8427,
-        "turn": 3
-      },
-      {
-        "cached_input_tokens": 7424,
-        "edit": "Add a new 'celery-worker' service that shares the same image as the notification",
-        "failed": false,
-        "input_tokens": 7668,
-        "latency_ms": 9904,
-        "median_itl_ms": 0.002375,
-        "output_bytes": 8310,
-        "output_tokens": 2336,
-        "ttft_ms": 10,
-        "ttlt_ms": 9530,
-        "turn": 4
+        "latency_ms": 14615,
+        "output_bytes": 4135,
+        "retried": false,
+        "failed": false
       }
     ],
-    "total_cached_input_tokens": 17408,
-    "total_input_tokens": 18690,
-    "total_latency_ms": 34370,
-    "total_output_tokens": 8102
+    "total_input_tokens": 8126,
+    "total_output_tokens": 3725,
+    "total_cached_input_tokens": 7040,
+    "total_latency_ms": 40132
   },
-  "experiment_id": "029-yaml-docker-compose-microservices",
-  "format": "text/x-yaml",
   "gap_flow": {
-    "apply_success_rate": 1.0,
-    "envelope_parse_rate": 1.0,
     "per_turn": [
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
+        "turn": 1,
         "edit": "Add a new 'monitoring' service using Prometheus with a scrape config targeting a",
-        "envelope_name": "edit",
+        "input_tokens": 1373,
+        "output_tokens": 177,
+        "latency_ms": 2247,
+        "output_bytes": 3666,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: end marker not found for target: notification-service",
         "envelope_parsed": true,
-        "failed": false,
-        "input_tokens": 3412,
-        "latency_ms": 3358,
-        "median_itl_ms": 0.002604,
-        "output_bytes": 13491,
-        "output_tokens": 717,
-        "ttft_ms": 0,
-        "ttlt_ms": 2921,
-        "turn": 1
+        "apply_succeeded": false,
+        "envelope_name": "edit"
       },
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 1792,
+        "turn": 2,
         "edit": "Update the PostgreSQL service to use version 16 and add a health check that runs",
-        "envelope_name": "edit",
+        "input_tokens": 1373,
+        "output_tokens": 232,
+        "cached_input_tokens": 1152,
+        "latency_ms": 3582,
+        "output_bytes": 3666,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: end marker not found for target: database-service",
         "envelope_parsed": true,
-        "failed": false,
-        "input_tokens": 4025,
-        "latency_ms": 1124,
-        "median_itl_ms": 0.003541,
-        "output_bytes": 13321,
-        "output_tokens": 144,
-        "ttft_ms": 6,
-        "ttlt_ms": 585,
-        "turn": 2
+        "apply_succeeded": false,
+        "envelope_name": "edit"
       },
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 2816,
+        "turn": 3,
         "edit": "Add resource limits (CPU and memory) to every service: API gateway 0.5 CPU / 256",
-        "envelope_name": "edit",
+        "input_tokens": 1391,
+        "output_tokens": 1370,
+        "cached_input_tokens": 1152,
+        "latency_ms": 13620,
+        "output_bytes": 3666,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: end marker not found for target: api-gateway",
         "envelope_parsed": true,
-        "failed": false,
-        "input_tokens": 3999,
-        "latency_ms": 2234,
-        "median_itl_ms": 0.003208,
-        "output_bytes": 14027,
-        "output_tokens": 454,
-        "ttft_ms": 25,
-        "ttlt_ms": 1814,
-        "turn": 3
+        "apply_succeeded": false,
+        "envelope_name": "edit"
       },
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
+        "turn": 4,
         "edit": "Add a new 'celery-worker' service that shares the same image as the notification",
-        "envelope_name": "edit",
+        "input_tokens": 1374,
+        "output_tokens": 194,
+        "cached_input_tokens": 1152,
+        "latency_ms": 2194,
+        "output_bytes": 3666,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: end marker not found for target: notification-service",
         "envelope_parsed": true,
-        "failed": false,
-        "input_tokens": 4177,
-        "latency_ms": 1687,
-        "median_itl_ms": 0.003125,
-        "output_bytes": 14692,
-        "output_tokens": 264,
-        "ttft_ms": 2,
-        "ttlt_ms": 1211,
-        "turn": 4
+        "apply_succeeded": false,
+        "envelope_name": "edit"
       }
     ],
-    "total_cached_input_tokens": 4608,
-    "total_input_tokens": 15613,
-    "total_latency_ms": 8403,
-    "total_output_tokens": 1579
+    "total_input_tokens": 5511,
+    "total_output_tokens": 1973,
+    "total_cached_input_tokens": 3456,
+    "total_latency_ms": 21643,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
   },
-  "gap_turn0": {
-    "artifact_bytes": 11027,
-    "cached_input_tokens": 0,
-    "input_tokens": 399,
-    "latency_ms": 12962,
-    "median_itl_ms": 0.0027080000000000003,
-    "output_tokens": 3143,
-    "ttft_ms": 0,
-    "ttlt_ms": 12600
+  "comparison": {
+    "output_token_savings_pct": 47,
+    "input_token_savings_pct": 32.2,
+    "latency_savings_pct": 46.1
   },
-  "model": "gpt-5.4-mini",
-  "provider": "openai",
-  "quality": {
-    "mean_rouge_l": 0.3982,
-    "mean_sequence_similarity": 0.5674,
-    "mean_token_f1": 0.5704,
-    "per_turn": [
-      {
-        "base_char_count": 6562,
-        "char_delta_pct": -17.9,
-        "gap_char_count": 5386,
-        "lines_added": 119,
-        "lines_removed": 132,
-        "rouge_l": 0.3837,
-        "sequence_similarity": 0.5586,
-        "token_f1": 0.5619,
-        "turn": 1
-      },
-      {
-        "base_char_count": 6562,
-        "char_delta_pct": -18.0,
-        "gap_char_count": 5379,
-        "lines_added": 120,
-        "lines_removed": 133,
-        "rouge_l": 0.3812,
-        "sequence_similarity": 0.5586,
-        "token_f1": 0.5594,
-        "turn": 2
-      },
-      {
-        "base_char_count": 7375,
-        "char_delta_pct": -17.5,
-        "gap_char_count": 6085,
-        "lines_added": 136,
-        "lines_removed": 162,
-        "rouge_l": 0.4207,
-        "sequence_similarity": 0.5771,
-        "token_f1": 0.5912,
-        "turn": 3
-      },
-      {
-        "base_char_count": 8310,
-        "char_delta_pct": -24.4,
-        "gap_char_count": 6284,
-        "lines_added": 140,
-        "lines_removed": 188,
-        "rouge_l": 0.4071,
-        "sequence_similarity": 0.5752,
-        "token_f1": 0.5692,
-        "turn": 4
-      }
-    ]
+  "reliability": {
+    "edit_turns": 4,
+    "miss_count": 4,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 4,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: end marker not found for target: api-gateway": 1,
+      "apply failed: operation 0: target not found: end marker not found for target: database-service": 1,
+      "apply failed: operation 0: target not found: end marker not found for target: notification-service": 2
+    }
   },
-  "timestamp": "2026-05-29T02:58:54Z"
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 36.8,
+    "fallback_adjusted": {
+      "input_tokens": 13637,
+      "output_tokens": 5698,
+      "total_tokens": 19335,
+      "miss_attempt_input_tokens": 5511,
+      "miss_attempt_output_tokens": 1973,
+      "miss_attempt_total_tokens": 7484,
+      "fallback_retry_input_tokens": 8126,
+      "fallback_retry_output_tokens": 3725,
+      "fallback_retry_total_tokens": 11851,
+      "input_token_savings_pct": -67.8,
+      "output_token_savings_pct": -53,
+      "total_token_savings_pct": -63.2
+    },
+    "amortized": {
+      "edit_turns": 4,
+      "base_init_inclusive_tokens": 12565,
+      "gap_init_inclusive_tokens": 8927,
+      "fallback_init_inclusive_tokens": 20778,
+      "measured_init_inclusive_token_savings_pct": 29,
+      "fallback_init_inclusive_token_savings_pct": -65.4
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
 }

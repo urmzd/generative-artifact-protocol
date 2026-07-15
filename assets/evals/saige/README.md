@@ -13,6 +13,13 @@ Regenerate the set after changing `assets/evals/experiments/`:
 just evalset
 ```
 
+Regenerate the measured economics and reliability report after changing
+committed `metrics.json` files:
+
+```sh
+just report
+```
+
 Run live OpenAI-compatible experiments with:
 
 ```sh
@@ -29,3 +36,8 @@ New live `metrics.json` files include `reliability` and `economics` blocks for
 miss count/rate, fallback-adjusted savings, retry tax, and init-inclusive
 amortized savings. Treat raw `comparison` savings as the protocol attempt and
 fallback-adjusted savings plus correctness as the honest product view.
+
+The report excludes degenerate GAP runs and runs without comparable base/GAP
+economics from savings aggregates. Use the generated `results.md` applicability
+tables to decide where GAP is expected to save: larger artifacts, repeated
+records/pages, and repeated edit sessions. Tiny one-off configs can be negative.

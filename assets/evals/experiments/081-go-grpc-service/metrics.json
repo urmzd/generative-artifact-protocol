@@ -1,0 +1,152 @@
+{
+  "experiment_id": "081-go-grpc-service",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:45:54Z",
+  "format": "text/x-go",
+  "base_turn0": {
+    "input_tokens": 119,
+    "output_tokens": 922,
+    "latency_ms": 11746,
+    "artifact_bytes": 4280
+  },
+  "gap_turn0": {
+    "input_tokens": 195,
+    "output_tokens": 693,
+    "latency_ms": 6583,
+    "artifact_bytes": 3325
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'ScheduleNotification' handler that accepts a delivery time and queues",
+        "input_tokens": 1069,
+        "output_tokens": 1152,
+        "latency_ms": 11735,
+        "output_bytes": 5271,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the Types section to add a 'NotificationPriority' enum with values: LOW, ",
+        "input_tokens": 2263,
+        "output_tokens": 1192,
+        "cached_input_tokens": 2176,
+        "latency_ms": 12342,
+        "output_bytes": 5455,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the interceptors to add a metrics interceptor that tracks request count,",
+        "input_tokens": 3490,
+        "output_tokens": 807,
+        "cached_input_tokens": 3328,
+        "latency_ms": 8996,
+        "output_bytes": 3334,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 6822,
+    "total_output_tokens": 3151,
+    "total_cached_input_tokens": 5504,
+    "total_latency_ms": 33073
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'ScheduleNotification' handler that accepts a delivery time and queues",
+        "input_tokens": 1019,
+        "output_tokens": 97,
+        "latency_ms": 1322,
+        "output_bytes": 3499,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the Types section to add a 'NotificationPriority' enum with values: LOW, ",
+        "input_tokens": 1062,
+        "output_tokens": 158,
+        "latency_ms": 1794,
+        "output_bytes": 3408,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the interceptors to add a metrics interceptor that tracks request count,",
+        "input_tokens": 1021,
+        "output_tokens": 187,
+        "latency_ms": 2096,
+        "output_bytes": 2962,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 3102,
+    "total_output_tokens": 442,
+    "total_latency_ms": 5212,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 86,
+    "input_token_savings_pct": 54.5,
+    "latency_savings_pct": 84.2
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 64.5,
+    "fallback_adjusted": {
+      "input_tokens": 3102,
+      "output_tokens": 442,
+      "total_tokens": 3544,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 54.5,
+      "output_token_savings_pct": 86,
+      "total_token_savings_pct": 64.5
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 11014,
+      "gap_init_inclusive_tokens": 4432,
+      "fallback_init_inclusive_tokens": 4432,
+      "measured_init_inclusive_token_savings_pct": 59.8,
+      "fallback_init_inclusive_token_savings_pct": 59.8
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

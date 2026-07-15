@@ -1,0 +1,129 @@
+{
+  "experiment_id": "075-rust-error-types",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:33:18Z",
+  "format": "text/x-rust",
+  "base_turn0": {
+    "input_tokens": 131,
+    "output_tokens": 946,
+    "latency_ms": 10344,
+    "artifact_bytes": 3981
+  },
+  "gap_turn0": {
+    "input_tokens": 206,
+    "output_tokens": 744,
+    "latency_ms": 8542,
+    "artifact_bytes": 3264
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'Conflict' variant for HTTP 409 responses with a 'resource_id' field s",
+        "input_tokens": 1110,
+        "output_tokens": 1071,
+        "cached_input_tokens": 1024,
+        "latency_ms": 8546,
+        "output_bytes": 4539,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the From implementation for sqlx::Error to distinguish between unique con",
+        "input_tokens": 2213,
+        "output_tokens": 1151,
+        "cached_input_tokens": 2048,
+        "latency_ms": 9258,
+        "output_bytes": 4974,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 3323,
+    "total_output_tokens": 2222,
+    "total_cached_input_tokens": 3072,
+    "total_latency_ms": 17804
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'Conflict' variant for HTTP 409 responses with a 'resource_id' field s",
+        "input_tokens": 1075,
+        "output_tokens": 195,
+        "latency_ms": 2484,
+        "output_bytes": 3588,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the From implementation for sqlx::Error to distinguish between unique con",
+        "input_tokens": 1143,
+        "output_tokens": 154,
+        "latency_ms": 2136,
+        "output_bytes": 385,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 2218,
+    "total_output_tokens": 349,
+    "total_latency_ms": 4620,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 84.3,
+    "input_token_savings_pct": 33.3,
+    "latency_savings_pct": 74.1
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 53.7,
+    "fallback_adjusted": {
+      "input_tokens": 2218,
+      "output_tokens": 349,
+      "total_tokens": 2567,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 33.3,
+      "output_token_savings_pct": 84.3,
+      "total_token_savings_pct": 53.7
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 6622,
+      "gap_init_inclusive_tokens": 3517,
+      "fallback_init_inclusive_tokens": 3517,
+      "measured_init_inclusive_token_savings_pct": 46.9,
+      "fallback_init_inclusive_token_savings_pct": 46.9
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "experiment_id": "010-html-kanban",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:12:30Z",
+  "format": "text/html",
+  "base_turn0": {
+    "input_tokens": 145,
+    "output_tokens": 2279,
+    "latency_ms": 21159,
+    "artifact_bytes": 7589
+  },
+  "gap_turn0": {
+    "input_tokens": 222,
+    "output_tokens": 2288,
+    "latency_ms": 21319,
+    "artifact_bytes": 7456
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the project name from 'Sprint 24' to 'Sprint 27 — Q2 Launch' and update",
+        "input_tokens": 2463,
+        "output_tokens": 2344,
+        "cached_input_tokens": 2304,
+        "latency_ms": 22566,
+        "output_bytes": 7803,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Move 2 cards from Backlog to In Progress and add a 'Blocked' label to the first ",
+        "input_tokens": 4839,
+        "output_tokens": 2110,
+        "cached_input_tokens": 4736,
+        "latency_ms": 19532,
+        "output_bytes": 7039,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new 'Cancelled' column after Done with 2 cancelled task cards",
+        "input_tokens": 6972,
+        "output_tokens": 2322,
+        "cached_input_tokens": 6912,
+        "latency_ms": 22190,
+        "output_bytes": 7760,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 4,
+        "edit": "Change all 'critical' priority tags to have a red pulsing animation effect",
+        "input_tokens": 9317,
+        "output_tokens": 2376,
+        "cached_input_tokens": 9216,
+        "latency_ms": 19826,
+        "output_bytes": 7949,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 23591,
+    "total_output_tokens": 9152,
+    "total_cached_input_tokens": 23168,
+    "total_latency_ms": 84114
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the project name from 'Sprint 24' to 'Sprint 27 — Q2 Launch' and update",
+        "input_tokens": 2625,
+        "output_tokens": 389,
+        "latency_ms": 4109,
+        "output_bytes": 8014,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Move 2 cards from Backlog to In Progress and add a 'Blocked' label to the first ",
+        "input_tokens": 2798,
+        "output_tokens": 181,
+        "latency_ms": 2223,
+        "output_bytes": 8061,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new 'Cancelled' column after Done with 2 cancelled task cards",
+        "input_tokens": 2797,
+        "output_tokens": 284,
+        "latency_ms": 3431,
+        "output_bytes": 8754,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 4,
+        "edit": "Change all 'critical' priority tags to have a red pulsing animation effect",
+        "input_tokens": 3018,
+        "output_tokens": 209,
+        "cached_input_tokens": 2176,
+        "latency_ms": 2067,
+        "output_bytes": 9059,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 11238,
+    "total_output_tokens": 1063,
+    "total_cached_input_tokens": 2176,
+    "total_latency_ms": 11830,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 88.4,
+    "input_token_savings_pct": 52.4,
+    "latency_savings_pct": 85.9
+  },
+  "reliability": {
+    "edit_turns": 4,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 62.4,
+    "fallback_adjusted": {
+      "input_tokens": 11238,
+      "output_tokens": 1063,
+      "total_tokens": 12301,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 52.4,
+      "output_token_savings_pct": 88.4,
+      "total_token_savings_pct": 62.4
+    },
+    "amortized": {
+      "edit_turns": 4,
+      "base_init_inclusive_tokens": 35167,
+      "gap_init_inclusive_tokens": 14811,
+      "fallback_init_inclusive_tokens": 14811,
+      "measured_init_inclusive_token_savings_pct": 57.9,
+      "fallback_init_inclusive_token_savings_pct": 57.9
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

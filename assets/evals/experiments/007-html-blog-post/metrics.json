@@ -1,0 +1,157 @@
+{
+  "experiment_id": "007-html-blog-post",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:06:04Z",
+  "format": "text/html",
+  "base_turn0": {
+    "input_tokens": 134,
+    "output_tokens": 1400,
+    "latency_ms": 11490,
+    "artifact_bytes": 5595
+  },
+  "gap_turn0": {
+    "input_tokens": 211,
+    "output_tokens": 1580,
+    "latency_ms": 18143,
+    "artifact_bytes": 6115
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the article title to 'Building Scalable Microservices with Go and gRPC'",
+        "input_tokens": 1559,
+        "output_tokens": 1502,
+        "cached_input_tokens": 1408,
+        "latency_ms": 12417,
+        "output_bytes": 5968,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the comments section to have 6 comments instead of 4, with replies neste",
+        "input_tokens": 3091,
+        "output_tokens": 1753,
+        "cached_input_tokens": 2944,
+        "latency_ms": 13484,
+        "output_bytes": 7056,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Add a 'Related Articles' section after the author bio showing 3 related article ",
+        "input_tokens": 4873,
+        "output_tokens": 1979,
+        "cached_input_tokens": 4736,
+        "latency_ms": 17830,
+        "output_bytes": 8033,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 9523,
+    "total_output_tokens": 5234,
+    "total_cached_input_tokens": 9088,
+    "total_latency_ms": 43731
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the article title to 'Building Scalable Microservices with Go and gRPC'",
+        "input_tokens": 1902,
+        "output_tokens": 70,
+        "latency_ms": 1270,
+        "output_bytes": 6122,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the comments section to have 6 comments instead of 4, with replies neste",
+        "input_tokens": 1911,
+        "output_tokens": 1305,
+        "latency_ms": 12637,
+        "output_bytes": 6122,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: comment-1",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Add a 'Related Articles' section after the author bio showing 3 related article ",
+        "input_tokens": 1910,
+        "output_tokens": 248,
+        "latency_ms": 2586,
+        "output_bytes": 6844,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 5723,
+    "total_output_tokens": 1623,
+    "total_latency_ms": 16493,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.6666666666666666
+  },
+  "comparison": {
+    "output_token_savings_pct": 69,
+    "input_token_savings_pct": 39.9,
+    "latency_savings_pct": 62.3
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 1,
+    "miss_rate": 0.33299999999999996,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 1,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: comment-1": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 50.2,
+    "fallback_adjusted": {
+      "input_tokens": 8814,
+      "output_tokens": 3376,
+      "total_tokens": 12190,
+      "miss_attempt_input_tokens": 1911,
+      "miss_attempt_output_tokens": 1305,
+      "miss_attempt_total_tokens": 3216,
+      "fallback_retry_input_tokens": 3091,
+      "fallback_retry_output_tokens": 1753,
+      "fallback_retry_total_tokens": 4844,
+      "input_token_savings_pct": 7.4,
+      "output_token_savings_pct": 35.5,
+      "total_token_savings_pct": 17.4
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 16291,
+      "gap_init_inclusive_tokens": 9137,
+      "fallback_init_inclusive_tokens": 13981,
+      "measured_init_inclusive_token_savings_pct": 43.9,
+      "fallback_init_inclusive_token_savings_pct": 14.2
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

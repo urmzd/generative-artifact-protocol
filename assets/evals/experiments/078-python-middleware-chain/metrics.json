@@ -1,0 +1,152 @@
+{
+  "experiment_id": "078-python-middleware-chain",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:42:47Z",
+  "format": "text/x-python",
+  "base_turn0": {
+    "input_tokens": 130,
+    "output_tokens": 791,
+    "latency_ms": 6347,
+    "artifact_bytes": 3673
+  },
+  "gap_turn0": {
+    "input_tokens": 206,
+    "output_tokens": 737,
+    "latency_ms": 7012,
+    "artifact_bytes": 3494
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the rate-limiter to support different rate limits per endpoint by accepti",
+        "input_tokens": 956,
+        "output_tokens": 295,
+        "latency_ms": 2623,
+        "output_bytes": 1344,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the logging-middleware to add request body logging for POST/PUT requests",
+        "input_tokens": 1291,
+        "output_tokens": 304,
+        "cached_input_tokens": 1152,
+        "latency_ms": 2583,
+        "output_bytes": 1437,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new 'MaintenanceMiddleware' section that returns 503 Service Unavailable w",
+        "input_tokens": 1637,
+        "output_tokens": 132,
+        "cached_input_tokens": 1536,
+        "latency_ms": 1813,
+        "output_bytes": 647,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 3884,
+    "total_output_tokens": 731,
+    "total_cached_input_tokens": 2688,
+    "total_latency_ms": 7019
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the rate-limiter to support different rate limits per endpoint by accepti",
+        "input_tokens": 1070,
+        "output_tokens": 328,
+        "latency_ms": 3373,
+        "output_bytes": 3833,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the logging-middleware to add request body logging for POST/PUT requests",
+        "input_tokens": 1129,
+        "output_tokens": 346,
+        "latency_ms": 3787,
+        "output_bytes": 4413,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new 'MaintenanceMiddleware' section that returns 503 Service Unavailable w",
+        "input_tokens": 1250,
+        "output_tokens": 156,
+        "latency_ms": 2147,
+        "output_bytes": 4837,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 3449,
+    "total_output_tokens": 830,
+    "total_latency_ms": 9307,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": -13.5,
+    "input_token_savings_pct": 11.2,
+    "latency_savings_pct": -32.6
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 7.3,
+    "fallback_adjusted": {
+      "input_tokens": 3449,
+      "output_tokens": 830,
+      "total_tokens": 4279,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 11.2,
+      "output_token_savings_pct": -13.5,
+      "total_token_savings_pct": 7.3
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 5536,
+      "gap_init_inclusive_tokens": 5222,
+      "fallback_init_inclusive_tokens": 5222,
+      "measured_init_inclusive_token_savings_pct": 5.7,
+      "fallback_init_inclusive_token_savings_pct": 5.7
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

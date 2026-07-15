@@ -1,0 +1,156 @@
+{
+  "experiment_id": "088-yaml-k8s-helm-values",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:54:30Z",
+  "format": "text/x-yaml",
+  "base_turn0": {
+    "input_tokens": 139,
+    "output_tokens": 898,
+    "latency_ms": 9007,
+    "artifact_bytes": 3518
+  },
+  "gap_turn0": {
+    "input_tokens": 214,
+    "output_tokens": 705,
+    "latency_ms": 6349,
+    "artifact_bytes": 2367
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the app section to set replicas to 5, change the image tag to 'v2.4.0', a",
+        "input_tokens": 1081,
+        "output_tokens": 503,
+        "latency_ms": 7565,
+        "output_bytes": 1865,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Add a new 'redis' section after database with architecture set to 'replication',",
+        "input_tokens": 1622,
+        "output_tokens": 240,
+        "cached_input_tokens": 1536,
+        "latency_ms": 4414,
+        "output_bytes": 985,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the monitoring section to add custom Grafana dashboard JSON for request ",
+        "input_tokens": 1893,
+        "output_tokens": 701,
+        "cached_input_tokens": 1792,
+        "latency_ms": 8398,
+        "output_bytes": 3627,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 4596,
+    "total_output_tokens": 1444,
+    "total_cached_input_tokens": 3328,
+    "total_latency_ms": 20377
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the app section to set replicas to 5, change the image tag to 'v2.4.0', a",
+        "input_tokens": 1048,
+        "output_tokens": 126,
+        "latency_ms": 1786,
+        "output_bytes": 2361,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Add a new 'redis' section after database with architecture set to 'replication',",
+        "input_tokens": 1044,
+        "output_tokens": 91,
+        "latency_ms": 1385,
+        "output_bytes": 2456,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the monitoring section to add custom Grafana dashboard JSON for request ",
+        "input_tokens": 1064,
+        "output_tokens": 265,
+        "latency_ms": 2967,
+        "output_bytes": 2456,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: monitoring",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 3156,
+    "total_output_tokens": 482,
+    "total_latency_ms": 6138,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.6666666666666666
+  },
+  "comparison": {
+    "output_token_savings_pct": 66.6,
+    "input_token_savings_pct": 31.3,
+    "latency_savings_pct": 69.9
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 1,
+    "miss_rate": 0.33299999999999996,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 1,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: monitoring": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 39.8,
+    "fallback_adjusted": {
+      "input_tokens": 5049,
+      "output_tokens": 1183,
+      "total_tokens": 6232,
+      "miss_attempt_input_tokens": 1064,
+      "miss_attempt_output_tokens": 265,
+      "miss_attempt_total_tokens": 1329,
+      "fallback_retry_input_tokens": 1893,
+      "fallback_retry_output_tokens": 701,
+      "fallback_retry_total_tokens": 2594,
+      "input_token_savings_pct": -9.9,
+      "output_token_savings_pct": 18.1,
+      "total_token_savings_pct": -3.2
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 7077,
+      "gap_init_inclusive_tokens": 4557,
+      "fallback_init_inclusive_tokens": 7151,
+      "measured_init_inclusive_token_savings_pct": 35.6,
+      "fallback_init_inclusive_token_savings_pct": -1
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

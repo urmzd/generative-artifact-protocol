@@ -1,0 +1,131 @@
+{
+  "experiment_id": "040-css-animations",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T18:23:41Z",
+  "format": "text/css",
+  "base_turn0": {
+    "input_tokens": 119,
+    "output_tokens": 886,
+    "latency_ms": 15258,
+    "artifact_bytes": 3238
+  },
+  "gap_turn0": {
+    "input_tokens": 196,
+    "output_tokens": 951,
+    "latency_ms": 17815,
+    "artifact_bytes": 3219
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add 3 new keyframe animations: 'typewriter' (text appears character by character",
+        "input_tokens": 1054,
+        "output_tokens": 238,
+        "latency_ms": 3725,
+        "output_bytes": 796,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update all animation durations to use CSS custom properties like --duration-fast",
+        "input_tokens": 1334,
+        "output_tokens": 1161,
+        "cached_input_tokens": 1152,
+        "latency_ms": 21361,
+        "output_bytes": 4143,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 2388,
+    "total_output_tokens": 1399,
+    "total_cached_input_tokens": 1152,
+    "total_latency_ms": 25086
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add 3 new keyframe animations: 'typewriter' (text appears character by character",
+        "input_tokens": 1494,
+        "output_tokens": 185,
+        "latency_ms": 5631,
+        "output_bytes": 3532,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update all animation durations to use CSS custom properties like --duration-fast",
+        "input_tokens": 1596,
+        "output_tokens": 224,
+        "cached_input_tokens": 1152,
+        "latency_ms": 5629,
+        "output_bytes": 284,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 3090,
+    "total_output_tokens": 409,
+    "total_cached_input_tokens": 1152,
+    "total_latency_ms": 11260,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 70.8,
+    "input_token_savings_pct": -29.4,
+    "latency_savings_pct": 55.1
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "validation_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 7.6,
+    "fallback_adjusted": {
+      "input_tokens": 3090,
+      "output_tokens": 409,
+      "total_tokens": 3499,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": -29.4,
+      "output_token_savings_pct": 70.8,
+      "total_token_savings_pct": 7.6
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 4792,
+      "gap_init_inclusive_tokens": 4646,
+      "fallback_init_inclusive_tokens": 4646,
+      "measured_init_inclusive_token_savings_pct": 3,
+      "fallback_init_inclusive_token_savings_pct": 3
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

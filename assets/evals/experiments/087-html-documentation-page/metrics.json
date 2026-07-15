@@ -1,0 +1,190 @@
+{
+  "experiment_id": "087-html-documentation-page",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:52:03Z",
+  "format": "text/html",
+  "base_turn0": {
+    "input_tokens": 151,
+    "output_tokens": 2088,
+    "latency_ms": 18605,
+    "artifact_bytes": 7313
+  },
+  "gap_turn0": {
+    "input_tokens": 228,
+    "output_tokens": 1939,
+    "latency_ms": 19522,
+    "artifact_bytes": 5873
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Rewrite the sidebar navigation to add a 'Plugins' section with 3 sub-items: Offi",
+        "input_tokens": 2274,
+        "output_tokens": 2140,
+        "cached_input_tokens": 2176,
+        "latency_ms": 18961,
+        "output_bytes": 7509,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Add 3 more functions to the API reference: 'pipe', 'compose', and 'memoize' with",
+        "input_tokens": 4450,
+        "output_tokens": 2704,
+        "cached_input_tokens": 4352,
+        "latency_ms": 24883,
+        "output_bytes": 9634,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Update the installation section to add a Deno import example and a 'Requirements",
+        "input_tokens": 7188,
+        "output_tokens": 2790,
+        "cached_input_tokens": 7040,
+        "latency_ms": 25392,
+        "output_bytes": 9952,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 4,
+        "edit": "Add a 'Migration Guide' section after the FAQ showing how to migrate from v1 to ",
+        "input_tokens": 10014,
+        "output_tokens": 3223,
+        "cached_input_tokens": 9856,
+        "latency_ms": 27630,
+        "output_bytes": 11769,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 23926,
+    "total_output_tokens": 10857,
+    "total_cached_input_tokens": 23424,
+    "total_latency_ms": 96866
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Rewrite the sidebar navigation to add a 'Plugins' section with 3 sub-items: Offi",
+        "input_tokens": 2272,
+        "output_tokens": 144,
+        "latency_ms": 1684,
+        "output_bytes": 5873,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: faq",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Add 3 more functions to the API reference: 'pipe', 'compose', and 'memoize' with",
+        "input_tokens": 2273,
+        "output_tokens": 530,
+        "cached_input_tokens": 2048,
+        "latency_ms": 5231,
+        "output_bytes": 5873,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: api-reference",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Update the installation section to add a Deno import example and a 'Requirements",
+        "input_tokens": 2271,
+        "output_tokens": 253,
+        "cached_input_tokens": 2048,
+        "latency_ms": 2658,
+        "output_bytes": 5873,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: installation",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 4,
+        "edit": "Add a 'Migration Guide' section after the FAQ showing how to migrate from v1 to ",
+        "input_tokens": 2273,
+        "output_tokens": 239,
+        "cached_input_tokens": 2048,
+        "latency_ms": 2560,
+        "output_bytes": 5873,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: faq",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 9089,
+    "total_output_tokens": 1166,
+    "total_cached_input_tokens": 6144,
+    "total_latency_ms": 12133,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
+  },
+  "comparison": {
+    "output_token_savings_pct": 89.3,
+    "input_token_savings_pct": 62,
+    "latency_savings_pct": 87.5
+  },
+  "reliability": {
+    "edit_turns": 4,
+    "miss_count": 4,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 4,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: api-reference": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: faq": 2,
+      "apply failed: operation 0: target not found: start marker not found for target: installation": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 70.5,
+    "fallback_adjusted": {
+      "input_tokens": 33015,
+      "output_tokens": 12023,
+      "total_tokens": 45038,
+      "miss_attempt_input_tokens": 9089,
+      "miss_attempt_output_tokens": 1166,
+      "miss_attempt_total_tokens": 10255,
+      "fallback_retry_input_tokens": 23926,
+      "fallback_retry_output_tokens": 10857,
+      "fallback_retry_total_tokens": 34783,
+      "input_token_savings_pct": -38,
+      "output_token_savings_pct": -10.7,
+      "total_token_savings_pct": -29.5
+    },
+    "amortized": {
+      "edit_turns": 4,
+      "base_init_inclusive_tokens": 37022,
+      "gap_init_inclusive_tokens": 12422,
+      "fallback_init_inclusive_tokens": 47205,
+      "measured_init_inclusive_token_savings_pct": 66.4,
+      "fallback_init_inclusive_token_savings_pct": -27.5
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
+}

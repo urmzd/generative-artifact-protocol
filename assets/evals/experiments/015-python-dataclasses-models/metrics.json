@@ -1,0 +1,134 @@
+{
+  "experiment_id": "015-python-dataclasses-models",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:19:00Z",
+  "format": "text/x-python",
+  "base_turn0": {
+    "input_tokens": 114,
+    "output_tokens": 830,
+    "latency_ms": 7078,
+    "artifact_bytes": 3371
+  },
+  "gap_turn0": {
+    "input_tokens": 190,
+    "output_tokens": 646,
+    "latency_ms": 6890,
+    "artifact_bytes": 2468
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'Milestone' entity with fields: id, name, target_date, status, project",
+        "input_tokens": 982,
+        "output_tokens": 959,
+        "latency_ms": 9692,
+        "output_bytes": 3879,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the Priority enum to include a 'URGENT' level above 'HIGH' and add a colo",
+        "input_tokens": 1976,
+        "output_tokens": 1070,
+        "cached_input_tokens": 1920,
+        "latency_ms": 10743,
+        "output_bytes": 4273,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 2958,
+    "total_output_tokens": 2029,
+    "total_cached_input_tokens": 1920,
+    "total_latency_ms": 20435
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'Milestone' entity with fields: id, name, target_date, status, project",
+        "input_tokens": 978,
+        "output_tokens": 105,
+        "latency_ms": 1495,
+        "output_bytes": 2468,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: Task",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the Priority enum to include a 'URGENT' level above 'HIGH' and add a colo",
+        "input_tokens": 975,
+        "output_tokens": 90,
+        "latency_ms": 1377,
+        "output_bytes": 2468,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: Priority",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 1953,
+    "total_output_tokens": 195,
+    "total_latency_ms": 2872,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
+  },
+  "comparison": {
+    "output_token_savings_pct": 90.4,
+    "input_token_savings_pct": 34,
+    "latency_savings_pct": 85.9
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 2,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 2,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: Priority": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: Task": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 56.9,
+    "fallback_adjusted": {
+      "input_tokens": 4911,
+      "output_tokens": 2224,
+      "total_tokens": 7135,
+      "miss_attempt_input_tokens": 1953,
+      "miss_attempt_output_tokens": 195,
+      "miss_attempt_total_tokens": 2148,
+      "fallback_retry_input_tokens": 2958,
+      "fallback_retry_output_tokens": 2029,
+      "fallback_retry_total_tokens": 4987,
+      "input_token_savings_pct": -66,
+      "output_token_savings_pct": -9.6,
+      "total_token_savings_pct": -43.1
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 5931,
+      "gap_init_inclusive_tokens": 2984,
+      "fallback_init_inclusive_tokens": 7971,
+      "measured_init_inclusive_token_savings_pct": 49.7,
+      "fallback_init_inclusive_token_savings_pct": -34.4
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
+}

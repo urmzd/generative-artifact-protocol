@@ -1,0 +1,162 @@
+{
+  "experiment_id": "054-xml-rss-feed",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:11:24Z",
+  "format": "application/xml",
+  "base_turn0": {
+    "input_tokens": 125,
+    "output_tokens": 2211,
+    "latency_ms": 23040,
+    "artifact_bytes": 8811
+  },
+  "gap_turn0": {
+    "input_tokens": 202,
+    "output_tokens": 3433,
+    "latency_ms": 32957,
+    "artifact_bytes": 12386
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add 5 new items about Rust, WebAssembly, and edge computing topics with dates fr",
+        "input_tokens": 2367,
+        "output_tokens": 708,
+        "cached_input_tokens": 2304,
+        "latency_ms": 7448,
+        "output_bytes": 2757,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the channel-info to change the blog name to 'CodeStream Weekly' and add a",
+        "input_tokens": 3114,
+        "output_tokens": 3005,
+        "cached_input_tokens": 2944,
+        "latency_ms": 30024,
+        "output_bytes": 12295,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Change the category of all AI/ML related items from 'Technology' to 'Artificial ",
+        "input_tokens": 6146,
+        "output_tokens": 3002,
+        "cached_input_tokens": 6016,
+        "latency_ms": 27675,
+        "output_bytes": 12349,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 11627,
+    "total_output_tokens": 6715,
+    "total_cached_input_tokens": 11264,
+    "total_latency_ms": 65147
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add 5 new items about Rust, WebAssembly, and edge computing topics with dates fr",
+        "input_tokens": 3762,
+        "output_tokens": 1236,
+        "latency_ms": 12271,
+        "output_bytes": 12386,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 7: target not found: start marker not found for target: item-title-16",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the channel-info to change the blog name to 'CodeStream Weekly' and add a",
+        "input_tokens": 3770,
+        "output_tokens": 128,
+        "cached_input_tokens": 3072,
+        "latency_ms": 1528,
+        "output_bytes": 12386,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 2: target not found: start marker not found for target: itunes:author",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Change the category of all AI/ML related items from 'Technology' to 'Artificial ",
+        "input_tokens": 3757,
+        "output_tokens": 133,
+        "cached_input_tokens": 3072,
+        "latency_ms": 1491,
+        "output_bytes": 12458,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 11289,
+    "total_output_tokens": 1497,
+    "total_cached_input_tokens": 6144,
+    "total_latency_ms": 15290,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.3333333333333333
+  },
+  "comparison": {
+    "output_token_savings_pct": 77.7,
+    "input_token_savings_pct": 2.9,
+    "latency_savings_pct": 76.5
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 2,
+    "miss_rate": 0.667,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 2,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 2: target not found: start marker not found for target: itunes:author": 1,
+      "apply failed: operation 7: target not found: start marker not found for target: item-title-16": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 30.3,
+    "fallback_adjusted": {
+      "input_tokens": 16770,
+      "output_tokens": 5210,
+      "total_tokens": 21980,
+      "miss_attempt_input_tokens": 7532,
+      "miss_attempt_output_tokens": 1364,
+      "miss_attempt_total_tokens": 8896,
+      "fallback_retry_input_tokens": 5481,
+      "fallback_retry_output_tokens": 3713,
+      "fallback_retry_total_tokens": 9194,
+      "input_token_savings_pct": -44.2,
+      "output_token_savings_pct": 22.4,
+      "total_token_savings_pct": -19.8
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 20678,
+      "gap_init_inclusive_tokens": 16421,
+      "fallback_init_inclusive_tokens": 25615,
+      "measured_init_inclusive_token_savings_pct": 20.6,
+      "fallback_init_inclusive_token_savings_pct": -23.9
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

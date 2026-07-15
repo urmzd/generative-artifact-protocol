@@ -1,0 +1,129 @@
+{
+  "experiment_id": "009-html-invoice",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:11:27Z",
+  "format": "text/html",
+  "base_turn0": {
+    "input_tokens": 132,
+    "output_tokens": 1560,
+    "latency_ms": 12327,
+    "artifact_bytes": 4868
+  },
+  "gap_turn0": {
+    "input_tokens": 209,
+    "output_tokens": 1649,
+    "latency_ms": 13455,
+    "artifact_bytes": 5882
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the company name to 'NovaTech Industries' and invoice number to INV-2026-",
+        "input_tokens": 1721,
+        "output_tokens": 1561,
+        "cached_input_tokens": 1664,
+        "latency_ms": 13541,
+        "output_bytes": 4871,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Add 4 more line items: Cloud Hosting Setup ($2,400), SSL Certificate ($199), Dat",
+        "input_tokens": 3324,
+        "output_tokens": 2022,
+        "cached_input_tokens": 3200,
+        "latency_ms": 16934,
+        "output_bytes": 6305,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 5045,
+    "total_output_tokens": 3583,
+    "total_cached_input_tokens": 4864,
+    "total_latency_ms": 30475
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the company name to 'NovaTech Industries' and invoice number to INV-2026-",
+        "input_tokens": 1976,
+        "output_tokens": 106,
+        "latency_ms": 1989,
+        "output_bytes": 5883,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Add 4 more line items: Cloud Hosting Setup ($2,400), SSL Certificate ($199), Dat",
+        "input_tokens": 1988,
+        "output_tokens": 518,
+        "latency_ms": 5173,
+        "output_bytes": 6911,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 3964,
+    "total_output_tokens": 624,
+    "total_latency_ms": 7162,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 82.6,
+    "input_token_savings_pct": 21.4,
+    "latency_savings_pct": 76.5
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 46.8,
+    "fallback_adjusted": {
+      "input_tokens": 3964,
+      "output_tokens": 624,
+      "total_tokens": 4588,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 21.4,
+      "output_token_savings_pct": 82.6,
+      "total_token_savings_pct": 46.8
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 10320,
+      "gap_init_inclusive_tokens": 6446,
+      "fallback_init_inclusive_tokens": 6446,
+      "measured_init_inclusive_token_savings_pct": 37.5,
+      "fallback_init_inclusive_token_savings_pct": 37.5
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

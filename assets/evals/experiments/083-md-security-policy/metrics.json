@@ -1,0 +1,130 @@
+{
+  "experiment_id": "083-md-security-policy",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:47:36Z",
+  "format": "text/markdown",
+  "base_turn0": {
+    "input_tokens": 88,
+    "output_tokens": 416,
+    "latency_ms": 4705,
+    "artifact_bytes": 1986
+  },
+  "gap_turn0": {
+    "input_tokens": 164,
+    "output_tokens": 448,
+    "latency_ms": 4913,
+    "artifact_bytes": 1878
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the response timeline to commit to: initial response within 24 hours, sta",
+        "input_tokens": 540,
+        "output_tokens": 429,
+        "latency_ms": 3484,
+        "output_bytes": 2025,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Add a 'Hall of Fame' section at the end listing 5 fictional security researchers",
+        "input_tokens": 999,
+        "output_tokens": 474,
+        "latency_ms": 6452,
+        "output_bytes": 2235,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 1539,
+    "total_output_tokens": 903,
+    "total_latency_ms": 9936
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the response timeline to commit to: initial response within 24 hours, sta",
+        "input_tokens": 782,
+        "output_tokens": 105,
+        "latency_ms": 1435,
+        "output_bytes": 2054,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Add a 'Hall of Fame' section at the end listing 5 fictional security researchers",
+        "input_tokens": 817,
+        "output_tokens": 113,
+        "latency_ms": 1332,
+        "output_bytes": 2054,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: safe-harbor-statement",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 1599,
+    "total_output_tokens": 218,
+    "total_latency_ms": 2767,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.5
+  },
+  "comparison": {
+    "output_token_savings_pct": 75.9,
+    "input_token_savings_pct": -3.9,
+    "latency_savings_pct": 72.2
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 1,
+    "miss_rate": 0.5,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 1,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: safe-harbor-statement": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 25.6,
+    "fallback_adjusted": {
+      "input_tokens": 2598,
+      "output_tokens": 692,
+      "total_tokens": 3290,
+      "miss_attempt_input_tokens": 817,
+      "miss_attempt_output_tokens": 113,
+      "miss_attempt_total_tokens": 930,
+      "fallback_retry_input_tokens": 999,
+      "fallback_retry_output_tokens": 474,
+      "fallback_retry_total_tokens": 1473,
+      "input_token_savings_pct": -68.8,
+      "output_token_savings_pct": 23.4,
+      "total_token_savings_pct": -34.7
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 2946,
+      "gap_init_inclusive_tokens": 2429,
+      "fallback_init_inclusive_tokens": 3902,
+      "measured_init_inclusive_token_savings_pct": 17.5,
+      "fallback_init_inclusive_token_savings_pct": -32.5
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
+}

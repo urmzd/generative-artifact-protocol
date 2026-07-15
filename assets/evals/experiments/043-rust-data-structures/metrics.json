@@ -1,0 +1,152 @@
+{
+  "experiment_id": "043-rust-data-structures",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:57:33Z",
+  "format": "text/x-rust",
+  "base_turn0": {
+    "input_tokens": 124,
+    "output_tokens": 1818,
+    "latency_ms": 18578,
+    "artifact_bytes": 7300
+  },
+  "gap_turn0": {
+    "input_tokens": 199,
+    "output_tokens": 1787,
+    "latency_ms": 18482,
+    "artifact_bytes": 7067
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a 'get_or_insert' method to the LRU Cache that takes a key and a closure, re",
+        "input_tokens": 1977,
+        "output_tokens": 729,
+        "latency_ms": 6816,
+        "output_bytes": 2683,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the Trie to support wildcard matching where '?' matches any single chara",
+        "input_tokens": 2734,
+        "output_tokens": 1223,
+        "cached_input_tokens": 2560,
+        "latency_ms": 11158,
+        "output_bytes": 5316,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new 'count_prefix' method to the Trie that returns how many inserted words",
+        "input_tokens": 3986,
+        "output_tokens": 1462,
+        "cached_input_tokens": 3840,
+        "latency_ms": 13112,
+        "output_bytes": 6300,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 8697,
+    "total_output_tokens": 3414,
+    "total_cached_input_tokens": 6400,
+    "total_latency_ms": 31086
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a 'get_or_insert' method to the LRU Cache that takes a key and a closure, re",
+        "input_tokens": 2124,
+        "output_tokens": 172,
+        "latency_ms": 1996,
+        "output_bytes": 6231,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the Trie to support wildcard matching where '?' matches any single chara",
+        "input_tokens": 1892,
+        "output_tokens": 293,
+        "latency_ms": 4580,
+        "output_bytes": 4484,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new 'count_prefix' method to the Trie that returns how many inserted words",
+        "input_tokens": 1476,
+        "output_tokens": 144,
+        "latency_ms": 1664,
+        "output_bytes": 4819,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 5492,
+    "total_output_tokens": 609,
+    "total_latency_ms": 8240,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 82.2,
+    "input_token_savings_pct": 36.9,
+    "latency_savings_pct": 73.5
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 49.6,
+    "fallback_adjusted": {
+      "input_tokens": 5492,
+      "output_tokens": 609,
+      "total_tokens": 6101,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 36.9,
+      "output_token_savings_pct": 82.2,
+      "total_token_savings_pct": 49.6
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 14053,
+      "gap_init_inclusive_tokens": 8087,
+      "fallback_init_inclusive_tokens": 8087,
+      "measured_init_inclusive_token_savings_pct": 42.5,
+      "fallback_init_inclusive_token_savings_pct": 42.5
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

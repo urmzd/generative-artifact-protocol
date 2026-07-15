@@ -1,0 +1,164 @@
+{
+  "experiment_id": "014-python-pytest-suite",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:17:39Z",
+  "format": "text/x-python",
+  "base_turn0": {
+    "input_tokens": 132,
+    "output_tokens": 1064,
+    "latency_ms": 9932,
+    "artifact_bytes": 4844
+  },
+  "gap_turn0": {
+    "input_tokens": 208,
+    "output_tokens": 1115,
+    "latency_ms": 10180,
+    "artifact_bytes": 4954
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new fixture 'sample_superadmin' with elevated permissions and update the p",
+        "input_tokens": 1229,
+        "output_tokens": 1297,
+        "cached_input_tokens": 1152,
+        "latency_ms": 14055,
+        "output_bytes": 5927,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Add 3 new parametrized test cases to test-login for multi-factor authentication ",
+        "input_tokens": 2563,
+        "output_tokens": 1481,
+        "cached_input_tokens": 2432,
+        "latency_ms": 16051,
+        "output_bytes": 6641,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the test-registration section to include tests for OAuth signup via Goog",
+        "input_tokens": 4069,
+        "output_tokens": 1735,
+        "cached_input_tokens": 3968,
+        "latency_ms": 17806,
+        "output_bytes": 7829,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 7861,
+    "total_output_tokens": 4513,
+    "total_cached_input_tokens": 7552,
+    "total_latency_ms": 47912
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new fixture 'sample_superadmin' with elevated permissions and update the p",
+        "input_tokens": 1446,
+        "output_tokens": 399,
+        "latency_ms": 4388,
+        "output_bytes": 4954,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: sample_users",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Add 3 new parametrized test cases to test-login for multi-factor authentication ",
+        "input_tokens": 1450,
+        "output_tokens": 573,
+        "cached_input_tokens": 1280,
+        "latency_ms": 5921,
+        "output_bytes": 4954,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: test_valid_login",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the test-registration section to include tests for OAuth signup via Goog",
+        "input_tokens": 1438,
+        "output_tokens": 254,
+        "cached_input_tokens": 1280,
+        "latency_ms": 3068,
+        "output_bytes": 4954,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: test_valid_signup",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 4334,
+    "total_output_tokens": 1226,
+    "total_cached_input_tokens": 2560,
+    "total_latency_ms": 13377,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
+  },
+  "comparison": {
+    "output_token_savings_pct": 72.8,
+    "input_token_savings_pct": 44.9,
+    "latency_savings_pct": 72.1
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 3,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 3,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: sample_users": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: test_valid_login": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: test_valid_signup": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 55.1,
+    "fallback_adjusted": {
+      "input_tokens": 12195,
+      "output_tokens": 5739,
+      "total_tokens": 17934,
+      "miss_attempt_input_tokens": 4334,
+      "miss_attempt_output_tokens": 1226,
+      "miss_attempt_total_tokens": 5560,
+      "fallback_retry_input_tokens": 7861,
+      "fallback_retry_output_tokens": 4513,
+      "fallback_retry_total_tokens": 12374,
+      "input_token_savings_pct": -55.1,
+      "output_token_savings_pct": -27.2,
+      "total_token_savings_pct": -44.9
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 13570,
+      "gap_init_inclusive_tokens": 6883,
+      "fallback_init_inclusive_tokens": 19257,
+      "measured_init_inclusive_token_savings_pct": 49.3,
+      "fallback_init_inclusive_token_savings_pct": -41.9
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
+}

@@ -1,0 +1,188 @@
+{
+  "experiment_id": "080-html-pricing-page",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:43:35Z",
+  "format": "text/html",
+  "base_turn0": {
+    "input_tokens": 139,
+    "output_tokens": 2066,
+    "latency_ms": 17821,
+    "artifact_bytes": 7002
+  },
+  "gap_turn0": {
+    "input_tokens": 216,
+    "output_tokens": 2593,
+    "latency_ms": 25909,
+    "artifact_bytes": 9063
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the Starter plan price to $19/mo and add a '14-day free trial' badge to a",
+        "input_tokens": 2235,
+        "output_tokens": 2139,
+        "cached_input_tokens": 2176,
+        "latency_ms": 19451,
+        "output_bytes": 7243,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the FAQ section to add 2 more questions about data export and SLA guaran",
+        "input_tokens": 4398,
+        "output_tokens": 2247,
+        "cached_input_tokens": 4352,
+        "latency_ms": 21402,
+        "output_bytes": 7663,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new 'Add-ons' section after the comparison table showing 4 optional add-on",
+        "input_tokens": 6696,
+        "output_tokens": 2505,
+        "cached_input_tokens": 6528,
+        "latency_ms": 23467,
+        "output_bytes": 8458,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 4,
+        "edit": "Change the annual discount from a percentage to show the exact savings: 'Save $5",
+        "input_tokens": 9239,
+        "output_tokens": 2565,
+        "cached_input_tokens": 9088,
+        "latency_ms": 22715,
+        "output_bytes": 8653,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 22568,
+    "total_output_tokens": 9456,
+    "total_cached_input_tokens": 22144,
+    "total_latency_ms": 87035
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the Starter plan price to $19/mo and add a '14-day free trial' badge to a",
+        "input_tokens": 2921,
+        "output_tokens": 162,
+        "latency_ms": 2229,
+        "output_bytes": 9195,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the FAQ section to add 2 more questions about data export and SLA guaran",
+        "input_tokens": 2951,
+        "output_tokens": 191,
+        "latency_ms": 2309,
+        "output_bytes": 9195,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: faq",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new 'Add-ons' section after the comparison table showing 4 optional add-on",
+        "input_tokens": 2977,
+        "output_tokens": 147,
+        "cached_input_tokens": 2816,
+        "latency_ms": 2409,
+        "output_bytes": 9195,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: comparison-table",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 4,
+        "edit": "Change the annual discount from a percentage to show the exact savings: 'Save $5",
+        "input_tokens": 2965,
+        "output_tokens": 116,
+        "cached_input_tokens": 2816,
+        "latency_ms": 1571,
+        "output_bytes": 9195,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: toggle-annual",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 11814,
+    "total_output_tokens": 616,
+    "total_cached_input_tokens": 5632,
+    "total_latency_ms": 8518,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.25
+  },
+  "comparison": {
+    "output_token_savings_pct": 93.5,
+    "input_token_savings_pct": 47.7,
+    "latency_savings_pct": 90.2
+  },
+  "reliability": {
+    "edit_turns": 4,
+    "miss_count": 3,
+    "miss_rate": 0.75,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 3,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: comparison-table": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: faq": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: toggle-annual": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 61.2,
+    "fallback_adjusted": {
+      "input_tokens": 32147,
+      "output_tokens": 7933,
+      "total_tokens": 40080,
+      "miss_attempt_input_tokens": 8893,
+      "miss_attempt_output_tokens": 454,
+      "miss_attempt_total_tokens": 9347,
+      "fallback_retry_input_tokens": 20333,
+      "fallback_retry_output_tokens": 7317,
+      "fallback_retry_total_tokens": 27650,
+      "input_token_savings_pct": -42.4,
+      "output_token_savings_pct": 16.1,
+      "total_token_savings_pct": -25.2
+    },
+    "amortized": {
+      "edit_turns": 4,
+      "base_init_inclusive_tokens": 34229,
+      "gap_init_inclusive_tokens": 15239,
+      "fallback_init_inclusive_tokens": 42889,
+      "measured_init_inclusive_token_savings_pct": 55.5,
+      "fallback_init_inclusive_token_savings_pct": -25.3
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
+}

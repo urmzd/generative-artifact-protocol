@@ -1,0 +1,163 @@
+{
+  "experiment_id": "031-yaml-k8s-deployment",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:42:12Z",
+  "format": "text/x-yaml",
+  "base_turn0": {
+    "input_tokens": 143,
+    "output_tokens": 722,
+    "latency_ms": 8336,
+    "artifact_bytes": 2769
+  },
+  "gap_turn0": {
+    "input_tokens": 218,
+    "output_tokens": 853,
+    "latency_ms": 8059,
+    "artifact_bytes": 3064
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the Deployment to use 5 replicas and add a PodDisruptionBudget with minAv",
+        "input_tokens": 894,
+        "output_tokens": 771,
+        "latency_ms": 8083,
+        "output_bytes": 2929,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Add a new Secret manifest containing database credentials and update the Deploym",
+        "input_tokens": 1691,
+        "output_tokens": 879,
+        "cached_input_tokens": 1536,
+        "latency_ms": 8708,
+        "output_bytes": 3356,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the Ingress to add a second host rule for api.example.com routing to a d",
+        "input_tokens": 2602,
+        "output_tokens": 981,
+        "cached_input_tokens": 2432,
+        "latency_ms": 9421,
+        "output_bytes": 3719,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 5187,
+    "total_output_tokens": 2631,
+    "total_cached_input_tokens": 3968,
+    "total_latency_ms": 26212
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the Deployment to use 5 replicas and add a PodDisruptionBudget with minAv",
+        "input_tokens": 1180,
+        "output_tokens": 132,
+        "latency_ms": 1860,
+        "output_bytes": 3064,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 1: target not found: end marker not found for target: deployment",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Add a new Secret manifest containing database credentials and update the Deploym",
+        "input_tokens": 1177,
+        "output_tokens": 216,
+        "cached_input_tokens": 1024,
+        "latency_ms": 2721,
+        "output_bytes": 3064,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: end marker not found for target: secret",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the Ingress to add a second host rule for api.example.com routing to a d",
+        "input_tokens": 1183,
+        "output_tokens": 150,
+        "cached_input_tokens": 1024,
+        "latency_ms": 4094,
+        "output_bytes": 3064,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: end marker not found for target: ingress",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 3540,
+    "total_output_tokens": 498,
+    "total_cached_input_tokens": 2048,
+    "total_latency_ms": 8675,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
+  },
+  "comparison": {
+    "output_token_savings_pct": 81.1,
+    "input_token_savings_pct": 31.8,
+    "latency_savings_pct": 66.9
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 3,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 3,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: end marker not found for target: ingress": 1,
+      "apply failed: operation 0: target not found: end marker not found for target: secret": 1,
+      "apply failed: operation 1: target not found: end marker not found for target: deployment": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 48.3,
+    "fallback_adjusted": {
+      "input_tokens": 8727,
+      "output_tokens": 3129,
+      "total_tokens": 11856,
+      "miss_attempt_input_tokens": 3540,
+      "miss_attempt_output_tokens": 498,
+      "miss_attempt_total_tokens": 4038,
+      "fallback_retry_input_tokens": 5187,
+      "fallback_retry_output_tokens": 2631,
+      "fallback_retry_total_tokens": 7818,
+      "input_token_savings_pct": -68.2,
+      "output_token_savings_pct": -18.9,
+      "total_token_savings_pct": -51.7
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 8683,
+      "gap_init_inclusive_tokens": 5109,
+      "fallback_init_inclusive_tokens": 12927,
+      "measured_init_inclusive_token_savings_pct": 41.2,
+      "fallback_init_inclusive_token_savings_pct": -48.9
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
+}

@@ -1,182 +1,159 @@
 {
+  "experiment_id": "044-go-http-server",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:58:49Z",
+  "format": "text/x-go",
   "base_turn0": {
-    "artifact_bytes": 11021,
-    "cached_input_tokens": 0,
-    "input_tokens": 151,
-    "latency_ms": 16074,
-    "median_itl_ms": 0.002708,
-    "output_tokens": 3174,
-    "ttft_ms": 1,
-    "ttlt_ms": 15007
+    "input_tokens": 152,
+    "output_tokens": 875,
+    "latency_ms": 10236,
+    "artifact_bytes": 3343
   },
-  "comparison": {
-    "input_token_savings_pct": 53.7,
-    "latency_savings_pct": 59.0,
-    "output_token_savings_pct": 64.2
+  "gap_turn0": {
+    "input_tokens": 414,
+    "output_tokens": 1090,
+    "latency_ms": 11421,
+    "artifact_bytes": 4367
   },
   "default_flow": {
     "per_turn": [
       {
-        "cached_input_tokens": 2816,
+        "turn": 1,
         "edit": "Add a new GetTopURLs handler (GET /urls/top?limit=10) that returns the most-clic",
-        "failed": false,
-        "input_tokens": 3360,
-        "latency_ms": 14980,
-        "median_itl_ms": 0.0031455,
-        "output_bytes": 12007,
-        "output_tokens": 3480,
-        "ttft_ms": 0,
-        "ttlt_ms": 14570,
-        "turn": 1
+        "input_tokens": 1063,
+        "output_tokens": 1134,
+        "latency_ms": 11058,
+        "output_bytes": 4263,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 6400,
+        "turn": 2,
         "edit": "Update the rate limiting middleware to use a per-IP token bucket with configurab",
-        "failed": false,
-        "input_tokens": 6874,
-        "latency_ms": 15990,
-        "median_itl_ms": 0.002542,
-        "output_bytes": 13225,
-        "output_tokens": 3868,
-        "ttft_ms": 4,
-        "ttlt_ms": 15704,
-        "turn": 2
+        "input_tokens": 2232,
+        "output_tokens": 1386,
+        "cached_input_tokens": 2176,
+        "latency_ms": 15945,
+        "output_bytes": 4996,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 10496,
+        "turn": 3,
         "edit": "Add URL expiration support: a new 'expires_at' field on the URL struct and a han",
-        "failed": false,
-        "input_tokens": 10779,
-        "latency_ms": 17488,
-        "median_itl_ms": 0.0026249999999999997,
-        "output_bytes": 14998,
-        "output_tokens": 4369,
-        "ttft_ms": 0,
-        "ttlt_ms": 16979,
-        "turn": 3
+        "input_tokens": 3656,
+        "output_tokens": 1626,
+        "cached_input_tokens": 3584,
+        "latency_ms": 18818,
+        "output_bytes": 5860,
+        "retried": false,
+        "failed": false
       }
     ],
-    "total_cached_input_tokens": 19712,
-    "total_input_tokens": 21013,
-    "total_latency_ms": 48458,
-    "total_output_tokens": 11717
+    "total_input_tokens": 6951,
+    "total_output_tokens": 4146,
+    "total_cached_input_tokens": 5760,
+    "total_latency_ms": 45821
   },
-  "experiment_id": "044-go-http-server",
-  "format": "text/x-go",
   "gap_flow": {
-    "apply_success_rate": 0.6666666666666666,
-    "envelope_parse_rate": 1.0,
     "per_turn": [
       {
-        "apply_succeeded": false,
-        "cached_input_tokens": 0,
+        "turn": 1,
         "edit": "Add a new GetTopURLs handler (GET /urls/top?limit=10) that returns the most-clic",
-        "envelope_name": "edit",
+        "input_tokens": 1424,
+        "output_tokens": 301,
+        "latency_ms": 3373,
+        "output_bytes": 5165,
+        "retried": false,
+        "failed": false,
         "envelope_parsed": true,
-        "failed": true,
-        "failure_reason": "parse or apply failed",
-        "input_tokens": 3454,
-        "latency_ms": 4671,
-        "median_itl_ms": 0.0029585,
-        "output_bytes": 11190,
-        "output_tokens": 925,
-        "ttft_ms": 3,
-        "ttlt_ms": 4068,
-        "turn": 1
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       },
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 2816,
+        "turn": 2,
         "edit": "Update the rate limiting middleware to use a per-IP token bucket with configurab",
-        "envelope_name": "edit",
+        "input_tokens": 1638,
+        "output_tokens": 299,
+        "cached_input_tokens": 1280,
+        "latency_ms": 3519,
+        "output_bytes": 5165,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: rateLimitMiddleware",
         "envelope_parsed": true,
-        "failed": false,
-        "input_tokens": 3453,
-        "latency_ms": 4288,
-        "median_itl_ms": 0.0023745,
-        "output_bytes": 8744,
-        "output_tokens": 767,
-        "ttft_ms": 34,
-        "ttlt_ms": 3840,
-        "turn": 2
+        "apply_succeeded": false,
+        "envelope_name": "edit"
       },
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
+        "turn": 3,
         "edit": "Add URL expiration support: a new 'expires_at' field on the URL struct and a han",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
+        "input_tokens": 1641,
+        "output_tokens": 354,
+        "cached_input_tokens": 1408,
+        "latency_ms": 4249,
+        "output_bytes": 789,
+        "retried": false,
         "failed": false,
-        "input_tokens": 2814,
-        "latency_ms": 10912,
-        "median_itl_ms": 0.002854,
-        "output_bytes": 9636,
-        "output_tokens": 2507,
-        "ttft_ms": 0,
-        "ttlt_ms": 10351,
-        "turn": 3
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       }
     ],
-    "total_cached_input_tokens": 2816,
-    "total_input_tokens": 9721,
-    "total_latency_ms": 19871,
-    "total_output_tokens": 4199
+    "total_input_tokens": 4703,
+    "total_output_tokens": 954,
+    "total_cached_input_tokens": 2688,
+    "total_latency_ms": 11141,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.6666666666666666
   },
-  "gap_turn0": {
-    "artifact_bytes": 11190,
-    "cached_input_tokens": 0,
-    "input_tokens": 413,
-    "latency_ms": 16073,
-    "median_itl_ms": 0.0025,
-    "output_tokens": 3187,
-    "ttft_ms": 0,
-    "ttlt_ms": 15759
+  "comparison": {
+    "output_token_savings_pct": 77,
+    "input_token_savings_pct": 32.3,
+    "latency_savings_pct": 75.7
   },
-  "model": "gpt-5.4-mini",
-  "provider": "openai",
-  "quality": {
-    "mean_rouge_l": 0.3981,
-    "mean_sequence_similarity": 0.4915,
-    "mean_token_f1": 0.6097,
-    "per_turn": [
-      {
-        "base_char_count": 12007,
-        "char_delta_pct": -15.5,
-        "gap_char_count": 10146,
-        "lines_added": 198,
-        "lines_removed": 267,
-        "rouge_l": 0.4197,
-        "sequence_similarity": 0.5188,
-        "token_f1": 0.6774,
-        "turn": 1
-      },
-      {
-        "base_char_count": 13225,
-        "char_delta_pct": -41.8,
-        "gap_char_count": 7700,
-        "lines_added": 151,
-        "lines_removed": 370,
-        "rouge_l": 0.3811,
-        "sequence_similarity": 0.4699,
-        "token_f1": 0.5762,
-        "turn": 2
-      },
-      {
-        "base_char_count": 14998,
-        "char_delta_pct": -42.7,
-        "gap_char_count": 8592,
-        "lines_added": 171,
-        "lines_removed": 428,
-        "rouge_l": 0.3934,
-        "sequence_similarity": 0.4858,
-        "token_f1": 0.5754,
-        "turn": 3
-      }
-    ]
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 1,
+    "miss_rate": 0.33299999999999996,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 1,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: rateLimitMiddleware": 1
+    }
   },
-  "timestamp": "2026-05-29T03:05:22Z",
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 49,
+    "fallback_adjusted": {
+      "input_tokens": 6935,
+      "output_tokens": 2340,
+      "total_tokens": 9275,
+      "miss_attempt_input_tokens": 1638,
+      "miss_attempt_output_tokens": 299,
+      "miss_attempt_total_tokens": 1937,
+      "fallback_retry_input_tokens": 2232,
+      "fallback_retry_output_tokens": 1386,
+      "fallback_retry_total_tokens": 3618,
+      "input_token_savings_pct": 0.2,
+      "output_token_savings_pct": 43.6,
+      "total_token_savings_pct": 16.4
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 12124,
+      "gap_init_inclusive_tokens": 7161,
+      "fallback_init_inclusive_tokens": 10779,
+      "measured_init_inclusive_token_savings_pct": 40.9,
+      "fallback_init_inclusive_token_savings_pct": 11.1
+    }
+  },
   "validity": {
-    "base_input_monotone": true,
-    "gap_run_degenerate": false
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
   }
 }

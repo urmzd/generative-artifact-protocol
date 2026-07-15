@@ -1,0 +1,128 @@
+{
+  "experiment_id": "064-python-conftest",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:17:49Z",
+  "format": "text/x-python",
+  "base_turn0": {
+    "input_tokens": 100,
+    "output_tokens": 524,
+    "latency_ms": 4823,
+    "artifact_bytes": 2416
+  },
+  "gap_turn0": {
+    "input_tokens": 176,
+    "output_tokens": 648,
+    "latency_ms": 6080,
+    "artifact_bytes": 2770
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new fixture 'mock_redis' that patches the Redis connection with fakeredis ",
+        "input_tokens": 655,
+        "output_tokens": 567,
+        "latency_ms": 5728,
+        "output_bytes": 2600,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the factories section to add a 'create_comment' factory with fields: tas",
+        "input_tokens": 1260,
+        "output_tokens": 637,
+        "cached_input_tokens": 1152,
+        "latency_ms": 6555,
+        "output_bytes": 2912,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 1915,
+    "total_output_tokens": 1204,
+    "total_cached_input_tokens": 1152,
+    "total_latency_ms": 12283
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new fixture 'mock_redis' that patches the Redis connection with fakeredis ",
+        "input_tokens": 977,
+        "output_tokens": 105,
+        "latency_ms": 1497,
+        "output_bytes": 2939,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the factories section to add a 'create_comment' factory with fields: tas",
+        "input_tokens": 1022,
+        "output_tokens": 145,
+        "latency_ms": 1678,
+        "output_bytes": 3282,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 1999,
+    "total_output_tokens": 250,
+    "total_latency_ms": 3175,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 79.2,
+    "input_token_savings_pct": -4.4,
+    "latency_savings_pct": 74.2
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 27.9,
+    "fallback_adjusted": {
+      "input_tokens": 1999,
+      "output_tokens": 250,
+      "total_tokens": 2249,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": -4.4,
+      "output_token_savings_pct": 79.2,
+      "total_token_savings_pct": 27.9
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 3743,
+      "gap_init_inclusive_tokens": 3073,
+      "fallback_init_inclusive_tokens": 3073,
+      "measured_init_inclusive_token_savings_pct": 17.9,
+      "fallback_init_inclusive_token_savings_pct": 17.9
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

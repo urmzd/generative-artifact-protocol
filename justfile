@@ -8,6 +8,10 @@ test:
 evalset:
     go run ./internal/evalsetgen
 
+# Regenerate the eval results report from committed/live metrics
+report:
+    go run ./internal/evalreport
+
 # Run live OpenAI-compatible eval experiments. flow ∈ base|stateless|gap|both|abc|all
 run count="0" model="" id="" flow="both" api-base="" api-key="" force="false":
     #!/usr/bin/env sh
@@ -23,8 +27,10 @@ run count="0" model="" id="" flow="both" api-base="" api-key="" force="false":
 
 # Format check, vet, and tests (same gate as CI)
 check:
-    test -z "$(gofmt -l *.go cmd/gap-eval/*.go evalset/*.go internal/evalsetgen/*.go internal/liveeval/*.go)"
+    test -z "$(gofmt -l *.go cmd/gap-eval/*.go evalset/*.go internal/evalsetgen/*.go internal/evalreport/*.go internal/liveeval/*.go)"
     go run ./internal/evalsetgen
     git diff --exit-code -- assets/evals/saige/observations.json
+    go run ./internal/evalreport
+    git diff --exit-code -- assets/evals/experiments/results.md
     go vet ./...
     go test ./...

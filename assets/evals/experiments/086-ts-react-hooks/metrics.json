@@ -1,0 +1,161 @@
+{
+  "experiment_id": "086-ts-react-hooks",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:51:12Z",
+  "format": "text/typescript",
+  "base_turn0": {
+    "input_tokens": 136,
+    "output_tokens": 1513,
+    "latency_ms": 13720,
+    "artifact_bytes": 6586
+  },
+  "gap_turn0": {
+    "input_tokens": 212,
+    "output_tokens": 1596,
+    "latency_ms": 16462,
+    "artifact_bytes": 6875
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new useWebSocket\u003cT\u003e hook to the data-hooks section that manages a WebSocke",
+        "input_tokens": 1684,
+        "output_tokens": 356,
+        "latency_ms": 3892,
+        "output_bytes": 1697,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the useForm hook to support nested object fields using dot notation paths",
+        "input_tokens": 2076,
+        "output_tokens": 227,
+        "cached_input_tokens": 1920,
+        "latency_ms": 2250,
+        "output_bytes": 1040,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the useToast hook to support toast stacking with a max of 5 visible toas",
+        "input_tokens": 2343,
+        "output_tokens": 430,
+        "cached_input_tokens": 2176,
+        "latency_ms": 4300,
+        "output_bytes": 1680,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 6103,
+    "total_output_tokens": 1013,
+    "total_cached_input_tokens": 4096,
+    "total_latency_ms": 10442
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new useWebSocket\u003cT\u003e hook to the data-hooks section that manages a WebSocke",
+        "input_tokens": 1933,
+        "output_tokens": 353,
+        "latency_ms": 4223,
+        "output_bytes": 6875,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: end marker not found for target: data-hooks",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the useForm hook to support nested object fields using dot notation paths",
+        "input_tokens": 1930,
+        "output_tokens": 289,
+        "cached_input_tokens": 1024,
+        "latency_ms": 3211,
+        "output_bytes": 6875,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: end marker not found for target: form-hooks",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the useToast hook to support toast stacking with a max of 5 visible toas",
+        "input_tokens": 1934,
+        "output_tokens": 277,
+        "cached_input_tokens": 1024,
+        "latency_ms": 2740,
+        "output_bytes": 7248,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 5797,
+    "total_output_tokens": 919,
+    "total_cached_input_tokens": 2048,
+    "total_latency_ms": 10174,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.3333333333333333
+  },
+  "comparison": {
+    "output_token_savings_pct": 9.3,
+    "input_token_savings_pct": 5,
+    "latency_savings_pct": 2.6
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 2,
+    "miss_rate": 0.667,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 2,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: end marker not found for target: data-hooks": 1,
+      "apply failed: operation 0: target not found: end marker not found for target: form-hooks": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 5.6,
+    "fallback_adjusted": {
+      "input_tokens": 9557,
+      "output_tokens": 1502,
+      "total_tokens": 11059,
+      "miss_attempt_input_tokens": 3863,
+      "miss_attempt_output_tokens": 642,
+      "miss_attempt_total_tokens": 4505,
+      "fallback_retry_input_tokens": 3760,
+      "fallback_retry_output_tokens": 583,
+      "fallback_retry_total_tokens": 4343,
+      "input_token_savings_pct": -56.6,
+      "output_token_savings_pct": -48.3,
+      "total_token_savings_pct": -55.4
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 8765,
+      "gap_init_inclusive_tokens": 8524,
+      "fallback_init_inclusive_tokens": 12867,
+      "measured_init_inclusive_token_savings_pct": 2.7,
+      "fallback_init_inclusive_token_savings_pct": -46.8
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

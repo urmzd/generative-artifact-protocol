@@ -1,178 +1,153 @@
 {
+  "experiment_id": "020-ts-react-form",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:24:14Z",
+  "format": "text/typescript",
   "base_turn0": {
-    "artifact_bytes": 16554,
-    "cached_input_tokens": 0,
-    "input_tokens": 132,
-    "latency_ms": 21174,
-    "median_itl_ms": 0.005688,
-    "output_tokens": 4398,
-    "ttft_ms": 0,
-    "ttlt_ms": 20743
+    "input_tokens": 133,
+    "output_tokens": 1442,
+    "latency_ms": 13174,
+    "artifact_bytes": 5649
   },
-  "comparison": {
-    "input_token_savings_pct": 36.9,
-    "latency_savings_pct": 64.2,
-    "output_token_savings_pct": 68.9
+  "gap_turn0": {
+    "input_tokens": 395,
+    "output_tokens": 1365,
+    "latency_ms": 13095,
+    "artifact_bytes": 5589
   },
   "default_flow": {
     "per_turn": [
       {
-        "cached_input_tokens": 0,
+        "turn": 1,
         "edit": "Add a new ShippingOption interface with fields: id, name, price, estimated_days,",
-        "failed": false,
-        "input_tokens": 4557,
-        "latency_ms": 17997,
-        "median_itl_ms": 0.002916,
-        "output_bytes": 16595,
-        "output_tokens": 4409,
-        "ttft_ms": 7,
-        "ttlt_ms": 17616,
-        "turn": 1
+        "input_tokens": 1603,
+        "output_tokens": 1471,
+        "cached_input_tokens": 1536,
+        "latency_ms": 12706,
+        "output_bytes": 5765,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 8448,
+        "turn": 2,
         "edit": "Rewrite the form-fields section to add a promo code input with a 'Apply' button ",
-        "failed": false,
-        "input_tokens": 9002,
-        "latency_ms": 21968,
-        "median_itl_ms": 0.0032294999999999997,
-        "output_bytes": 19431,
-        "output_tokens": 5116,
-        "ttft_ms": 10,
-        "ttlt_ms": 21490,
-        "turn": 2
+        "input_tokens": 3111,
+        "output_tokens": 1665,
+        "cached_input_tokens": 2944,
+        "latency_ms": 13727,
+        "output_bytes": 6490,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 13568,
+        "turn": 3,
         "edit": "Update the validation functions to show inline error messages below each field i",
-        "failed": false,
-        "input_tokens": 14146,
-        "latency_ms": 23114,
-        "median_itl_ms": 0.003375,
-        "output_bytes": 19431,
-        "output_tokens": 5116,
-        "ttft_ms": 7,
-        "ttlt_ms": 22541,
-        "turn": 3
+        "input_tokens": 4805,
+        "output_tokens": 1671,
+        "cached_input_tokens": 4736,
+        "latency_ms": 13093,
+        "output_bytes": 6544,
+        "retried": false,
+        "failed": false
       }
     ],
-    "total_cached_input_tokens": 22016,
-    "total_input_tokens": 27705,
-    "total_latency_ms": 63079,
-    "total_output_tokens": 14641
+    "total_input_tokens": 9519,
+    "total_output_tokens": 4807,
+    "total_cached_input_tokens": 9216,
+    "total_latency_ms": 39526
   },
-  "experiment_id": "020-ts-react-form",
-  "format": "text/typescript",
   "gap_flow": {
-    "apply_success_rate": 0.6666666666666666,
-    "envelope_parse_rate": 1.0,
     "per_turn": [
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
+        "turn": 1,
         "edit": "Add a new ShippingOption interface with fields: id, name, price, estimated_days,",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
+        "input_tokens": 1691,
+        "output_tokens": 100,
+        "latency_ms": 1177,
+        "output_bytes": 183,
+        "retried": false,
         "failed": false,
-        "input_tokens": 5801,
-        "latency_ms": 1215,
-        "median_itl_ms": 0.002291,
-        "output_bytes": 21734,
-        "output_tokens": 112,
-        "ttft_ms": 19,
-        "ttlt_ms": 527,
-        "turn": 1
-      },
-      {
-        "apply_succeeded": false,
-        "cached_input_tokens": 0,
-        "edit": "Rewrite the form-fields section to add a promo code input with a 'Apply' button ",
-        "envelope_name": "edit",
         "envelope_parsed": true,
-        "failed": true,
-        "failure_reason": "parse or apply failed",
-        "input_tokens": 5846,
-        "latency_ms": 11324,
-        "median_itl_ms": 0.003104,
-        "output_bytes": 21734,
-        "output_tokens": 2409,
-        "ttft_ms": 0,
-        "ttlt_ms": 10806,
-        "turn": 2
-      },
-      {
         "apply_succeeded": true,
-        "cached_input_tokens": 4864,
-        "edit": "Update the validation functions to show inline error messages below each field i",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the form-fields section to add a promo code input with a 'Apply' button ",
+        "input_tokens": 380,
+        "output_tokens": 201,
+        "latency_ms": 2269,
+        "output_bytes": 569,
+        "retried": false,
         "failed": false,
-        "input_tokens": 5838,
-        "latency_ms": 10014,
-        "median_itl_ms": 0.008833500000000001,
-        "output_bytes": 21769,
-        "output_tokens": 2033,
-        "ttft_ms": 37,
-        "ttlt_ms": 9633,
-        "turn": 3
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Update the validation functions to show inline error messages below each field i",
+        "input_tokens": 463,
+        "output_tokens": 149,
+        "latency_ms": 1724,
+        "output_bytes": 417,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       }
     ],
-    "total_cached_input_tokens": 4864,
-    "total_input_tokens": 17485,
-    "total_latency_ms": 22553,
-    "total_output_tokens": 4554
+    "total_input_tokens": 2534,
+    "total_output_tokens": 450,
+    "total_latency_ms": 5170,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
   },
-  "gap_turn0": {
-    "artifact_bytes": 21576,
-    "cached_input_tokens": 0,
-    "input_tokens": 394,
-    "latency_ms": 25492,
-    "median_itl_ms": 0.0034165000000000003,
-    "output_tokens": 5536,
-    "ttft_ms": 0,
-    "ttlt_ms": 25240
+  "comparison": {
+    "output_token_savings_pct": 90.6,
+    "input_token_savings_pct": 73.4,
+    "latency_savings_pct": 86.9
   },
-  "model": "gpt-5.4-mini",
-  "provider": "openai",
-  "quality": {
-    "mean_rouge_l": 0.3927,
-    "mean_sequence_similarity": 0.5868,
-    "mean_token_f1": 0.5544,
-    "per_turn": [
-      {
-        "base_char_count": 16595,
-        "char_delta_pct": 6.1,
-        "gap_char_count": 17608,
-        "lines_added": 437,
-        "lines_removed": 529,
-        "rouge_l": 0.4229,
-        "sequence_similarity": 0.606,
-        "token_f1": 0.5851,
-        "turn": 1
-      },
-      {
-        "base_char_count": 19431,
-        "char_delta_pct": -9.4,
-        "gap_char_count": 17608,
-        "lines_added": 434,
-        "lines_removed": 613,
-        "rouge_l": 0.403,
-        "sequence_similarity": 0.589,
-        "token_f1": 0.5622,
-        "turn": 2
-      },
-      {
-        "base_char_count": 19431,
-        "char_delta_pct": -8.1,
-        "gap_char_count": 17856,
-        "lines_added": 431,
-        "lines_removed": 616,
-        "rouge_l": 0.3521,
-        "sequence_similarity": 0.5653,
-        "token_f1": 0.5159,
-        "turn": 3
-      }
-    ]
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
   },
-  "timestamp": "2026-05-29T02:52:17Z"
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 79.2,
+    "fallback_adjusted": {
+      "input_tokens": 2534,
+      "output_tokens": 450,
+      "total_tokens": 2984,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 73.4,
+      "output_token_savings_pct": 90.6,
+      "total_token_savings_pct": 79.2
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 15901,
+      "gap_init_inclusive_tokens": 4744,
+      "fallback_init_inclusive_tokens": 4744,
+      "measured_init_inclusive_token_savings_pct": 70.2,
+      "fallback_init_inclusive_token_savings_pct": 70.2
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
 }

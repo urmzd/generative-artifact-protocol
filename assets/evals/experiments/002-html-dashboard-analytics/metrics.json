@@ -1,0 +1,185 @@
+{
+  "experiment_id": "002-html-dashboard-analytics",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T01:56:37Z",
+  "format": "text/html",
+  "base_turn0": {
+    "input_tokens": 123,
+    "output_tokens": 2218,
+    "latency_ms": 16244,
+    "artifact_bytes": 7158
+  },
+  "gap_turn0": {
+    "input_tokens": 200,
+    "output_tokens": 1639,
+    "latency_ms": 15985,
+    "artifact_bytes": 5919
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the Bounce Rate KPI card to show 34.2% with a -5.1% improvement trend",
+        "input_tokens": 2371,
+        "output_tokens": 2236,
+        "cached_input_tokens": 2304,
+        "latency_ms": 16204,
+        "output_bytes": 7201,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Add 20 new rows to the traffic sources table with social media referral data fro",
+        "input_tokens": 4636,
+        "output_tokens": 4455,
+        "cached_input_tokens": 4480,
+        "latency_ms": 31006,
+        "output_bytes": 13400,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Replace the top referrers list with a new list of 15 referrers focused on develo",
+        "input_tokens": 9120,
+        "output_tokens": 3656,
+        "cached_input_tokens": 8960,
+        "latency_ms": 26622,
+        "output_bytes": 11085,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 4,
+        "edit": "Add a new 'Conversion Funnel' section after the KPI cards showing 5 funnel stage",
+        "input_tokens": 12805,
+        "output_tokens": 4018,
+        "cached_input_tokens": 12672,
+        "latency_ms": 29444,
+        "output_bytes": 12280,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 28932,
+    "total_output_tokens": 14365,
+    "total_cached_input_tokens": 28416,
+    "total_latency_ms": 103276
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the Bounce Rate KPI card to show 34.2% with a -5.1% improvement trend",
+        "input_tokens": 1967,
+        "output_tokens": 91,
+        "latency_ms": 1236,
+        "output_bytes": 5919,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 1: target not found: start marker not found for target: bounce-rate-trend",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Add 20 new rows to the traffic sources table with social media referral data fro",
+        "input_tokens": 1966,
+        "output_tokens": 3682,
+        "cached_input_tokens": 1024,
+        "latency_ms": 36395,
+        "output_bytes": 15269,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Replace the top referrers list with a new list of 15 referrers focused on develo",
+        "input_tokens": 5346,
+        "output_tokens": 773,
+        "cached_input_tokens": 1024,
+        "latency_ms": 8489,
+        "output_bytes": 17043,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 4,
+        "edit": "Add a new 'Conversion Funnel' section after the KPI cards showing 5 funnel stage",
+        "input_tokens": 5960,
+        "output_tokens": 680,
+        "cached_input_tokens": 4224,
+        "latency_ms": 6097,
+        "output_bytes": 18892,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 15239,
+    "total_output_tokens": 5226,
+    "total_cached_input_tokens": 6272,
+    "total_latency_ms": 52217,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.75
+  },
+  "comparison": {
+    "output_token_savings_pct": 63.6,
+    "input_token_savings_pct": 47.3,
+    "latency_savings_pct": 49.4
+  },
+  "reliability": {
+    "edit_turns": 4,
+    "miss_count": 1,
+    "miss_rate": 0.25,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 1,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 1: target not found: start marker not found for target: bounce-rate-trend": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 52.7,
+    "fallback_adjusted": {
+      "input_tokens": 17610,
+      "output_tokens": 7462,
+      "total_tokens": 25072,
+      "miss_attempt_input_tokens": 1967,
+      "miss_attempt_output_tokens": 91,
+      "miss_attempt_total_tokens": 2058,
+      "fallback_retry_input_tokens": 2371,
+      "fallback_retry_output_tokens": 2236,
+      "fallback_retry_total_tokens": 4607,
+      "input_token_savings_pct": 39.1,
+      "output_token_savings_pct": 48.1,
+      "total_token_savings_pct": 42.1
+    },
+    "amortized": {
+      "edit_turns": 4,
+      "base_init_inclusive_tokens": 45638,
+      "gap_init_inclusive_tokens": 22304,
+      "fallback_init_inclusive_tokens": 26911,
+      "measured_init_inclusive_token_savings_pct": 51.1,
+      "fallback_init_inclusive_token_savings_pct": 41
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

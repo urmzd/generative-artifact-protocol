@@ -1,0 +1,128 @@
+{
+  "experiment_id": "047-shell-setup-dev",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:02:16Z",
+  "format": "text/x-sh",
+  "base_turn0": {
+    "input_tokens": 124,
+    "output_tokens": 749,
+    "latency_ms": 8019,
+    "artifact_bytes": 2915
+  },
+  "gap_turn0": {
+    "input_tokens": 200,
+    "output_tokens": 478,
+    "latency_ms": 5122,
+    "artifact_bytes": 1583
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add Rust installation via rustup to the install-deps section with the stable too",
+        "input_tokens": 901,
+        "output_tokens": 828,
+        "latency_ms": 8497,
+        "output_bytes": 3212,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the verify section to output a formatted summary table showing each tool ",
+        "input_tokens": 1763,
+        "output_tokens": 1242,
+        "cached_input_tokens": 1664,
+        "latency_ms": 11672,
+        "output_bytes": 4828,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 2664,
+    "total_output_tokens": 2070,
+    "total_cached_input_tokens": 1664,
+    "total_latency_ms": 20169
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add Rust installation via rustup to the install-deps section with the stable too",
+        "input_tokens": 800,
+        "output_tokens": 251,
+        "latency_ms": 3479,
+        "output_bytes": 1813,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the verify section to output a formatted summary table showing each tool ",
+        "input_tokens": 870,
+        "output_tokens": 442,
+        "latency_ms": 5426,
+        "output_bytes": 2904,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 1670,
+    "total_output_tokens": 693,
+    "total_latency_ms": 8905,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 66.5,
+    "input_token_savings_pct": 37.3,
+    "latency_savings_pct": 55.8
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 50.1,
+    "fallback_adjusted": {
+      "input_tokens": 1670,
+      "output_tokens": 693,
+      "total_tokens": 2363,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 37.3,
+      "output_token_savings_pct": 66.5,
+      "total_token_savings_pct": 50.1
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 5607,
+      "gap_init_inclusive_tokens": 3041,
+      "fallback_init_inclusive_tokens": 3041,
+      "measured_init_inclusive_token_savings_pct": 45.8,
+      "fallback_init_inclusive_token_savings_pct": 45.8
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

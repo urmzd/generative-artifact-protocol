@@ -1,177 +1,152 @@
 {
+  "experiment_id": "011-python-fastapi-users",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:14:49Z",
+  "format": "text/x-python",
   "base_turn0": {
-    "artifact_bytes": 5933,
-    "cached_input_tokens": 0,
-    "input_tokens": 147,
-    "latency_ms": 7165,
-    "median_itl_ms": 0.004541,
-    "output_tokens": 1451,
-    "ttft_ms": 65,
-    "ttlt_ms": 6627
+    "input_tokens": 148,
+    "output_tokens": 811,
+    "latency_ms": 6939,
+    "artifact_bytes": 3287
   },
-  "comparison": {
-    "input_token_savings_pct": 0.9,
-    "latency_savings_pct": 82.3,
-    "output_token_savings_pct": 89.1
+  "gap_turn0": {
+    "input_tokens": 410,
+    "output_tokens": 916,
+    "latency_ms": 10041,
+    "artifact_bytes": 3780
   },
   "default_flow": {
     "per_turn": [
       {
-        "cached_input_tokens": 0,
+        "turn": 1,
         "edit": "Add a 'role' field to UserCreate schema with allowed values 'admin', 'editor', '",
-        "failed": false,
-        "input_tokens": 1632,
-        "latency_ms": 6982,
-        "median_itl_ms": 0.00375,
-        "output_bytes": 6171,
-        "output_tokens": 1507,
-        "ttft_ms": 4,
-        "ttlt_ms": 6690,
-        "turn": 1
+        "input_tokens": 994,
+        "output_tokens": 835,
+        "latency_ms": 7933,
+        "output_bytes": 3384,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 1280,
+        "turn": 2,
         "edit": "Rewrite the list_users CRUD function to support filtering by role and is_active ",
-        "failed": false,
-        "input_tokens": 3161,
-        "latency_ms": 6851,
-        "median_itl_ms": 0.002959,
-        "output_bytes": 6737,
-        "output_tokens": 1645,
-        "ttft_ms": 2,
-        "ttlt_ms": 6586,
-        "turn": 2
+        "input_tokens": 1852,
+        "output_tokens": 890,
+        "cached_input_tokens": 1792,
+        "latency_ms": 9079,
+        "output_bytes": 3614,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 4352,
+        "turn": 3,
         "edit": "Add a new PATCH /users/{id}/deactivate endpoint that sets is_active to False and",
-        "failed": false,
-        "input_tokens": 4836,
-        "latency_ms": 7199,
-        "median_itl_ms": 0.00425,
-        "output_bytes": 7088,
-        "output_tokens": 1733,
-        "ttft_ms": 9,
-        "ttlt_ms": 6758,
-        "turn": 3
+        "input_tokens": 2773,
+        "output_tokens": 984,
+        "cached_input_tokens": 2688,
+        "latency_ms": 9746,
+        "output_bytes": 3992,
+        "retried": false,
+        "failed": false
       }
     ],
-    "total_cached_input_tokens": 5632,
-    "total_input_tokens": 9629,
-    "total_latency_ms": 21032,
-    "total_output_tokens": 4885
+    "total_input_tokens": 5619,
+    "total_output_tokens": 2709,
+    "total_cached_input_tokens": 4480,
+    "total_latency_ms": 26758
   },
-  "experiment_id": "011-python-fastapi-users",
-  "format": "text/x-python",
   "gap_flow": {
-    "apply_success_rate": 1.0,
-    "envelope_parse_rate": 1.0,
     "per_turn": [
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
+        "turn": 1,
         "edit": "Add a 'role' field to UserCreate schema with allowed values 'admin', 'editor', '",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
+        "input_tokens": 1248,
+        "output_tokens": 125,
+        "latency_ms": 1579,
+        "output_bytes": 3314,
+        "retried": false,
         "failed": false,
-        "input_tokens": 3179,
-        "latency_ms": 1138,
-        "median_itl_ms": 0.008604500000000001,
-        "output_bytes": 11831,
-        "output_tokens": 113,
-        "ttft_ms": 0,
-        "ttlt_ms": 528,
-        "turn": 1
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       },
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
+        "turn": 2,
         "edit": "Rewrite the list_users CRUD function to support filtering by role and is_active ",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
+        "input_tokens": 1121,
+        "output_tokens": 174,
+        "latency_ms": 2876,
+        "output_bytes": 2580,
+        "retried": false,
         "failed": false,
-        "input_tokens": 3187,
-        "latency_ms": 1240,
-        "median_itl_ms": 0.004416,
-        "output_bytes": 11730,
-        "output_tokens": 208,
-        "ttft_ms": 4,
-        "ttlt_ms": 786,
-        "turn": 2
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       },
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
+        "turn": 3,
         "edit": "Add a new PATCH /users/{id}/deactivate endpoint that sets is_active to False and",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
+        "input_tokens": 959,
+        "output_tokens": 135,
+        "latency_ms": 2617,
+        "output_bytes": 2865,
+        "retried": false,
         "failed": false,
-        "input_tokens": 3173,
-        "latency_ms": 1347,
-        "median_itl_ms": 0.00275,
-        "output_bytes": 12239,
-        "output_tokens": 210,
-        "ttft_ms": 2,
-        "ttlt_ms": 889,
-        "turn": 3
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       }
     ],
-    "total_cached_input_tokens": 0,
-    "total_input_tokens": 9539,
-    "total_latency_ms": 3725,
-    "total_output_tokens": 531
+    "total_input_tokens": 3328,
+    "total_output_tokens": 434,
+    "total_latency_ms": 7072,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
   },
-  "gap_turn0": {
-    "artifact_bytes": 11744,
-    "cached_input_tokens": 0,
-    "input_tokens": 409,
-    "latency_ms": 12637,
-    "median_itl_ms": 0.00275,
-    "output_tokens": 2907,
-    "ttft_ms": 5,
-    "ttlt_ms": 12417
+  "comparison": {
+    "output_token_savings_pct": 84,
+    "input_token_savings_pct": 40.8,
+    "latency_savings_pct": 73.6
   },
-  "model": "gpt-5.4-mini",
-  "provider": "openai",
-  "quality": {
-    "mean_rouge_l": 0.5204,
-    "mean_sequence_similarity": 0.6042,
-    "mean_token_f1": 0.6461,
-    "per_turn": [
-      {
-        "base_char_count": 6171,
-        "char_delta_pct": 17.2,
-        "gap_char_count": 7230,
-        "lines_added": 238,
-        "lines_removed": 173,
-        "rouge_l": 0.5333,
-        "sequence_similarity": 0.6104,
-        "token_f1": 0.6521,
-        "turn": 1
-      },
-      {
-        "base_char_count": 6737,
-        "char_delta_pct": 9.2,
-        "gap_char_count": 7356,
-        "lines_added": 234,
-        "lines_removed": 189,
-        "rouge_l": 0.5225,
-        "sequence_similarity": 0.6071,
-        "token_f1": 0.6412,
-        "turn": 2
-      },
-      {
-        "base_char_count": 7088,
-        "char_delta_pct": 8.7,
-        "gap_char_count": 7706,
-        "lines_added": 245,
-        "lines_removed": 201,
-        "rouge_l": 0.5053,
-        "sequence_similarity": 0.5951,
-        "token_f1": 0.645,
-        "turn": 3
-      }
-    ]
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
   },
-  "timestamp": "2026-05-29T02:49:20Z"
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 54.8,
+    "fallback_adjusted": {
+      "input_tokens": 3328,
+      "output_tokens": 434,
+      "total_tokens": 3762,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 40.8,
+      "output_token_savings_pct": 84,
+      "total_token_savings_pct": 54.8
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 9287,
+      "gap_init_inclusive_tokens": 5088,
+      "fallback_init_inclusive_tokens": 5088,
+      "measured_init_inclusive_token_savings_pct": 45.2,
+      "fallback_init_inclusive_token_savings_pct": 45.2
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
 }

@@ -1,0 +1,184 @@
+{
+  "experiment_id": "018-js-react-data-table",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:21:20Z",
+  "format": "text/javascript",
+  "base_turn0": {
+    "input_tokens": 130,
+    "output_tokens": 1254,
+    "latency_ms": 11834,
+    "artifact_bytes": 4790
+  },
+  "gap_turn0": {
+    "input_tokens": 207,
+    "output_tokens": 1342,
+    "latency_ms": 11227,
+    "artifact_bytes": 4515
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'department' column after 'role' with values like Engineering, Marketi",
+        "input_tokens": 1414,
+        "output_tokens": 1458,
+        "cached_input_tokens": 1280,
+        "latency_ms": 14964,
+        "output_bytes": 5640,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the toolbar component to include a date range filter with 'from' and 'to",
+        "input_tokens": 2901,
+        "output_tokens": 1628,
+        "cached_input_tokens": 2816,
+        "latency_ms": 15466,
+        "output_bytes": 6300,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Add 10 more user entries to the sample data with international names and email a",
+        "input_tokens": 4553,
+        "output_tokens": 2158,
+        "cached_input_tokens": 4480,
+        "latency_ms": 20629,
+        "output_bytes": 7881,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 4,
+        "edit": "Update the pagination component to show 'Showing X-Y of Z results' text and a ju",
+        "input_tokens": 6740,
+        "output_tokens": 2417,
+        "cached_input_tokens": 6656,
+        "latency_ms": 21808,
+        "output_bytes": 8877,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 15608,
+    "total_output_tokens": 7661,
+    "total_cached_input_tokens": 15232,
+    "total_latency_ms": 72867
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'department' column after 'role' with values like Engineering, Marketi",
+        "input_tokens": 1670,
+        "output_tokens": 877,
+        "latency_ms": 7075,
+        "output_bytes": 4515,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 1: target not found: start marker not found for target: row-1",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the toolbar component to include a date range filter with 'from' and 'to",
+        "input_tokens": 1669,
+        "output_tokens": 97,
+        "cached_input_tokens": 1536,
+        "latency_ms": 1119,
+        "output_bytes": 4579,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Add 10 more user entries to the sample data with international names and email a",
+        "input_tokens": 1688,
+        "output_tokens": 1439,
+        "cached_input_tokens": 1024,
+        "latency_ms": 16024,
+        "output_bytes": 3762,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 4,
+        "edit": "Update the pagination component to show 'Showing X-Y of Z results' text and a ju",
+        "input_tokens": 1659,
+        "output_tokens": 216,
+        "latency_ms": 2508,
+        "output_bytes": 612,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 6686,
+    "total_output_tokens": 2629,
+    "total_cached_input_tokens": 2560,
+    "total_latency_ms": 26726,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.75
+  },
+  "comparison": {
+    "output_token_savings_pct": 65.7,
+    "input_token_savings_pct": 57.2,
+    "latency_savings_pct": 63.3
+  },
+  "reliability": {
+    "edit_turns": 4,
+    "miss_count": 1,
+    "miss_rate": 0.25,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 1,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 1: target not found: start marker not found for target: row-1": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 60,
+    "fallback_adjusted": {
+      "input_tokens": 8100,
+      "output_tokens": 4087,
+      "total_tokens": 12187,
+      "miss_attempt_input_tokens": 1670,
+      "miss_attempt_output_tokens": 877,
+      "miss_attempt_total_tokens": 2547,
+      "fallback_retry_input_tokens": 1414,
+      "fallback_retry_output_tokens": 1458,
+      "fallback_retry_total_tokens": 2872,
+      "input_token_savings_pct": 48.1,
+      "output_token_savings_pct": 46.7,
+      "total_token_savings_pct": 47.6
+    },
+    "amortized": {
+      "edit_turns": 4,
+      "base_init_inclusive_tokens": 24653,
+      "gap_init_inclusive_tokens": 10864,
+      "fallback_init_inclusive_tokens": 13736,
+      "measured_init_inclusive_token_savings_pct": 55.9,
+      "fallback_init_inclusive_token_savings_pct": 44.3
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

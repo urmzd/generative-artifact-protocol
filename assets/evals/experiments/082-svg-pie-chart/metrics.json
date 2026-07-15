@@ -1,0 +1,129 @@
+{
+  "experiment_id": "082-svg-pie-chart",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:46:51Z",
+  "format": "image/svg+xml",
+  "base_turn0": {
+    "input_tokens": 137,
+    "output_tokens": 1010,
+    "latency_ms": 8165,
+    "artifact_bytes": 2557
+  },
+  "gap_turn0": {
+    "input_tokens": 213,
+    "output_tokens": 1317,
+    "latency_ms": 15662,
+    "artifact_bytes": 3690
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the total in the center to '$5,100' and change the Housing slice to 30% (",
+        "input_tokens": 1190,
+        "output_tokens": 990,
+        "cached_input_tokens": 1024,
+        "latency_ms": 7168,
+        "output_bytes": 2538,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Add an 'Insurance' slice at 5% by reducing Entertainment from 8% to 3%, and use ",
+        "input_tokens": 2224,
+        "output_tokens": 1094,
+        "cached_input_tokens": 2048,
+        "latency_ms": 9529,
+        "output_bytes": 2783,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 3414,
+    "total_output_tokens": 2084,
+    "total_cached_input_tokens": 3072,
+    "total_latency_ms": 16697
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the total in the center to '$5,100' and change the Housing slice to 30% (",
+        "input_tokens": 1657,
+        "output_tokens": 157,
+        "latency_ms": 2636,
+        "output_bytes": 3685,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Add an 'Insurance' slice at 5% by reducing Entertainment from 8% to 3%, and use ",
+        "input_tokens": 1655,
+        "output_tokens": 145,
+        "latency_ms": 2174,
+        "output_bytes": 3815,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 3312,
+    "total_output_tokens": 302,
+    "total_latency_ms": 4810,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 85.5,
+    "input_token_savings_pct": 3,
+    "latency_savings_pct": 71.2
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 34.3,
+    "fallback_adjusted": {
+      "input_tokens": 3312,
+      "output_tokens": 302,
+      "total_tokens": 3614,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 3,
+      "output_token_savings_pct": 85.5,
+      "total_token_savings_pct": 34.3
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 6645,
+      "gap_init_inclusive_tokens": 5144,
+      "fallback_init_inclusive_tokens": 5144,
+      "measured_init_inclusive_token_savings_pct": 22.6,
+      "fallback_init_inclusive_token_savings_pct": 22.6
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

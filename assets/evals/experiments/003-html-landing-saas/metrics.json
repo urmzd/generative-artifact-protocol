@@ -1,0 +1,155 @@
+{
+  "experiment_id": "003-html-landing-saas",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T01:59:45Z",
+  "format": "text/html",
+  "base_turn0": {
+    "input_tokens": 133,
+    "output_tokens": 1995,
+    "latency_ms": 17058,
+    "artifact_bytes": 6620
+  },
+  "gap_turn0": {
+    "input_tokens": 210,
+    "output_tokens": 1550,
+    "latency_ms": 16262,
+    "artifact_bytes": 5595
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the hero headline to 'Sync Everything. Everywhere.' and the subheadline t",
+        "input_tokens": 2162,
+        "output_tokens": 1995,
+        "cached_input_tokens": 2048,
+        "latency_ms": 19917,
+        "output_bytes": 6621,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the pricing section to have 4 tiers instead of 3: Free, Starter $19/mo, ",
+        "input_tokens": 4193,
+        "output_tokens": 2132,
+        "cached_input_tokens": 4096,
+        "latency_ms": 19504,
+        "output_bytes": 7072,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new 'Integrations' section between features and pricing showing a grid of ",
+        "input_tokens": 6355,
+        "output_tokens": 2962,
+        "cached_input_tokens": 6272,
+        "latency_ms": 28779,
+        "output_bytes": 9734,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 12710,
+    "total_output_tokens": 7089,
+    "total_cached_input_tokens": 12416,
+    "total_latency_ms": 68200
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the hero headline to 'Sync Everything. Everywhere.' and the subheadline t",
+        "input_tokens": 1881,
+        "output_tokens": 95,
+        "latency_ms": 1331,
+        "output_bytes": 5585,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the pricing section to have 4 tiers instead of 3: Free, Starter $19/mo, ",
+        "input_tokens": 1882,
+        "output_tokens": 449,
+        "latency_ms": 4517,
+        "output_bytes": 6874,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new 'Integrations' section between features and pricing showing a grid of ",
+        "input_tokens": 2236,
+        "output_tokens": 587,
+        "cached_input_tokens": 1024,
+        "latency_ms": 8165,
+        "output_bytes": 8621,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 5999,
+    "total_output_tokens": 1131,
+    "total_cached_input_tokens": 1024,
+    "total_latency_ms": 14013,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 84,
+    "input_token_savings_pct": 52.8,
+    "latency_savings_pct": 79.5
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 64,
+    "fallback_adjusted": {
+      "input_tokens": 5999,
+      "output_tokens": 1131,
+      "total_tokens": 7130,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 52.8,
+      "output_token_savings_pct": 84,
+      "total_token_savings_pct": 64
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 21927,
+      "gap_init_inclusive_tokens": 8890,
+      "fallback_init_inclusive_tokens": 8890,
+      "measured_init_inclusive_token_savings_pct": 59.5,
+      "fallback_init_inclusive_token_savings_pct": 59.5
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

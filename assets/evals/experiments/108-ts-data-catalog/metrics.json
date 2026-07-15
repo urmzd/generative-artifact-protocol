@@ -1,0 +1,218 @@
+{
+  "experiment_id": "108-ts-data-catalog",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T04:50:21Z",
+  "format": "text/typescript",
+  "base_turn0": {
+    "input_tokens": 509,
+    "output_tokens": 4206,
+    "latency_ms": 46589,
+    "artifact_bytes": 10973
+  },
+  "gap_turn0": {
+    "input_tokens": 777,
+    "output_tokens": 4210,
+    "latency_ms": 34324,
+    "artifact_bytes": 10968
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the price of record rec-067 (sku SKU-067, on pageFour) to 249.95. Do not ",
+        "input_tokens": 4764,
+        "output_tokens": 4206,
+        "cached_input_tokens": 4608,
+        "latency_ms": 40736,
+        "output_bytes": 10973,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Insert a new record into pageTwo immediately after rec-025. The new record must ",
+        "input_tokens": 9045,
+        "output_tokens": 4249,
+        "cached_input_tokens": 8832,
+        "latency_ms": 38912,
+        "output_bytes": 11092,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Delete the record rec-050 (sku SKU-050, on pageThree) entirely. Remove its full ",
+        "input_tokens": 13340,
+        "output_tokens": 4208,
+        "cached_input_tokens": 13184,
+        "latency_ms": 39841,
+        "output_bytes": 10991,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 4,
+        "edit": "Set the category field of EVERY remaining record in the entire catalog (all page",
+        "input_tokens": 17610,
+        "output_tokens": 4254,
+        "cached_input_tokens": 17408,
+        "latency_ms": 36595,
+        "output_bytes": 11218,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 5,
+        "edit": "Add a whole new sixth page. Declare an exported const `pageSix: CatalogRecord[]`",
+        "input_tokens": 21998,
+        "output_tokens": 5089,
+        "cached_input_tokens": 21760,
+        "latency_ms": 45545,
+        "output_bytes": 13405,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 66757,
+    "total_output_tokens": 22006,
+    "total_cached_input_tokens": 65792,
+    "total_latency_ms": 201629
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the price of record rec-067 (sku SKU-067, on pageFour) to 249.95. Do not ",
+        "input_tokens": 4552,
+        "output_tokens": 64,
+        "latency_ms": 1308,
+        "output_bytes": 10968,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: rec-067",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Insert a new record into pageTwo immediately after rec-025. The new record must ",
+        "input_tokens": 4578,
+        "output_tokens": 98,
+        "cached_input_tokens": 4352,
+        "latency_ms": 2457,
+        "output_bytes": 10968,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: rec-025",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Delete the record rec-050 (sku SKU-050, on pageThree) entirely. Remove its full ",
+        "input_tokens": 4549,
+        "output_tokens": 62,
+        "cached_input_tokens": 4352,
+        "latency_ms": 1659,
+        "output_bytes": 10968,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: rec-050",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 4,
+        "edit": "Set the category field of EVERY remaining record in the entire catalog (all page",
+        "input_tokens": 4565,
+        "output_tokens": 2441,
+        "cached_input_tokens": 4352,
+        "latency_ms": 26602,
+        "output_bytes": 10968,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: rec-001",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 5,
+        "edit": "Add a whole new sixth page. Declare an exported const `pageSix: CatalogRecord[]`",
+        "input_tokens": 4637,
+        "output_tokens": 1035,
+        "cached_input_tokens": 4352,
+        "latency_ms": 10249,
+        "output_bytes": 10968,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: pageSix",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 22881,
+    "total_output_tokens": 3700,
+    "total_cached_input_tokens": 17408,
+    "total_latency_ms": 42275,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
+  },
+  "comparison": {
+    "output_token_savings_pct": 83.2,
+    "input_token_savings_pct": 65.7,
+    "latency_savings_pct": 79
+  },
+  "reliability": {
+    "edit_turns": 5,
+    "miss_count": 5,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 5,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: pageSix": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: rec-001": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: rec-025": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: rec-050": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: rec-067": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 70.1,
+    "fallback_adjusted": {
+      "input_tokens": 89638,
+      "output_tokens": 25706,
+      "total_tokens": 115344,
+      "miss_attempt_input_tokens": 22881,
+      "miss_attempt_output_tokens": 3700,
+      "miss_attempt_total_tokens": 26581,
+      "fallback_retry_input_tokens": 66757,
+      "fallback_retry_output_tokens": 22006,
+      "fallback_retry_total_tokens": 88763,
+      "input_token_savings_pct": -34.3,
+      "output_token_savings_pct": -16.8,
+      "total_token_savings_pct": -29.9
+    },
+    "amortized": {
+      "edit_turns": 5,
+      "base_init_inclusive_tokens": 93478,
+      "gap_init_inclusive_tokens": 31568,
+      "fallback_init_inclusive_tokens": 120331,
+      "measured_init_inclusive_token_savings_pct": 66.2,
+      "fallback_init_inclusive_token_savings_pct": -28.7
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
+}

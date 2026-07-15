@@ -1,0 +1,126 @@
+{
+  "experiment_id": "052-toml-pyproject",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:09:46Z",
+  "format": "text/x-toml",
+  "base_turn0": {
+    "input_tokens": 153,
+    "output_tokens": 239,
+    "latency_ms": 2337,
+    "artifact_bytes": 831
+  },
+  "gap_turn0": {
+    "input_tokens": 227,
+    "output_tokens": 333,
+    "latency_ms": 3787,
+    "artifact_bytes": 1132
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add polars and pyarrow to the dependencies and create a new optional dependency ",
+        "input_tokens": 421,
+        "output_tokens": 253,
+        "latency_ms": 2580,
+        "output_bytes": 871,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the ruff configuration to add the 'I' (isort) and 'UP' (pyupgrade) rule s",
+        "input_tokens": 716,
+        "output_tokens": 266,
+        "latency_ms": 2661,
+        "output_bytes": 907,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 1137,
+    "total_output_tokens": 519,
+    "total_latency_ms": 5241
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add polars and pyarrow to the dependencies and create a new optional dependency ",
+        "input_tokens": 660,
+        "output_tokens": 286,
+        "latency_ms": 2967,
+        "output_bytes": 1359,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the ruff configuration to add the 'I' (isort) and 'UP' (pyupgrade) rule s",
+        "input_tokens": 745,
+        "output_tokens": 115,
+        "latency_ms": 2152,
+        "output_bytes": 1313,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 1405,
+    "total_output_tokens": 401,
+    "total_latency_ms": 5119,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 22.7,
+    "input_token_savings_pct": -23.6,
+    "latency_savings_pct": 2.3
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": -9.1,
+    "fallback_adjusted": {
+      "input_tokens": 1405,
+      "output_tokens": 401,
+      "total_tokens": 1806,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": -23.6,
+      "output_token_savings_pct": 22.7,
+      "total_token_savings_pct": -9.1
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 2048,
+      "gap_init_inclusive_tokens": 2366,
+      "fallback_init_inclusive_tokens": 2366,
+      "measured_init_inclusive_token_savings_pct": -15.5,
+      "fallback_init_inclusive_token_savings_pct": -15.5
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

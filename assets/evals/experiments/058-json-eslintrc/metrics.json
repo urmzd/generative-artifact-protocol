@@ -1,0 +1,131 @@
+{
+  "experiment_id": "058-json-eslintrc",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:15:55Z",
+  "format": "application/json",
+  "base_turn0": {
+    "input_tokens": 64,
+    "output_tokens": 191,
+    "latency_ms": 2263,
+    "artifact_bytes": 625
+  },
+  "gap_turn0": {
+    "input_tokens": 141,
+    "output_tokens": 266,
+    "latency_ms": 3047,
+    "artifact_bytes": 976
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add the 'react-hooks/exhaustive-deps' rule set to 'warn' and add 'plugin:@tansta",
+        "input_tokens": 296,
+        "output_tokens": 217,
+        "latency_ms": 2397,
+        "output_bytes": 724,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Change the parser from @typescript-eslint/parser to @babel/eslint-parser and upd",
+        "input_tokens": 541,
+        "output_tokens": 226,
+        "latency_ms": 2557,
+        "output_bytes": 751,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 837,
+    "total_output_tokens": 443,
+    "total_latency_ms": 4954
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add the 'react-hooks/exhaustive-deps' rule set to 'warn' and add 'plugin:@tansta",
+        "input_tokens": 605,
+        "output_tokens": 103,
+        "latency_ms": 1764,
+        "output_bytes": 976,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: JSON does not support text-based markers; use pointer addressing instead",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Change the parser from @typescript-eslint/parser to @babel/eslint-parser and upd",
+        "input_tokens": 592,
+        "output_tokens": 130,
+        "latency_ms": 2047,
+        "output_bytes": 976,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: JSON does not support text-based markers; use pointer addressing instead",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 1197,
+    "total_output_tokens": 233,
+    "total_latency_ms": 3811,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
+  },
+  "comparison": {
+    "output_token_savings_pct": 47.4,
+    "input_token_savings_pct": -43,
+    "latency_savings_pct": 23.1
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 2,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 2,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: JSON does not support text-based markers; use pointer addressing instead": 2
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": -11.7,
+    "fallback_adjusted": {
+      "input_tokens": 2034,
+      "output_tokens": 676,
+      "total_tokens": 2710,
+      "miss_attempt_input_tokens": 1197,
+      "miss_attempt_output_tokens": 233,
+      "miss_attempt_total_tokens": 1430,
+      "fallback_retry_input_tokens": 837,
+      "fallback_retry_output_tokens": 443,
+      "fallback_retry_total_tokens": 1280,
+      "input_token_savings_pct": -143,
+      "output_token_savings_pct": -52.6,
+      "total_token_savings_pct": -111.7
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 1535,
+      "gap_init_inclusive_tokens": 1837,
+      "fallback_init_inclusive_tokens": 3117,
+      "measured_init_inclusive_token_savings_pct": -19.7,
+      "fallback_init_inclusive_token_savings_pct": -103.1
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "experiment_id": "036-md-changelog",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:50:15Z",
+  "format": "text/markdown",
+  "base_turn0": {
+    "input_tokens": 136,
+    "output_tokens": 1315,
+    "latency_ms": 12546,
+    "artifact_bytes": 5954
+  },
+  "gap_turn0": {
+    "input_tokens": 212,
+    "output_tokens": 1122,
+    "latency_ms": 12448,
+    "artifact_bytes": 4092
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new v2.4.0 release at the top of the v2 section with 3 Added items about W",
+        "input_tokens": 1494,
+        "output_tokens": 1461,
+        "cached_input_tokens": 1408,
+        "latency_ms": 14518,
+        "output_bytes": 6654,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the unreleased section to include a Deprecated entry for the legacy XML c",
+        "input_tokens": 2992,
+        "output_tokens": 1487,
+        "cached_input_tokens": 2816,
+        "latency_ms": 14087,
+        "output_bytes": 6775,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the v1.0.0 entry to expand it with a detailed 'Migration Guide from v0.x",
+        "input_tokens": 4516,
+        "output_tokens": 1674,
+        "cached_input_tokens": 4352,
+        "latency_ms": 15120,
+        "output_bytes": 7739,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 9002,
+    "total_output_tokens": 4622,
+    "total_cached_input_tokens": 8576,
+    "total_latency_ms": 43725
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new v2.4.0 release at the top of the v2 section with 3 Added items about W",
+        "input_tokens": 1463,
+        "output_tokens": 259,
+        "latency_ms": 3701,
+        "output_bytes": 4092,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: v2.3.0",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the unreleased section to include a Deprecated entry for the legacy XML c",
+        "input_tokens": 1457,
+        "output_tokens": 147,
+        "cached_input_tokens": 1280,
+        "latency_ms": 1767,
+        "output_bytes": 4303,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the v1.0.0 entry to expand it with a detailed 'Migration Guide from v0.x",
+        "input_tokens": 1514,
+        "output_tokens": 244,
+        "latency_ms": 3174,
+        "output_bytes": 5125,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 4434,
+    "total_output_tokens": 650,
+    "total_cached_input_tokens": 1280,
+    "total_latency_ms": 8642,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.6666666666666666
+  },
+  "comparison": {
+    "output_token_savings_pct": 85.9,
+    "input_token_savings_pct": 50.7,
+    "latency_savings_pct": 80.2
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 1,
+    "miss_rate": 0.33299999999999996,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 1,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: v2.3.0": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 62.7,
+    "fallback_adjusted": {
+      "input_tokens": 5928,
+      "output_tokens": 2111,
+      "total_tokens": 8039,
+      "miss_attempt_input_tokens": 1463,
+      "miss_attempt_output_tokens": 259,
+      "miss_attempt_total_tokens": 1722,
+      "fallback_retry_input_tokens": 1494,
+      "fallback_retry_output_tokens": 1461,
+      "fallback_retry_total_tokens": 2955,
+      "input_token_savings_pct": 34.1,
+      "output_token_savings_pct": 54.3,
+      "total_token_savings_pct": 41
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 15075,
+      "gap_init_inclusive_tokens": 6418,
+      "fallback_init_inclusive_tokens": 9373,
+      "measured_init_inclusive_token_savings_pct": 57.4,
+      "fallback_init_inclusive_token_savings_pct": 37.8
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

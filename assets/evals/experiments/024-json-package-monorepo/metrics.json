@@ -1,0 +1,131 @@
+{
+  "experiment_id": "024-json-package-monorepo",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:31:12Z",
+  "format": "application/json",
+  "base_turn0": {
+    "input_tokens": 145,
+    "output_tokens": 418,
+    "latency_ms": 4523,
+    "artifact_bytes": 1120
+  },
+  "gap_turn0": {
+    "input_tokens": 222,
+    "output_tokens": 697,
+    "latency_ms": 6736,
+    "artifact_bytes": 2150
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add drizzle-orm and @auth/core to the dependencies with realistic version number",
+        "input_tokens": 586,
+        "output_tokens": 444,
+        "latency_ms": 4725,
+        "output_bytes": 1177,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the scripts section to add 'db:migrate', 'db:seed', and 'db:studio' comma",
+        "input_tokens": 1064,
+        "output_tokens": 480,
+        "latency_ms": 5512,
+        "output_bytes": 1292,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 1650,
+    "total_output_tokens": 924,
+    "total_latency_ms": 10237
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add drizzle-orm and @auth/core to the dependencies with realistic version number",
+        "input_tokens": 1020,
+        "output_tokens": 110,
+        "latency_ms": 2245,
+        "output_bytes": 2150,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: JSON does not support text-based markers; use pointer addressing instead",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the scripts section to add 'db:migrate', 'db:seed', and 'db:studio' comma",
+        "input_tokens": 1031,
+        "output_tokens": 165,
+        "latency_ms": 2628,
+        "output_bytes": 2150,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: JSON does not support text-based markers; use pointer addressing instead",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 2051,
+    "total_output_tokens": 275,
+    "total_latency_ms": 4873,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
+  },
+  "comparison": {
+    "output_token_savings_pct": 70.2,
+    "input_token_savings_pct": -24.3,
+    "latency_savings_pct": 52.4
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 2,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 2,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: JSON does not support text-based markers; use pointer addressing instead": 2
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 9.6,
+    "fallback_adjusted": {
+      "input_tokens": 3701,
+      "output_tokens": 1199,
+      "total_tokens": 4900,
+      "miss_attempt_input_tokens": 2051,
+      "miss_attempt_output_tokens": 275,
+      "miss_attempt_total_tokens": 2326,
+      "fallback_retry_input_tokens": 1650,
+      "fallback_retry_output_tokens": 924,
+      "fallback_retry_total_tokens": 2574,
+      "input_token_savings_pct": -124.3,
+      "output_token_savings_pct": -29.8,
+      "total_token_savings_pct": -90.4
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 3137,
+      "gap_init_inclusive_tokens": 3245,
+      "fallback_init_inclusive_tokens": 5819,
+      "measured_init_inclusive_token_savings_pct": -3.4,
+      "fallback_init_inclusive_token_savings_pct": -85.5
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
+}

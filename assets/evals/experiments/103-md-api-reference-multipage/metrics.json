@@ -1,0 +1,218 @@
+{
+  "experiment_id": "103-md-api-reference-multipage",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T04:17:52Z",
+  "format": "text/markdown",
+  "base_turn0": {
+    "input_tokens": 556,
+    "output_tokens": 11330,
+    "latency_ms": 110285,
+    "artifact_bytes": 42228
+  },
+  "gap_turn0": {
+    "input_tokens": 824,
+    "output_tokens": 11153,
+    "latency_ms": 94905,
+    "artifact_bytes": 41290
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "On Page 4: Storage, change the Path of endpoint EP-407 to exactly `/v1/storage/b",
+        "input_tokens": 11942,
+        "output_tokens": 1906,
+        "cached_input_tokens": 11776,
+        "latency_ms": 18068,
+        "output_bytes": 7135,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "On Page 2: Billing, insert a new endpoint with ID EP-216 titled \"Export Invoices",
+        "input_tokens": 13954,
+        "output_tokens": 9588,
+        "cached_input_tokens": 13824,
+        "latency_ms": 85866,
+        "output_bytes": 35683,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "On Page 3: Compute, delete the endpoint EP-308 entirely, including its heading, ",
+        "input_tokens": 23603,
+        "output_tokens": 7416,
+        "cached_input_tokens": 23424,
+        "latency_ms": 66945,
+        "output_bytes": 27659,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 4,
+        "edit": "Bump the API version across every endpoint in the entire document: change the le",
+        "input_tokens": 31115,
+        "output_tokens": 11350,
+        "cached_input_tokens": 30976,
+        "latency_ms": 102008,
+        "output_bytes": 42340,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 5,
+        "edit": "Add a brand-new seventh page at the end of the document titled `## Page 7: Secur",
+        "input_tokens": 42616,
+        "output_tokens": 1791,
+        "cached_input_tokens": 42368,
+        "latency_ms": 16106,
+        "output_bytes": 6984,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 123230,
+    "total_output_tokens": 32051,
+    "total_cached_input_tokens": 122368,
+    "total_latency_ms": 288993
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "On Page 4: Storage, change the Path of endpoint EP-407 to exactly `/v1/storage/b",
+        "input_tokens": 11506,
+        "output_tokens": 78,
+        "latency_ms": 2252,
+        "output_bytes": 41290,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: EP-407",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "On Page 2: Billing, insert a new endpoint with ID EP-216 titled \"Export Invoices",
+        "input_tokens": 11556,
+        "output_tokens": 202,
+        "cached_input_tokens": 11264,
+        "latency_ms": 3274,
+        "output_bytes": 41290,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: EP-215",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "On Page 3: Compute, delete the endpoint EP-308 entirely, including its heading, ",
+        "input_tokens": 11510,
+        "output_tokens": 62,
+        "cached_input_tokens": 11264,
+        "latency_ms": 1398,
+        "output_bytes": 41290,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: EP-308",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 4,
+        "edit": "Bump the API version across every endpoint in the entire document: change the le",
+        "input_tokens": 11545,
+        "output_tokens": 2467,
+        "cached_input_tokens": 11264,
+        "latency_ms": 22663,
+        "output_bytes": 41290,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: pointer targeting requires valid JSON content: invalid character '#' looking for beginning of value",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 5,
+        "edit": "Add a brand-new seventh page at the end of the document titled `## Page 7: Secur",
+        "input_tokens": 11600,
+        "output_tokens": 1911,
+        "cached_input_tokens": 11264,
+        "latency_ms": 18222,
+        "output_bytes": 41290,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: EP-615",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 57717,
+    "total_output_tokens": 4720,
+    "total_cached_input_tokens": 45056,
+    "total_latency_ms": 47809,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
+  },
+  "comparison": {
+    "output_token_savings_pct": 85.3,
+    "input_token_savings_pct": 53.2,
+    "latency_savings_pct": 83.5
+  },
+  "reliability": {
+    "edit_turns": 5,
+    "miss_count": 5,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 5,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: EP-215": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: EP-308": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: EP-407": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: EP-615": 1,
+      "apply failed: pointer targeting requires valid JSON content: invalid character '#' looking for beginning of value": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 59.8,
+    "fallback_adjusted": {
+      "input_tokens": 180947,
+      "output_tokens": 36771,
+      "total_tokens": 217718,
+      "miss_attempt_input_tokens": 57717,
+      "miss_attempt_output_tokens": 4720,
+      "miss_attempt_total_tokens": 62437,
+      "fallback_retry_input_tokens": 123230,
+      "fallback_retry_output_tokens": 32051,
+      "fallback_retry_total_tokens": 155281,
+      "input_token_savings_pct": -46.8,
+      "output_token_savings_pct": -14.7,
+      "total_token_savings_pct": -40.2
+    },
+    "amortized": {
+      "edit_turns": 5,
+      "base_init_inclusive_tokens": 167167,
+      "gap_init_inclusive_tokens": 74414,
+      "fallback_init_inclusive_tokens": 229695,
+      "measured_init_inclusive_token_savings_pct": 55.5,
+      "fallback_init_inclusive_token_savings_pct": -37.4
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
+}

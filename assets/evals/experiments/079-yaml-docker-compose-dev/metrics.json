@@ -1,0 +1,126 @@
+{
+  "experiment_id": "079-yaml-docker-compose-dev",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:43:17Z",
+  "format": "text/x-yaml",
+  "base_turn0": {
+    "input_tokens": 113,
+    "output_tokens": 272,
+    "latency_ms": 2661,
+    "artifact_bytes": 918
+  },
+  "gap_turn0": {
+    "input_tokens": 188,
+    "output_tokens": 449,
+    "latency_ms": 4915,
+    "artifact_bytes": 1447
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a MinIO service for S3-compatible local object storage on port 9000 with a w",
+        "input_tokens": 419,
+        "output_tokens": 373,
+        "latency_ms": 3038,
+        "output_bytes": 1255,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the PostgreSQL service to use version 16 and add a health check with pg_i",
+        "input_tokens": 824,
+        "output_tokens": 417,
+        "latency_ms": 3823,
+        "output_bytes": 1386,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 1243,
+    "total_output_tokens": 790,
+    "total_latency_ms": 6861
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a MinIO service for S3-compatible local object storage on port 9000 with a w",
+        "input_tokens": 781,
+        "output_tokens": 180,
+        "latency_ms": 2045,
+        "output_bytes": 1785,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the PostgreSQL service to use version 16 and add a health check with pg_i",
+        "input_tokens": 888,
+        "output_tokens": 105,
+        "latency_ms": 1432,
+        "output_bytes": 1856,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 1669,
+    "total_output_tokens": 285,
+    "total_latency_ms": 3477,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 63.9,
+    "input_token_savings_pct": -34.3,
+    "latency_savings_pct": 49.3
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 3.9,
+    "fallback_adjusted": {
+      "input_tokens": 1669,
+      "output_tokens": 285,
+      "total_tokens": 1954,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": -34.3,
+      "output_token_savings_pct": 63.9,
+      "total_token_savings_pct": 3.9
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 2418,
+      "gap_init_inclusive_tokens": 2591,
+      "fallback_init_inclusive_tokens": 2591,
+      "measured_init_inclusive_token_savings_pct": -7.2,
+      "fallback_init_inclusive_token_savings_pct": -7.2
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

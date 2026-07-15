@@ -1,0 +1,218 @@
+{
+  "experiment_id": "104-yaml-k8s-multi-manifest",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T04:26:54Z",
+  "format": "text/x-yaml",
+  "base_turn0": {
+    "input_tokens": 455,
+    "output_tokens": 5591,
+    "latency_ms": 44563,
+    "artifact_bytes": 20871
+  },
+  "gap_turn0": {
+    "input_tokens": 722,
+    "output_tokens": 5595,
+    "latency_ms": 42101,
+    "artifact_bytes": 20839
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "In the `orders` group, change the Deployment named `orders-worker` to set `spec.",
+        "input_tokens": 6107,
+        "output_tokens": 1396,
+        "cached_input_tokens": 6016,
+        "latency_ms": 12343,
+        "output_bytes": 5214,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Insert one new Service resource named `catalog-scheduler-svc` into the `catalog`",
+        "input_tokens": 7622,
+        "output_tokens": 1481,
+        "cached_input_tokens": 7424,
+        "latency_ms": 12901,
+        "output_bytes": 5551,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Delete the ConfigMap resource named `billing-worker-config` from the `billing` g",
+        "input_tokens": 9144,
+        "output_tokens": 1330,
+        "cached_input_tokens": 8960,
+        "latency_ms": 10461,
+        "output_bytes": 5028,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 4,
+        "edit": "Across EVERY remaining resource in the entire manifest set, change the `metadata",
+        "input_tokens": 10548,
+        "output_tokens": 5606,
+        "cached_input_tokens": 10368,
+        "latency_ms": 45327,
+        "output_bytes": 20944,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 5,
+        "edit": "Add a whole new app group `notifications` (namespace: notifications) appended af",
+        "input_tokens": 16319,
+        "output_tokens": 1400,
+        "cached_input_tokens": 16128,
+        "latency_ms": 12513,
+        "output_bytes": 5637,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 49740,
+    "total_output_tokens": 11213,
+    "total_cached_input_tokens": 48896,
+    "total_latency_ms": 93545
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "In the `orders` group, change the Deployment named `orders-worker` to set `spec.",
+        "input_tokens": 5949,
+        "output_tokens": 64,
+        "latency_ms": 1309,
+        "output_bytes": 20839,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: orders-worker",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Insert one new Service resource named `catalog-scheduler-svc` into the `catalog`",
+        "input_tokens": 6007,
+        "output_tokens": 153,
+        "cached_input_tokens": 5760,
+        "latency_ms": 2182,
+        "output_bytes": 20839,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: catalog-gateway-svc",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Delete the ConfigMap resource named `billing-worker-config` from the `billing` g",
+        "input_tokens": 5929,
+        "output_tokens": 64,
+        "cached_input_tokens": 5120,
+        "latency_ms": 1170,
+        "output_bytes": 20839,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: billing-worker-config",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 4,
+        "edit": "Across EVERY remaining resource in the entire manifest set, change the `metadata",
+        "input_tokens": 5962,
+        "output_tokens": 1013,
+        "cached_input_tokens": 5760,
+        "latency_ms": 10246,
+        "output_bytes": 20839,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: auth-api",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 5,
+        "edit": "Add a whole new app group `notifications` (namespace: notifications) appended af",
+        "input_tokens": 6053,
+        "output_tokens": 1768,
+        "cached_input_tokens": 5760,
+        "latency_ms": 19578,
+        "output_bytes": 20839,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: billing-gateway-config",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 29900,
+    "total_output_tokens": 3062,
+    "total_cached_input_tokens": 22400,
+    "total_latency_ms": 34485,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
+  },
+  "comparison": {
+    "output_token_savings_pct": 72.7,
+    "input_token_savings_pct": 39.9,
+    "latency_savings_pct": 63.1
+  },
+  "reliability": {
+    "edit_turns": 5,
+    "miss_count": 5,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 5,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: auth-api": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: billing-gateway-config": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: billing-worker-config": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: catalog-gateway-svc": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: orders-worker": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 45.9,
+    "fallback_adjusted": {
+      "input_tokens": 79640,
+      "output_tokens": 14275,
+      "total_tokens": 93915,
+      "miss_attempt_input_tokens": 29900,
+      "miss_attempt_output_tokens": 3062,
+      "miss_attempt_total_tokens": 32962,
+      "fallback_retry_input_tokens": 49740,
+      "fallback_retry_output_tokens": 11213,
+      "fallback_retry_total_tokens": 60953,
+      "input_token_savings_pct": -60.1,
+      "output_token_savings_pct": -27.3,
+      "total_token_savings_pct": -54.1
+    },
+    "amortized": {
+      "edit_turns": 5,
+      "base_init_inclusive_tokens": 66999,
+      "gap_init_inclusive_tokens": 39279,
+      "fallback_init_inclusive_tokens": 100232,
+      "measured_init_inclusive_token_savings_pct": 41.4,
+      "fallback_init_inclusive_token_savings_pct": -49.6
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
+}
