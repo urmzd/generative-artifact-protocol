@@ -1,0 +1,164 @@
+{
+  "experiment_id": "049-svg-dashboard-icons",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:05:12Z",
+  "format": "image/svg+xml",
+  "base_turn0": {
+    "input_tokens": 142,
+    "output_tokens": 1498,
+    "latency_ms": 15842,
+    "artifact_bytes": 3178
+  },
+  "gap_turn0": {
+    "input_tokens": 218,
+    "output_tokens": 1587,
+    "latency_ms": 15529,
+    "artifact_bytes": 3317
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add 4 new action icons: 'filter', 'sort', 'refresh', and 'copy' following the sa",
+        "input_tokens": 1683,
+        "output_tokens": 1854,
+        "cached_input_tokens": 1536,
+        "latency_ms": 15622,
+        "output_bytes": 3884,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the navigation icons to use a filled style instead of stroke-based, with",
+        "input_tokens": 3567,
+        "output_tokens": 1800,
+        "cached_input_tokens": 3456,
+        "latency_ms": 14459,
+        "output_bytes": 3698,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new 'social-icons' section with 4 icons: github, twitter, linkedin, and di",
+        "input_tokens": 5396,
+        "output_tokens": 3454,
+        "cached_input_tokens": 5248,
+        "latency_ms": 31751,
+        "output_bytes": 6044,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 10646,
+    "total_output_tokens": 7108,
+    "total_cached_input_tokens": 10240,
+    "total_latency_ms": 61832
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add 4 new action icons: 'filter', 'sort', 'refresh', and 'copy' following the sa",
+        "input_tokens": 1928,
+        "output_tokens": 450,
+        "latency_ms": 4304,
+        "output_bytes": 3317,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: icon-chart",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the navigation icons to use a filled style instead of stroke-based, with",
+        "input_tokens": 1915,
+        "output_tokens": 1383,
+        "cached_input_tokens": 1024,
+        "latency_ms": 14188,
+        "output_bytes": 3317,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: icon-home",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Add a new 'social-icons' section with 4 icons: github, twitter, linkedin, and di",
+        "input_tokens": 1914,
+        "output_tokens": 1832,
+        "cached_input_tokens": 1024,
+        "latency_ms": 20319,
+        "output_bytes": 3317,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: icon-star",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 5757,
+    "total_output_tokens": 3665,
+    "total_cached_input_tokens": 2048,
+    "total_latency_ms": 38811,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
+  },
+  "comparison": {
+    "output_token_savings_pct": 48.4,
+    "input_token_savings_pct": 45.9,
+    "latency_savings_pct": 37.2
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 3,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 3,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: icon-chart": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: icon-home": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: icon-star": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 46.9,
+    "fallback_adjusted": {
+      "input_tokens": 16403,
+      "output_tokens": 10773,
+      "total_tokens": 27176,
+      "miss_attempt_input_tokens": 5757,
+      "miss_attempt_output_tokens": 3665,
+      "miss_attempt_total_tokens": 9422,
+      "fallback_retry_input_tokens": 10646,
+      "fallback_retry_output_tokens": 7108,
+      "fallback_retry_total_tokens": 17754,
+      "input_token_savings_pct": -54.1,
+      "output_token_savings_pct": -51.6,
+      "total_token_savings_pct": -53.1
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 19394,
+      "gap_init_inclusive_tokens": 11227,
+      "fallback_init_inclusive_tokens": 28981,
+      "measured_init_inclusive_token_savings_pct": 42.1,
+      "fallback_init_inclusive_token_savings_pct": -49.4
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
+}

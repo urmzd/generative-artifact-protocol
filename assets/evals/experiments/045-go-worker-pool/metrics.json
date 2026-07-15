@@ -1,0 +1,128 @@
+{
+  "experiment_id": "045-go-worker-pool",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:00:08Z",
+  "format": "text/x-go",
+  "base_turn0": {
+    "input_tokens": 111,
+    "output_tokens": 658,
+    "latency_ms": 7149,
+    "artifact_bytes": 2309
+  },
+  "gap_turn0": {
+    "input_tokens": 187,
+    "output_tokens": 608,
+    "latency_ms": 6571,
+    "artifact_bytes": 2087
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a 'Priority' field to the Job interface and update the pool to process high-",
+        "input_tokens": 802,
+        "output_tokens": 963,
+        "latency_ms": 12833,
+        "output_bytes": 3207,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the example to process a batch of 20 image resize operations instead of H",
+        "input_tokens": 1797,
+        "output_tokens": 1420,
+        "cached_input_tokens": 1664,
+        "latency_ms": 16429,
+        "output_bytes": 4345,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 2599,
+    "total_output_tokens": 2383,
+    "total_cached_input_tokens": 1664,
+    "total_latency_ms": 29262
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a 'Priority' field to the Job interface and update the pool to process high-",
+        "input_tokens": 935,
+        "output_tokens": 510,
+        "latency_ms": 6285,
+        "output_bytes": 2791,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the example to process a batch of 20 image resize operations instead of H",
+        "input_tokens": 1154,
+        "output_tokens": 857,
+        "latency_ms": 9318,
+        "output_bytes": 4233,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 2089,
+    "total_output_tokens": 1367,
+    "total_latency_ms": 15603,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 42.6,
+    "input_token_savings_pct": 19.6,
+    "latency_savings_pct": 46.7
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 30.6,
+    "fallback_adjusted": {
+      "input_tokens": 2089,
+      "output_tokens": 1367,
+      "total_tokens": 3456,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 19.6,
+      "output_token_savings_pct": 42.6,
+      "total_token_savings_pct": 30.6
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 5751,
+      "gap_init_inclusive_tokens": 4251,
+      "fallback_init_inclusive_tokens": 4251,
+      "measured_init_inclusive_token_savings_pct": 26.1,
+      "fallback_init_inclusive_token_savings_pct": 26.1
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

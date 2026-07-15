@@ -1,0 +1,164 @@
+{
+  "experiment_id": "084-json-swagger-pets",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:47:59Z",
+  "format": "application/json",
+  "base_turn0": {
+    "input_tokens": 133,
+    "output_tokens": 2157,
+    "latency_ms": 19964,
+    "artifact_bytes": 9153
+  },
+  "gap_turn0": {
+    "input_tokens": 210,
+    "output_tokens": 2134,
+    "latency_ms": 20994,
+    "artifact_bytes": 9080
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new /pets/{id}/medical-records endpoint group with GET (list records) and ",
+        "input_tokens": 2338,
+        "output_tokens": 2588,
+        "cached_input_tokens": 2176,
+        "latency_ms": 24060,
+        "output_bytes": 11066,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the Pet schema to add 'vaccinated', 'neutered', and 'microchipped' boolea",
+        "input_tokens": 4957,
+        "output_tokens": 2635,
+        "cached_input_tokens": 4864,
+        "latency_ms": 25195,
+        "output_bytes": 11255,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Add pagination parameters (page, per_page, sort_by) to all list endpoints and up",
+        "input_tokens": 7625,
+        "output_tokens": 3789,
+        "cached_input_tokens": 7552,
+        "latency_ms": 33276,
+        "output_bytes": 16519,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 14920,
+    "total_output_tokens": 9012,
+    "total_cached_input_tokens": 14592,
+    "total_latency_ms": 82531
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new /pets/{id}/medical-records endpoint group with GET (list records) and ",
+        "input_tokens": 2480,
+        "output_tokens": 250,
+        "latency_ms": 2666,
+        "output_bytes": 9080,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: /pets/{id}",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the Pet schema to add 'vaccinated', 'neutered', and 'microchipped' boolea",
+        "input_tokens": 2463,
+        "output_tokens": 233,
+        "cached_input_tokens": 2304,
+        "latency_ms": 2673,
+        "output_bytes": 9080,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: JSON does not support text-based markers; use pointer addressing instead",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Add pagination parameters (page, per_page, sort_by) to all list endpoints and up",
+        "input_tokens": 2465,
+        "output_tokens": 705,
+        "cached_input_tokens": 2304,
+        "latency_ms": 5706,
+        "output_bytes": 9080,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: /pets",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 7408,
+    "total_output_tokens": 1188,
+    "total_cached_input_tokens": 4608,
+    "total_latency_ms": 11045,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
+  },
+  "comparison": {
+    "output_token_savings_pct": 86.8,
+    "input_token_savings_pct": 50.3,
+    "latency_savings_pct": 86.6
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 3,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 3,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: JSON does not support text-based markers; use pointer addressing instead": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: /pets": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: /pets/{id}": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 64.1,
+    "fallback_adjusted": {
+      "input_tokens": 22328,
+      "output_tokens": 10200,
+      "total_tokens": 32528,
+      "miss_attempt_input_tokens": 7408,
+      "miss_attempt_output_tokens": 1188,
+      "miss_attempt_total_tokens": 8596,
+      "fallback_retry_input_tokens": 14920,
+      "fallback_retry_output_tokens": 9012,
+      "fallback_retry_total_tokens": 23932,
+      "input_token_savings_pct": -49.7,
+      "output_token_savings_pct": -13.2,
+      "total_token_savings_pct": -35.9
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 26222,
+      "gap_init_inclusive_tokens": 10940,
+      "fallback_init_inclusive_tokens": 34872,
+      "measured_init_inclusive_token_savings_pct": 58.3,
+      "fallback_init_inclusive_token_savings_pct": -33
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
+}

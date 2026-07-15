@@ -1,0 +1,136 @@
+{
+  "experiment_id": "028-json-geojson-cities",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:37:34Z",
+  "format": "application/json",
+  "base_turn0": {
+    "input_tokens": 81,
+    "output_tokens": 2349,
+    "latency_ms": 21062,
+    "artifact_bytes": 8370
+  },
+  "gap_turn0": {
+    "input_tokens": 158,
+    "output_tokens": 4262,
+    "latency_ms": 39735,
+    "artifact_bytes": 14236
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add 10 more cities from Africa and South America with accurate coordinates and p",
+        "input_tokens": 2453,
+        "output_tokens": 3332,
+        "latency_ms": 30281,
+        "output_bytes": 11871,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Add a 'language' property to every city feature listing the primary official lan",
+        "input_tokens": 5810,
+        "output_tokens": 3574,
+        "cached_input_tokens": 5760,
+        "latency_ms": 31700,
+        "output_bytes": 12899,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 8263,
+    "total_output_tokens": 6906,
+    "total_cached_input_tokens": 5760,
+    "total_latency_ms": 61981
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add 10 more cities from Africa and South America with accurate coordinates and p",
+        "input_tokens": 4583,
+        "output_tokens": 796,
+        "latency_ms": 9056,
+        "output_bytes": 14236,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 1: target not found: start marker not found for target: lagos-name",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Add a 'language' property to every city feature listing the primary official lan",
+        "input_tokens": 4585,
+        "output_tokens": 593,
+        "cached_input_tokens": 4352,
+        "latency_ms": 6094,
+        "output_bytes": 14236,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: JSON does not support text-based markers; use pointer addressing instead",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 9168,
+    "total_output_tokens": 1389,
+    "total_cached_input_tokens": 4352,
+    "total_latency_ms": 15150,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
+  },
+  "comparison": {
+    "output_token_savings_pct": 79.9,
+    "input_token_savings_pct": -11,
+    "latency_savings_pct": 75.6
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 2,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 2,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: JSON does not support text-based markers; use pointer addressing instead": 1,
+      "apply failed: operation 1: target not found: start marker not found for target: lagos-name": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 30.4,
+    "fallback_adjusted": {
+      "input_tokens": 17431,
+      "output_tokens": 8295,
+      "total_tokens": 25726,
+      "miss_attempt_input_tokens": 9168,
+      "miss_attempt_output_tokens": 1389,
+      "miss_attempt_total_tokens": 10557,
+      "fallback_retry_input_tokens": 8263,
+      "fallback_retry_output_tokens": 6906,
+      "fallback_retry_total_tokens": 15169,
+      "input_token_savings_pct": -111,
+      "output_token_savings_pct": -20.1,
+      "total_token_savings_pct": -69.6
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 17599,
+      "gap_init_inclusive_tokens": 14977,
+      "fallback_init_inclusive_tokens": 30146,
+      "measured_init_inclusive_token_savings_pct": 14.9,
+      "fallback_init_inclusive_token_savings_pct": -71.3
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
+}

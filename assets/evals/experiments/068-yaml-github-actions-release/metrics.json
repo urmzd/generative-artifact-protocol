@@ -1,0 +1,156 @@
+{
+  "experiment_id": "068-yaml-github-actions-release",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:21:31Z",
+  "format": "text/x-yaml",
+  "base_turn0": {
+    "input_tokens": 132,
+    "output_tokens": 514,
+    "latency_ms": 4297,
+    "artifact_bytes": 2061
+  },
+  "gap_turn0": {
+    "input_tokens": 207,
+    "output_tokens": 638,
+    "latency_ms": 6406,
+    "artifact_bytes": 2477
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a 'checksum' step after the build that generates SHA256 checksums for all bi",
+        "input_tokens": 680,
+        "output_tokens": 567,
+        "latency_ms": 6093,
+        "output_bytes": 2294,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the build matrix to add a musl target for Linux x86_64 that produces a st",
+        "input_tokens": 1278,
+        "output_tokens": 603,
+        "cached_input_tokens": 1152,
+        "latency_ms": 5028,
+        "output_bytes": 2351,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the notifications section to also send a Discord webhook notification wi",
+        "input_tokens": 1914,
+        "output_tokens": 938,
+        "cached_input_tokens": 1792,
+        "latency_ms": 7606,
+        "output_bytes": 3735,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 3872,
+    "total_output_tokens": 2108,
+    "total_cached_input_tokens": 2944,
+    "total_latency_ms": 18727
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a 'checksum' step after the build that generates SHA256 checksums for all bi",
+        "input_tokens": 970,
+        "output_tokens": 161,
+        "latency_ms": 3127,
+        "output_bytes": 2875,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the build matrix to add a musl target for Linux x86_64 that produces a st",
+        "input_tokens": 1067,
+        "output_tokens": 76,
+        "latency_ms": 1229,
+        "output_bytes": 2447,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the notifications section to also send a Discord webhook notification wi",
+        "input_tokens": 968,
+        "output_tokens": 429,
+        "latency_ms": 4534,
+        "output_bytes": 2447,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: notify-slack",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 3005,
+    "total_output_tokens": 666,
+    "total_latency_ms": 8890,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.6666666666666666
+  },
+  "comparison": {
+    "output_token_savings_pct": 68.4,
+    "input_token_savings_pct": 22.4,
+    "latency_savings_pct": 52.5
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 1,
+    "miss_rate": 0.33299999999999996,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 1,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: notify-slack": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 38.6,
+    "fallback_adjusted": {
+      "input_tokens": 4919,
+      "output_tokens": 1604,
+      "total_tokens": 6523,
+      "miss_attempt_input_tokens": 968,
+      "miss_attempt_output_tokens": 429,
+      "miss_attempt_total_tokens": 1397,
+      "fallback_retry_input_tokens": 1914,
+      "fallback_retry_output_tokens": 938,
+      "fallback_retry_total_tokens": 2852,
+      "input_token_savings_pct": -27,
+      "output_token_savings_pct": 23.9,
+      "total_token_savings_pct": -9.1
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 6626,
+      "gap_init_inclusive_tokens": 4516,
+      "fallback_init_inclusive_tokens": 7368,
+      "measured_init_inclusive_token_savings_pct": 31.8,
+      "fallback_init_inclusive_token_savings_pct": -11.2
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

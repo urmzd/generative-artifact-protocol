@@ -1,182 +1,164 @@
 {
+  "experiment_id": "048-svg-bar-chart",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:02:58Z",
+  "format": "image/svg+xml",
   "base_turn0": {
-    "artifact_bytes": 6463,
-    "cached_input_tokens": 0,
-    "input_tokens": 123,
-    "latency_ms": 11536,
-    "median_itl_ms": 0.0032915,
-    "output_tokens": 2334,
-    "ttft_ms": 0,
-    "ttlt_ms": 10529
+    "input_tokens": 124,
+    "output_tokens": 1661,
+    "latency_ms": 18650,
+    "artifact_bytes": 4840
   },
-  "comparison": {
-    "input_token_savings_pct": 29.0,
-    "latency_savings_pct": 61.9,
-    "output_token_savings_pct": 66.3
+  "gap_turn0": {
+    "input_tokens": 386,
+    "output_tokens": 2987,
+    "latency_ms": 29765,
+    "artifact_bytes": 8134
   },
   "default_flow": {
     "per_turn": [
       {
-        "cached_input_tokens": 0,
+        "turn": 1,
         "edit": "Update the March bar to show $425,000 and the July bar to show $380,000 with the",
-        "failed": false,
-        "input_tokens": 2482,
-        "latency_ms": 10080,
-        "median_itl_ms": 0.002375,
-        "output_bytes": 6059,
-        "output_tokens": 2207,
-        "ttft_ms": 0,
-        "ttlt_ms": 9598,
-        "turn": 1
+        "input_tokens": 1818,
+        "output_tokens": 1661,
+        "cached_input_tokens": 1664,
+        "latency_ms": 16266,
+        "output_bytes": 4840,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 4352,
+        "turn": 2,
         "edit": "Add a second bar series in a lighter shade for 'Previous Year' revenue data alon",
-        "failed": false,
-        "input_tokens": 4717,
-        "latency_ms": 14142,
-        "median_itl_ms": 0.002959,
-        "output_bytes": 8138,
-        "output_tokens": 2977,
-        "ttft_ms": 73,
-        "ttlt_ms": 13677,
-        "turn": 2
+        "input_tokens": 3508,
+        "output_tokens": 2458,
+        "cached_input_tokens": 3456,
+        "latency_ms": 25908,
+        "output_bytes": 7314,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 7424,
+        "turn": 3,
         "edit": "Change the chart title to 'Monthly Revenue 2024 vs 2023' and add a subtitle show",
-        "failed": false,
-        "input_tokens": 7736,
-        "latency_ms": 13720,
-        "median_itl_ms": 0.0037495,
-        "output_bytes": 8369,
-        "output_tokens": 3058,
-        "ttft_ms": 0,
-        "ttlt_ms": 13349,
-        "turn": 3
+        "input_tokens": 6009,
+        "output_tokens": 2507,
+        "cached_input_tokens": 5888,
+        "latency_ms": 26862,
+        "output_bytes": 7443,
+        "retried": false,
+        "failed": false
       }
     ],
-    "total_cached_input_tokens": 11776,
-    "total_input_tokens": 14935,
-    "total_latency_ms": 37942,
-    "total_output_tokens": 8242
+    "total_input_tokens": 11335,
+    "total_output_tokens": 6626,
+    "total_cached_input_tokens": 11008,
+    "total_latency_ms": 69036
   },
-  "experiment_id": "048-svg-bar-chart",
-  "format": "image/svg+xml",
   "gap_flow": {
-    "apply_success_rate": 0.6666666666666666,
-    "envelope_parse_rate": 1.0,
     "per_turn": [
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
+        "turn": 1,
         "edit": "Update the March bar to show $425,000 and the July bar to show $380,000 with the",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
-        "failed": false,
-        "input_tokens": 3534,
-        "latency_ms": 943,
-        "median_itl_ms": 0.0025,
-        "output_bytes": 11007,
-        "output_tokens": 94,
-        "ttft_ms": 17,
-        "ttlt_ms": 519,
-        "turn": 1
-      },
-      {
-        "apply_succeeded": false,
-        "cached_input_tokens": 1792,
-        "edit": "Add a second bar series in a lighter shade for 'Previous Year' revenue data alon",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
+        "input_tokens": 3318,
+        "output_tokens": 88,
+        "latency_ms": 1597,
+        "output_bytes": 8134,
+        "retried": false,
         "failed": true,
-        "failure_reason": "parse or apply failed",
-        "input_tokens": 3530,
-        "latency_ms": 12411,
-        "median_itl_ms": 0.002833,
-        "output_bytes": 11007,
-        "output_tokens": 2574,
-        "ttft_ms": 3,
-        "ttlt_ms": 11746,
-        "turn": 2
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: bar-mar",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
       },
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 2816,
-        "edit": "Change the chart title to 'Monthly Revenue 2024 vs 2023' and add a subtitle show",
-        "envelope_name": "edit",
+        "turn": 2,
+        "edit": "Add a second bar series in a lighter shade for 'Previous Year' revenue data alon",
+        "input_tokens": 3314,
+        "output_tokens": 1199,
+        "cached_input_tokens": 3200,
+        "latency_ms": 13143,
+        "output_bytes": 8134,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: bar-jan",
         "envelope_parsed": true,
-        "failed": false,
-        "input_tokens": 3544,
-        "latency_ms": 1092,
-        "median_itl_ms": 0.003916,
-        "output_bytes": 11038,
-        "output_tokens": 110,
-        "ttft_ms": 16,
-        "ttlt_ms": 410,
-        "turn": 3
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Change the chart title to 'Monthly Revenue 2024 vs 2023' and add a subtitle show",
+        "input_tokens": 3328,
+        "output_tokens": 124,
+        "cached_input_tokens": 3200,
+        "latency_ms": 1820,
+        "output_bytes": 8134,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: chart-title",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
       }
     ],
-    "total_cached_input_tokens": 4608,
-    "total_input_tokens": 10608,
-    "total_latency_ms": 14446,
-    "total_output_tokens": 2778
+    "total_input_tokens": 9960,
+    "total_output_tokens": 1411,
+    "total_cached_input_tokens": 6400,
+    "total_latency_ms": 16560,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
   },
-  "gap_turn0": {
-    "artifact_bytes": 11007,
-    "cached_input_tokens": 0,
-    "input_tokens": 385,
-    "latency_ms": 17398,
-    "median_itl_ms": 0.0035624999999999997,
-    "output_tokens": 3270,
-    "ttft_ms": 2,
-    "ttlt_ms": 16981
+  "comparison": {
+    "output_token_savings_pct": 78.7,
+    "input_token_savings_pct": 12.1,
+    "latency_savings_pct": 76
   },
-  "model": "gpt-5.4-mini",
-  "provider": "openai",
-  "quality": {
-    "mean_rouge_l": 0.3465,
-    "mean_sequence_similarity": 0.6228,
-    "mean_token_f1": 0.4122,
-    "per_turn": [
-      {
-        "base_char_count": 6059,
-        "char_delta_pct": 50.2,
-        "gap_char_count": 9099,
-        "lines_added": 165,
-        "lines_removed": 111,
-        "rouge_l": 0.3755,
-        "sequence_similarity": 0.623,
-        "token_f1": 0.4469,
-        "turn": 1
-      },
-      {
-        "base_char_count": 8138,
-        "char_delta_pct": 11.8,
-        "gap_char_count": 9099,
-        "lines_added": 165,
-        "lines_removed": 141,
-        "rouge_l": 0.3321,
-        "sequence_similarity": 0.6242,
-        "token_f1": 0.3964,
-        "turn": 2
-      },
-      {
-        "base_char_count": 8369,
-        "char_delta_pct": 9.1,
-        "gap_char_count": 9130,
-        "lines_added": 165,
-        "lines_removed": 143,
-        "rouge_l": 0.3319,
-        "sequence_similarity": 0.6212,
-        "token_f1": 0.3933,
-        "turn": 3
-      }
-    ]
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 3,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 3,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: bar-jan": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: bar-mar": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: chart-title": 1
+    }
   },
-  "timestamp": "2026-05-29T03:08:32Z",
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 36.7,
+    "fallback_adjusted": {
+      "input_tokens": 21295,
+      "output_tokens": 8037,
+      "total_tokens": 29332,
+      "miss_attempt_input_tokens": 9960,
+      "miss_attempt_output_tokens": 1411,
+      "miss_attempt_total_tokens": 11371,
+      "fallback_retry_input_tokens": 11335,
+      "fallback_retry_output_tokens": 6626,
+      "fallback_retry_total_tokens": 17961,
+      "input_token_savings_pct": -87.9,
+      "output_token_savings_pct": -21.3,
+      "total_token_savings_pct": -63.3
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 19746,
+      "gap_init_inclusive_tokens": 14744,
+      "fallback_init_inclusive_tokens": 32705,
+      "measured_init_inclusive_token_savings_pct": 25.3,
+      "fallback_init_inclusive_token_savings_pct": -65.6
+    }
+  },
   "validity": {
-    "base_input_monotone": true,
-    "gap_run_degenerate": false
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
   }
 }

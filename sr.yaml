@@ -1,54 +1,22 @@
-# sr configuration
-# Reference: https://github.com/urmzd/sr#configuration
-
 git:
-  tag_prefix: v
+  tag_prefix: "v"
   floating_tag: true
+  v0_protection: true
 
 commit:
   types:
-    minor:
-      - feat
-    patch:
-      - fix
-      - perf
-      - refactor
-    none:
-      - docs
-      - revert
-      - chore
-      - ci
-      - test
-      - build
-      - style
+    minor: [feat]
+    patch: [fix, perf, refactor]
+    none: [docs, revert, chore, ci, test, build, style]
 
 changelog:
   file: CHANGELOG.md
   groups:
-    - name: breaking
-      content:
-        - breaking
-    - name: features
-      content:
-        - feat
-    - name: bug-fixes
-      content:
-        - fix
-    - name: performance
-      content:
-        - perf
-    - name: refactoring
-      content:
-        - refactor
-    - name: misc
-      content:
-        - docs
-        - revert
-        - chore
-        - ci
-        - test
-        - build
-        - style
+    - { name: breaking, content: [breaking] }
+    - { name: features, content: [feat] }
+    - { name: bug-fixes, content: [fix] }
+    - { name: performance, content: [perf] }
+    - { name: misc, content: [chore, ci, test, build, style] }
 
 channels:
   default: stable
@@ -58,9 +26,5 @@ channels:
 
 packages:
   - path: .
-    version_files:
-      - Cargo.toml
-    stage_files:
-      - Cargo.lock
     publish:
-      type: cargo
+      type: go

@@ -1,0 +1,153 @@
+{
+  "experiment_id": "072-ts-api-client",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:28:56Z",
+  "format": "text/typescript",
+  "base_turn0": {
+    "input_tokens": 132,
+    "output_tokens": 919,
+    "latency_ms": 8968,
+    "artifact_bytes": 3902
+  },
+  "gap_turn0": {
+    "input_tokens": 208,
+    "output_tokens": 792,
+    "latency_ms": 7242,
+    "artifact_bytes": 3482
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'Milestone' type with fields: id, title, due_date, status, progress_pe",
+        "input_tokens": 1087,
+        "output_tokens": 49,
+        "cached_input_tokens": 1024,
+        "latency_ms": 718,
+        "output_bytes": 188,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the interceptors section to add a request deduplication interceptor that",
+        "input_tokens": 1167,
+        "output_tokens": 843,
+        "cached_input_tokens": 1024,
+        "latency_ms": 6691,
+        "output_bytes": 3733,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Add batch endpoint methods: batchUpdateTasks(updates: Array\u003c{id: string, status:",
+        "input_tokens": 2054,
+        "output_tokens": 938,
+        "cached_input_tokens": 1920,
+        "latency_ms": 7439,
+        "output_bytes": 4132,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 4308,
+    "total_output_tokens": 1830,
+    "total_cached_input_tokens": 3968,
+    "total_latency_ms": 14848
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'Milestone' type with fields: id, title, due_date, status, progress_pe",
+        "input_tokens": 1126,
+        "output_tokens": 109,
+        "latency_ms": 1461,
+        "output_bytes": 3637,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the interceptors section to add a request deduplication interceptor that",
+        "input_tokens": 1160,
+        "output_tokens": 293,
+        "latency_ms": 2882,
+        "output_bytes": 2050,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Add batch endpoint methods: batchUpdateTasks(updates: Array\u003c{id: string, status:",
+        "input_tokens": 808,
+        "output_tokens": 226,
+        "latency_ms": 2746,
+        "output_bytes": 2719,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 3094,
+    "total_output_tokens": 628,
+    "total_latency_ms": 7089,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 65.7,
+    "input_token_savings_pct": 28.2,
+    "latency_savings_pct": 52.3
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 39.4,
+    "fallback_adjusted": {
+      "input_tokens": 3094,
+      "output_tokens": 628,
+      "total_tokens": 3722,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 28.2,
+      "output_token_savings_pct": 65.7,
+      "total_token_savings_pct": 39.4
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 7189,
+      "gap_init_inclusive_tokens": 4722,
+      "fallback_init_inclusive_tokens": 4722,
+      "measured_init_inclusive_token_savings_pct": 34.3,
+      "fallback_init_inclusive_token_savings_pct": 34.3
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

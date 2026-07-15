@@ -3,7 +3,7 @@
 **Version**: 0.1
 **Status**: Draft — subject to breaking changes
 **Date**: 2026-04-02
-**Revision history**: this document is versioned with the reference implementation. Normative changes since the 2026-04-02 draft ship in crate releases and are recorded in the [CHANGELOG](../CHANGELOG.md); the wire identifier stays `gap/0.1` until the next wire-breaking revision.
+**Revision history**: this document is versioned with the reference implementation. Normative changes since the 2026-04-02 draft ship in module releases and are recorded in the [CHANGELOG](../CHANGELOG.md); the wire identifier stays `gap/0.1` until the next wire-breaking revision.
 
 ## 1. Introduction
 
@@ -293,18 +293,18 @@ Reprovisioning is the act of updating an existing artifact. The producer selects
 
 ### 5.1 Target-First Generation (Recommended)
 
-Producers SHOULD emit `<gap:target>` markers on the **initial synthesize**. This incurs a small overhead (~2% extra tokens for markers) but enables all subsequent updates to use ID-based `edit` operations — reducing **output tokens** by 90–99% per update compared to full regeneration. Actual dollar savings depend on the model's output/input price ratio (see [Section 7.1.1](#711-cost-model)).
+For non-JSON text artifacts, producers SHOULD emit `<gap:target>` markers on the **initial synthesize**. For JSON artifacts, producers SHOULD emit clean JSON and rely on JSON Pointer paths for later edits. Initial target placement and later path discovery are part of the protocol economics: the upfront structure only pays off when later edits are small relative to the artifact.
 
-**Rationale**: the upfront cost of markers is amortized across every future update. After just one ID-targeted edit, the total output token spend is lower than two full regenerations.
+**Rationale**: markers and stable paths make later edits addressable. The upfront cost is amortized across future updates, especially for artifacts above roughly 2 KB, repeated records/pages, dashboards, feeds, catalogs, API payloads, and code files with stable section boundaries. Tiny configs and one-off edits can lose because target inventory, system instructions, and envelope structure can cost more than full regeneration.
 
 > **Structural hints:** Producers SHOULD annotate structurally constrained targets with the `accepts` field — for example, table targets that expect `<tr>` children, list targets that expect `<li>` items, or code block targets that expect specific syntax. This reduces silent structural corruption when the maintain context produces replacement content. See [Section 7.2](#72-handle-name-handle) for the target info schema.
 
 **Output cost model** ($N$ = number of future updates, $S$ = artifact size in output tokens):
 - Without targets: $N$ full regenerations = $N \times S$ output tokens
-- With targets: 1 synthesize (with markers) + $N$ targeted edits = $S \times 1.02 + N \times \text{edit\_tokens}$ output tokens
-- Break-even: 1 update ($\text{edit\_tokens}$ is typically 1–10% of $S$)
+- With targets: 1 synthesize (with marker overhead) + $N$ targeted edits = $S + \text{marker\_overhead} + N \times \text{edit\_tokens}$ output tokens
+- Output-only break-even: often 1 update when $\text{edit\_tokens} \ll S$
 
-> **Note:** Per-edit input cost is the same whether the operation is a synthesize or an edit — the maintain context reads the full artifact ($I + S$) either way. However, compared to a naive conversation (which accumulates all prior versions in context, growing as $O(N^2 \cdot S)$), GAP's stateless maintain context saves significantly on input. The output savings are typically larger per-edit (output tokens cost $r$x more), but input savings compound over the artifact's lifetime. See [Section 7.1](#71-memory-model) for the full cost derivation.
+> **Note:** Per-edit input is similar to stateless full regeneration because the maintain context reads the full artifact either way. GAP may also add input overhead for protocol instructions, target/path inventory, and repair prompts. Compared to a naive conversation (which accumulates all prior versions in context, growing as $O(N^2 \cdot S)$), GAP's stateless maintain context still avoids history growth. See [Section 7.1](#71-memory-model) for the full cost derivation.
 
 #### Producer System Prompt Requirements
 
@@ -312,6 +312,8 @@ GAP defines the *wire format*; the producer's **system prompts** determine wheth
 
 - **Init (synthesis) prompt.** MUST instruct the producer to emit fine-grained, role-based markers (text/markup formats) or clean, pointer-addressable structure (JSON). A vague instruction such as *"wrap updatable values in markers"* is **insufficient**: models routinely collapse to a single document-level target, after which every edit is destructive ([Section 3.2](#32-targets)). The prompt SHOULD (a) demand a marker on **every** independently-updatable value **and** every section, (b) give a concrete nested example, and (c) state explicitly that a single root marker is wrong.
 - **Maintain (edit) prompt.** MUST instruct the producer to reference existing target IDs (or JSON Pointers), put the replacement text in each operation's **`content`** field, and never re-emit the full artifact.
+- **Supervisor inventory.** Implementations SHOULD give the maintain context a current address inventory before every edit. For non-JSON artifacts this is `list_targets()` over valid marker IDs. For JSON artifacts this is `list_paths()` over valid JSON Pointers. The maintain context SHOULD choose only from this inventory.
+- **Pre-apply validation.** Implementations SHOULD validate every generated envelope before apply. Envelopes that reference missing IDs, invalid JSON Pointers, wrong target modes, or invalid JSON values SHOULD be rejected and repaired before they are applied. If repair fails, implementations SHOULD fall back to full regeneration and record the failed GAP attempt as miss cost.
 
 **Targeting mode is format-dependent and the init prompt MUST match the format:**
 
@@ -332,7 +334,9 @@ GAP defines the *wire format*; the producer's **system prompts** determine wheth
 | JSON field update | `edit` (pointer targeting) | ~95–99% |
 | Complete rewrite | `synthesize` | 0% (baseline) |
 
-> **Interpreting the table:** the "Output token reduction" column measures how many fewer output tokens the LLM produces compared to full regeneration. Because output tokens are priced 3–5x higher than input tokens (varies by provider), a 95% output reduction translates to roughly 75–80% total cost reduction when input costs are included. See [Section 7.1.1](#711-cost-model) for the precise formula.
+> **Interpreting the table:** the "Output token reduction" column measures how many fewer output tokens the LLM produces compared to full regeneration. Because output tokens are often priced higher than input tokens (varies by provider), a large output reduction can translate into large total cost reduction when input overhead is controlled. See [Section 7.1.1](#711-cost-model) for the formula.
+
+The table is an output-token guide, not a guarantee of total cost savings. Total savings depend on artifact size, number of future edits, miss rate, repair attempts, and the token cost of target/path inventory supplied to the maintain context.
 
 ### 5.3 Version Chain Integrity
 
@@ -449,12 +453,13 @@ The cost of artifact operations depends on three LLM-specific variables that var
 | $S_k$ | Artifact size in tokens at version $k$ (tokenizer-dependent) | 500–10,000 |
 | $d_k$ | Edit envelope size in output tokens for edit $k$ | 30–500 |
 | $I$ | System prompt + instructions in tokens | 200–1,000 |
+| $H_k$ | Incremental GAP input overhead for protocol instructions, target/path inventory, and repairs | 0–2,000+ |
 | $p_{\text{in}}$ | Price per input token | varies by model |
 | $p_{\text{out}}$ | Price per output token | varies by model |
 | $r$ | Output/input price ratio ($p_{\text{out}} / p_{\text{in}}$) | 1–5x |
 | $N$ | Number of edits over the artifact's lifetime | $1$–$\infty$ |
 
-> **Why these variables matter:** A given 8 KB HTML artifact might tokenize to ~2,000 tokens on GPT-4's tokenizer but ~2,400 on Claude's. The output/input price ratio ranges from 1x (some open-source providers) to 5x (frontier models). These differences change the absolute savings but not the structural advantage — GAP always reduces output tokens, and output tokens are always $\geq$ input token price.
+> **Why these variables matter:** A given 8 KB HTML artifact might tokenize to ~2,000 tokens on GPT-4's tokenizer but ~2,400 on Claude's. The output/input price ratio ranges from 1x (some open-source providers) to 5x (frontier models). GAP is designed to reduce output tokens, but total cost savings depend on whether the saved output cost exceeds $H_k$ and any miss or repair tax.
 
 ##### Three Scenarios
 
@@ -489,10 +494,10 @@ Each edit starts a fresh context. The LLM reads the full artifact but produces o
 | Component | Input tokens | Output tokens |
 |---|---|---|
 | Init (create) | $I + \text{prompt}$ | $S_0$ |
-| Edit $k$ | $I + S_{k-1} + \text{message}$ | $d_k$ |
-| Total ($N$ edits) | $I + \sum_{k=1}^{N} (I + S_{k-1})$ | $S_0 + \sum_{k=1}^{N} d_k$ |
+| Edit $k$ | $I + S_{k-1} + H_k + \text{message}$ | $d_k$ |
+| Total ($N$ edits) | $I + \sum_{k=1}^{N} (I + S_{k-1} + H_k)$ | $S_0 + \sum_{k=1}^{N} d_k$ |
 
-Input cost is **identical to Scenario B** (both read the current artifact per edit). Output cost drops from $\sum S_k$ to $S_0 + \sum d_k$. Since $d_k \ll S_k$ for targeted edits, this is the primary savings.
+Input cost is close to Scenario B, but may be higher by $H_k$ when the implementation injects protocol instructions, target/path inventory, or repair prompts. Output cost drops from $\sum S_k$ to $S_0 + \sum d_k$. When $d_k \ll S_k$ and $H_k$ is controlled, this is the primary savings.
 
 ##### Where the Savings Come From
 
@@ -504,7 +509,13 @@ In Scenario B (stateless full regen), every edit produces $S_k$ output tokens �
 
 In Scenario C (GAP), the LLM produces $d_k$ tokens — an edit envelope describing what changed. The apply engine resolves the edit against the stored artifact deterministically (CPU, ~2μs, zero tokens) and stores the new version. The $d_k$ output tokens are **consumed by the apply engine and discarded** — no LLM ever reads them back as input.
 
-The maintain context does re-read the full artifact ($S_{k-1}$ input tokens) each edit — that's how it knows what to edit. But input tokens are cheap ($1/r$ of the output price). The trade is always profitable: pay $S_{k-1} \cdot p_{\text{in}}$ to read, save $(S_k - d_k) \cdot p_{\text{out}}$ on output. Since $r \geq 1$ and $d_k \ll S_k$, the output savings dominate.
+The maintain context does re-read the full artifact ($S_{k-1}$ input tokens) each edit because that is how it knows what to edit. The trade is profitable when saved output cost exceeds incremental GAP overhead and miss tax:
+
+$$
+(S_k - d_k) \cdot p_{\text{out}} > H_k \cdot p_{\text{in}} + \text{miss\_tax}_k
+$$
+
+This usually favors larger artifacts and repeated localized edits. It can fail for tiny files, broad rewrites, bad target placement, or high miss rates.
 
 **Effect 2 — The orchestrator never reads the artifact (context separation).**
 
@@ -540,23 +551,23 @@ The **total cost** of a single edit (init excluded) under each scenario. Edit $k
 | **B (stateless full)** | $(I + S_{k-1}) \cdot p_{\text{in}}$ | $S_k \cdot p_{\text{out}}$ | $(I + S_{k-1}) \cdot p_{\text{in}} + S_k \cdot p_{\text{out}}$ |
 | **C (GAP edit)** | $(I + S_{k-1}) \cdot p_{\text{in}}$ | $d_k \cdot p_{\text{out}}$ | $(I + S_{k-1}) \cdot p_{\text{in}} + d_k \cdot p_{\text{out}}$ |
 
-**C vs B (same input, less output):** Input costs are identical — the maintain context reads the full artifact regardless. Savings are purely on the output side: $(S_k - d_k) \cdot p_{\text{out}}$ per edit. This is the edit efficiency.
+**C vs B (similar input, less output):** Both approaches read the current artifact. GAP may add $H_k$ input overhead for protocol instructions, target/path inventory, and repair prompts. Savings come from replacing full output $S_k$ with edit output $d_k$, minus that overhead.
 
 **C vs A (less input AND less output):** At edit $k$, Scenario A reads all prior artifact versions ($\sum_{j<k} S_j$) that Scenario C never sees. Input savings grow with $k$ — the longer the artifact lives, the wider the gap. Output savings $(S_k - d_k) \cdot p_{\text{out}}$ apply on top.
 
-This is why the output/input price ratio matters: the higher $r = p_{\text{out}} / p_{\text{in}}$, the more the output reduction dominates total savings. But even at $r = 1$, GAP saves on both sides vs the naive conversation.
+This is why the output/input price ratio matters: the higher $r = p_{\text{out}} / p_{\text{in}}$, the more the output reduction dominates total savings. At $r = 1$, GAP can still save versus a naive conversation by avoiding history growth, but it is easier for $H_k$ to erase savings versus stateless full regeneration.
 
-The **cost savings percentage** for a single edit (B→C), using $S$ for $S_{k-1} \approx S_k$ and $d$ for $d_k$:
+The **cost savings percentage** for a single edit (B→C), using $S$ for $S_{k-1} \approx S_k$, $d$ for $d_k$, and $H$ for incremental GAP input overhead:
 
-$$\text{savings\%} = \frac{(S - d) \cdot p_{\text{out}}}{(I + S) \cdot p_{\text{in}} + S \cdot p_{\text{out}}} = \frac{(S - d) \cdot r}{(I + S) + S \cdot r}$$
+$$\text{savings\%} = \frac{(S - d) \cdot p_{\text{out}} - H \cdot p_{\text{in}}}{(I + S) \cdot p_{\text{in}} + S \cdot p_{\text{out}}} = \frac{(S - d) \cdot r - H}{(I + S) + S \cdot r}$$
 
-Where $r = p_{\text{out}} / p_{\text{in}}$. As $r \to \infty$, $\text{savings\%} \to (S - d) / S \approx 1$ (approaches the raw output token reduction). As $r \to 1$, $\text{savings\%} \approx (S - d) / (I + 2S)$ (approaches roughly half the output reduction, since input and output cost equally).
+Where $r = p_{\text{out}} / p_{\text{in}}$. As $r \to \infty$, $\text{savings\%} \to (S - d) / S \approx 1$ (approaches the raw output token reduction). As $r \to 1$, $\text{savings\%} \approx (S - d - H) / (I + 2S)$. This is why small artifacts can be negative even when output tokens drop.
 
 > **Non-normative note:** The $d_k \approx 30\text{–}500$ output token estimate is derived from hand-crafted envelope benchmarks. AI-generated envelopes from natural language messages may produce larger edits or fall back to section-level rewrites when a targeted edit would suffice. Implementations SHOULD track actual output token counts to calibrate expectations.
 
 #### 7.1.2 Amortization
 
-The initial creation (init context, `name: "synthesize"`) is the most expensive operation — full output tokens to produce the artifact with targets. This is a one-time investment that makes every subsequent edit cheap.
+The initial creation (init context, `name: "synthesize"`) is the most expensive operation: full output tokens to produce the artifact with targets. This is a one-time investment that can make subsequent localized edits cheap when there are enough edits to amortize setup overhead.
 
 ##### Iteration-by-Iteration Comparison
 
@@ -622,20 +633,20 @@ An 8 KB HTML dashboard artifact with typical model pricing:
 The three columns reveal the two savings mechanisms:
 
 - **B vs A** (input savings from context flattening): \$0.677 → \$0.407 at edit 10. The naive conversation re-reads every prior regeneration; stateless dispatch reads only the current version.
-- **C vs B** (output savings from edit operations): \$0.407 → \$0.111 at edit 10. Same input cost, but output drops from $S$ to $d$ per edit.
+- **C vs B** (output savings from edit operations): \$0.407 → \$0.111 at edit 10 in this idealized example. Output drops from $S$ to $d$ per edit; real implementations must subtract any $H_k$ protocol, inventory, and repair overhead.
 - **C vs A** (both effects combined): \$0.677 → \$0.111 at edit 10 — **84% estimated savings**. The gap widens with every edit because both quadratic input growth *and* redundant output accumulate in A but not in C.
 
 > **These are projections, not guarantees.** Actual savings depend on how efficiently the LLM generates edit envelopes. The LLM may produce larger-than-minimal edits, fall back to section-level rewrites, or regenerate entirely. Implementations SHOULD track actual token counts to calibrate expectations.
 
-> **Sensitivity to price ratio:** Per-edit savings (B→C) scale with $r$: at $r = 1$ (equal pricing), ~44%; at $r = 3$, ~70%; at $r = 5$, ~79%. The output token reduction itself ($d/S$) is constant — what changes is how much of total cost it represents.
+> **Sensitivity to price ratio:** Idealized per-edit savings (B→C, with $H=0$) scale with $r$: at $r = 1$ (equal pricing), ~44%; at $r = 3$, ~70%; at $r = 5$, ~79%. The output token reduction itself ($d/S$) is constant; what changes is how much of total cost it represents.
 
 ##### With Model Asymmetry
 
-If the maintain context runs on a model costing 1/10th the orchestrator's output price (e.g., a small model for structured edits), the output cost column for C drops further. In the example above, 10 edits of GAP edit output at 1/10th price: \$0.035 × 0.1 = \$0.0035 — effectively free. Total savings approach the theoretical maximum.
+If the maintain context runs on a model costing 1/10th the orchestrator's output price (e.g., a small model for structured edits), the output cost column for C drops further. In the example above, 10 edits of GAP edit output at 1/10th price cost \$0.0035 instead of \$0.035 before input overhead and miss tax.
 
 ##### Break-Even
 
-Break-even occurs at **one edit**. After a single edit update, cumulative output spend ($S + d$) is less than two full regenerations ($2S$) whenever $d < S$ — which is always true for any non-trivial artifact.
+Output-only break-even often occurs after **one edit**: cumulative output spend ($S + d$) is less than two full regenerations ($2S$) whenever $d < S$. Total cost break-even depends on $H$, miss tax, and model pricing, so implementations MUST measure fallback-adjusted and init-inclusive economics rather than reporting raw output savings alone.
 
 #### 7.1.3 Why Savings Are LLM-Dependent
 
@@ -655,7 +666,7 @@ The three variables that determine actual dollar savings are all model-specific:
 
 **Model cost per token.** The maintain context does not require a frontier model — it needs recall (find the right location in the artifact) and structured output (emit valid envelope JSON). Smaller, cheaper models excel at this constrained task. When the maintain model is cheaper than the orchestrator, the savings multiply beyond what output token reduction alone provides.
 
-> **Non-normative note:** Implementations SHOULD report both output token reduction (model-independent) and estimated cost savings (model-dependent) in their benchmarks. Payload byte reduction (as measured by the Rust apply engine) is a useful proxy for output token reduction but not identical — envelope JSON overhead adds a small constant.
+> **Non-normative note:** Implementations SHOULD report both output token reduction (model-independent) and estimated cost savings (model-dependent) in their benchmarks. Payload byte reduction is a useful proxy for output token reduction but not identical — envelope JSON overhead adds a small constant.
 
 #### 7.1.4 Anti-Hallucination Properties
 
@@ -965,4 +976,4 @@ Empirical measurements from the reference implementation using a 40KB HTML dashb
 | Update all CSS colors | ~10,000 | ~700 | 93.0% |
 | Rewrite one section | ~10,000 | ~1,000 | 90.0% |
 
-*Values are approximate; run `cargo bench --bench gap` for current apply engine measurements.*
+*Values are approximate; benchmark the current apply engine implementation for fresh local measurements.*

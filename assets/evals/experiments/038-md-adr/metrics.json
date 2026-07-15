@@ -1,0 +1,128 @@
+{
+  "experiment_id": "038-md-adr",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:53:08Z",
+  "format": "text/markdown",
+  "base_turn0": {
+    "input_tokens": 138,
+    "output_tokens": 469,
+    "latency_ms": 4149,
+    "artifact_bytes": 2393
+  },
+  "gap_turn0": {
+    "input_tokens": 214,
+    "output_tokens": 609,
+    "latency_ms": 6715,
+    "artifact_bytes": 2299
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the status from 'Accepted' to 'Superseded by ADR-007' and add a link refe",
+        "input_tokens": 642,
+        "output_tokens": 479,
+        "latency_ms": 4406,
+        "output_bytes": 2411,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Add a third alternative considered: 'Use CDC (Change Data Capture) with Debezium",
+        "input_tokens": 1156,
+        "output_tokens": 592,
+        "cached_input_tokens": 1024,
+        "latency_ms": 5518,
+        "output_bytes": 2957,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 1798,
+    "total_output_tokens": 1071,
+    "total_cached_input_tokens": 1024,
+    "total_latency_ms": 9924
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the status from 'Accepted' to 'Superseded by ADR-007' and add a link refe",
+        "input_tokens": 942,
+        "output_tokens": 67,
+        "latency_ms": 1326,
+        "output_bytes": 2312,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Add a third alternative considered: 'Use CDC (Change Data Capture) with Debezium",
+        "input_tokens": 948,
+        "output_tokens": 106,
+        "latency_ms": 1532,
+        "output_bytes": 2527,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 1890,
+    "total_output_tokens": 173,
+    "total_latency_ms": 2858,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 83.8,
+    "input_token_savings_pct": -5.1,
+    "latency_savings_pct": 71.2
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 28.1,
+    "fallback_adjusted": {
+      "input_tokens": 1890,
+      "output_tokens": 173,
+      "total_tokens": 2063,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": -5.1,
+      "output_token_savings_pct": 83.8,
+      "total_token_savings_pct": 28.1
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 3476,
+      "gap_init_inclusive_tokens": 2886,
+      "fallback_init_inclusive_tokens": 2886,
+      "measured_init_inclusive_token_savings_pct": 17,
+      "fallback_init_inclusive_token_savings_pct": 17
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "experiment_id": "085-python-celery-tasks",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:50:13Z",
+  "format": "text/x-python",
+  "base_turn0": {
+    "input_tokens": 136,
+    "output_tokens": 735,
+    "latency_ms": 7755,
+    "artifact_bytes": 3028
+  },
+  "gap_turn0": {
+    "input_tokens": 212,
+    "output_tokens": 827,
+    "latency_ms": 7426,
+    "artifact_bytes": 3349
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'send_invoice_email' task to the email-tasks section that accepts orde",
+        "input_tokens": 914,
+        "output_tokens": 859,
+        "latency_ms": 10782,
+        "output_bytes": 3470,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the config to use a dead letter queue named 'failed_tasks' and set the ta",
+        "input_tokens": 1807,
+        "output_tokens": 910,
+        "cached_input_tokens": 1664,
+        "latency_ms": 10548,
+        "output_bytes": 3704,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the cleanup-tasks section to add a new 'rotate_logs' task that compresse",
+        "input_tokens": 2759,
+        "output_tokens": 1178,
+        "cached_input_tokens": 2688,
+        "latency_ms": 12028,
+        "output_bytes": 4907,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 5480,
+    "total_output_tokens": 2947,
+    "total_cached_input_tokens": 4352,
+    "total_latency_ms": 33358
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'send_invoice_email' task to the email-tasks section that accepts orde",
+        "input_tokens": 1168,
+        "output_tokens": 216,
+        "latency_ms": 2563,
+        "output_bytes": 3929,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the config to use a dead letter queue named 'failed_tasks' and set the ta",
+        "input_tokens": 1301,
+        "output_tokens": 383,
+        "latency_ms": 3798,
+        "output_bytes": 3929,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the cleanup-tasks section to add a new 'rotate_logs' task that compresse",
+        "input_tokens": 1303,
+        "output_tokens": 398,
+        "latency_ms": 4282,
+        "output_bytes": 4962,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 3772,
+    "total_output_tokens": 997,
+    "total_latency_ms": 10643,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 66.2,
+    "input_token_savings_pct": 31.2,
+    "latency_savings_pct": 68.1
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 43.4,
+    "fallback_adjusted": {
+      "input_tokens": 3772,
+      "output_tokens": 997,
+      "total_tokens": 4769,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 31.2,
+      "output_token_savings_pct": 66.2,
+      "total_token_savings_pct": 43.4
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 9298,
+      "gap_init_inclusive_tokens": 5808,
+      "fallback_init_inclusive_tokens": 5808,
+      "measured_init_inclusive_token_savings_pct": 37.5,
+      "fallback_init_inclusive_token_savings_pct": 37.5
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

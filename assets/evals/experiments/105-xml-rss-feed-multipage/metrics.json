@@ -1,0 +1,209 @@
+{
+  "experiment_id": "105-xml-rss-feed-multipage",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T04:30:29Z",
+  "format": "application/xml",
+  "base_turn0": {
+    "input_tokens": 409,
+    "output_tokens": 8707,
+    "latency_ms": 67477,
+    "artifact_bytes": 32179
+  },
+  "gap_turn0": {
+    "input_tokens": 678,
+    "output_tokens": 8965,
+    "latency_ms": 65849,
+    "artifact_bytes": 34681
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the title of item 67 (the item whose guid is dailybyte-0067, in batch 4) ",
+        "input_tokens": 9179,
+        "output_tokens": 8703,
+        "cached_input_tokens": 9088,
+        "latency_ms": 68814,
+        "output_bytes": 32173,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Insert one new \u003citem\u003e at the very start of batch 2, immediately before item 21 (",
+        "input_tokens": 18030,
+        "output_tokens": 8594,
+        "cached_input_tokens": 17792,
+        "latency_ms": 71252,
+        "output_bytes": 31758,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Delete the item whose guid is dailybyte-0050 (item 50, in batch 3) entirely, inc",
+        "input_tokens": 26690,
+        "output_tokens": 6250,
+        "cached_input_tokens": 26496,
+        "latency_ms": 48553,
+        "output_bytes": 23153,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 4,
+        "edit": "Change the \u003ccategory\u003e of EVERY item in the entire feed to exactly \"Technology\", ",
+        "input_tokens": 33016,
+        "output_tokens": 6250,
+        "cached_input_tokens": 32896,
+        "latency_ms": 57920,
+        "output_bytes": 23385,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 5,
+        "edit": "Add a whole new batch 5 of EXACTLY 20 new \u003citem\u003e entries appended after the curr",
+        "input_tokens": 39396,
+        "output_tokens": 8429,
+        "cached_input_tokens": 39168,
+        "latency_ms": 65090,
+        "output_bytes": 31645,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 126311,
+    "total_output_tokens": 38226,
+    "total_cached_input_tokens": 125440,
+    "total_latency_ms": 311629
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the title of item 67 (the item whose guid is dailybyte-0067, in batch 4) ",
+        "input_tokens": 9325,
+        "output_tokens": 68,
+        "latency_ms": 1449,
+        "output_bytes": 34681,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: dailybyte-0067",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Insert one new \u003citem\u003e at the very start of batch 2, immediately before item 21 (",
+        "input_tokens": 9410,
+        "output_tokens": 178,
+        "cached_input_tokens": 9088,
+        "latency_ms": 2620,
+        "output_bytes": 35084,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Delete the item whose guid is dailybyte-0050 (item 50, in batch 3) entirely, inc",
+        "input_tokens": 9432,
+        "output_tokens": 64,
+        "cached_input_tokens": 2176,
+        "latency_ms": 1149,
+        "output_bytes": 26609,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 4,
+        "edit": "Change the \u003ccategory\u003e of EVERY item in the entire feed to exactly \"Technology\", ",
+        "input_tokens": 7259,
+        "output_tokens": 133,
+        "cached_input_tokens": 4224,
+        "latency_ms": 1840,
+        "output_bytes": 663,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 5,
+        "edit": "Add a whole new batch 5 of EXACTLY 20 new \u003citem\u003e entries appended after the curr",
+        "input_tokens": 629,
+        "output_tokens": 2576,
+        "latency_ms": 24588,
+        "output_bytes": 7137,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 36055,
+    "total_output_tokens": 3019,
+    "total_cached_input_tokens": 15488,
+    "total_latency_ms": 31646,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.8
+  },
+  "comparison": {
+    "output_token_savings_pct": 92.1,
+    "input_token_savings_pct": 71.5,
+    "latency_savings_pct": 89.8
+  },
+  "reliability": {
+    "edit_turns": 5,
+    "miss_count": 1,
+    "miss_rate": 0.2,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 1,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: dailybyte-0067": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 76.3,
+    "fallback_adjusted": {
+      "input_tokens": 45234,
+      "output_tokens": 11722,
+      "total_tokens": 56956,
+      "miss_attempt_input_tokens": 9325,
+      "miss_attempt_output_tokens": 68,
+      "miss_attempt_total_tokens": 9393,
+      "fallback_retry_input_tokens": 9179,
+      "fallback_retry_output_tokens": 8703,
+      "fallback_retry_total_tokens": 17882,
+      "input_token_savings_pct": 64.2,
+      "output_token_savings_pct": 69.3,
+      "total_token_savings_pct": 65.4
+    },
+    "amortized": {
+      "edit_turns": 5,
+      "base_init_inclusive_tokens": 173653,
+      "gap_init_inclusive_tokens": 48717,
+      "fallback_init_inclusive_tokens": 66599,
+      "measured_init_inclusive_token_savings_pct": 71.9,
+      "fallback_init_inclusive_token_savings_pct": 61.6
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

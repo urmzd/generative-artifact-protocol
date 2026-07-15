@@ -1,0 +1,126 @@
+{
+  "experiment_id": "061-yaml-pre-commit",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:16:31Z",
+  "format": "text/x-yaml",
+  "base_turn0": {
+    "input_tokens": 78,
+    "output_tokens": 325,
+    "latency_ms": 5320,
+    "artifact_bytes": 1037
+  },
+  "gap_turn0": {
+    "input_tokens": 153,
+    "output_tokens": 290,
+    "latency_ms": 3562,
+    "artifact_bytes": 883
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a bandit hook for security linting with a severity level of medium and a con",
+        "input_tokens": 432,
+        "output_tokens": 388,
+        "latency_ms": 3617,
+        "output_bytes": 1249,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the ruff hook to pin version 0.9.0 and add the --fix flag to automaticall",
+        "input_tokens": 854,
+        "output_tokens": 381,
+        "latency_ms": 3826,
+        "output_bytes": 1214,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 1286,
+    "total_output_tokens": 769,
+    "total_latency_ms": 7443
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a bandit hook for security linting with a severity level of medium and a con",
+        "input_tokens": 617,
+        "output_tokens": 86,
+        "latency_ms": 1187,
+        "output_bytes": 964,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the ruff hook to pin version 0.9.0 and add the --fix flag to automaticall",
+        "input_tokens": 644,
+        "output_tokens": 97,
+        "latency_ms": 1319,
+        "output_bytes": 140,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 1261,
+    "total_output_tokens": 183,
+    "total_latency_ms": 2506,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 76.2,
+    "input_token_savings_pct": 1.9,
+    "latency_savings_pct": 66.3
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 29.7,
+    "fallback_adjusted": {
+      "input_tokens": 1261,
+      "output_tokens": 183,
+      "total_tokens": 1444,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 1.9,
+      "output_token_savings_pct": 76.2,
+      "total_token_savings_pct": 29.7
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 2458,
+      "gap_init_inclusive_tokens": 1887,
+      "fallback_init_inclusive_tokens": 1887,
+      "measured_init_inclusive_token_savings_pct": 23.2,
+      "fallback_init_inclusive_token_savings_pct": 23.2
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

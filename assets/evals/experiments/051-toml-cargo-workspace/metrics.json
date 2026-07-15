@@ -1,141 +1,127 @@
 {
+  "experiment_id": "051-toml-cargo-workspace",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T18:35:28Z",
+  "format": "text/x-toml",
   "base_turn0": {
-    "artifact_bytes": 1638,
-    "cached_input_tokens": 0,
-    "input_tokens": 140,
-    "latency_ms": 2518,
-    "median_itl_ms": 0.003229,
-    "output_tokens": 472,
-    "ttft_ms": 8,
-    "ttlt_ms": 2128
+    "input_tokens": 141,
+    "output_tokens": 272,
+    "latency_ms": 6799,
+    "artifact_bytes": 843
   },
-  "comparison": {
-    "input_token_savings_pct": -16.1,
-    "latency_savings_pct": 58.1,
-    "output_token_savings_pct": 75.8
+  "gap_turn0": {
+    "input_tokens": 401,
+    "output_tokens": 540,
+    "latency_ms": 10545,
+    "artifact_bytes": 1812
   },
   "default_flow": {
     "per_turn": [
       {
-        "cached_input_tokens": 0,
+        "turn": 1,
         "edit": "Add sqlx and sea-orm to the dependencies with features for PostgreSQL and runtim",
-        "failed": false,
-        "input_tokens": 639,
-        "latency_ms": 2666,
-        "median_itl_ms": 0.002854,
-        "output_bytes": 1993,
-        "output_tokens": 586,
-        "ttft_ms": 21,
-        "ttlt_ms": 2309,
-        "turn": 1
+        "input_tokens": 441,
+        "output_tokens": 124,
+        "latency_ms": 3683,
+        "output_bytes": 351,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 0,
+        "turn": 2,
         "edit": "Update the release profile to enable codegen-units = 1 and add a bench profile w",
-        "failed": false,
-        "input_tokens": 1256,
-        "latency_ms": 2772,
-        "median_itl_ms": 0.003166,
-        "output_bytes": 2041,
-        "output_tokens": 603,
-        "ttft_ms": 6,
-        "ttlt_ms": 2467,
-        "turn": 2
+        "input_tokens": 597,
+        "output_tokens": 32,
+        "latency_ms": 2144,
+        "output_bytes": 96,
+        "retried": false,
+        "failed": false
       }
     ],
-    "total_cached_input_tokens": 0,
-    "total_input_tokens": 1895,
-    "total_latency_ms": 5438,
-    "total_output_tokens": 1189
+    "total_input_tokens": 1038,
+    "total_output_tokens": 156,
+    "total_latency_ms": 5827
   },
-  "experiment_id": "051-toml-cargo-workspace",
-  "format": "text/x-toml",
   "gap_flow": {
-    "apply_success_rate": 1.0,
-    "envelope_parse_rate": 1.0,
     "per_turn": [
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
+        "turn": 1,
         "edit": "Add sqlx and sea-orm to the dependencies with features for PostgreSQL and runtim",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
+        "input_tokens": 1176,
+        "output_tokens": 135,
+        "latency_ms": 3479,
+        "output_bytes": 2018,
+        "retried": false,
         "failed": false,
-        "input_tokens": 1072,
-        "latency_ms": 998,
-        "median_itl_ms": 0.003292,
-        "output_bytes": 2785,
-        "output_tokens": 128,
-        "ttft_ms": 23,
-        "ttlt_ms": 665,
-        "turn": 1
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       },
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
+        "turn": 2,
         "edit": "Update the release profile to enable codegen-units = 1 and add a bench profile w",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
+        "input_tokens": 1246,
+        "output_tokens": 102,
+        "latency_ms": 2766,
+        "output_bytes": 2016,
+        "retried": false,
         "failed": false,
-        "input_tokens": 1129,
-        "latency_ms": 1279,
-        "median_itl_ms": 0.0027089999999999996,
-        "output_bytes": 2978,
-        "output_tokens": 160,
-        "ttft_ms": 38,
-        "ttlt_ms": 862,
-        "turn": 2
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       }
     ],
-    "total_cached_input_tokens": 0,
-    "total_input_tokens": 2201,
-    "total_latency_ms": 2277,
-    "total_output_tokens": 288
+    "total_input_tokens": 2422,
+    "total_output_tokens": 237,
+    "total_latency_ms": 6245,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
   },
-  "gap_turn0": {
-    "artifact_bytes": 2632,
-    "cached_input_tokens": 0,
-    "input_tokens": 400,
-    "latency_ms": 3912,
-    "median_itl_ms": 0.003417,
-    "output_tokens": 807,
-    "ttft_ms": 8,
-    "ttlt_ms": 3682
+  "comparison": {
+    "output_token_savings_pct": -51.9,
+    "input_token_savings_pct": -133.3,
+    "latency_savings_pct": -7.2
   },
-  "model": "gpt-5.4-mini",
-  "provider": "openai",
-  "quality": {
-    "mean_rouge_l": 0.4429,
-    "mean_sequence_similarity": 0.5553,
-    "mean_token_f1": 0.5435,
-    "per_turn": [
-      {
-        "base_char_count": 1993,
-        "char_delta_pct": -45.7,
-        "gap_char_count": 1083,
-        "lines_added": 35,
-        "lines_removed": 44,
-        "rouge_l": 0.4426,
-        "sequence_similarity": 0.5533,
-        "token_f1": 0.5404,
-        "turn": 1
-      },
-      {
-        "base_char_count": 2041,
-        "char_delta_pct": -44.5,
-        "gap_char_count": 1132,
-        "lines_added": 37,
-        "lines_removed": 45,
-        "rouge_l": 0.4431,
-        "sequence_similarity": 0.5572,
-        "token_f1": 0.5466,
-        "turn": 2
-      }
-    ]
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "validation_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
   },
-  "timestamp": "2026-05-29T03:09:54Z",
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": -122.7,
+    "fallback_adjusted": {
+      "input_tokens": 2422,
+      "output_tokens": 237,
+      "total_tokens": 2659,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": -133.3,
+      "output_token_savings_pct": -51.9,
+      "total_token_savings_pct": -122.7
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 1607,
+      "gap_init_inclusive_tokens": 3600,
+      "fallback_init_inclusive_tokens": 3600,
+      "measured_init_inclusive_token_savings_pct": -124,
+      "fallback_init_inclusive_token_savings_pct": -124
+    }
+  },
   "validity": {
-    "base_input_monotone": true,
-    "gap_run_degenerate": false
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
   }
 }

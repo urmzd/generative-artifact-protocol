@@ -1,0 +1,213 @@
+{
+  "experiment_id": "101-html-catalog-multipage",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:55:12Z",
+  "format": "text/html",
+  "base_turn0": {
+    "input_tokens": 325,
+    "output_tokens": 14071,
+    "latency_ms": 126160,
+    "artifact_bytes": 48596
+  },
+  "gap_turn0": {
+    "input_tokens": 594,
+    "output_tokens": 14491,
+    "latency_ms": 124725,
+    "artifact_bytes": 48583
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "On page 4, change the price of product P0087 to $349.95.",
+        "input_tokens": 14423,
+        "output_tokens": 14071,
+        "cached_input_tokens": 14336,
+        "latency_ms": 133483,
+        "output_bytes": 48597,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Insert a new product on page 2 immediately after P0030. Its id is P0121, name \"T",
+        "input_tokens": 28570,
+        "output_tokens": 15917,
+        "cached_input_tokens": 28416,
+        "latency_ms": 169525,
+        "output_bytes": 54930,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Delete product P0055 from page 3 entirely. Do not renumber any other products. T",
+        "input_tokens": 44523,
+        "output_tokens": 14074,
+        "cached_input_tokens": 44416,
+        "latency_ms": 141764,
+        "output_bytes": 48610,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 4,
+        "edit": "Change the category of EVERY product whose category is currently \"Filters\" to \"A",
+        "input_tokens": 58642,
+        "output_tokens": 12468,
+        "cached_input_tokens": 58496,
+        "latency_ms": 124890,
+        "output_bytes": 43116,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 5,
+        "edit": "Add a new page 6 as a new \u003csection\u003e with the header \"Page 6 of 6\". Populate it w",
+        "input_tokens": 71251,
+        "output_tokens": 8252,
+        "cached_input_tokens": 71040,
+        "latency_ms": 80177,
+        "output_bytes": 28598,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 217409,
+    "total_output_tokens": 64782,
+    "total_cached_input_tokens": 216704,
+    "total_latency_ms": 649839
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "On page 4, change the price of product P0087 to $349.95.",
+        "input_tokens": 14815,
+        "output_tokens": 71,
+        "latency_ms": 1740,
+        "output_bytes": 48583,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: product-price-87",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Insert a new product on page 2 immediately after P0030. Its id is P0121, name \"T",
+        "input_tokens": 14864,
+        "output_tokens": 239,
+        "cached_input_tokens": 14592,
+        "latency_ms": 3278,
+        "output_bytes": 48583,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: product-P0030",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Delete product P0055 from page 3 entirely. Do not renumber any other products. T",
+        "input_tokens": 14824,
+        "output_tokens": 63,
+        "cached_input_tokens": 14592,
+        "latency_ms": 1362,
+        "output_bytes": 48583,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: product-P0055",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 4,
+        "edit": "Change the category of EVERY product whose category is currently \"Filters\" to \"A",
+        "input_tokens": 14833,
+        "output_tokens": 409,
+        "cached_input_tokens": 14592,
+        "latency_ms": 6182,
+        "output_bytes": 48647,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 5,
+        "edit": "Add a new page 6 as a new \u003csection\u003e with the header \"Page 6 of 6\". Populate it w",
+        "input_tokens": 14945,
+        "output_tokens": 2290,
+        "latency_ms": 23767,
+        "output_bytes": 55356,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 74281,
+    "total_output_tokens": 3072,
+    "total_cached_input_tokens": 43776,
+    "total_latency_ms": 36329,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.4
+  },
+  "comparison": {
+    "output_token_savings_pct": 95.3,
+    "input_token_savings_pct": 65.8,
+    "latency_savings_pct": 94.4
+  },
+  "reliability": {
+    "edit_turns": 5,
+    "miss_count": 3,
+    "miss_rate": 0.6,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 3,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: product-P0030": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: product-P0055": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: product-price-87": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 72.6,
+    "fallback_adjusted": {
+      "input_tokens": 161797,
+      "output_tokens": 47134,
+      "total_tokens": 208931,
+      "miss_attempt_input_tokens": 44503,
+      "miss_attempt_output_tokens": 373,
+      "miss_attempt_total_tokens": 44876,
+      "fallback_retry_input_tokens": 87516,
+      "fallback_retry_output_tokens": 44062,
+      "fallback_retry_total_tokens": 131578,
+      "input_token_savings_pct": 25.6,
+      "output_token_savings_pct": 27.2,
+      "total_token_savings_pct": 26
+    },
+    "amortized": {
+      "edit_turns": 5,
+      "base_init_inclusive_tokens": 296587,
+      "gap_init_inclusive_tokens": 92438,
+      "fallback_init_inclusive_tokens": 224016,
+      "measured_init_inclusive_token_savings_pct": 68.8,
+      "fallback_init_inclusive_token_savings_pct": 24.5
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

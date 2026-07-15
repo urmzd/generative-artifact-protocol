@@ -1,0 +1,160 @@
+{
+  "experiment_id": "030-yaml-github-actions-ci",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:41:10Z",
+  "format": "text/x-yaml",
+  "base_turn0": {
+    "input_tokens": 158,
+    "output_tokens": 898,
+    "latency_ms": 8346,
+    "artifact_bytes": 3501
+  },
+  "gap_turn0": {
+    "input_tokens": 233,
+    "output_tokens": 974,
+    "latency_ms": 8804,
+    "artifact_bytes": 3637
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'security-scan' job between lint and test that runs npm audit and Snyk",
+        "input_tokens": 1087,
+        "output_tokens": 1130,
+        "cached_input_tokens": 1024,
+        "latency_ms": 11910,
+        "output_bytes": 4392,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the deploy job to add a manual approval step before production deployment",
+        "input_tokens": 2242,
+        "output_tokens": 1164,
+        "cached_input_tokens": 2176,
+        "latency_ms": 11238,
+        "output_bytes": 4544,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the test job to also run Playwright e2e tests in a separate matrix entry",
+        "input_tokens": 3438,
+        "output_tokens": 1384,
+        "cached_input_tokens": 3328,
+        "latency_ms": 12590,
+        "output_bytes": 5324,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 6767,
+    "total_output_tokens": 3678,
+    "total_cached_input_tokens": 6528,
+    "total_latency_ms": 35738
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'security-scan' job between lint and test that runs npm audit and Snyk",
+        "input_tokens": 1304,
+        "output_tokens": 255,
+        "latency_ms": 2854,
+        "output_bytes": 3637,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: lint",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the deploy job to add a manual approval step before production deployment",
+        "input_tokens": 1298,
+        "output_tokens": 125,
+        "cached_input_tokens": 1152,
+        "latency_ms": 1549,
+        "output_bytes": 3903,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the test job to also run Playwright e2e tests in a separate matrix entry",
+        "input_tokens": 1364,
+        "output_tokens": 398,
+        "cached_input_tokens": 1024,
+        "latency_ms": 4460,
+        "output_bytes": 5129,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 3966,
+    "total_output_tokens": 778,
+    "total_cached_input_tokens": 2176,
+    "total_latency_ms": 8863,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.6666666666666666
+  },
+  "comparison": {
+    "output_token_savings_pct": 78.8,
+    "input_token_savings_pct": 41.4,
+    "latency_savings_pct": 75.2
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 1,
+    "miss_rate": 0.33299999999999996,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 1,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: lint": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 54.6,
+    "fallback_adjusted": {
+      "input_tokens": 5053,
+      "output_tokens": 1908,
+      "total_tokens": 6961,
+      "miss_attempt_input_tokens": 1304,
+      "miss_attempt_output_tokens": 255,
+      "miss_attempt_total_tokens": 1559,
+      "fallback_retry_input_tokens": 1087,
+      "fallback_retry_output_tokens": 1130,
+      "fallback_retry_total_tokens": 2217,
+      "input_token_savings_pct": 25.3,
+      "output_token_savings_pct": 48.1,
+      "total_token_savings_pct": 33.4
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 11501,
+      "gap_init_inclusive_tokens": 5951,
+      "fallback_init_inclusive_tokens": 8168,
+      "measured_init_inclusive_token_savings_pct": 48.3,
+      "fallback_init_inclusive_token_savings_pct": 29
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

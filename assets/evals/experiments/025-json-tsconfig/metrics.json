@@ -1,0 +1,131 @@
+{
+  "experiment_id": "025-json-tsconfig",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:31:38Z",
+  "format": "application/json",
+  "base_turn0": {
+    "input_tokens": 71,
+    "output_tokens": 170,
+    "latency_ms": 1963,
+    "artifact_bytes": 546
+  },
+  "gap_turn0": {
+    "input_tokens": 148,
+    "output_tokens": 270,
+    "latency_ms": 3364,
+    "artifact_bytes": 837
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add path aliases for '@/components/*', '@/lib/*', and '@/hooks/*' pointing to th",
+        "input_tokens": 273,
+        "output_tokens": 200,
+        "latency_ms": 1944,
+        "output_bytes": 660,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Change the target from ES2017 to ES2022 and enable the 'decorators' and 'verbati",
+        "input_tokens": 508,
+        "output_tokens": 228,
+        "latency_ms": 2298,
+        "output_bytes": 767,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 781,
+    "total_output_tokens": 428,
+    "total_latency_ms": 4242
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add path aliases for '@/components/*', '@/lib/*', and '@/hooks/*' pointing to th",
+        "input_tokens": 600,
+        "output_tokens": 105,
+        "latency_ms": 1427,
+        "output_bytes": 837,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: JSON does not support text-based markers; use pointer addressing instead",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Change the target from ES2017 to ES2022 and enable the 'decorators' and 'verbati",
+        "input_tokens": 603,
+        "output_tokens": 118,
+        "latency_ms": 1435,
+        "output_bytes": 837,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: JSON does not support text-based markers; use pointer addressing instead",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 1203,
+    "total_output_tokens": 223,
+    "total_latency_ms": 2862,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
+  },
+  "comparison": {
+    "output_token_savings_pct": 47.9,
+    "input_token_savings_pct": -54,
+    "latency_savings_pct": 32.5
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 2,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 2,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: JSON does not support text-based markers; use pointer addressing instead": 2
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": -17.9,
+    "fallback_adjusted": {
+      "input_tokens": 1984,
+      "output_tokens": 651,
+      "total_tokens": 2635,
+      "miss_attempt_input_tokens": 1203,
+      "miss_attempt_output_tokens": 223,
+      "miss_attempt_total_tokens": 1426,
+      "fallback_retry_input_tokens": 781,
+      "fallback_retry_output_tokens": 428,
+      "fallback_retry_total_tokens": 1209,
+      "input_token_savings_pct": -154,
+      "output_token_savings_pct": -52.1,
+      "total_token_savings_pct": -117.9
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 1450,
+      "gap_init_inclusive_tokens": 1844,
+      "fallback_init_inclusive_tokens": 3053,
+      "measured_init_inclusive_token_savings_pct": -27.2,
+      "fallback_init_inclusive_token_savings_pct": -110.6
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
+}

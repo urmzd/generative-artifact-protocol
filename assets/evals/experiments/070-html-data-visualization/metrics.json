@@ -1,0 +1,187 @@
+{
+  "experiment_id": "070-html-data-visualization",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:23:20Z",
+  "format": "text/html",
+  "base_turn0": {
+    "input_tokens": 133,
+    "output_tokens": 4359,
+    "latency_ms": 42205,
+    "artifact_bytes": 11499
+  },
+  "gap_turn0": {
+    "input_tokens": 210,
+    "output_tokens": 2001,
+    "latency_ms": 26010,
+    "artifact_bytes": 6253
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the summary cards to show: Total Revenue $1,284,500, Avg Order Value $342",
+        "input_tokens": 4534,
+        "output_tokens": 4222,
+        "cached_input_tokens": 4352,
+        "latency_ms": 40708,
+        "output_bytes": 10932,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Add 20 more rows to the data table with sales records from March 2026 across APA",
+        "input_tokens": 8788,
+        "output_tokens": 3851,
+        "cached_input_tokens": 8704,
+        "latency_ms": 51506,
+        "output_bytes": 10074,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the chart area to show a grouped bar chart comparing revenue vs target f",
+        "input_tokens": 12672,
+        "output_tokens": 4319,
+        "cached_input_tokens": 12544,
+        "latency_ms": 59771,
+        "output_bytes": 11740,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 4,
+        "edit": "Add a new 'Trends' section after the summary cards showing 3 mini line charts fo",
+        "input_tokens": 17030,
+        "output_tokens": 5025,
+        "cached_input_tokens": 16896,
+        "latency_ms": 51126,
+        "output_bytes": 13884,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 43024,
+    "total_output_tokens": 17417,
+    "total_cached_input_tokens": 42496,
+    "total_latency_ms": 203111
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the summary cards to show: Total Revenue $1,284,500, Avg Order Value $342",
+        "input_tokens": 2340,
+        "output_tokens": 131,
+        "latency_ms": 1549,
+        "output_bytes": 6273,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Add 20 more rows to the data table with sales records from March 2026 across APA",
+        "input_tokens": 2334,
+        "output_tokens": 1330,
+        "cached_input_tokens": 1024,
+        "latency_ms": 12754,
+        "output_bytes": 6273,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: pointer targeting requires valid JSON content: invalid character '\u003c' looking for beginning of value",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the chart area to show a grouped bar chart comparing revenue vs target f",
+        "input_tokens": 2335,
+        "output_tokens": 1070,
+        "cached_input_tokens": 2176,
+        "latency_ms": 10142,
+        "output_bytes": 6273,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: chart",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 4,
+        "edit": "Add a new 'Trends' section after the summary cards showing 3 mini line charts fo",
+        "input_tokens": 2341,
+        "output_tokens": 364,
+        "cached_input_tokens": 2176,
+        "latency_ms": 3604,
+        "output_bytes": 7064,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 9350,
+    "total_output_tokens": 2895,
+    "total_cached_input_tokens": 5376,
+    "total_latency_ms": 28049,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.5
+  },
+  "comparison": {
+    "output_token_savings_pct": 83.4,
+    "input_token_savings_pct": 78.3,
+    "latency_savings_pct": 86.2
+  },
+  "reliability": {
+    "edit_turns": 4,
+    "miss_count": 2,
+    "miss_rate": 0.5,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 2,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: chart": 1,
+      "apply failed: pointer targeting requires valid JSON content: invalid character '\u003c' looking for beginning of value": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 79.7,
+    "fallback_adjusted": {
+      "input_tokens": 30810,
+      "output_tokens": 11065,
+      "total_tokens": 41875,
+      "miss_attempt_input_tokens": 4669,
+      "miss_attempt_output_tokens": 2400,
+      "miss_attempt_total_tokens": 7069,
+      "fallback_retry_input_tokens": 21460,
+      "fallback_retry_output_tokens": 8170,
+      "fallback_retry_total_tokens": 29630,
+      "input_token_savings_pct": 28.4,
+      "output_token_savings_pct": 36.5,
+      "total_token_savings_pct": 30.7
+    },
+    "amortized": {
+      "edit_turns": 4,
+      "base_init_inclusive_tokens": 64933,
+      "gap_init_inclusive_tokens": 14456,
+      "fallback_init_inclusive_tokens": 44086,
+      "measured_init_inclusive_token_savings_pct": 77.7,
+      "fallback_init_inclusive_token_savings_pct": 32.1
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

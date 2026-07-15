@@ -1,0 +1,203 @@
+{
+  "experiment_id": "102-json-paginated-users",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T04:10:49Z",
+  "format": "application/json",
+  "base_turn0": {
+    "input_tokens": 321,
+    "output_tokens": 5332,
+    "latency_ms": 49146,
+    "artifact_bytes": 17408
+  },
+  "gap_turn0": {
+    "input_tokens": 423,
+    "output_tokens": 5327,
+    "latency_ms": 55769,
+    "artifact_bytes": 17330
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the email of the user with id 67 (the 7th user on page 4, at array index ",
+        "input_tokens": 5721,
+        "output_tokens": 5333,
+        "latency_ms": 51950,
+        "output_bytes": 17407,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Insert a brand new user into the data array immediately after the user with id 4",
+        "input_tokens": 11172,
+        "output_tokens": 5388,
+        "cached_input_tokens": 11008,
+        "latency_ms": 48712,
+        "output_bytes": 17581,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Delete the user with id 53 (this user is on page 3, currently located in the dat",
+        "input_tokens": 16644,
+        "output_tokens": 5333,
+        "cached_input_tokens": 16512,
+        "latency_ms": 51123,
+        "output_bytes": 17403,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 4,
+        "edit": "Set the \"active\" field to false for EVERY user in the data array. After this cha",
+        "input_tokens": 22050,
+        "output_tokens": 5333,
+        "cached_input_tokens": 21888,
+        "latency_ms": 47426,
+        "output_bytes": 17478,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 5,
+        "edit": "Add a whole new page 6 of users by appending 20 brand new user objects to the EN",
+        "input_tokens": 27499,
+        "output_tokens": 6383,
+        "cached_input_tokens": 27264,
+        "latency_ms": 57327,
+        "output_bytes": 20974,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 83086,
+    "total_output_tokens": 27770,
+    "total_cached_input_tokens": 76672,
+    "total_latency_ms": 256538
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the email of the user with id 67 (the 7th user on page 4, at array index ",
+        "input_tokens": 5897,
+        "output_tokens": 126,
+        "latency_ms": 2526,
+        "output_bytes": 17333,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Insert a brand new user into the data array immediately after the user with id 4",
+        "input_tokens": 5948,
+        "output_tokens": 201,
+        "latency_ms": 2809,
+        "output_bytes": 17507,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Delete the user with id 53 (this user is on page 3, currently located in the dat",
+        "input_tokens": 5969,
+        "output_tokens": 157,
+        "cached_input_tokens": 2176,
+        "latency_ms": 2046,
+        "output_bytes": 17327,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 4,
+        "edit": "Set the \"active\" field to false for EVERY user in the data array. After this cha",
+        "input_tokens": 5900,
+        "output_tokens": 4376,
+        "cached_input_tokens": 3072,
+        "latency_ms": 42327,
+        "output_bytes": 17402,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 5,
+        "edit": "Add a whole new page 6 of users by appending 20 brand new user objects to the EN",
+        "input_tokens": 5943,
+        "output_tokens": 1080,
+        "latency_ms": 11627,
+        "output_bytes": 21254,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 29657,
+    "total_output_tokens": 5940,
+    "total_cached_input_tokens": 5248,
+    "total_latency_ms": 61335,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 78.6,
+    "input_token_savings_pct": 64.3,
+    "latency_savings_pct": 76.1
+  },
+  "reliability": {
+    "edit_turns": 5,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 67.9,
+    "fallback_adjusted": {
+      "input_tokens": 29657,
+      "output_tokens": 5940,
+      "total_tokens": 35597,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 64.3,
+      "output_token_savings_pct": 78.6,
+      "total_token_savings_pct": 67.9
+    },
+    "amortized": {
+      "edit_turns": 5,
+      "base_init_inclusive_tokens": 116509,
+      "gap_init_inclusive_tokens": 41347,
+      "fallback_init_inclusive_tokens": 41347,
+      "measured_init_inclusive_token_savings_pct": 64.5,
+      "fallback_init_inclusive_token_savings_pct": 64.5
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

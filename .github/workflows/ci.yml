@@ -13,32 +13,26 @@ permissions:
   contents: read
 
 jobs:
-  rust:
-    name: Rust
+  go:
+    name: Go
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
 
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-go@v6
         with:
-          components: clippy, rustfmt
-
-      - uses: Swatinem/rust-cache@v2
+          go-version-file: go.mod
 
       - name: Format
-        run: cargo fmt --check
+        run: test -z "$(gofmt -l *.go cmd/gap-eval/*.go evalset/*.go internal/evalsetgen/*.go internal/liveeval/*.go)"
 
-      - name: Build
-        run: cargo build
+      - name: Eval set
+        run: |
+          go run ./internal/evalsetgen
+          git diff --exit-code -- assets/evals/saige/observations.json
 
-      - name: Lint
-        run: cargo clippy --workspace --all-targets -- -D warnings
+      - name: Vet
+        run: go vet ./...
 
       - name: Test
-        run: cargo test
-
-      - name: Verify benchmarks compile
-        run: cargo bench --no-run
-
-      - name: Execute one bench case (fixture path guard)
-        run: cargo bench --bench gap -- --quick "edit_section_single/case_0001"
+        run: go test ./...

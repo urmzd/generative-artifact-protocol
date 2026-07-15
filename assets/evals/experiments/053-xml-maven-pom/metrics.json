@@ -1,181 +1,156 @@
 {
+  "experiment_id": "053-xml-maven-pom",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:10:02Z",
+  "format": "application/xml",
   "base_turn0": {
-    "artifact_bytes": 5948,
-    "cached_input_tokens": 0,
-    "input_tokens": 159,
-    "latency_ms": 7691,
-    "median_itl_ms": 0.003042,
-    "output_tokens": 1537,
-    "ttft_ms": 0,
-    "ttlt_ms": 7283
+    "input_tokens": 160,
+    "output_tokens": 1091,
+    "latency_ms": 12591,
+    "artifact_bytes": 4745
   },
-  "comparison": {
-    "input_token_savings_pct": -17.8,
-    "latency_savings_pct": 54.1,
-    "output_token_savings_pct": 64.6
+  "gap_turn0": {
+    "input_tokens": 423,
+    "output_tokens": 1383,
+    "latency_ms": 13304,
+    "artifact_bytes": 5444
   },
   "default_flow": {
     "per_turn": [
       {
-        "cached_input_tokens": 0,
+        "turn": 1,
         "edit": "Add spring-boot-starter-cache and caffeine dependencies for local caching suppor",
-        "failed": false,
-        "input_tokens": 1717,
-        "latency_ms": 7376,
-        "median_itl_ms": 0.002458,
-        "output_bytes": 6314,
-        "output_tokens": 1634,
-        "ttft_ms": 0,
-        "ttlt_ms": 7097,
-        "turn": 1
+        "input_tokens": 1273,
+        "output_tokens": 1188,
+        "cached_input_tokens": 1152,
+        "latency_ms": 15771,
+        "output_bytes": 5159,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 2816,
+        "turn": 2,
         "edit": "Rewrite the profiles section to add a 'test' profile with H2 in-memory database,",
-        "failed": false,
-        "input_tokens": 3383,
-        "latency_ms": 2467,
-        "median_itl_ms": 0.00325,
-        "output_bytes": 2177,
-        "output_tokens": 531,
-        "ttft_ms": 4,
-        "ttlt_ms": 2205,
-        "turn": 2
+        "input_tokens": 2494,
+        "output_tokens": 1348,
+        "cached_input_tokens": 2432,
+        "latency_ms": 13313,
+        "output_bytes": 5974,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 3328,
+        "turn": 3,
         "edit": "Add the jib-maven-plugin to the build section for containerizing the application",
-        "failed": false,
-        "input_tokens": 3943,
-        "latency_ms": 8746,
-        "median_itl_ms": 0.003334,
-        "output_bytes": 8228,
-        "output_tokens": 2063,
-        "ttft_ms": 9,
-        "ttlt_ms": 8484,
-        "turn": 3
+        "input_tokens": 3872,
+        "output_tokens": 1476,
+        "cached_input_tokens": 3712,
+        "latency_ms": 14952,
+        "output_bytes": 6603,
+        "retried": false,
+        "failed": false
       }
     ],
-    "total_cached_input_tokens": 6144,
-    "total_input_tokens": 9043,
-    "total_latency_ms": 18589,
-    "total_output_tokens": 4228
+    "total_input_tokens": 7639,
+    "total_output_tokens": 4012,
+    "total_cached_input_tokens": 7296,
+    "total_latency_ms": 44036
   },
-  "experiment_id": "053-xml-maven-pom",
-  "format": "application/xml",
   "gap_flow": {
-    "apply_success_rate": 1.0,
-    "envelope_parse_rate": 1.0,
     "per_turn": [
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
+        "turn": 1,
         "edit": "Add spring-boot-starter-cache and caffeine dependencies for local caching suppor",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
+        "input_tokens": 1703,
+        "output_tokens": 151,
+        "latency_ms": 2204,
+        "output_bytes": 5782,
+        "retried": false,
         "failed": false,
-        "input_tokens": 3315,
-        "latency_ms": 1589,
-        "median_itl_ms": 0.008042,
-        "output_bytes": 13042,
-        "output_tokens": 234,
-        "ttft_ms": 37,
-        "ttlt_ms": 1200,
-        "turn": 1
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       },
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
+        "turn": 2,
         "edit": "Rewrite the profiles section to add a 'test' profile with H2 in-memory database,",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
+        "input_tokens": 1795,
+        "output_tokens": 479,
+        "cached_input_tokens": 1024,
+        "latency_ms": 5681,
+        "output_bytes": 6404,
+        "retried": false,
         "failed": false,
-        "input_tokens": 3476,
-        "latency_ms": 5012,
-        "median_itl_ms": 0.002958,
-        "output_bytes": 14634,
-        "output_tokens": 1021,
-        "ttft_ms": 3,
-        "ttlt_ms": 4538,
-        "turn": 2
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       },
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 2816,
+        "turn": 3,
         "edit": "Add the jib-maven-plugin to the build section for containerizing the application",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
+        "input_tokens": 1989,
+        "output_tokens": 147,
+        "cached_input_tokens": 1024,
+        "latency_ms": 3890,
+        "output_bytes": 6724,
+        "retried": false,
         "failed": false,
-        "input_tokens": 3860,
-        "latency_ms": 1923,
-        "median_itl_ms": 0.002791,
-        "output_bytes": 15150,
-        "output_tokens": 242,
-        "ttft_ms": 0,
-        "ttlt_ms": 819,
-        "turn": 3
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       }
     ],
-    "total_cached_input_tokens": 2816,
-    "total_input_tokens": 10651,
-    "total_latency_ms": 8524,
-    "total_output_tokens": 1497
+    "total_input_tokens": 5487,
+    "total_output_tokens": 777,
+    "total_cached_input_tokens": 2048,
+    "total_latency_ms": 11775,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
   },
-  "gap_turn0": {
-    "artifact_bytes": 12435,
-    "cached_input_tokens": 0,
-    "input_tokens": 422,
-    "latency_ms": 12969,
-    "median_itl_ms": 0.0029165,
-    "output_tokens": 3056,
-    "ttft_ms": 0,
-    "ttlt_ms": 12683
+  "comparison": {
+    "output_token_savings_pct": 80.6,
+    "input_token_savings_pct": 28.2,
+    "latency_savings_pct": 73.3
   },
-  "model": "gpt-5.4-mini",
-  "provider": "openai",
-  "quality": {
-    "mean_rouge_l": 0.3158,
-    "mean_sequence_similarity": 0.4903,
-    "mean_token_f1": 0.3342,
-    "per_turn": [
-      {
-        "base_char_count": 6314,
-        "char_delta_pct": -13.9,
-        "gap_char_count": 5437,
-        "lines_added": 250,
-        "lines_removed": 181,
-        "rouge_l": 0.4278,
-        "sequence_similarity": 0.5943,
-        "token_f1": 0.4278,
-        "turn": 1
-      },
-      {
-        "base_char_count": 2177,
-        "char_delta_pct": 184.2,
-        "gap_char_count": 6186,
-        "lines_added": 290,
-        "lines_removed": 50,
-        "rouge_l": 0.1481,
-        "sequence_similarity": 0.2994,
-        "token_f1": 0.1481,
-        "turn": 2
-      },
-      {
-        "base_char_count": 8228,
-        "char_delta_pct": -19.0,
-        "gap_char_count": 6668,
-        "lines_added": 289,
-        "lines_removed": 223,
-        "rouge_l": 0.3716,
-        "sequence_similarity": 0.5771,
-        "token_f1": 0.4266,
-        "turn": 3
-      }
-    ]
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
   },
-  "timestamp": "2026-05-29T03:10:08Z",
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 46.2,
+    "fallback_adjusted": {
+      "input_tokens": 5487,
+      "output_tokens": 777,
+      "total_tokens": 6264,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 28.2,
+      "output_token_savings_pct": 80.6,
+      "total_token_savings_pct": 46.2
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 12902,
+      "gap_init_inclusive_tokens": 8070,
+      "fallback_init_inclusive_tokens": 8070,
+      "measured_init_inclusive_token_savings_pct": 37.5,
+      "fallback_init_inclusive_token_savings_pct": 37.5
+    }
+  },
   "validity": {
-    "base_input_monotone": true,
-    "gap_run_degenerate": false
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
   }
 }

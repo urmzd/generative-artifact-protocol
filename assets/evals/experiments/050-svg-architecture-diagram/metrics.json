@@ -1,0 +1,164 @@
+{
+  "experiment_id": "050-svg-architecture-diagram",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:07:24Z",
+  "format": "image/svg+xml",
+  "base_turn0": {
+    "input_tokens": 131,
+    "output_tokens": 1606,
+    "latency_ms": 18938,
+    "artifact_bytes": 4640
+  },
+  "gap_turn0": {
+    "input_tokens": 207,
+    "output_tokens": 1231,
+    "latency_ms": 12214,
+    "artifact_bytes": 3517
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'Monitoring' tier in purple with Prometheus, Grafana, and Jaeger boxes",
+        "input_tokens": 1770,
+        "output_tokens": 2231,
+        "cached_input_tokens": 1664,
+        "latency_ms": 23450,
+        "output_bytes": 6428,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the backend tier to add a 'Search Service' box connected to an Elasticse",
+        "input_tokens": 4030,
+        "output_tokens": 2414,
+        "cached_input_tokens": 3968,
+        "latency_ms": 27344,
+        "output_bytes": 6997,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Update all connection arrows between API Gateway and backend services to show 'g",
+        "input_tokens": 6481,
+        "output_tokens": 2655,
+        "cached_input_tokens": 6400,
+        "latency_ms": 30279,
+        "output_bytes": 7642,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 12281,
+    "total_output_tokens": 7300,
+    "total_cached_input_tokens": 12032,
+    "total_latency_ms": 81073
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'Monitoring' tier in purple with Prometheus, Grafana, and Jaeger boxes",
+        "input_tokens": 1562,
+        "output_tokens": 456,
+        "latency_ms": 5119,
+        "output_bytes": 3517,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: user_service",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the backend tier to add a 'Search Service' box connected to an Elasticse",
+        "input_tokens": 1558,
+        "output_tokens": 546,
+        "cached_input_tokens": 1024,
+        "latency_ms": 5224,
+        "output_bytes": 3517,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: auth-service",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Update all connection arrows between API Gateway and backend services to show 'g",
+        "input_tokens": 1566,
+        "output_tokens": 147,
+        "cached_input_tokens": 1024,
+        "latency_ms": 1838,
+        "output_bytes": 3517,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: text-325",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 4686,
+    "total_output_tokens": 1149,
+    "total_cached_input_tokens": 2048,
+    "total_latency_ms": 12181,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
+  },
+  "comparison": {
+    "output_token_savings_pct": 84.3,
+    "input_token_savings_pct": 61.8,
+    "latency_savings_pct": 85
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 3,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 3,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: auth-service": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: text-325": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: user_service": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 70.2,
+    "fallback_adjusted": {
+      "input_tokens": 16967,
+      "output_tokens": 8449,
+      "total_tokens": 25416,
+      "miss_attempt_input_tokens": 4686,
+      "miss_attempt_output_tokens": 1149,
+      "miss_attempt_total_tokens": 5835,
+      "fallback_retry_input_tokens": 12281,
+      "fallback_retry_output_tokens": 7300,
+      "fallback_retry_total_tokens": 19581,
+      "input_token_savings_pct": -38.2,
+      "output_token_savings_pct": -15.7,
+      "total_token_savings_pct": -29.8
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 21318,
+      "gap_init_inclusive_tokens": 7273,
+      "fallback_init_inclusive_tokens": 26854,
+      "measured_init_inclusive_token_savings_pct": 65.9,
+      "fallback_init_inclusive_token_savings_pct": -26
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
+}

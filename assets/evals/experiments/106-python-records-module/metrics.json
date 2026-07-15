@@ -1,0 +1,106 @@
+{
+  "experiment_id": "106-python-records-module",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T05:18:21Z",
+  "format": "text/x-python",
+  "gap_turn0": {
+    "input_tokens": 7285,
+    "output_tokens": 8951,
+    "latency_ms": 123254,
+    "artifact_bytes": 15867
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "In REGION_CENTRAL, change the price of the record with id=87 to 249.95. Leave it",
+        "input_tokens": 9936,
+        "output_tokens": 92,
+        "latency_ms": 1662,
+        "output_bytes": 15868,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Insert a new record into REGION_EAST immediately after the record with id=50: Re",
+        "input_tokens": 9968,
+        "output_tokens": 111,
+        "cached_input_tokens": 4224,
+        "latency_ms": 1737,
+        "output_bytes": 16012,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Delete the record with id=33 (in REGION_SOUTH, sku STH-033) entirely. Do not ren",
+        "input_tokens": 10046,
+        "output_tokens": 62,
+        "cached_input_tokens": 2176,
+        "latency_ms": 1534,
+        "output_bytes": 15910,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 4,
+        "edit": "Across every record in every region, change the category value \"consumable\" to \"",
+        "input_tokens": 10009,
+        "output_tokens": 1542,
+        "cached_input_tokens": 1024,
+        "latency_ms": 11782,
+        "output_bytes": 15798,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 5,
+        "edit": "Add a whole new region group. Define a module-level list constant REGION_OFFSHOR",
+        "input_tokens": 10030,
+        "output_tokens": 855,
+        "latency_ms": 10250,
+        "output_bytes": 15814,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 49989,
+    "total_output_tokens": 2662,
+    "total_cached_input_tokens": 7424,
+    "total_latency_ms": 26965,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "reliability": {
+    "edit_turns": 5,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "validation_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

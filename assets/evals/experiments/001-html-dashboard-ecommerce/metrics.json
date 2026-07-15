@@ -1,217 +1,187 @@
 {
+  "experiment_id": "001-html-dashboard-ecommerce",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T01:53:06Z",
+  "format": "text/html",
   "base_turn0": {
-    "artifact_bytes": 33437,
-    "cached_input_tokens": 0,
-    "input_tokens": 161,
-    "latency_ms": 49853,
-    "median_itl_ms": 0.004583,
-    "output_tokens": 10421,
-    "ttft_ms": 16,
-    "ttlt_ms": 49296
+    "input_tokens": 162,
+    "output_tokens": 2872,
+    "latency_ms": 31536,
+    "artifact_bytes": 11903
   },
-  "comparison": {
-    "input_token_savings_pct": 61.0,
-    "latency_savings_pct": 93.3,
-    "output_token_savings_pct": 94.8
+  "gap_turn0": {
+    "input_tokens": 431,
+    "output_tokens": 1759,
+    "latency_ms": 15795,
+    "artifact_bytes": 7893
   },
   "default_flow": {
     "per_turn": [
       {
-        "cached_input_tokens": 0,
+        "turn": 1,
         "edit": "Update the Total Revenue stat card to show $215,430 with a +12.3% trend indicato",
-        "failed": false,
-        "input_tokens": 10604,
-        "latency_ms": 46489,
-        "median_itl_ms": 0.00325,
-        "output_bytes": 33431,
-        "output_tokens": 10413,
-        "ttft_ms": 0,
-        "ttlt_ms": 45931,
-        "turn": 1
+        "input_tokens": 3063,
+        "output_tokens": 2873,
+        "cached_input_tokens": 2944,
+        "latency_ms": 29129,
+        "output_bytes": 11904,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 20736,
+        "turn": 2,
         "edit": "Add 15 new rows to the orders table with recent order data from March 2026",
-        "failed": false,
-        "input_tokens": 21042,
-        "latency_ms": 48781,
-        "median_itl_ms": 0.004,
-        "output_bytes": 35674,
-        "output_tokens": 11254,
-        "ttft_ms": 0,
-        "ttlt_ms": 48171,
-        "turn": 2
+        "input_tokens": 5962,
+        "output_tokens": 3872,
+        "cached_input_tokens": 5888,
+        "latency_ms": 37942,
+        "output_bytes": 15956,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 32000,
+        "turn": 3,
         "edit": "Change the primary accent color from blue to purple (#8b5cf6) across all element",
-        "failed": false,
-        "input_tokens": 32322,
-        "latency_ms": 46518,
-        "median_itl_ms": 0.006083,
-        "output_bytes": 35676,
-        "output_tokens": 11256,
-        "ttft_ms": 5,
-        "ttlt_ms": 46139,
-        "turn": 3
+        "input_tokens": 9861,
+        "output_tokens": 3875,
+        "cached_input_tokens": 9728,
+        "latency_ms": 37230,
+        "output_bytes": 15956,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 43264,
+        "turn": 4,
         "edit": "Add a new 'Recent Activity' section after the stats cards showing the last 10 us",
-        "failed": false,
-        "input_tokens": 43604,
-        "latency_ms": 52497,
-        "median_itl_ms": 0.00425,
-        "output_bytes": 39014,
-        "output_tokens": 12106,
-        "ttft_ms": 0,
-        "ttlt_ms": 51931,
-        "turn": 4
+        "input_tokens": 13763,
+        "output_tokens": 4182,
+        "cached_input_tokens": 13696,
+        "latency_ms": 42992,
+        "output_bytes": 17184,
+        "retried": false,
+        "failed": false
       }
     ],
-    "total_cached_input_tokens": 96000,
-    "total_input_tokens": 107572,
-    "total_latency_ms": 194285,
-    "total_output_tokens": 45029
+    "total_input_tokens": 32649,
+    "total_output_tokens": 14802,
+    "total_cached_input_tokens": 32256,
+    "total_latency_ms": 147293
   },
-  "experiment_id": "001-html-dashboard-ecommerce",
-  "format": "text/html",
   "gap_flow": {
-    "apply_success_rate": 1.0,
-    "envelope_parse_rate": 1.0,
     "per_turn": [
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
+        "turn": 1,
         "edit": "Update the Total Revenue stat card to show $215,430 with a +12.3% trend indicato",
-        "envelope_name": "edit",
+        "input_tokens": 2086,
+        "output_tokens": 91,
+        "latency_ms": 1614,
+        "output_bytes": 7893,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 1: target not found: start marker not found for target: total-revenue-trend",
         "envelope_parsed": true,
-        "failed": false,
-        "input_tokens": 11270,
-        "latency_ms": 1442,
-        "median_itl_ms": 0.007271,
-        "output_bytes": 37872,
-        "output_tokens": 191,
-        "ttft_ms": 4,
-        "ttlt_ms": 843,
-        "turn": 1
+        "apply_succeeded": false,
+        "envelope_name": "edit"
       },
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 2816,
+        "turn": 2,
         "edit": "Add 15 new rows to the orders table with recent order data from March 2026",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
+        "input_tokens": 2083,
+        "output_tokens": 1035,
+        "cached_input_tokens": 1920,
+        "latency_ms": 9931,
+        "output_bytes": 10076,
+        "retried": false,
         "failed": false,
-        "input_tokens": 11263,
-        "latency_ms": 5183,
-        "median_itl_ms": 0.0028335,
-        "output_bytes": 33111,
-        "output_tokens": 1045,
-        "ttft_ms": 108,
-        "ttlt_ms": 4602,
-        "turn": 2
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       },
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 7936,
+        "turn": 3,
         "edit": "Change the primary accent color from blue to purple (#8b5cf6) across all element",
-        "envelope_name": "edit",
+        "input_tokens": 2959,
+        "output_tokens": 130,
+        "cached_input_tokens": 1024,
+        "latency_ms": 2192,
+        "output_bytes": 10076,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: navbar",
         "envelope_parsed": true,
-        "failed": false,
-        "input_tokens": 9701,
-        "latency_ms": 1588,
-        "median_itl_ms": 0.005146,
-        "output_bytes": 32831,
-        "output_tokens": 227,
-        "ttft_ms": 0,
-        "ttlt_ms": 794,
-        "turn": 3
+        "apply_succeeded": false,
+        "envelope_name": "edit"
       },
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 1792,
+        "turn": 4,
         "edit": "Add a new 'Recent Activity' section after the stats cards showing the last 10 us",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
+        "input_tokens": 2959,
+        "output_tokens": 224,
+        "cached_input_tokens": 2816,
+        "latency_ms": 2722,
+        "output_bytes": 10726,
+        "retried": false,
         "failed": false,
-        "input_tokens": 9686,
-        "latency_ms": 4886,
-        "median_itl_ms": 0.002583,
-        "output_bytes": 35661,
-        "output_tokens": 858,
-        "ttft_ms": 3,
-        "ttlt_ms": 3855,
-        "turn": 4
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       }
     ],
-    "total_cached_input_tokens": 12544,
-    "total_input_tokens": 41920,
-    "total_latency_ms": 13099,
-    "total_output_tokens": 2321
+    "total_input_tokens": 10087,
+    "total_output_tokens": 1480,
+    "total_cached_input_tokens": 5760,
+    "total_latency_ms": 16459,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.5
   },
-  "gap_turn0": {
-    "artifact_bytes": 37904,
-    "cached_input_tokens": 0,
-    "input_tokens": 430,
-    "latency_ms": 55477,
-    "median_itl_ms": 0.0047079999999999995,
-    "output_tokens": 11010,
-    "ttft_ms": 6,
-    "ttlt_ms": 54918
+  "comparison": {
+    "output_token_savings_pct": 90,
+    "input_token_savings_pct": 69.1,
+    "latency_savings_pct": 88.8
   },
-  "model": "gpt-5.4-mini",
-  "provider": "openai",
-  "quality": {
-    "mean_rouge_l": 0.2962,
-    "mean_sequence_similarity": 0.6686,
-    "mean_token_f1": 0.3409,
-    "per_turn": [
-      {
-        "base_char_count": 33431,
-        "char_delta_pct": 10.4,
-        "gap_char_count": 36917,
-        "lines_added": 426,
-        "lines_removed": 665,
-        "rouge_l": 0.3115,
-        "sequence_similarity": 0.7151,
-        "token_f1": 0.3517,
-        "turn": 1
-      },
-      {
-        "base_char_count": 35674,
-        "char_delta_pct": -9.9,
-        "gap_char_count": 32156,
-        "lines_added": 399,
-        "lines_removed": 680,
-        "rouge_l": 0.3035,
-        "sequence_similarity": 0.6608,
-        "token_f1": 0.345,
-        "turn": 2
-      },
-      {
-        "base_char_count": 35676,
-        "char_delta_pct": -10.7,
-        "gap_char_count": 31876,
-        "lines_added": 396,
-        "lines_removed": 682,
-        "rouge_l": 0.2923,
-        "sequence_similarity": 0.6561,
-        "token_f1": 0.3333,
-        "turn": 3
-      },
-      {
-        "base_char_count": 39014,
-        "char_delta_pct": -11.2,
-        "gap_char_count": 34652,
-        "lines_added": 431,
-        "lines_removed": 551,
-        "rouge_l": 0.2775,
-        "sequence_similarity": 0.6423,
-        "token_f1": 0.3334,
-        "turn": 4
-      }
-    ]
+  "reliability": {
+    "edit_turns": 4,
+    "miss_count": 2,
+    "miss_rate": 0.5,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 2,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: navbar": 1,
+      "apply failed: operation 1: target not found: start marker not found for target: total-revenue-trend": 1
+    }
   },
-  "timestamp": "2026-05-29T02:44:00Z"
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 75.6,
+    "fallback_adjusted": {
+      "input_tokens": 23011,
+      "output_tokens": 8228,
+      "total_tokens": 31239,
+      "miss_attempt_input_tokens": 5045,
+      "miss_attempt_output_tokens": 221,
+      "miss_attempt_total_tokens": 5266,
+      "fallback_retry_input_tokens": 12924,
+      "fallback_retry_output_tokens": 6748,
+      "fallback_retry_total_tokens": 19672,
+      "input_token_savings_pct": 29.5,
+      "output_token_savings_pct": 44.4,
+      "total_token_savings_pct": 34.2
+    },
+    "amortized": {
+      "edit_turns": 4,
+      "base_init_inclusive_tokens": 50485,
+      "gap_init_inclusive_tokens": 13757,
+      "fallback_init_inclusive_tokens": 33429,
+      "measured_init_inclusive_token_savings_pct": 72.8,
+      "fallback_init_inclusive_token_savings_pct": 33.8
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
 }

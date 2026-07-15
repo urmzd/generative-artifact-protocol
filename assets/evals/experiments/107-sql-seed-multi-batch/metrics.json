@@ -1,0 +1,217 @@
+{
+  "experiment_id": "107-sql-seed-multi-batch",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T04:43:01Z",
+  "format": "application/sql",
+  "base_turn0": {
+    "input_tokens": 572,
+    "output_tokens": 5467,
+    "latency_ms": 53277,
+    "artifact_bytes": 16176
+  },
+  "gap_turn0": {
+    "input_tokens": 841,
+    "output_tokens": 5500,
+    "latency_ms": 46183,
+    "artifact_bytes": 16241
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "In Batch 2, change the price of the product with id 27 to 1299.99 and set its st",
+        "input_tokens": 6094,
+        "output_tokens": 5468,
+        "cached_input_tokens": 6016,
+        "latency_ms": 53392,
+        "output_bytes": 16176,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Append a new product row to the end of Batch 2 (products): id 41, sku 'SKU-0041'",
+        "input_tokens": 11626,
+        "output_tokens": 5513,
+        "cached_input_tokens": 11520,
+        "latency_ms": 56687,
+        "output_bytes": 16320,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Delete the order with id 15 from Batch 5 (orders). Remove its INSERT statement e",
+        "input_tokens": 17186,
+        "output_tokens": 5521,
+        "cached_input_tokens": 17024,
+        "latency_ms": 58473,
+        "output_bytes": 16352,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 4,
+        "edit": "Change the status of EVERY remaining order in both order batches (Batch 5 and Ba",
+        "input_tokens": 22771,
+        "output_tokens": 5560,
+        "cached_input_tokens": 22656,
+        "latency_ms": 57549,
+        "output_bytes": 16352,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 5,
+        "edit": "Add a brand-new table and a new seed batch at the end of the script. First emit ",
+        "input_tokens": 28459,
+        "output_tokens": 6514,
+        "cached_input_tokens": 28288,
+        "latency_ms": 74139,
+        "output_bytes": 19181,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 86136,
+    "total_output_tokens": 28576,
+    "total_cached_input_tokens": 85504,
+    "total_latency_ms": 300240
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "In Batch 2, change the price of the product with id 27 to 1299.99 and set its st",
+        "input_tokens": 5848,
+        "output_tokens": 103,
+        "latency_ms": 1611,
+        "output_bytes": 16241,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: 27",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Append a new product row to the end of Batch 2 (products): id 41, sku 'SKU-0041'",
+        "input_tokens": 5857,
+        "output_tokens": 105,
+        "cached_input_tokens": 5120,
+        "latency_ms": 1660,
+        "output_bytes": 16241,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: 40",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Delete the order with id 15 from Batch 5 (orders). Remove its INSERT statement e",
+        "input_tokens": 5840,
+        "output_tokens": 1409,
+        "cached_input_tokens": 5120,
+        "latency_ms": 14563,
+        "output_bytes": 16241,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: 15",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 4,
+        "edit": "Change the status of EVERY remaining order in both order batches (Batch 5 and Ba",
+        "input_tokens": 5857,
+        "output_tokens": 921,
+        "cached_input_tokens": 5120,
+        "latency_ms": 10521,
+        "output_bytes": 16241,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: 1",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 5,
+        "edit": "Add a brand-new table and a new seed batch at the end of the script. First emit ",
+        "input_tokens": 5921,
+        "output_tokens": 1064,
+        "cached_input_tokens": 5120,
+        "latency_ms": 12389,
+        "output_bytes": 16241,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: 40",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 29323,
+    "total_output_tokens": 3602,
+    "total_cached_input_tokens": 20480,
+    "total_latency_ms": 40744,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
+  },
+  "comparison": {
+    "output_token_savings_pct": 87.4,
+    "input_token_savings_pct": 66,
+    "latency_savings_pct": 86.4
+  },
+  "reliability": {
+    "edit_turns": 5,
+    "miss_count": 5,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 5,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: 1": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: 15": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: 27": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: 40": 2
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 71.3,
+    "fallback_adjusted": {
+      "input_tokens": 115459,
+      "output_tokens": 32178,
+      "total_tokens": 147637,
+      "miss_attempt_input_tokens": 29323,
+      "miss_attempt_output_tokens": 3602,
+      "miss_attempt_total_tokens": 32925,
+      "fallback_retry_input_tokens": 86136,
+      "fallback_retry_output_tokens": 28576,
+      "fallback_retry_total_tokens": 114712,
+      "input_token_savings_pct": -34,
+      "output_token_savings_pct": -12.6,
+      "total_token_savings_pct": -28.7
+    },
+    "amortized": {
+      "edit_turns": 5,
+      "base_init_inclusive_tokens": 120751,
+      "gap_init_inclusive_tokens": 39266,
+      "fallback_init_inclusive_tokens": 153978,
+      "measured_init_inclusive_token_savings_pct": 67.5,
+      "fallback_init_inclusive_token_savings_pct": -27.5
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
+}

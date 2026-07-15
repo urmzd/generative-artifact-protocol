@@ -1,0 +1,43 @@
+# SAIGE Eval Set
+
+This directory contains the GAP benchmark corpus materialized as
+`github.com/urmzd/saige/eval` observations.
+
+- `observations.json`: one SAIGE observation per multi-turn GAP experiment
+- observation `input`: prompts, format metadata, expected sections, and path refs
+- observation `annotations`: stable `gap.*` keys for metrics, outputs, checks, and source directory
+
+Regenerate the set after changing `assets/evals/experiments/`:
+
+```sh
+just evalset
+```
+
+Regenerate the measured economics and reliability report after changing
+committed `metrics.json` files:
+
+```sh
+just report
+```
+
+Run live OpenAI-compatible experiments with:
+
+```sh
+just run 0 "gpt-4o-mini" "004" both
+```
+
+The previous standalone Rust runner has been removed. Live runs now use the Go
+`cmd/gap-eval` runner and write outputs plus `metrics.json` back into each
+experiment directory. SAIGE can consume the generated observations and score
+committed metrics with `evalset.MetricsScorers()`.
+
+When reporting results, keep raw savings separate from production expectations.
+New live `metrics.json` files include `reliability` and `economics` blocks for
+miss count/rate, fallback-adjusted savings, retry tax, and init-inclusive
+amortized savings. Treat raw `comparison` savings as the protocol attempt and
+fallback-adjusted savings plus correctness as the honest product view.
+
+The report excludes degenerate GAP runs and runs without comparable base/GAP
+economics from savings aggregates. Use the generated `results.md` applicability
+tables to decide where GAP is expected to save: larger artifacts, repeated
+records/pages, and repeated edit sessions. Tiny one-off configs can be negative.

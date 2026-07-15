@@ -1,0 +1,152 @@
+{
+  "experiment_id": "032-yaml-ansible-playbook",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:43:03Z",
+  "format": "text/x-yaml",
+  "base_turn0": {
+    "input_tokens": 149,
+    "output_tokens": 665,
+    "latency_ms": 6862,
+    "artifact_bytes": 2739
+  },
+  "gap_turn0": {
+    "input_tokens": 224,
+    "output_tokens": 718,
+    "latency_ms": 7250,
+    "artifact_bytes": 2893
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the vars section to add a 'backup_retention_days: 30' variable and add a ",
+        "input_tokens": 854,
+        "output_tokens": 777,
+        "latency_ms": 8345,
+        "output_bytes": 3119,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Add a new pre-task that checks disk space and fails the playbook if less than 5G",
+        "input_tokens": 1664,
+        "output_tokens": 876,
+        "cached_input_tokens": 1536,
+        "latency_ms": 9157,
+        "output_bytes": 3470,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the app-deploy section to use a blue-green deployment strategy with a sy",
+        "input_tokens": 2576,
+        "output_tokens": 867,
+        "cached_input_tokens": 2432,
+        "latency_ms": 9275,
+        "output_bytes": 3447,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 5094,
+    "total_output_tokens": 2520,
+    "total_cached_input_tokens": 3968,
+    "total_latency_ms": 26777
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Update the vars section to add a 'backup_retention_days: 30' variable and add a ",
+        "input_tokens": 1057,
+        "output_tokens": 167,
+        "latency_ms": 2513,
+        "output_bytes": 3174,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Add a new pre-task that checks disk space and fails the playbook if less than 5G",
+        "input_tokens": 1130,
+        "output_tokens": 119,
+        "latency_ms": 1418,
+        "output_bytes": 3372,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the app-deploy section to use a blue-green deployment strategy with a sy",
+        "input_tokens": 1191,
+        "output_tokens": 333,
+        "latency_ms": 4019,
+        "output_bytes": 4236,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 3378,
+    "total_output_tokens": 619,
+    "total_latency_ms": 7950,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 75.4,
+    "input_token_savings_pct": 33.7,
+    "latency_savings_pct": 70.3
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 47.5,
+    "fallback_adjusted": {
+      "input_tokens": 3378,
+      "output_tokens": 619,
+      "total_tokens": 3997,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 33.7,
+      "output_token_savings_pct": 75.4,
+      "total_token_savings_pct": 47.5
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 8428,
+      "gap_init_inclusive_tokens": 4939,
+      "fallback_init_inclusive_tokens": 4939,
+      "measured_init_inclusive_token_savings_pct": 41.4,
+      "fallback_init_inclusive_token_savings_pct": 41.4
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

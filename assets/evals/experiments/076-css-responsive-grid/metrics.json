@@ -1,0 +1,131 @@
+{
+  "experiment_id": "076-css-responsive-grid",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:33:59Z",
+  "format": "text/css",
+  "base_turn0": {
+    "input_tokens": 139,
+    "output_tokens": 2754,
+    "latency_ms": 28348,
+    "artifact_bytes": 6328
+  },
+  "gap_turn0": {
+    "input_tokens": 216,
+    "output_tokens": 5146,
+    "latency_ms": 51921,
+    "artifact_bytes": 12523
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new '.col-auto' class that sizes the column based on its content width and",
+        "input_tokens": 2926,
+        "output_tokens": 2863,
+        "cached_input_tokens": 2816,
+        "latency_ms": 30308,
+        "output_bytes": 6602,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the container section to add a '.container-fluid' class that is always f",
+        "input_tokens": 5817,
+        "output_tokens": 2889,
+        "cached_input_tokens": 5760,
+        "latency_ms": 32564,
+        "output_bytes": 6684,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 8743,
+    "total_output_tokens": 5752,
+    "total_cached_input_tokens": 8576,
+    "total_latency_ms": 62872
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new '.col-auto' class that sizes the column based on its content width and",
+        "input_tokens": 5477,
+        "output_tokens": 267,
+        "latency_ms": 3068,
+        "output_bytes": 13037,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Rewrite the container section to add a '.container-fluid' class that is always f",
+        "input_tokens": 5656,
+        "output_tokens": 299,
+        "cached_input_tokens": 2176,
+        "latency_ms": 3873,
+        "output_bytes": 13117,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 11133,
+    "total_output_tokens": 566,
+    "total_cached_input_tokens": 2176,
+    "total_latency_ms": 6941,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 90.2,
+    "input_token_savings_pct": -27.3,
+    "latency_savings_pct": 89
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 19.3,
+    "fallback_adjusted": {
+      "input_tokens": 11133,
+      "output_tokens": 566,
+      "total_tokens": 11699,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": -27.3,
+      "output_token_savings_pct": 90.2,
+      "total_token_savings_pct": 19.3
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 17388,
+      "gap_init_inclusive_tokens": 17061,
+      "fallback_init_inclusive_tokens": 17061,
+      "measured_init_inclusive_token_savings_pct": 1.9,
+      "fallback_init_inclusive_token_savings_pct": 1.9
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "experiment_id": "059-yaml-renovate",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:16:09Z",
+  "format": "text/x-yaml",
+  "base_turn0": {
+    "input_tokens": 66,
+    "output_tokens": 160,
+    "latency_ms": 1956,
+    "artifact_bytes": 517
+  },
+  "gap_turn0": {
+    "input_tokens": 141,
+    "output_tokens": 232,
+    "latency_ms": 2196,
+    "artifact_bytes": 794
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a packageRule that groups all @types/* packages into a single PR with autome",
+        "input_tokens": 253,
+        "output_tokens": 193,
+        "latency_ms": 2094,
+        "output_bytes": 634,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the schedule to run only on weekends and add a 'prConcurrentLimit' of 5",
+        "input_tokens": 473,
+        "output_tokens": 197,
+        "latency_ms": 2193,
+        "output_bytes": 645,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 726,
+    "total_output_tokens": 390,
+    "total_latency_ms": 4287
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a packageRule that groups all @types/* packages into a single PR with autome",
+        "input_tokens": 557,
+        "output_tokens": 151,
+        "latency_ms": 2308,
+        "output_bytes": 794,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: packageRules",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the schedule to run only on weekends and add a 'prConcurrentLimit' of 5",
+        "input_tokens": 557,
+        "output_tokens": 90,
+        "latency_ms": 1532,
+        "output_bytes": 794,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: update-schedule",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 1114,
+    "total_output_tokens": 241,
+    "total_latency_ms": 3840,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
+  },
+  "comparison": {
+    "output_token_savings_pct": 38.2,
+    "input_token_savings_pct": -53.4,
+    "latency_savings_pct": 10.4
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 2,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 2,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: packageRules": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: update-schedule": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": -21.4,
+    "fallback_adjusted": {
+      "input_tokens": 1840,
+      "output_tokens": 631,
+      "total_tokens": 2471,
+      "miss_attempt_input_tokens": 1114,
+      "miss_attempt_output_tokens": 241,
+      "miss_attempt_total_tokens": 1355,
+      "fallback_retry_input_tokens": 726,
+      "fallback_retry_output_tokens": 390,
+      "fallback_retry_total_tokens": 1116,
+      "input_token_savings_pct": -153.4,
+      "output_token_savings_pct": -61.8,
+      "total_token_savings_pct": -121.4
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 1342,
+      "gap_init_inclusive_tokens": 1728,
+      "fallback_init_inclusive_tokens": 2844,
+      "measured_init_inclusive_token_savings_pct": -28.8,
+      "fallback_init_inclusive_token_savings_pct": -111.9
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
+}

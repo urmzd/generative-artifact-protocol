@@ -1,0 +1,162 @@
+{
+  "experiment_id": "012-python-cli-log-analyzer",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:15:39Z",
+  "format": "text/x-python",
+  "base_turn0": {
+    "input_tokens": 125,
+    "output_tokens": 969,
+    "latency_ms": 9072,
+    "artifact_bytes": 3945
+  },
+  "gap_turn0": {
+    "input_tokens": 201,
+    "output_tokens": 1049,
+    "latency_ms": 13775,
+    "artifact_bytes": 4149
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new analyzer function called 'detect_anomalies' that flags response times ",
+        "input_tokens": 1124,
+        "output_tokens": 1117,
+        "cached_input_tokens": 1024,
+        "latency_ms": 10914,
+        "output_bytes": 4614,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the argparse main function to add a --group-by flag that accepts 'hour', ",
+        "input_tokens": 2277,
+        "output_tokens": 1325,
+        "cached_input_tokens": 2176,
+        "latency_ms": 14403,
+        "output_bytes": 5527,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the table formatter to use box-drawing characters for borders instead of",
+        "input_tokens": 3630,
+        "output_tokens": 1331,
+        "cached_input_tokens": 3456,
+        "latency_ms": 21709,
+        "output_bytes": 5542,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 7031,
+    "total_output_tokens": 3773,
+    "total_cached_input_tokens": 6656,
+    "total_latency_ms": 47026
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new analyzer function called 'detect_anomalies' that flags response times ",
+        "input_tokens": 1377,
+        "output_tokens": 179,
+        "latency_ms": 2363,
+        "output_bytes": 4149,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: end marker not found for target: analysis-functions",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the argparse main function to add a --group-by flag that accepts 'hour', ",
+        "input_tokens": 1383,
+        "output_tokens": 90,
+        "cached_input_tokens": 1152,
+        "latency_ms": 1364,
+        "output_bytes": 4270,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the table formatter to use box-drawing characters for borders instead of",
+        "input_tokens": 1403,
+        "output_tokens": 280,
+        "cached_input_tokens": 1152,
+        "latency_ms": 3241,
+        "output_bytes": 4270,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: end marker not found for target: output-formatters",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 4163,
+    "total_output_tokens": 549,
+    "total_cached_input_tokens": 2304,
+    "total_latency_ms": 6968,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.3333333333333333
+  },
+  "comparison": {
+    "output_token_savings_pct": 85.4,
+    "input_token_savings_pct": 40.8,
+    "latency_savings_pct": 85.2
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 2,
+    "miss_rate": 0.667,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 2,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: end marker not found for target: analysis-functions": 1,
+      "apply failed: operation 0: target not found: end marker not found for target: output-formatters": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 56.4,
+    "fallback_adjusted": {
+      "input_tokens": 8917,
+      "output_tokens": 2997,
+      "total_tokens": 11914,
+      "miss_attempt_input_tokens": 2780,
+      "miss_attempt_output_tokens": 459,
+      "miss_attempt_total_tokens": 3239,
+      "fallback_retry_input_tokens": 4754,
+      "fallback_retry_output_tokens": 2448,
+      "fallback_retry_total_tokens": 7202,
+      "input_token_savings_pct": -26.8,
+      "output_token_savings_pct": 20.6,
+      "total_token_savings_pct": -10.3
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 11898,
+      "gap_init_inclusive_tokens": 5962,
+      "fallback_init_inclusive_tokens": 13164,
+      "measured_init_inclusive_token_savings_pct": 49.9,
+      "fallback_init_inclusive_token_savings_pct": -10.6
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

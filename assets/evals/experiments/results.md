@@ -1,79 +1,149 @@
 # GAP Experiment Results
 
-**Model:** `gpt-5.4-mini` | **Experiments:** 18
+**Models:** gpt-4o-mini | **Metrics files:** 96 | **Timestamp range:** 2026-07-15T01:53:06Z -> 2026-07-15T18:35:28Z
 
-| Experiment | Fmt | Base Out | GAP Out | Out Δ | Parse | Apply | Seq Sim | F1 |
-|---|---|---:|---:|---:|---:|---:|---:|---:|
-| 001-html-dashboard-ecommerce | text/html |  45029 |   2321 |  94.8% | 4/4 | 4/4 | 0.669 | 0.341 |
-| 011-python-fastapi-users | text/x-pyt |   4885 |    531 |  89.1% | 3/3 | 3/3 | 0.604 | 0.646 |
-| 019-js-express-api | text/javas |  14962 |   1077 |  92.8% | 3/3 | 2/3 | 0.415 | 0.415 |
-| 020-ts-react-form | text/types |  14641 |   4554 |  68.9% | 3/3 | 2/3 | 0.587 | 0.554 |
-| 023-json-openapi-spec | applicatio |  17805 |   1808 |  89.8% | 4/4 | 1/4 | 0.509 | 0.235 |
-| 026-json-api-response-users † | applicatio |  21177 |   3990 |  81.2% | 3/3 | 2/3 | 0.616 | 0.737 |
-| 029-yaml-docker-compose-microservices | text/x-yam |   8102 |   1579 |  80.5% | 4/4 | 4/4 | 0.567 | 0.570 |
-| 034-md-readme-cli | text/markd |   5214 |    644 |  87.6% | 3/3 | 3/3 | 0.463 | 0.481 |
-| 039-css-design-system | text/css |  29484 |   2228 |  92.4% | 4/4 | 4/4 | 0.486 | 0.521 |
-| 041-rust-cli-file-processor | text/x-rus |  11626 |   2444 |  79.0% | 3/3 | 3/3 | 0.527 | 0.461 |
-| 044-go-http-server | text/x-go |  11717 |   4199 |  64.2% | 3/3 | 2/3 | 0.491 | 0.610 |
-| 046-shell-deploy-script | text/x-sh |  11333 |   2074 |  81.7% | 3/3 | 3/3 | 0.315 | 0.234 |
-| 048-svg-bar-chart | image/svg+ |   8242 |   2778 |  66.3% | 3/3 | 2/3 | 0.623 | 0.412 |
-| 051-toml-cargo-workspace | text/x-tom |   1189 |    288 |  75.8% | 2/2 | 2/2 | 0.555 | 0.543 |
-| 053-xml-maven-pom | applicatio |   4228 |   1497 |  64.6% | 3/3 | 3/3 | 0.490 | 0.334 |
-| 055-java-spring-controller | text/x-jav |   8608 |   1519 |  82.4% | 3/3 | 2/3 | 0.389 | 0.403 |
-| 056-ruby-rails-model | text/x-rub |   2423 |    291 |  88.0% | 2/2 | 2/2 | 0.533 | 0.402 |
-| 057-sql-schema-ecommerce | text/x-sql |    869 |   8333 | -858.9% | 3/3 | 3/3 | 0.104 | 0.069 |
+This report is generated from `metrics.json` files in this working tree. Token counts and reliability are measured. Dollar costs are modeled from measured tokens using GPT-4o mini launch rates: input $0.15/M, output $0.60/M. Degenerate GAP runs and runs without both base and GAP economics are excluded from savings aggregates.
 
-† degenerate run (artifact never changed — all edits no-ops); excluded from the savings and cost aggregates below.
+## Validity
 
-**Output savings (17 eligible / 18 runs):**
-
-| Aggregate | Savings |
+| Set | Count |
 |---|---:|
-| Micro (token-weighted; dominated by large artifacts) | 81.0% |
-| Macro (mean of per-experiment savings; outlier-sensitive) | 25.8% |
-| Median per-experiment | 81.7% |
-| Micro excluding the 3 largest artifacts (whale check) | 70.6% |
+| Metrics files | 96 |
+| Degenerate GAP runs excluded from economics | 28 |
+| Missing comparable economics excluded from economics | 1 |
+| Comparable economics set | 67 |
 
-**Reliability (all 18 runs, degenerate included):** Parse: 56/56 | Apply: 47/56
+## Reliability
 
-## Run validity
+| Scope | Edit turns | Misses | Miss rate | Parse | Validation | Invalid envelope | Apply | Request | Unknown | Repairs |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| All runs with reliability | 290 | 115 | 39.7% | 0 | 0 | 0 | 115 | 0 | 0 | 0 |
 
-- ⚠ **1/18** GAP runs are **degenerate** (artifact never changed — all edits no-ops). Their "output savings" are illusory; they are excluded from every savings and cost aggregate in this report.
+A miss means the GAP attempt did not produce an applied edit. The production fallback assumption is: pay for the failed GAP attempt, then run the baseline full-regeneration edit.
 
-## Cost analysis — init-inclusive, cache regimes (MODELED $)
+## Economics
 
-Over 17 eligible experiments (degenerate runs excluded). Prices (USD/1M): input $0.250, cached-input $0.025, output $2.000. Output is never cached.
+| Metric | Value |
+|---|---:|
+| Experiments | 67 |
+| Edit turns | 195 |
+| Misses | 29 (14.9%) |
+| Base edit tokens | 1,393,218 |
+| GAP fallback-adjusted edit tokens | 867,185 |
+| Saved edit tokens | 526,033 |
+| Fallback-adjusted token savings | 37.8% |
+| Init-inclusive fallback token savings | 34.0% |
+| Base modeled cost | $0.3896 |
+| GAP fallback modeled cost | $0.2127 |
+| Modeled cost saved | $0.1770 |
 
-| Flow | Cost (cache off) | Cost (cache observed) | Cost (cache theoretical-best) |
-|---|---:|---:|---:|
-| Base (Scenario A, full regen) | $0.6355 | $0.5435 | $0.5322 |
-| GAP (Scenario C, envelopes) | $0.2941 | $0.2775 | $0.2941 |
+Interpretation: GAP is not a blanket cost win. It reliably reduces output tokens, but small artifacts can lose because target inventory, system instructions, and envelope structure add input overhead.
 
-**GAP savings vs base:** 53.7% (cache off) → 44.7% (base perfectly cached, GAP not).
-Even with a perfectly hot cache on the baseline, GAP's advantage survives — the residual is the output-token win, which no cache can discount.
+## Where GAP Saves Most
 
-**Break-even** (cumulative GAP cost < perfectly-cached base): reached in 10/17 eligible experiments, mean edit turn 1.3.
+### By Artifact Size
 
-## Agent loop — Effect 2 (orchestrator context separation), MODELED
+| Segment | Experiments | Turns | Miss rate | Saved tokens | Fallback savings | Amortized savings | Modeled cost saved |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| <2KB | 8 | 16 | 6.2% | -863 | -5.8% | -16.5% | $0.0012 |
+| 2-5KB | 33 | 90 | 7.8% | 84,738 | 33.2% | 26.9% | $0.0379 |
+| 5-10KB | 19 | 59 | 16.9% | 152,797 | 42.5% | 37.9% | $0.0580 |
+| 10-25KB | 5 | 20 | 35.0% | 108,520 | 34.2% | 32.5% | $0.0329 |
+| >=25KB | 2 | 10 | 40.0% | 180,841 | 40.5% | 38.2% | $0.0470 |
 
-Orchestrator-wallet input tokens summed across eligible experiments, as the orchestrator spends extra reasoning turns holding the artifact. **KeepLatest** (steelman baseline) keeps only the current body in context; **Accumulate** (worst case) retains every version; **GAP** holds a handle. This is a *separate ledger* from the edit work above (the maintain wallet = Scenario C).
+### By Edit Count
 
-| Extra turns | KeepLatest in | Accumulate in | GAP in | Re-reads avoided | GAP savings vs KeepLatest | GAP $ vs KeepLatest $ |
-|---:|---:|---:|---:|---:|---:|---:|
-| +0 | 259860 | 709324 | 50322 | 70 | 80.6% | $0.0126 vs $0.0650 |
-| +2 | 381374 | 1229044 | 74636 | 104 | 80.4% | $0.0187 vs $0.0953 |
-| +5 | 563645 | 2008624 | 111106 | 155 | 80.3% | $0.0278 vs $0.1409 |
-| +10 | 867430 | 3307924 | 171890 | 240 | 80.2% | $0.0430 vs $0.2169 |
+| Segment | Experiments | Turns | Miss rate | Saved tokens | Fallback savings | Amortized savings | Modeled cost saved |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 2 edits | 22 | 44 | 4.5% | 28,317 | 28.5% | 19.1% | $0.0171 |
+| 3 edits | 32 | 96 | 13.5% | 101,878 | 31.4% | 26.1% | $0.0431 |
+| 4 edits | 10 | 40 | 25.0% | 139,738 | 33.9% | 32.2% | $0.0487 |
+| 5 edits | 3 | 15 | 26.7% | 256,100 | 45.9% | 43.4% | $0.0681 |
 
-Across 17 eligible experiments. The KeepLatest column grows linearly with reasoning turns and Accumulate quadratically, while GAP stays flat — every re-read avoided is a full artifact body the orchestrator never pays to re-ingest.
+### By Format
 
-## Latency (median over edit turns, IQR in parens, MEASURED)
+| Segment | Experiments | Turns | Miss rate | Saved tokens | Fallback savings | Amortized savings | Modeled cost saved |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| text/html | 13 | 45 | 24.4% | 220,709 | 35.5% | 33.7% | $0.0710 |
+| application/xml | 3 | 11 | 27.3% | 109,330 | 56.2% | 51.6% | $0.0305 |
+| application/json | 2 | 9 | 33.3% | 67,548 | 35.0% | 32.5% | $0.0205 |
+| text/x-yaml | 8 | 22 | 13.6% | 29,497 | 42.0% | 36.6% | $0.0113 |
+| text/x-python | 10 | 28 | 7.1% | 22,111 | 30.9% | 25.5% | $0.0103 |
+| text/x-rust | 4 | 11 | 0.0% | 17,291 | 46.4% | 39.4% | $0.0070 |
+| text/javascript | 3 | 10 | 10.0% | 21,320 | 44.0% | 37.7% | $0.0064 |
+| text/x-go | 4 | 10 | 20.0% | 13,243 | 36.7% | 33.2% | $0.0053 |
+| text/markdown | 4 | 10 | 10.0% | 10,478 | 36.5% | 29.7% | $0.0046 |
+| text/typescript | 4 | 11 | 18.2% | 10,803 | 34.7% | 28.3% | $0.0044 |
+| text/css | 3 | 8 | 0.0% | 894 | 3.0% | -8.9% | $0.0032 |
+| text/x-sh | 2 | 4 | 0.0% | 2,485 | 37.9% | 33.0% | $0.0012 |
+| image/svg+xml | 1 | 2 | 0.0% | 1,884 | 34.3% | 22.6% | $0.0011 |
+| text/x-ruby | 1 | 2 | 0.0% | 981 | 32.0% | 16.7% | $0.0006 |
+| text/x-sql | 1 | 3 | 0.0% | 360 | 5.8% | 0.7% | $0.0001 |
+| text/x-java | 1 | 3 | 0.0% | -416 | -7.6% | -6.9% | $0.0000 |
+| text/x-toml | 3 | 6 | 16.7% | -2,485 | -68.9% | -73.7% | $-0.0004 |
 
-Wall-clock includes network + queueing, not pure prefill/decode. Retried turns are excluded (their wall-clock contains rate-limit backoff). TTLT is also reported as a mean; long-tail turns pull it above the median.
+## Largest Absolute Savings
 
-| Flow | Turns | TTFT | TTLT | TTLT mean | Total latency |
-|---|---:|---:|---:|---:|---:|
-| Base (full regen) | 56 | 2 ms (0-6) | 15076 ms (7326-23304) | 16643 ms | 15902 ms (7647-23772) |
-| GAP (envelopes) | 56 | 24 ms (2-38) | 1867 ms (816-3857) | 3397 ms | 2356 ms (1303-4949) |
+| Experiment | Format | Turns | Miss rate | Saved tokens | Fallback savings | Amortized savings | Modeled cost saved |
+|---|---|---:|---:|---:|---:|---:|---:|
+| `105-xml-rss-feed-multipage` | `application/xml` | 5 | 20.0% | 107,581 | 65.4% | 61.6% | $0.0281 |
+| `102-json-paginated-users` | `application/json` | 5 | 0.0% | 75,259 | 67.9% | 64.5% | $0.0211 |
+| `101-html-catalog-multipage` | `text/html` | 5 | 60.0% | 73,260 | 26.0% | 24.5% | $0.0189 |
+| `008-html-admin-users` | `text/html` | 4 | 0.0% | 25,386 | 60.2% | 58.3% | $0.0094 |
+| `033-yaml-cloudformation` | `text/x-yaml` | 4 | 0.0% | 22,604 | 67.2% | 62.6% | $0.0076 |
+| `010-html-kanban` | `text/html` | 4 | 0.0% | 20,442 | 62.4% | 57.9% | $0.0067 |
+| `002-html-dashboard-analytics` | `text/html` | 4 | 25.0% | 18,225 | 42.1% | 41.0% | $0.0058 |
+| `070-html-data-visualization` | `text/html` | 4 | 50.0% | 18,566 | 30.7% | 32.1% | $0.0056 |
+| `074-html-status-page` | `text/html` | 4 | 25.0% | 17,122 | 48.0% | 47.0% | $0.0056 |
+| `001-html-dashboard-ecommerce` | `text/html` | 4 | 50.0% | 16,212 | 34.2% | 33.8% | $0.0054 |
+| `003-html-landing-saas` | `text/html` | 3 | 0.0% | 12,669 | 64.0% | 59.5% | $0.0046 |
+| `020-ts-react-form` | `text/typescript` | 3 | 0.0% | 11,342 | 79.2% | 70.2% | $0.0037 |
+| `041-rust-cli-file-processor` | `text/x-rust` | 3 | 0.0% | 9,254 | 69.1% | 62.6% | $0.0034 |
+| `018-js-react-data-table` | `text/javascript` | 4 | 25.0% | 11,082 | 47.6% | 44.3% | $0.0033 |
+| `065-html-email-newsletter` | `text/html` | 3 | 0.0% | 8,481 | 59.0% | 52.5% | $0.0032 |
 
-⚠ Turns recorded without a `retried` flag predate the harness fix and their TTFT/TTLT are **under revision** (methodology corrected 2026-06-09: the stream timer was anchored after response headers, so TTFT/TTLT excluded request upload and queue time, and retried turns cannot be identified or filtered). Values are kept visible until the suite is re-run under the corrected harness.
+## Strongest Amortized Percentage Savings
+
+| Experiment | Format | Turns | Miss rate | Saved tokens | Fallback savings | Amortized savings | Modeled cost saved |
+|---|---|---:|---:|---:|---:|---:|---:|
+| `020-ts-react-form` | `text/typescript` | 3 | 0.0% | 11,342 | 79.2% | 70.2% | $0.0037 |
+| `102-json-paginated-users` | `application/json` | 5 | 0.0% | 75,259 | 67.9% | 64.5% | $0.0211 |
+| `033-yaml-cloudformation` | `text/x-yaml` | 4 | 0.0% | 22,604 | 67.2% | 62.6% | $0.0076 |
+| `041-rust-cli-file-processor` | `text/x-rust` | 3 | 0.0% | 9,254 | 69.1% | 62.6% | $0.0034 |
+| `105-xml-rss-feed-multipage` | `application/xml` | 5 | 20.0% | 107,581 | 65.4% | 61.6% | $0.0281 |
+| `066-python-fastapi-auth` | `text/x-python` | 3 | 0.0% | 6,786 | 64.6% | 60.0% | $0.0024 |
+| `081-go-grpc-service` | `text/x-go` | 3 | 0.0% | 6,429 | 64.5% | 59.8% | $0.0022 |
+| `003-html-landing-saas` | `text/html` | 3 | 0.0% | 12,669 | 64.0% | 59.5% | $0.0046 |
+| `008-html-admin-users` | `text/html` | 4 | 0.0% | 25,386 | 60.2% | 58.3% | $0.0094 |
+| `010-html-kanban` | `text/html` | 4 | 0.0% | 20,442 | 62.4% | 57.9% | $0.0067 |
+| `016-python-websocket-chat` | `text/x-python` | 3 | 0.0% | 5,046 | 59.2% | 53.2% | $0.0019 |
+| `065-html-email-newsletter` | `text/html` | 3 | 0.0% | 8,481 | 59.0% | 52.5% | $0.0032 |
+| `074-html-status-page` | `text/html` | 4 | 25.0% | 17,122 | 48.0% | 47.0% | $0.0056 |
+| `075-rust-error-types` | `text/x-rust` | 2 | 0.0% | 2,978 | 53.7% | 46.9% | $0.0013 |
+| `047-shell-setup-dev` | `text/x-sh` | 2 | 0.0% | 2,371 | 50.1% | 45.8% | $0.0010 |
+
+## Negative Savings
+
+| Experiment | Format | Turns | Miss rate | Saved tokens | Fallback savings | Amortized savings | Modeled cost saved |
+|---|---|---:|---:|---:|---:|---:|---:|
+| `051-toml-cargo-workspace` | `text/x-toml` | 2 | 0.0% | -1,465 | -122.7% | -124.0% | $-0.0003 |
+| `060-toml-rustfmt` | `text/x-toml` | 2 | 50.0% | -870 | -114.9% | -115.0% | $-0.0002 |
+| `071-python-orm-models` | `text/x-python` | 3 | 0.0% | -4,122 | -92.7% | -80.4% | $-0.0006 |
+| `086-ts-react-hooks` | `text/typescript` | 3 | 66.7% | -3,943 | -55.4% | -46.8% | $-0.0008 |
+| `054-xml-rss-feed` | `application/xml` | 3 | 66.7% | -3,638 | -19.8% | -23.9% | $0.0001 |
+| `039-css-design-system` | `text/css` | 4 | 0.0% | -2,190 | -19.4% | -27.7% | $-0.0001 |
+| `042-rust-http-client` | `text/x-rust` | 3 | 0.0% | -951 | -15.2% | -18.9% | $0.0002 |
+| `012-python-cli-log-analyzer` | `text/x-python` | 3 | 66.7% | -1,110 | -10.3% | -10.6% | $0.0002 |
+| `077-json-database-seed` | `application/json` | 4 | 75.0% | -7,711 | -9.4% | -10.3% | $-0.0006 |
+| `052-toml-pyproject` | `text/x-toml` | 2 | 0.0% | -150 | -9.1% | -15.5% | $0.0000 |
+| `068-yaml-github-actions-release` | `text/x-yaml` | 3 | 33.3% | -543 | -9.1% | -11.2% | $0.0001 |
+| `055-java-spring-controller` | `text/x-java` | 3 | 0.0% | -416 | -7.6% | -6.9% | $0.0000 |
+| `073-yaml-terraform-vars` | `text/x-yaml` | 2 | 0.0% | -163 | -7.0% | -22.2% | $0.0002 |
+| `088-yaml-k8s-helm-values` | `text/x-yaml` | 3 | 33.3% | -192 | -3.2% | -1.0% | $0.0001 |
+
+## Operating Guidance
+
+- Prefer GAP for artifacts above roughly 2 KB, repeated records/pages, dashboards, catalogs, feeds, API payloads, and code files with stable section boundaries.
+- Avoid GAP for tiny config files and one-off edits where the marker and supervisor inventory overhead can exceed the full-regeneration baseline.
+- Treat fallback-adjusted and init-inclusive savings as the headline economics. Raw output savings alone overstates value when misses or setup overhead are present.
+- Continue improving miss rate on high-value large HTML/XML/JSON cases first. Those cases dominate absolute token and dollar savings.

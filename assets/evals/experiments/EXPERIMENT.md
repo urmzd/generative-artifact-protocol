@@ -2,8 +2,9 @@
 
 This suite measures the Generative Artifact Protocol against full-regeneration
 baselines on real, multi-turn LLM edit sessions. Each experiment is a directory;
-the eval CLI (`apps/eval`, binary `gap-eval`) runs the flows, scores them, and
-writes a `metrics.json`. `gap-eval report` aggregates them into a markdown report.
+the `evalset` Go package materializes those directories as `github.com/urmzd/saige/eval`
+observations. Existing `metrics.json` files are committed historical measurements
+and can be scored offline through SAIGE scorers.
 
 ## Hypotheses
 
@@ -11,7 +12,7 @@ writes a `metrics.json`. `gap-eval report` aggregates them into a markdown repor
 2. **Input is bounded** — the stateless maintain context reads `instructions + current artifact`, not the growing conversation.
 3. **Output savings survive prompt caching** — caching mostly erases the baseline's *input* disadvantage, but output tokens are never cached and dominate cost, so GAP's edge persists.
 4. **Apply is effectively free** — envelope resolution is ~2 µs, dominated by LLM time.
-5. **Reliability and correctness are measurable** — and gated by the producer's system prompt (see below).
+5. **Reliability and correctness are measurable** - and misses are part of the cost model, not something to hide.
 
 ## Design
 
@@ -64,7 +65,7 @@ The GAP system prompt is the intervention and is **not** held constant — its t
 
 Each experiment directory `<NNN>-<name>/` contains:
 
-- `README.md`: the `**Format:** <mime>` line is parsed by the runner
+- `README.md`: the `**Format:** <mime>` line is parsed by the SAIGE evalset loader
 - `inputs/base/system.md`: "You produce \<mime\> artifacts. Output raw code only."
 - `inputs/base/turn-0.md`: creation prompt
 - `inputs/base/turn-1.md` … `turn-N.md`: one edit instruction per file
@@ -74,7 +75,8 @@ Each experiment directory `<NNN>-<name>/` contains:
 - `outputs/base/turn-k.<ext>`: regenerated artifact per turn (Scenario A)
 - `outputs/stateless/turn-k.<ext>`: regenerated artifact per turn (Scenario B, `--flow abc`/`all`)
 - `outputs/gap/turn-k.json` + `turn-k.<ext>`: envelope + resolved artifact per turn (Scenario C)
-- `metrics.json`: all measurements (written by the runner)
+- `metrics.json`: committed measurements from prior runs
+- `../../saige/observations.json`: generated SAIGE observation set for all experiments
 
 ## Correctness oracles (high-fidelity scoring)
 
@@ -94,7 +96,29 @@ Reliability metrics like "apply succeeded" only check that the engine ran — th
 }
 ```
 
-The `regex_count` "exact item count" assertion is the key signal — it catches a run that applied cleanly but dropped the other items. The runner writes a `correctness {pass_rate, base_pass_rate, per_turn}` block; the report shows GAP vs base correctness per experiment. Re-run standalone with `gap-eval checks` / `just checks`.
+The `regex_count` "exact item count" assertion is the key signal — it catches a run that applied cleanly but dropped the other items. SAIGE subjects that execute these observations should write a `correctness {pass_rate, base_pass_rate, per_turn}` block into their metrics output.
+
+## Miss Economics and Honest Expectations
+
+GAP is a protocol optimization with a real failure mode. A benchmark that only reports "output token savings" is incomplete because the production question is not "was the envelope short?" It is "did the envelope parse, apply, preserve correctness, and still save tokens after fallback?"
+
+The live runner treats a missed GAP edit as a failed attempt. It records the failed envelope call, leaves the current artifact unchanged for that turn, and marks the turn with `failed`, `failure_reason`, `envelope_parsed`, and `apply_succeeded`. New metrics also include:
+
+- `reliability.miss_count` and `reliability.miss_rate`
+- miss taxonomy: parse miss, invalid envelope, apply miss, request failure, unknown miss
+- `economics.measured_total_token_savings_pct`: raw GAP attempt savings on edit turns
+- `economics.fallback_adjusted`: assumes every missed GAP edit is retried as a full baseline regeneration
+- `economics.amortized`: includes turn-0 marker/protocol overhead, not only edit turns
+
+The expected production behavior should be conservative:
+
+- **Clean case:** the envelope parses, applies, and passes correctness checks. Savings are real.
+- **Parse or invalid-envelope miss:** the model failed to produce usable protocol output. The safe response is a full-regeneration retry, so the miss costs the failed GAP call plus the baseline retry.
+- **Apply miss:** the model targeted something missing or structurally incompatible. The safe response is also fallback. These misses usually mean the synthesis prompt did not create stable, granular targets or the maintain prompt selected the wrong target.
+- **False success:** `apply_succeeded = true`, but the artifact lost unrelated content or violated the edit intent. This is the most dangerous case because protocol metrics look healthy. Correctness oracles and artifact-level checks are required.
+- **Degenerate run:** the artifact never changes. Savings are illusory and should be excluded from headline aggregates.
+
+Fallback-adjusted savings are the honest number to use when talking about expected cost in a product. Raw savings are still useful for measuring the protocol ceiling, but they should be reported next to miss rate and correctness. A high-savings, high-miss run is a prompt or targeting problem, not a production-ready result.
 
 ## Dependent variables (measured)
 
@@ -104,10 +128,13 @@ The `regex_count` "exact item count" assertion is the key signal — it catches 
 | `cached_input_tokens` | ✓ | prompt-cache hits; powers the cache-on vs cache-off cost model |
 | `latency_ms`, `ttft_ms`, `ttlt_ms`, `median_itl_ms` | ✓ | wall-clock + streaming timings |
 | `envelope_parsed`, `apply_succeeded` | ✓ (GAP) | wire-level reliability |
+| `reliability.miss_rate` | aggregate | failed GAP edit attempts divided by edit turns |
+| `economics.fallback_adjusted.*_savings_pct` | aggregate | savings after modeling full-regeneration fallback on misses |
+| `economics.amortized.*_savings_pct` | aggregate | init-inclusive session savings, including marker/protocol overhead |
 | `mean_sequence_similarity`, `token_f1`, `rouge_l` | aggregate | similarity of GAP result to the baseline |
 | correctness `pass_rate` / `base_pass_rate` | ✓ | from `checks/` oracles |
 
-The report derives: output/input savings, **A/B/C decomposition**, **caching-aware, init-inclusive cost** (each flow priced under three regimes — `off`, `observed`, and a steelman `theoretical-best` that caches the baseline fully and GAP not — plus the **break-even turn**), an **agent-loop / orchestrator-context** projection (Effect 2), latency summaries, run-validity gates (e.g. degenerate GAP runs are flagged and excluded from headlines), and the correctness table. Full methodology and the "when GAP is *not* worth it" loss region: [`apps/eval/STEELMAN.md`](../../../apps/eval/STEELMAN.md).
+Reports derived from these observations should preserve the same dependent variables: output/input savings, **A/B/C decomposition**, **caching-aware, init-inclusive cost**, miss economics, latency summaries, run-validity gates, and correctness tables.
 
 ## Multi-item / multi-page experiments (`101`–`108`)
 
@@ -115,25 +142,23 @@ Beyond the per-format basics, experiments `101`–`108` stress **large, paginate
 
 ## Interpreting results
 
-**Success:** output savings > 90% on edit turns; flat GAP input vs growing base input; parse rate > 80%; **correctness on par with the base flow** (GAP didn't trade fidelity for tokens); positive C-vs-B output decomposition.
+**Success:** output savings > 90% on edit turns; flat GAP input vs growing base input; parse rate > 80%; low miss rate; fallback-adjusted savings still positive; **correctness on par with the base flow** (GAP didn't trade fidelity for tokens); positive C-vs-B output decomposition.
 
-**Failure / investigate:** correctness ≪ base correctness ⇒ edits are dropping or corrupting content (usually a too-coarse synthesis prompt — fix `init-system.md`); parse rate < 50% ⇒ the model can't produce the envelope format; degenerate GAP run (artifact never changed) ⇒ "savings" are illusory and the run is excluded.
+**Failure / investigate:** correctness far below base correctness means edits are dropping or corrupting content, usually from too-coarse targets in `init-system.md`; parse rate < 50% means the model cannot reliably produce the envelope format; high apply-miss rate means target IDs or JSON pointers are unstable; positive raw savings with weak fallback-adjusted savings means misses are eating the economic benefit; degenerate GAP runs make "savings" illusory and should be excluded.
 
 ## Running
 
 ```sh
-# All experiments, both base and GAP flows (count 0 = all)
-just run 0 "gpt-5.4-mini"
+# Regenerate the SAIGE observation set
+just evalset
 
-# A single experiment with the full A/B/C decomposition
-just run 0 "gpt-5.4-mini" "102-json-paginated-users" abc
+# Validate the loader and run SAIGE scorers over committed metrics
+go test ./evalset
 
-# Aggregate report (token savings, cache-aware cost, decomposition, correctness)
-just report
-
-# Re-score quality + correctness on completed runs without re-calling the LLM
-just score
-just checks
+# Full repository gate
+just check
 ```
 
-Any OpenAI-compatible endpoint works (`GAP_API_BASE` / `GAP_API_KEY`, falls back to `OPENAI_API_KEY`) — see the README's "Running evals on a free tier".
+Live LLM runs should be implemented as SAIGE subjects over
+`assets/evals/saige/observations.json`, then scored with SAIGE scorers and GAP's
+committed-metrics scorer helpers.

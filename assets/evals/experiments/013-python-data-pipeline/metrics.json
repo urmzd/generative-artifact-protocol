@@ -1,0 +1,152 @@
+{
+  "experiment_id": "013-python-data-pipeline",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:16:56Z",
+  "format": "text/x-python",
+  "base_turn0": {
+    "input_tokens": 129,
+    "output_tokens": 651,
+    "latency_ms": 6509,
+    "artifact_bytes": 2656
+  },
+  "gap_turn0": {
+    "input_tokens": 205,
+    "output_tokens": 717,
+    "latency_ms": 7243,
+    "artifact_bytes": 3005
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new transformation step that calculates a 'customer_lifetime_value' metric",
+        "input_tokens": 810,
+        "output_tokens": 721,
+        "latency_ms": 6085,
+        "output_bytes": 2981,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the validation section to add a check that rejects rows where the sale da",
+        "input_tokens": 1558,
+        "output_tokens": 751,
+        "cached_input_tokens": 1408,
+        "latency_ms": 6765,
+        "output_bytes": 3120,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the loading section to also output a summary CSV with one row per region",
+        "input_tokens": 2343,
+        "output_tokens": 905,
+        "cached_input_tokens": 2176,
+        "latency_ms": 9399,
+        "output_bytes": 3778,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 4711,
+    "total_output_tokens": 2377,
+    "total_cached_input_tokens": 3584,
+    "total_latency_ms": 22249
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new transformation step that calculates a 'customer_lifetime_value' metric",
+        "input_tokens": 1041,
+        "output_tokens": 86,
+        "latency_ms": 1198,
+        "output_bytes": 3110,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the validation section to add a check that rejects rows where the sale da",
+        "input_tokens": 1060,
+        "output_tokens": 80,
+        "latency_ms": 1602,
+        "output_bytes": 3184,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite the loading section to also output a summary CSV with one row per region",
+        "input_tokens": 1083,
+        "output_tokens": 239,
+        "latency_ms": 3480,
+        "output_bytes": 3510,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 3184,
+    "total_output_tokens": 405,
+    "total_latency_ms": 6280,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 83,
+    "input_token_savings_pct": 32.4,
+    "latency_savings_pct": 71.8
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 49.4,
+    "fallback_adjusted": {
+      "input_tokens": 3184,
+      "output_tokens": 405,
+      "total_tokens": 3589,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 32.4,
+      "output_token_savings_pct": 83,
+      "total_token_savings_pct": 49.4
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 7868,
+      "gap_init_inclusive_tokens": 4511,
+      "fallback_init_inclusive_tokens": 4511,
+      "measured_init_inclusive_token_savings_pct": 42.7,
+      "fallback_init_inclusive_token_savings_pct": 42.7
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

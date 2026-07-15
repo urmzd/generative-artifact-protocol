@@ -1,0 +1,129 @@
+{
+  "experiment_id": "004-html-email-receipt",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:01:41Z",
+  "format": "text/html",
+  "base_turn0": {
+    "input_tokens": 116,
+    "output_tokens": 1440,
+    "latency_ms": 12689,
+    "artifact_bytes": 5890
+  },
+  "gap_turn0": {
+    "input_tokens": 193,
+    "output_tokens": 1529,
+    "latency_ms": 14636,
+    "artifact_bytes": 4511
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the order number to ORD-2026-03-4821 and the date to March 28, 2026",
+        "input_tokens": 1589,
+        "output_tokens": 1447,
+        "cached_input_tokens": 1536,
+        "latency_ms": 12778,
+        "output_bytes": 5898,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Add 3 more products to the items table: Wireless Charger ($34.99, qty 1), USB-C ",
+        "input_tokens": 3089,
+        "output_tokens": 1781,
+        "cached_input_tokens": 2944,
+        "latency_ms": 16078,
+        "output_bytes": 7319,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 4678,
+    "total_output_tokens": 3228,
+    "total_cached_input_tokens": 4480,
+    "total_latency_ms": 28856
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Change the order number to ORD-2026-03-4821 and the date to March 28, 2026",
+        "input_tokens": 1860,
+        "output_tokens": 100,
+        "latency_ms": 1511,
+        "output_bytes": 4520,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Add 3 more products to the items table: Wireless Charger ($34.99, qty 1), USB-C ",
+        "input_tokens": 1885,
+        "output_tokens": 549,
+        "latency_ms": 12045,
+        "output_bytes": 5144,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 3745,
+    "total_output_tokens": 649,
+    "total_latency_ms": 13556,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 79.9,
+    "input_token_savings_pct": 19.9,
+    "latency_savings_pct": 53
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 44.4,
+    "fallback_adjusted": {
+      "input_tokens": 3745,
+      "output_tokens": 649,
+      "total_tokens": 4394,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 19.9,
+      "output_token_savings_pct": 79.9,
+      "total_token_savings_pct": 44.4
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 9462,
+      "gap_init_inclusive_tokens": 6116,
+      "fallback_init_inclusive_tokens": 6116,
+      "measured_init_inclusive_token_savings_pct": 35.4,
+      "fallback_init_inclusive_token_savings_pct": 35.4
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "experiment_id": "042-rust-http-client",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T18:32:33Z",
+  "format": "text/x-rust",
+  "base_turn0": {
+    "input_tokens": 139,
+    "output_tokens": 1063,
+    "latency_ms": 30836,
+    "artifact_bytes": 4465
+  },
+  "gap_turn0": {
+    "input_tokens": 214,
+    "output_tokens": 1442,
+    "latency_ms": 21098,
+    "artifact_bytes": 6269
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'air_quality' endpoint method that takes a Location and returns an Air",
+        "input_tokens": 1242,
+        "output_tokens": 192,
+        "latency_ms": 4995,
+        "output_bytes": 792,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the error type to add a 'Timeout' variant and implement a retry_with_back",
+        "input_tokens": 1476,
+        "output_tokens": 335,
+        "cached_input_tokens": 1408,
+        "latency_ms": 9015,
+        "output_bytes": 1343,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Add a caching layer to the client that stores responses in a HashMap with TTL ex",
+        "input_tokens": 1840,
+        "output_tokens": 1163,
+        "cached_input_tokens": 1664,
+        "latency_ms": 32803,
+        "output_bytes": 5023,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 4558,
+    "total_output_tokens": 1690,
+    "total_cached_input_tokens": 3072,
+    "total_latency_ms": 46813
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'air_quality' endpoint method that takes a Location and returns an Air",
+        "input_tokens": 1892,
+        "output_tokens": 268,
+        "latency_ms": 7425,
+        "output_bytes": 7066,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the error type to add a 'Timeout' variant and implement a retry_with_back",
+        "input_tokens": 2070,
+        "output_tokens": 278,
+        "cached_input_tokens": 1024,
+        "latency_ms": 5942,
+        "output_bytes": 7781,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Add a caching layer to the client that stores responses in a HashMap with TTL ex",
+        "input_tokens": 2229,
+        "output_tokens": 462,
+        "latency_ms": 9528,
+        "output_bytes": 1697,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 6191,
+    "total_output_tokens": 1008,
+    "total_cached_input_tokens": 1024,
+    "total_latency_ms": 22895,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 40.4,
+    "input_token_savings_pct": -35.8,
+    "latency_savings_pct": 51.1
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "validation_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": -15.2,
+    "fallback_adjusted": {
+      "input_tokens": 6191,
+      "output_tokens": 1008,
+      "total_tokens": 7199,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": -35.8,
+      "output_token_savings_pct": 40.4,
+      "total_token_savings_pct": -15.2
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 7450,
+      "gap_init_inclusive_tokens": 8855,
+      "fallback_init_inclusive_tokens": 8855,
+      "measured_init_inclusive_token_savings_pct": -18.9,
+      "fallback_init_inclusive_token_savings_pct": -18.9
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

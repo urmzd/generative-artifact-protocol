@@ -1,181 +1,155 @@
 {
+  "experiment_id": "057-sql-schema-ecommerce",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:15:13Z",
+  "format": "text/x-sql",
   "base_turn0": {
-    "artifact_bytes": 10926,
-    "cached_input_tokens": 0,
-    "input_tokens": 162,
-    "latency_ms": 15901,
-    "median_itl_ms": 0.00575,
-    "output_tokens": 3325,
-    "ttft_ms": 3,
-    "ttlt_ms": 15630
+    "input_tokens": 163,
+    "output_tokens": 1417,
+    "latency_ms": 14641,
+    "artifact_bytes": 5594
   },
-  "comparison": {
-    "input_token_savings_pct": -213.0,
-    "latency_savings_pct": -941.8,
-    "output_token_savings_pct": -858.9
+  "gap_turn0": {
+    "input_tokens": 424,
+    "output_tokens": 1458,
+    "latency_ms": 13523,
+    "artifact_bytes": 5402
   },
   "default_flow": {
     "per_turn": [
       {
-        "cached_input_tokens": 3328,
+        "turn": 1,
         "edit": "Add a new 'wishlists' table with columns: id, user_id (FK), product_id (FK), add",
-        "failed": false,
-        "input_tokens": 3532,
-        "latency_ms": 770,
-        "median_itl_ms": 0.007875,
-        "output_bytes": 404,
-        "output_tokens": 99,
-        "ttft_ms": 9,
-        "ttlt_ms": 372,
-        "turn": 1
+        "input_tokens": 1626,
+        "output_tokens": 69,
+        "cached_input_tokens": 1536,
+        "latency_ms": 1535,
+        "output_bytes": 309,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 3328,
+        "turn": 2,
         "edit": "Rewrite the seed-data section to add 10 more products across all categories with",
-        "failed": false,
-        "input_tokens": 3671,
-        "latency_ms": 2970,
-        "median_itl_ms": 0.005833,
-        "output_bytes": 1560,
-        "output_tokens": 585,
-        "ttft_ms": 5,
-        "ttlt_ms": 2586,
-        "turn": 2
+        "input_tokens": 1736,
+        "output_tokens": 440,
+        "cached_input_tokens": 1664,
+        "latency_ms": 4609,
+        "output_bytes": 1245,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 3840,
+        "turn": 3,
         "edit": "Add a new materialized view 'monthly_sales_summary' that aggregates total revenu",
-        "failed": false,
-        "input_tokens": 4290,
-        "latency_ms": 1279,
-        "median_itl_ms": 0.003208,
-        "output_bytes": 653,
-        "output_tokens": 185,
-        "ttft_ms": 5,
-        "ttlt_ms": 904,
-        "turn": 3
+        "input_tokens": 2211,
+        "output_tokens": 109,
+        "cached_input_tokens": 2048,
+        "latency_ms": 1737,
+        "output_bytes": 428,
+        "retried": false,
+        "failed": false
       }
     ],
-    "total_cached_input_tokens": 10496,
-    "total_input_tokens": 11493,
-    "total_latency_ms": 5019,
-    "total_output_tokens": 869
+    "total_input_tokens": 5573,
+    "total_output_tokens": 618,
+    "total_cached_input_tokens": 5248,
+    "total_latency_ms": 7881
   },
-  "experiment_id": "057-sql-schema-ecommerce",
-  "format": "text/x-sql",
   "gap_flow": {
-    "apply_success_rate": 1.0,
-    "envelope_parse_rate": 1.0,
     "per_turn": [
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
+        "turn": 1,
         "edit": "Add a new 'wishlists' table with columns: id, user_id (FK), product_id (FK), add",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
+        "input_tokens": 1801,
+        "output_tokens": 130,
+        "latency_ms": 1838,
+        "output_bytes": 5658,
+        "retried": false,
         "failed": false,
-        "input_tokens": 11803,
-        "latency_ms": 16693,
-        "median_itl_ms": 0.0048544999999999994,
-        "output_bytes": 39577,
-        "output_tokens": 271,
-        "ttft_ms": 130,
-        "ttlt_ms": 2451,
-        "turn": 1
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       },
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 2816,
+        "turn": 2,
         "edit": "Rewrite the seed-data section to add 10 more products across all categories with",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
+        "input_tokens": 1860,
+        "output_tokens": 287,
+        "latency_ms": 2814,
+        "output_bytes": 4915,
+        "retried": false,
         "failed": false,
-        "input_tokens": 11986,
-        "latency_ms": 29400,
-        "median_itl_ms": 0.003375,
-        "output_bytes": 40731,
-        "output_tokens": 6674,
-        "ttft_ms": 12,
-        "ttlt_ms": 28894,
-        "turn": 2
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       },
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 4864,
+        "turn": 3,
         "edit": "Add a new materialized view 'monthly_sales_summary' that aggregates total revenu",
-        "envelope_name": "edit",
-        "envelope_parsed": true,
+        "input_tokens": 1606,
+        "output_tokens": 147,
+        "cached_input_tokens": 1024,
+        "latency_ms": 1737,
+        "output_bytes": 5248,
+        "retried": false,
         "failed": false,
-        "input_tokens": 12184,
-        "latency_ms": 6194,
-        "median_itl_ms": 0.002666,
-        "output_bytes": 41644,
-        "output_tokens": 1388,
-        "ttft_ms": 34,
-        "ttlt_ms": 5731,
-        "turn": 3
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
       }
     ],
-    "total_cached_input_tokens": 7680,
-    "total_input_tokens": 35973,
-    "total_latency_ms": 52287,
-    "total_output_tokens": 8333
+    "total_input_tokens": 5267,
+    "total_output_tokens": 564,
+    "total_cached_input_tokens": 1024,
+    "total_latency_ms": 6389,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
   },
-  "gap_turn0": {
-    "artifact_bytes": 38839,
-    "cached_input_tokens": 0,
-    "input_tokens": 423,
-    "latency_ms": 54481,
-    "median_itl_ms": 0.0045,
-    "output_tokens": 11526,
-    "ttft_ms": 6,
-    "ttlt_ms": 54149
+  "comparison": {
+    "output_token_savings_pct": 8.7,
+    "input_token_savings_pct": 5.5,
+    "latency_savings_pct": 18.9
   },
-  "model": "gpt-5.4-mini",
-  "provider": "openai",
-  "quality": {
-    "mean_rouge_l": 0.0528,
-    "mean_sequence_similarity": 0.1039,
-    "mean_token_f1": 0.0693,
-    "per_turn": [
-      {
-        "base_char_count": 404,
-        "char_delta_pct": 2794.3,
-        "gap_char_count": 11693,
-        "lines_added": 301,
-        "lines_removed": 9,
-        "rouge_l": 0.0594,
-        "sequence_similarity": 0.0661,
-        "token_f1": 0.0608,
-        "turn": 1
-      },
-      {
-        "base_char_count": 1560,
-        "char_delta_pct": 662.6,
-        "gap_char_count": 11897,
-        "lines_added": 302,
-        "lines_removed": 22,
-        "rouge_l": 0.0591,
-        "sequence_similarity": 0.1592,
-        "token_f1": 0.1028,
-        "turn": 2
-      },
-      {
-        "base_char_count": 653,
-        "char_delta_pct": 1782.4,
-        "gap_char_count": 12292,
-        "lines_added": 313,
-        "lines_removed": 11,
-        "rouge_l": 0.04,
-        "sequence_similarity": 0.0865,
-        "token_f1": 0.0442,
-        "turn": 3
-      }
-    ]
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
   },
-  "timestamp": "2026-05-29T03:12:56Z",
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 5.8,
+    "fallback_adjusted": {
+      "input_tokens": 5267,
+      "output_tokens": 564,
+      "total_tokens": 5831,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": 5.5,
+      "output_token_savings_pct": 8.7,
+      "total_token_savings_pct": 5.8
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 7771,
+      "gap_init_inclusive_tokens": 7713,
+      "fallback_init_inclusive_tokens": 7713,
+      "measured_init_inclusive_token_savings_pct": 0.7,
+      "fallback_init_inclusive_token_savings_pct": 0.7
+    }
+  },
   "validity": {
-    "base_input_monotone": true,
-    "gap_run_degenerate": false
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
   }
 }

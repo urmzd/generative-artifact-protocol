@@ -1,0 +1,128 @@
+{
+  "experiment_id": "022-ts-state-store",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:27:06Z",
+  "format": "text/typescript",
+  "base_turn0": {
+    "input_tokens": 124,
+    "output_tokens": 583,
+    "latency_ms": 4911,
+    "artifact_bytes": 2485
+  },
+  "gap_turn0": {
+    "input_tokens": 200,
+    "output_tokens": 784,
+    "latency_ms": 6585,
+    "artifact_bytes": 3209
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'applyBulkDiscount' action that applies a 15% discount when the cart h",
+        "input_tokens": 740,
+        "output_tokens": 681,
+        "latency_ms": 6711,
+        "output_bytes": 2856,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the getTaxAmount selector to accept a state tax rate parameter instead of",
+        "input_tokens": 1449,
+        "output_tokens": 685,
+        "cached_input_tokens": 1280,
+        "latency_ms": 5733,
+        "output_bytes": 2901,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 2189,
+    "total_output_tokens": 1366,
+    "total_cached_input_tokens": 1280,
+    "total_latency_ms": 12444
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'applyBulkDiscount' action that applies a 15% discount when the cart h",
+        "input_tokens": 1115,
+        "output_tokens": 163,
+        "latency_ms": 1912,
+        "output_bytes": 3494,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the getTaxAmount selector to accept a state tax rate parameter instead of",
+        "input_tokens": 1183,
+        "output_tokens": 106,
+        "latency_ms": 1277,
+        "output_bytes": 3013,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 2298,
+    "total_output_tokens": 269,
+    "total_latency_ms": 3189,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 1
+  },
+  "comparison": {
+    "output_token_savings_pct": 80.3,
+    "input_token_savings_pct": -5,
+    "latency_savings_pct": 74.4
+  },
+  "reliability": {
+    "edit_turns": 2,
+    "miss_count": 0,
+    "miss_rate": 0,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 0,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 27.8,
+    "fallback_adjusted": {
+      "input_tokens": 2298,
+      "output_tokens": 269,
+      "total_tokens": 2567,
+      "miss_attempt_input_tokens": 0,
+      "miss_attempt_output_tokens": 0,
+      "miss_attempt_total_tokens": 0,
+      "fallback_retry_input_tokens": 0,
+      "fallback_retry_output_tokens": 0,
+      "fallback_retry_total_tokens": 0,
+      "input_token_savings_pct": -5,
+      "output_token_savings_pct": 80.3,
+      "total_token_savings_pct": 27.8
+    },
+    "amortized": {
+      "edit_turns": 2,
+      "base_init_inclusive_tokens": 4262,
+      "gap_init_inclusive_tokens": 3551,
+      "fallback_init_inclusive_tokens": 3551,
+      "measured_init_inclusive_token_savings_pct": 16.7,
+      "fallback_init_inclusive_token_savings_pct": 16.7
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

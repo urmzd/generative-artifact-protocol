@@ -1,0 +1,187 @@
+{
+  "experiment_id": "077-json-database-seed",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:36:29Z",
+  "format": "application/json",
+  "base_turn0": {
+    "input_tokens": 156,
+    "output_tokens": 5207,
+    "latency_ms": 46689,
+    "artifact_bytes": 18992
+  },
+  "gap_turn0": {
+    "input_tokens": 233,
+    "output_tokens": 6377,
+    "latency_ms": 49748,
+    "artifact_bytes": 21709
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add 3 more users with the 'contractor' role from timezones 'Asia/Tokyo', 'Europe",
+        "input_tokens": 5407,
+        "output_tokens": 5412,
+        "cached_input_tokens": 5248,
+        "latency_ms": 48048,
+        "output_bytes": 19721,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Add a new project 'Mobile App Redesign' with 8 tasks covering UI mockups, user t",
+        "input_tokens": 10853,
+        "output_tokens": 5979,
+        "cached_input_tokens": 10752,
+        "latency_ms": 61343,
+        "output_bytes": 21899,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Update all tasks in the 'Infrastructure Migration' project to have their due dat",
+        "input_tokens": 16877,
+        "output_tokens": 6478,
+        "cached_input_tokens": 16768,
+        "latency_ms": 58365,
+        "output_bytes": 23859,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 4,
+        "edit": "Add 10 more comments on tasks in the 'API Gateway' project with realistic code r",
+        "input_tokens": 23386,
+        "output_tokens": 7538,
+        "cached_input_tokens": 23296,
+        "latency_ms": 66969,
+        "output_bytes": 27409,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 56523,
+    "total_output_tokens": 25407,
+    "total_cached_input_tokens": 56064,
+    "total_latency_ms": 234725
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add 3 more users with the 'contractor' role from timezones 'Asia/Tokyo', 'Europe",
+        "input_tokens": 6718,
+        "output_tokens": 321,
+        "latency_ms": 3807,
+        "output_bytes": 21709,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: JSON does not support text-based markers; use pointer addressing instead",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Add a new project 'Mobile App Redesign' with 8 tasks covering UI mockups, user t",
+        "input_tokens": 6709,
+        "output_tokens": 774,
+        "cached_input_tokens": 6144,
+        "latency_ms": 6346,
+        "output_bytes": 21709,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: JSON does not support text-based markers; use pointer addressing instead",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Update all tasks in the 'Infrastructure Migration' project to have their due dat",
+        "input_tokens": 6719,
+        "output_tokens": 3230,
+        "cached_input_tokens": 6144,
+        "latency_ms": 26650,
+        "output_bytes": 18949,
+        "retried": false,
+        "failed": false,
+        "envelope_parsed": true,
+        "apply_succeeded": true,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 4,
+        "edit": "Add 10 more comments on tasks in the 'API Gateway' project with realistic code r",
+        "input_tokens": 5674,
+        "output_tokens": 921,
+        "latency_ms": 10102,
+        "output_bytes": 18949,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 1: target not found: start marker not found for target: comment-11",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 25820,
+    "total_output_tokens": 5246,
+    "total_cached_input_tokens": 12288,
+    "total_latency_ms": 46905,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0.25
+  },
+  "comparison": {
+    "output_token_savings_pct": 79.4,
+    "input_token_savings_pct": 54.3,
+    "latency_savings_pct": 80
+  },
+  "reliability": {
+    "edit_turns": 4,
+    "miss_count": 3,
+    "miss_rate": 0.75,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 3,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: JSON does not support text-based markers; use pointer addressing instead": 2,
+      "apply failed: operation 1: target not found: start marker not found for target: comment-11": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 62.1,
+    "fallback_adjusted": {
+      "input_tokens": 65466,
+      "output_tokens": 24175,
+      "total_tokens": 89641,
+      "miss_attempt_input_tokens": 19101,
+      "miss_attempt_output_tokens": 2016,
+      "miss_attempt_total_tokens": 21117,
+      "fallback_retry_input_tokens": 39646,
+      "fallback_retry_output_tokens": 18929,
+      "fallback_retry_total_tokens": 58575,
+      "input_token_savings_pct": -15.8,
+      "output_token_savings_pct": 4.8,
+      "total_token_savings_pct": -9.4
+    },
+    "amortized": {
+      "edit_turns": 4,
+      "base_init_inclusive_tokens": 87293,
+      "gap_init_inclusive_tokens": 37676,
+      "fallback_init_inclusive_tokens": 96251,
+      "measured_init_inclusive_token_savings_pct": 56.8,
+      "fallback_init_inclusive_token_savings_pct": -10.3
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": false,
+    "base_input_monotone": true
+  }
+}

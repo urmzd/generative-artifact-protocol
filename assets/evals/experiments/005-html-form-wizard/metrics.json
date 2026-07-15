@@ -1,0 +1,164 @@
+{
+  "experiment_id": "005-html-form-wizard",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:02:50Z",
+  "format": "text/html",
+  "base_turn0": {
+    "input_tokens": 146,
+    "output_tokens": 1994,
+    "latency_ms": 21723,
+    "artifact_bytes": 8153
+  },
+  "gap_turn0": {
+    "input_tokens": 223,
+    "output_tokens": 1392,
+    "latency_ms": 13227,
+    "artifact_bytes": 5798
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new Step 5 for 'Preferences' with fields for newsletter opt-in, preferred ",
+        "input_tokens": 2174,
+        "output_tokens": 2386,
+        "cached_input_tokens": 2048,
+        "latency_ms": 25142,
+        "output_bytes": 9942,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update the progress bar to show 5 steps instead of 4 and change its color from b",
+        "input_tokens": 4595,
+        "output_tokens": 2388,
+        "cached_input_tokens": 4480,
+        "latency_ms": 23095,
+        "output_bytes": 9942,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite Step 3 (Payment) to include PayPal and Apple Pay options as radio button",
+        "input_tokens": 7013,
+        "output_tokens": 2559,
+        "cached_input_tokens": 6912,
+        "latency_ms": 27020,
+        "output_bytes": 10793,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 13782,
+    "total_output_tokens": 7333,
+    "total_cached_input_tokens": 13440,
+    "total_latency_ms": 75257
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new Step 5 for 'Preferences' with fields for newsletter opt-in, preferred ",
+        "input_tokens": 1724,
+        "output_tokens": 283,
+        "latency_ms": 3103,
+        "output_bytes": 5798,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: step4",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update the progress bar to show 5 steps instead of 4 and change its color from b",
+        "input_tokens": 1724,
+        "output_tokens": 324,
+        "cached_input_tokens": 1536,
+        "latency_ms": 3435,
+        "output_bytes": 5798,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: pointer targeting requires valid JSON content: invalid character '\u003c' looking for beginning of value",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Rewrite Step 3 (Payment) to include PayPal and Apple Pay options as radio button",
+        "input_tokens": 1720,
+        "output_tokens": 330,
+        "cached_input_tokens": 1536,
+        "latency_ms": 3544,
+        "output_bytes": 5798,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: step3",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 5168,
+    "total_output_tokens": 937,
+    "total_cached_input_tokens": 3072,
+    "total_latency_ms": 10082,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
+  },
+  "comparison": {
+    "output_token_savings_pct": 87.2,
+    "input_token_savings_pct": 62.5,
+    "latency_savings_pct": 86.6
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 3,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 3,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: step3": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: step4": 1,
+      "apply failed: pointer targeting requires valid JSON content: invalid character '\u003c' looking for beginning of value": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 71.1,
+    "fallback_adjusted": {
+      "input_tokens": 18950,
+      "output_tokens": 8270,
+      "total_tokens": 27220,
+      "miss_attempt_input_tokens": 5168,
+      "miss_attempt_output_tokens": 937,
+      "miss_attempt_total_tokens": 6105,
+      "fallback_retry_input_tokens": 13782,
+      "fallback_retry_output_tokens": 7333,
+      "fallback_retry_total_tokens": 21115,
+      "input_token_savings_pct": -37.5,
+      "output_token_savings_pct": -12.8,
+      "total_token_savings_pct": -28.9
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 23255,
+      "gap_init_inclusive_tokens": 7720,
+      "fallback_init_inclusive_tokens": 28835,
+      "measured_init_inclusive_token_savings_pct": 66.8,
+      "fallback_init_inclusive_token_savings_pct": -24
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
+}

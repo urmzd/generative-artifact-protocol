@@ -1,181 +1,163 @@
 {
+  "experiment_id": "046-shell-deploy-script",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T03:01:06Z",
+  "format": "text/x-sh",
   "base_turn0": {
-    "artifact_bytes": 9055,
-    "cached_input_tokens": 0,
-    "input_tokens": 151,
-    "latency_ms": 13310,
-    "median_itl_ms": 0.002458,
-    "output_tokens": 2676,
-    "ttft_ms": 0,
-    "ttlt_ms": 12650
+    "input_tokens": 152,
+    "output_tokens": 751,
+    "latency_ms": 12489,
+    "artifact_bytes": 2445
   },
-  "comparison": {
-    "input_token_savings_pct": 69.4,
-    "latency_savings_pct": 80.7,
-    "output_token_savings_pct": 81.7
+  "gap_turn0": {
+    "input_tokens": 414,
+    "output_tokens": 956,
+    "latency_ms": 9646,
+    "artifact_bytes": 3010
   },
   "default_flow": {
     "per_turn": [
       {
-        "cached_input_tokens": 0,
+        "turn": 1,
         "edit": "Add a '--dry-run' flag to the script that prints every command without executing",
-        "failed": false,
-        "input_tokens": 2845,
-        "latency_ms": 18954,
-        "median_itl_ms": 0.002583,
-        "output_bytes": 13318,
-        "output_tokens": 4061,
-        "ttft_ms": 0,
-        "ttlt_ms": 17955,
-        "turn": 1
+        "input_tokens": 928,
+        "output_tokens": 983,
+        "latency_ms": 11773,
+        "output_bytes": 3190,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 6400,
+        "turn": 2,
         "edit": "Rewrite the deploy section to support deploying to multiple servers defined in a",
-        "failed": false,
-        "input_tokens": 6934,
-        "latency_ms": 17554,
-        "median_itl_ms": 0.002333,
-        "output_bytes": 11927,
-        "output_tokens": 3715,
-        "ttft_ms": 0,
-        "ttlt_ms": 17301,
-        "turn": 2
+        "input_tokens": 1940,
+        "output_tokens": 963,
+        "cached_input_tokens": 1792,
+        "latency_ms": 10446,
+        "output_bytes": 3203,
+        "retried": false,
+        "failed": false
       },
       {
-        "cached_input_tokens": 10496,
+        "turn": 3,
         "edit": "Add a rollback function that restores the previous symlink and restarts PM2 if t",
-        "failed": false,
-        "input_tokens": 10682,
-        "latency_ms": 18715,
-        "median_itl_ms": 0.002334,
-        "output_bytes": 11585,
-        "output_tokens": 3557,
-        "ttft_ms": 0,
-        "ttlt_ms": 18174,
-        "turn": 3
+        "input_tokens": 2937,
+        "output_tokens": 989,
+        "cached_input_tokens": 2816,
+        "latency_ms": 11255,
+        "output_bytes": 3290,
+        "retried": false,
+        "failed": false
       }
     ],
-    "total_cached_input_tokens": 16896,
-    "total_input_tokens": 20461,
-    "total_latency_ms": 55223,
-    "total_output_tokens": 11333
+    "total_input_tokens": 5805,
+    "total_output_tokens": 2935,
+    "total_cached_input_tokens": 4608,
+    "total_latency_ms": 33474
   },
-  "experiment_id": "046-shell-deploy-script",
-  "format": "text/x-sh",
   "gap_flow": {
-    "apply_success_rate": 1.0,
-    "envelope_parse_rate": 1.0,
     "per_turn": [
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
+        "turn": 1,
         "edit": "Add a '--dry-run' flag to the script that prints every command without executing",
-        "envelope_name": "edit",
+        "input_tokens": 1275,
+        "output_tokens": 258,
+        "latency_ms": 3112,
+        "output_bytes": 3010,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 1: target not found: start marker not found for target: pre_deploy_checks",
         "envelope_parsed": true,
-        "failed": false,
-        "input_tokens": 2093,
-        "latency_ms": 5616,
-        "median_itl_ms": 0.003125,
-        "output_bytes": 5875,
-        "output_tokens": 1143,
-        "ttft_ms": 36,
-        "ttlt_ms": 5123,
-        "turn": 1
+        "apply_succeeded": false,
+        "envelope_name": "edit"
       },
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
+        "turn": 2,
         "edit": "Rewrite the deploy section to support deploying to multiple servers defined in a",
-        "envelope_name": "edit",
+        "input_tokens": 1279,
+        "output_tokens": 321,
+        "cached_input_tokens": 1152,
+        "latency_ms": 5090,
+        "output_bytes": 3010,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: deploy",
         "envelope_parsed": true,
-        "failed": false,
-        "input_tokens": 2055,
-        "latency_ms": 2948,
-        "median_itl_ms": 0.0028339999999999997,
-        "output_bytes": 6089,
-        "output_tokens": 584,
-        "ttft_ms": 39,
-        "ttlt_ms": 2603,
-        "turn": 2
+        "apply_succeeded": false,
+        "envelope_name": "edit"
       },
       {
-        "apply_succeeded": true,
-        "cached_input_tokens": 0,
+        "turn": 3,
         "edit": "Add a rollback function that restores the previous symlink and restarts PM2 if t",
-        "envelope_name": "edit",
+        "input_tokens": 1284,
+        "output_tokens": 377,
+        "cached_input_tokens": 1152,
+        "latency_ms": 5779,
+        "output_bytes": 3010,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: post-deploy-verification",
         "envelope_parsed": true,
-        "failed": false,
-        "input_tokens": 2122,
-        "latency_ms": 2100,
-        "median_itl_ms": 0.003146,
-        "output_bytes": 6935,
-        "output_tokens": 347,
-        "ttft_ms": 38,
-        "ttlt_ms": 1736,
-        "turn": 3
+        "apply_succeeded": false,
+        "envelope_name": "edit"
       }
     ],
-    "total_cached_input_tokens": 0,
-    "total_input_tokens": 6270,
-    "total_latency_ms": 10664,
-    "total_output_tokens": 2074
+    "total_input_tokens": 3838,
+    "total_output_tokens": 956,
+    "total_cached_input_tokens": 2304,
+    "total_latency_ms": 13981,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
   },
-  "gap_turn0": {
-    "artifact_bytes": 6184,
-    "cached_input_tokens": 0,
-    "input_tokens": 413,
-    "latency_ms": 9277,
-    "median_itl_ms": 0.0022500000000000003,
-    "output_tokens": 1831,
-    "ttft_ms": 3,
-    "ttlt_ms": 8729
+  "comparison": {
+    "output_token_savings_pct": 67.4,
+    "input_token_savings_pct": 33.9,
+    "latency_savings_pct": 58.2
   },
-  "model": "gpt-5.4-mini",
-  "provider": "openai",
-  "quality": {
-    "mean_rouge_l": 0.1346,
-    "mean_sequence_similarity": 0.3151,
-    "mean_token_f1": 0.2344,
-    "per_turn": [
-      {
-        "base_char_count": 13318,
-        "char_delta_pct": -69.2,
-        "gap_char_count": 4102,
-        "lines_added": 90,
-        "lines_removed": 401,
-        "rouge_l": 0.1237,
-        "sequence_similarity": 0.2955,
-        "token_f1": 0.2017,
-        "turn": 1
-      },
-      {
-        "base_char_count": 11927,
-        "char_delta_pct": -63.8,
-        "gap_char_count": 4316,
-        "lines_added": 93,
-        "lines_removed": 328,
-        "rouge_l": 0.1314,
-        "sequence_similarity": 0.3116,
-        "token_f1": 0.2276,
-        "turn": 2
-      },
-      {
-        "base_char_count": 11585,
-        "char_delta_pct": -55.4,
-        "gap_char_count": 5162,
-        "lines_added": 116,
-        "lines_removed": 280,
-        "rouge_l": 0.1486,
-        "sequence_similarity": 0.3382,
-        "token_f1": 0.274,
-        "turn": 3
-      }
-    ]
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 3,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 3,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: start marker not found for target: deploy": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: post-deploy-verification": 1,
+      "apply failed: operation 1: target not found: start marker not found for target: pre_deploy_checks": 1
+    }
   },
-  "timestamp": "2026-05-29T03:07:03Z",
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 45.1,
+    "fallback_adjusted": {
+      "input_tokens": 9643,
+      "output_tokens": 3891,
+      "total_tokens": 13534,
+      "miss_attempt_input_tokens": 3838,
+      "miss_attempt_output_tokens": 956,
+      "miss_attempt_total_tokens": 4794,
+      "fallback_retry_input_tokens": 5805,
+      "fallback_retry_output_tokens": 2935,
+      "fallback_retry_total_tokens": 8740,
+      "input_token_savings_pct": -66.1,
+      "output_token_savings_pct": -32.6,
+      "total_token_savings_pct": -54.9
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 9643,
+      "gap_init_inclusive_tokens": 6164,
+      "fallback_init_inclusive_tokens": 14904,
+      "measured_init_inclusive_token_savings_pct": 36.1,
+      "fallback_init_inclusive_token_savings_pct": -54.6
+    }
+  },
   "validity": {
-    "base_input_monotone": true,
-    "gap_run_degenerate": false
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
   }
 }

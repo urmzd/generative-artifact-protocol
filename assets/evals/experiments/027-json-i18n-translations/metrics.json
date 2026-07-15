@@ -1,0 +1,164 @@
+{
+  "experiment_id": "027-json-i18n-translations",
+  "model": "gpt-4o-mini",
+  "provider": "openai-compatible",
+  "timestamp": "2026-07-15T02:36:24Z",
+  "format": "application/json",
+  "base_turn0": {
+    "input_tokens": 136,
+    "output_tokens": 1184,
+    "latency_ms": 11625,
+    "artifact_bytes": 4728
+  },
+  "gap_turn0": {
+    "input_tokens": 213,
+    "output_tokens": 1459,
+    "latency_ms": 11508,
+    "artifact_bytes": 5563
+  },
+  "default_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'teams' section with translation keys for team list, team detail, invi",
+        "input_tokens": 1354,
+        "output_tokens": 1394,
+        "cached_input_tokens": 1280,
+        "latency_ms": 13045,
+        "output_bytes": 5537,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 2,
+        "edit": "Update all error messages in the 'common.errors' section to be more user-friendl",
+        "input_tokens": 2776,
+        "output_tokens": 1426,
+        "cached_input_tokens": 2688,
+        "latency_ms": 13734,
+        "output_bytes": 5700,
+        "retried": false,
+        "failed": false
+      },
+      {
+        "turn": 3,
+        "edit": "Add a 'notifications' section with keys for email, push, and in-app notification",
+        "input_tokens": 4232,
+        "output_tokens": 1562,
+        "cached_input_tokens": 4096,
+        "latency_ms": 14021,
+        "output_bytes": 6377,
+        "retried": false,
+        "failed": false
+      }
+    ],
+    "total_input_tokens": 8362,
+    "total_output_tokens": 4382,
+    "total_cached_input_tokens": 8064,
+    "total_latency_ms": 40800
+  },
+  "gap_flow": {
+    "per_turn": [
+      {
+        "turn": 1,
+        "edit": "Add a new 'teams' section with translation keys for team list, team detail, invi",
+        "input_tokens": 1791,
+        "output_tokens": 262,
+        "latency_ms": 3082,
+        "output_bytes": 5563,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: JSON does not support text-based markers; use pointer addressing instead",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 2,
+        "edit": "Update all error messages in the 'common.errors' section to be more user-friendl",
+        "input_tokens": 1785,
+        "output_tokens": 171,
+        "cached_input_tokens": 1024,
+        "latency_ms": 2321,
+        "output_bytes": 5563,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: common.errors.requiredField",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      },
+      {
+        "turn": 3,
+        "edit": "Add a 'notifications' section with keys for email, push, and in-app notification",
+        "input_tokens": 1787,
+        "output_tokens": 88,
+        "cached_input_tokens": 1024,
+        "latency_ms": 1414,
+        "output_bytes": 5563,
+        "retried": false,
+        "failed": true,
+        "failure_reason": "apply failed: operation 0: target not found: start marker not found for target: settings.notifications",
+        "envelope_parsed": true,
+        "apply_succeeded": false,
+        "envelope_name": "edit"
+      }
+    ],
+    "total_input_tokens": 5363,
+    "total_output_tokens": 521,
+    "total_cached_input_tokens": 2048,
+    "total_latency_ms": 6817,
+    "envelope_parse_rate": 1,
+    "apply_success_rate": 0
+  },
+  "comparison": {
+    "output_token_savings_pct": 88.1,
+    "input_token_savings_pct": 35.9,
+    "latency_savings_pct": 83.3
+  },
+  "reliability": {
+    "edit_turns": 3,
+    "miss_count": 3,
+    "miss_rate": 1,
+    "parse_miss_count": 0,
+    "invalid_envelope_count": 0,
+    "apply_miss_count": 3,
+    "request_failure_count": 0,
+    "unknown_miss_count": 0,
+    "by_reason": {
+      "apply failed: operation 0: target not found: JSON does not support text-based markers; use pointer addressing instead": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: common.errors.requiredField": 1,
+      "apply failed: operation 0: target not found: start marker not found for target: settings.notifications": 1
+    }
+  },
+  "economics": {
+    "fallback_assumption": "on each missed GAP edit, run the baseline full-regeneration edit after the failed GAP attempt",
+    "measured_total_token_savings_pct": 53.8,
+    "fallback_adjusted": {
+      "input_tokens": 13725,
+      "output_tokens": 4903,
+      "total_tokens": 18628,
+      "miss_attempt_input_tokens": 5363,
+      "miss_attempt_output_tokens": 521,
+      "miss_attempt_total_tokens": 5884,
+      "fallback_retry_input_tokens": 8362,
+      "fallback_retry_output_tokens": 4382,
+      "fallback_retry_total_tokens": 12744,
+      "input_token_savings_pct": -64.1,
+      "output_token_savings_pct": -11.9,
+      "total_token_savings_pct": -46.2
+    },
+    "amortized": {
+      "edit_turns": 3,
+      "base_init_inclusive_tokens": 14064,
+      "gap_init_inclusive_tokens": 7556,
+      "fallback_init_inclusive_tokens": 20300,
+      "measured_init_inclusive_token_savings_pct": 46.3,
+      "fallback_init_inclusive_token_savings_pct": -44.3
+    }
+  },
+  "validity": {
+    "gap_run_degenerate": true,
+    "base_input_monotone": true
+  }
+}
