@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.17.0 (2026-07-15)
+
+### Features
+
+- **core**: replace rust engine with go implementation (#13) ([de148cd](https://github.com/urmzd/generative-artifact-protocol/commit/de148cd4fbb4a7eb68f5bb2f61929f701bf1517b))
+
+### Misc
+
+- bump GitHub Actions to Node 24 majors and switch app token to client-id ([d0de101](https://github.com/urmzd/generative-artifact-protocol/commit/d0de1014e0470c5f101c35cf0eac754ae25f1c4f))
+
+[Full Changelog](https://github.com/urmzd/generative-artifact-protocol/compare/v0.16.1...v0.17.0)
+
+
 ## 0.16.1 (2026-06-09)
 
 ### Bug Fixes
