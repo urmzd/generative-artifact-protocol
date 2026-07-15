@@ -51,8 +51,8 @@ func TestCommittedMetricsRunThroughSAIGEScorers(t *testing.T) {
 		t.Fatalf("LoadObservations: %v", err)
 	}
 	observations = FilterWithMetrics(observations)
-	if len(observations) != 18 {
-		t.Fatalf("metrics observations = %d, want 18", len(observations))
+	if len(observations) < 18 {
+		t.Fatalf("metrics observations = %d, want at least 18 committed runs", len(observations))
 	}
 
 	if err := saigeeval.Populate(context.Background(), observations, CommittedMetricsSubject()); err != nil {

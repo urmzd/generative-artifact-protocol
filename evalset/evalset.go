@@ -116,7 +116,11 @@ func Observations(experiments []ExperimentInput) ([]saigeeval.Observation, error
 func FilterWithMetrics(observations []saigeeval.Observation) []saigeeval.Observation {
 	filtered := make([]saigeeval.Observation, 0, len(observations))
 	for _, obs := range observations {
-		if raw := obs.Annotations[AnnotationMetricsPath]; len(raw) > 0 && string(raw) != `""` {
+		path, ok, err := metricsPath(obs)
+		if err == nil && ok && path != "" {
+			if _, statErr := os.Stat(path); statErr != nil {
+				continue
+			}
 			filtered = append(filtered, obs)
 		}
 	}
@@ -152,6 +156,7 @@ func loadExperiment(dir string) (ExperimentInput, error) {
 	if err != nil {
 		return ExperimentInput{}, err
 	}
+	ext := formatToExt(format)
 
 	return ExperimentInput{
 		ExperimentID:     filepath.Base(dir),
@@ -165,11 +170,11 @@ func loadExperiment(dir string) (ExperimentInput, error) {
 		Turns:            turns,
 		Paths: Paths{
 			ExperimentDir:  slash(dir),
-			Metrics:        existing(filepath.Join(dir, "metrics.json")),
+			Metrics:        slash(filepath.Join(dir, "metrics.json")),
 			Checks:         globSlash(filepath.Join(dir, "checks", "turn-*.json")),
-			BaseOutputs:    globSlash(filepath.Join(dir, "outputs", "base", "turn-*")),
-			StatelessFiles: globSlash(filepath.Join(dir, "outputs", "stateless", "turn-*")),
-			GAPOutputs:     globSlash(filepath.Join(dir, "outputs", "gap", "turn-*")),
+			BaseOutputs:    expectedOutputs(dir, "base", ext, turns, false),
+			StatelessFiles: expectedOutputs(dir, "stateless", ext, turns, false),
+			GAPOutputs:     expectedOutputs(dir, "gap", ext, turns, true),
 		},
 	}, nil
 }
@@ -282,13 +287,6 @@ func readText(path string) (string, error) {
 	return string(data), nil
 }
 
-func existing(path string) string {
-	if _, err := os.Stat(path); err == nil {
-		return slash(path)
-	}
-	return ""
-}
-
 func globSlash(pattern string) []string {
 	matches, _ := filepath.Glob(pattern)
 	sort.Strings(matches)
@@ -297,6 +295,62 @@ func globSlash(pattern string) []string {
 		out = append(out, slash(match))
 	}
 	return out
+}
+
+func expectedOutputs(dir string, flow string, ext string, turns []TurnInput, includeEnvelopes bool) []string {
+	out := make([]string, 0, len(turns)*2)
+	for _, turn := range turns {
+		if includeEnvelopes && turn.Turn > 0 {
+			envelopeName := fmt.Sprintf("turn-%d.json", turn.Turn)
+			if ext == ".json" {
+				envelopeName = fmt.Sprintf("turn-%d.envelope.json", turn.Turn)
+			}
+			out = append(out, slash(filepath.Join(dir, "outputs", flow, envelopeName)))
+		}
+		out = append(out, slash(filepath.Join(dir, "outputs", flow, fmt.Sprintf("turn-%d%s", turn.Turn, ext))))
+	}
+	return out
+}
+
+func formatToExt(format string) string {
+	switch format {
+	case "text/html":
+		return ".html"
+	case "text/x-python":
+		return ".py"
+	case "application/javascript":
+		return ".js"
+	case "text/typescript":
+		return ".ts"
+	case "application/json":
+		return ".json"
+	case "text/x-yaml":
+		return ".yaml"
+	case "text/x-toml":
+		return ".toml"
+	case "text/x-rust":
+		return ".rs"
+	case "text/x-go":
+		return ".go"
+	case "text/css":
+		return ".css"
+	case "text/x-shellscript":
+		return ".sh"
+	case "text/markdown":
+		return ".md"
+	case "image/svg+xml":
+		return ".svg"
+	case "application/xml":
+		return ".xml"
+	case "text/x-java":
+		return ".java"
+	case "text/x-ruby":
+		return ".rb"
+	case "application/sql":
+		return ".sql"
+	default:
+		return ".txt"
+	}
 }
 
 func slash(path string) string {

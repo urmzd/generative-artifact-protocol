@@ -24,7 +24,7 @@ jobs:
           go-version-file: go.mod
 
       - name: Format
-        run: test -z "$(gofmt -l *.go evalset/*.go internal/evalsetgen/*.go)"
+        run: test -z "$(gofmt -l *.go cmd/gap-eval/*.go evalset/*.go internal/evalsetgen/*.go internal/liveeval/*.go)"
 
       - name: Eval set
         run: |

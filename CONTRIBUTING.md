@@ -10,6 +10,7 @@ cd generative-artifact-protocol
 just build   # compile the Go package
 just test    # run unit tests
 just evalset # regenerate the SAIGE eval observation set
+just run     # run live evals through the Go eval runner
 just check   # format check, vet, and tests (same gate as CI)
 ```
 
@@ -21,6 +22,8 @@ just check   # format check, vet, and tests (same gate as CI)
 - `store.go`: versioned artifact store
 - `markers.go`: section marker utilities
 - `evalset/`: SAIGE eval observation loader and committed-metrics scorers
+- `cmd/gap-eval/`: live eval runner
+- `internal/liveeval/`: provider client and live eval flow implementation
 - `assets/evals/`: evaluation datasets and experiments
 - `assets/evals/saige/`: generated SAIGE observation set
 - `assets/evals/experiments/go.mod`: module boundary that keeps generated fixtures out of root tests

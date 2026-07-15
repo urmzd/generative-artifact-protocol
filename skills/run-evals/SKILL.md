@@ -12,14 +12,17 @@ The source corpus is `assets/evals/experiments/`; the generated set is
 ## Commands
 
 ```sh
-just evalset      # regenerate assets/evals/saige/observations.json
-go test ./evalset # validate loader and score committed metrics through SAIGE
-just check        # full repository gate, including evalset drift check
+just evalset                       # regenerate assets/evals/saige/observations.json
+just run 0 "gpt-4o-mini" "004" both # live OpenAI-compatible run by ID prefix
+go test ./evalset                  # validate loader and score committed metrics through SAIGE
+just check                         # full repository gate, including evalset drift check
 ```
 
 ## Rules
 
 - Do not hand-edit `assets/evals/saige/observations.json`; run `just evalset`.
 - Do not hand-edit measured `metrics.json` or `results.md` values.
-- Live LLM runs should be implemented as SAIGE subjects over the generated
-  observations and scored with SAIGE scorers plus `evalset.MetricsScorers()`.
+- Live LLM runs use the Go `cmd/gap-eval` runner and write `metrics.json` plus
+  `outputs/` into the selected experiment directory.
+- SAIGE consumers can read the generated observations and score metrics with
+  `evalset.MetricsScorers()`.

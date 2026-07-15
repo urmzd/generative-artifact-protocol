@@ -1,0 +1,102 @@
+package liveeval
+
+import (
+	"context"
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
+	"os"
+	"path/filepath"
+	"strings"
+	"sync/atomic"
+	"testing"
+)
+
+func TestRunGAPFlowWithMockProvider(t *testing.T) {
+	root := t.TempDir()
+	expDir := filepath.Join(root, "001-html-smoke")
+	writeFixture(t, filepath.Join(expDir, "README.md"), "# Experiment: smoke\n\n**Format:** text/html | **Size:** small | **Edits:** 1\n\n**Expected sections:** msg\n")
+	writeFixture(t, filepath.Join(expDir, "inputs/base/system.md"), "You produce HTML.")
+	writeFixture(t, filepath.Join(expDir, "inputs/base/turn-0.md"), "Create greeting.")
+	writeFixture(t, filepath.Join(expDir, "inputs/base/turn-1.md"), "Change hello to world.")
+	writeFixture(t, filepath.Join(expDir, "inputs/gap/init-system.md"), "Create marked HTML.")
+	writeFixture(t, filepath.Join(expDir, "inputs/gap/maintain-system.md"), "Return a GAP edit envelope.")
+
+	var calls atomic.Int64
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/chat/completions" {
+			t.Fatalf("path = %s", r.URL.Path)
+		}
+		var req map[string]any
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			t.Fatalf("decode request: %v", err)
+		}
+		call := calls.Add(1)
+		switch call {
+		case 1:
+			writeChatResponse(t, w, `<gap:target id="msg">hello</gap:target>`, 10, 8)
+		case 2:
+			if _, ok := req["response_format"]; !ok {
+				t.Fatal("GAP edit request missing response_format")
+			}
+			writeChatResponse(t, w, `{"protocol":"gap/0.1","id":"001-html-smoke","version":2,"name":"edit","meta":{"format":"text/html"},"content":[{"op":"replace","target":{"type":"id","value":"msg"},"content":"world"}]}`, 12, 6)
+		default:
+			t.Fatalf("unexpected call %d", call)
+		}
+	}))
+	defer server.Close()
+
+	err := Run(context.Background(), Config{
+		ExperimentsDir: root,
+		Flow:           "gap",
+		Model:          "mock",
+		APIBase:        server.URL,
+		APIKey:         "test-key",
+		Force:          true,
+	})
+	if err != nil {
+		t.Fatalf("Run: %v", err)
+	}
+
+	output, err := os.ReadFile(filepath.Join(expDir, "outputs/gap/turn-1.html"))
+	if err != nil {
+		t.Fatalf("read output: %v", err)
+	}
+	if !strings.Contains(string(output), "world") {
+		t.Fatalf("output = %q", output)
+	}
+	metrics, err := os.ReadFile(filepath.Join(expDir, "metrics.json"))
+	if err != nil {
+		t.Fatalf("read metrics: %v", err)
+	}
+	if !strings.Contains(string(metrics), `"apply_success_rate": 1`) {
+		t.Fatalf("metrics missing apply success: %s", metrics)
+	}
+}
+
+func writeFixture(t *testing.T, path string, value string) {
+	t.Helper()
+	if err := os.MkdirAll(filepath.Dir(path), 0o750); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(path, []byte(value), 0o600); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func writeChatResponse(t *testing.T, w http.ResponseWriter, content string, promptTokens uint64, completionTokens uint64) {
+	t.Helper()
+	w.Header().Set("Content-Type", "application/json")
+	err := json.NewEncoder(w).Encode(map[string]any{
+		"choices": []map[string]any{{
+			"message": map[string]string{"content": content},
+		}},
+		"usage": map[string]any{
+			"prompt_tokens":     promptTokens,
+			"completion_tokens": completionTokens,
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+}

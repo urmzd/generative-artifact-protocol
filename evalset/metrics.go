@@ -33,7 +33,7 @@ type Metrics struct {
 
 func CommittedMetricsSubject() saigeeval.Subject {
 	return func(_ context.Context, obs *saigeeval.Observation) error {
-		path, ok, err := stringAnnotation(*obs, AnnotationMetricsPath)
+		path, ok, err := metricsPath(*obs)
 		if err != nil {
 			return err
 		}
@@ -48,6 +48,18 @@ func CommittedMetricsSubject() saigeeval.Subject {
 		obs.Output = append(obs.Output[:0], data...)
 		return nil
 	}
+}
+
+func metricsPath(obs saigeeval.Observation) (string, bool, error) {
+	path, ok, err := stringAnnotation(obs, AnnotationMetricsPath)
+	if err != nil || ok {
+		return path, ok, err
+	}
+	dir, ok, err := stringAnnotation(obs, AnnotationExperimentDir)
+	if err != nil || !ok || dir == "" {
+		return "", false, err
+	}
+	return filepath.Join(dir, "metrics.json"), true, nil
 }
 
 func MetricsScorers() []saigeeval.Scorer {

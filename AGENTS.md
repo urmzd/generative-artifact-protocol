@@ -17,6 +17,8 @@ This is a root Go module:
 | `apply.go` | Stateless apply engine for synthesize/edit envelopes |
 | `store.go` | Versioned in-memory artifact store with checksum and rollback |
 | `evalset/` | Loader and scorers that expose the GAP corpus as SAIGE eval observations |
+| `cmd/gap-eval/` | Go live eval runner for OpenAI-compatible providers |
+| `internal/liveeval/` | Live eval flow execution, provider client, and metrics writer |
 | `assets/evals/` | Experiment corpus, SAIGE observation set, and committed metrics |
 | `spec/` | Normative GAP and GAP-SSE specifications plus JSON Schemas |
 
@@ -28,6 +30,7 @@ This is a root Go module:
 just build      # go build ./...
 just test       # go test ./...
 just evalset    # regenerate assets/evals/saige/observations.json
+just run        # run live evals through cmd/gap-eval
 just check      # gofmt check + evalset drift check + go vet + go test
 go test ./...   # direct test command
 ```
@@ -43,4 +46,4 @@ go test ./...   # direct test command
 
 ## Measured Numbers Discipline
 
-The eval assets contain committed measurements from the old harness and a generated SAIGE observation set. Keep MEASURED and MODELED figures labeled as such. Do not hand-edit `metrics.json`, `results.md`, or `assets/evals/saige/observations.json`; regenerate derived files through `just evalset` and SAIGE eval tooling.
+The eval assets contain committed measurements, live-run outputs, and a generated SAIGE observation set. Keep MEASURED and MODELED figures labeled as such. Do not hand-edit `metrics.json`, `results.md`, or `assets/evals/saige/observations.json`; regenerate derived files through `just evalset`, `just run`, and SAIGE eval tooling.

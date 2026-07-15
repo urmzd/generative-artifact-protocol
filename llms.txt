@@ -17,6 +17,8 @@
 - [apply.go](apply.go): Stateless `Apply(base, envelope)` implementation
 - [markers.go](markers.go): `<gap:target>` marker resolution
 - [store.go](store.go): Versioned in-memory artifact store
+- [cmd/gap-eval](cmd/gap-eval/): Live OpenAI-compatible eval runner
+- [internal/liveeval](internal/liveeval/): Provider client, flow runner, metrics writer
 - [evalset](evalset/): Loader and committed-metrics scorers for `github.com/urmzd/saige/eval`
 - [observations.json](assets/evals/saige/observations.json): Generated SAIGE observation set
 - [artifact envelope schema](spec/schemas/artifact-envelope.json): JSON Schema for the envelope wire format
