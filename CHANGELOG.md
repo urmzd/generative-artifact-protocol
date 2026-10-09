@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.18.0 (2026-10-09)
+
+### Features
+
+- **eval**: default live evals to gpt-6-luna (#15) ([fcc3cd3](https://github.com/urmzd/generative-artifact-protocol/commit/fcc3cd364fe9ba3f655bf3f9bb4dfe4e97387df8))
+
+[Full Changelog](https://github.com/urmzd/generative-artifact-protocol/compare/v0.17.1...v0.18.0)
+
+
 ## 0.17.1 (2026-07-26)
 
 [Full Changelog](https://github.com/urmzd/generative-artifact-protocol/compare/v0.17.0...v0.17.1)
