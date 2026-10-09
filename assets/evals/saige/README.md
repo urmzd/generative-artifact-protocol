@@ -23,7 +23,7 @@ just report
 Run live OpenAI-compatible experiments with:
 
 ```sh
-just run 0 "gpt-4o-mini" "004" both
+just run 0 "gpt-6-luna" "004" both
 ```
 
 The previous standalone Rust runner has been removed. Live runs now use the Go

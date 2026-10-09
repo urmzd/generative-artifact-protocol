@@ -13,7 +13,7 @@ The source corpus is `assets/evals/experiments/`; the generated set is
 
 ```sh
 just evalset                       # regenerate assets/evals/saige/observations.json
-just run 0 "gpt-4o-mini" "004" both # live OpenAI-compatible run by ID prefix
+just run 0 "gpt-6-luna" "004" both  # live OpenAI-compatible run by ID prefix
 go test ./evalset                  # validate loader and score committed metrics through SAIGE
 just check                         # full repository gate, including evalset drift check
 ```
