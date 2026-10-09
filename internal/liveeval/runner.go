@@ -9,6 +9,7 @@ package liveeval
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/urmzd/generative-artifact-protocol/evalset"
 	"github.com/urmzd/saige/eval/harness"
@@ -51,6 +52,9 @@ func Run(ctx context.Context, cfg Config) error {
 	}
 	experiments := harness.FilterExperiments(toHarnessExperiments(inputs), cfg.IDFilter, cfg.Count)
 	client := harness.NewClient(cfg.APIBase, cfg.APIKey, cfg.Model)
+	if rejectsTemperature(client.Model) {
+		client.Temperature = nil
+	}
 	runner := &harness.Runner{
 		Client: client,
 		Flows:  flows,
@@ -60,6 +64,13 @@ func Run(ctx context.Context, cfg Config) error {
 		},
 	}
 	return runner.Run(ctx, experiments)
+}
+
+// rejectsTemperature reports models that reject sampling parameters at their
+// default reasoning effort. The harness already omits temperature for
+// o1/o3/o4/gpt-5; GPT-6 models (default effort medium) reject it too.
+func rejectsTemperature(model string) bool {
+	return strings.HasPrefix(strings.ToLower(model), "gpt-6")
 }
 
 func flowsFor(flow string) ([]harness.Flow, error) {

@@ -225,3 +225,17 @@ func writeChatResponse(t *testing.T, w http.ResponseWriter, content string, prom
 		t.Fatal(err)
 	}
 }
+
+func TestRejectsTemperature(t *testing.T) {
+	cases := map[string]bool{
+		"gpt-6-luna":  true,
+		"GPT-6.1-Sol": true,
+		"gpt-4o-mini": false,
+		"mock":        false,
+	}
+	for model, want := range cases {
+		if got := rejectsTemperature(model); got != want {
+			t.Errorf("rejectsTemperature(%q) = %v, want %v", model, got, want)
+		}
+	}
+}

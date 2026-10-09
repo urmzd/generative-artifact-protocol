@@ -17,7 +17,7 @@ func main() {
 	flag.IntVar(&cfg.Count, "count", 0, "Maximum experiments to run, 0 for all")
 	flag.StringVar(&cfg.IDFilter, "id", "", "Experiment ID prefix filter")
 	flag.StringVar(&cfg.Flow, "flow", "both", "Flow to run: base|stateless|gap|both|abc|all")
-	flag.StringVar(&cfg.Model, "model", "gpt-4o-mini", "OpenAI-compatible model name")
+	flag.StringVar(&cfg.Model, "model", "gpt-6-luna", "OpenAI-compatible model name")
 	flag.StringVar(&cfg.APIBase, "api-base", envOr("GAP_API_BASE", "https://api.openai.com/v1"), "OpenAI-compatible API base URL")
 	flag.StringVar(&cfg.APIKey, "api-key", firstEnv("GAP_API_KEY", "OPENAI_API_KEY", "GEMINI_API_KEY", "GOOGLE_API_KEY", "GROQ_API_KEY", "CEREBRAS_API_KEY", "OPENROUTER_API_KEY", "MISTRAL_API_KEY", "GITHUB_TOKEN"), "API key")
 	flag.BoolVar(&cfg.Force, "force", false, "Re-run experiments even when metrics.json exists")
