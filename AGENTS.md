@@ -37,7 +37,7 @@ go test ./...   # direct test command
 
 ## Code Style
 
-- Go 1.25.
+- Go 1.26.9.
 - Standard library only for the core engine unless a dependency is clearly justified. `evalset/` may depend on SAIGE because it is the eval integration boundary.
 - Small public API: exported protocol types, `Apply`, marker helpers, and `ArtifactStore`.
 - Return errors instead of panicking. Model-produced input can be malformed, inconsistent, or adversarial.

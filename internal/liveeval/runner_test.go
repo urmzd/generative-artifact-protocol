@@ -10,6 +10,8 @@ import (
 	"strings"
 	"sync/atomic"
 	"testing"
+
+	"github.com/urmzd/saige/eval/harness"
 )
 
 func TestRunGAPFlowWithMockProvider(t *testing.T) {
@@ -226,16 +228,17 @@ func writeChatResponse(t *testing.T, w http.ResponseWriter, content string, prom
 	}
 }
 
-func TestRejectsTemperature(t *testing.T) {
+func TestClientOmitsTemperatureForReasoningModels(t *testing.T) {
 	cases := map[string]bool{
 		"gpt-6-luna":  true,
 		"GPT-6.1-Sol": true,
 		"gpt-4o-mini": false,
 		"mock":        false,
 	}
-	for model, want := range cases {
-		if got := rejectsTemperature(model); got != want {
-			t.Errorf("rejectsTemperature(%q) = %v, want %v", model, got, want)
+	for model, omitted := range cases {
+		client := harness.NewClient("", "", model)
+		if got := client.Temperature == nil; got != omitted {
+			t.Errorf("NewClient(%q) temperature omitted = %v, want %v", model, got, omitted)
 		}
 	}
 }
