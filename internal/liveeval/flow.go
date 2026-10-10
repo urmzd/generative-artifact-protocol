@@ -26,7 +26,7 @@ type gapFlow struct{}
 
 func (gapFlow) Name() string { return gapFlowName }
 
-func (gapFlow) Run(ctx context.Context, client *harness.Client, exp harness.Experiment, _ *harness.FlowContext) (harness.FlowResult, error) {
+func (gapFlow) Run(ctx context.Context, client *harness.Client, exp harness.Script, _ *harness.FlowContext) (harness.FlowResult, error) {
 	outDir := filepath.Join(exp.Dir, "outputs", gapFlowName)
 	if err := os.MkdirAll(outDir, 0o750); err != nil {
 		return harness.FlowResult{}, err
@@ -59,7 +59,7 @@ func (gapFlow) Run(ctx context.Context, client *harness.Client, exp harness.Expe
 	return harness.FlowResult{Turn0: t0, Turns: turns, Artifact: artifact}, nil
 }
 
-func runGAPSynthesis(ctx context.Context, client *harness.Client, exp harness.Experiment) (harness.TurnMetrics, string, error) {
+func runGAPSynthesis(ctx context.Context, client *harness.Client, exp harness.Script) (harness.TurnMetrics, string, error) {
 	start := time.Now()
 	messages := []harness.Message{
 		{Role: "system", Content: exp.Systems[gapInitSystemKey]},
@@ -86,7 +86,7 @@ func runGAPSynthesis(ctx context.Context, client *harness.Client, exp harness.Ex
 	return turnMetrics(aggregate, start, artifact), artifact, nil
 }
 
-func runGAPEditTurn(ctx context.Context, client *harness.Client, exp harness.Experiment, artifact string, version uint64, turn harness.Turn) (harness.TurnResult, string, uint64, *gap.Envelope, string) {
+func runGAPEditTurn(ctx context.Context, client *harness.Client, exp harness.Script, artifact string, version uint64, turn harness.Turn) (harness.TurnResult, string, uint64, *gap.Envelope, string) {
 	start := time.Now()
 	messages := []harness.Message{
 		{Role: "system", Content: exp.Systems[gapMaintainSystemKey]},
@@ -198,7 +198,7 @@ func addChatResult(total *harness.ChatResult, result harness.ChatResult) {
 	total.Retried = total.Retried || result.Retried
 }
 
-func normalizeEnvelope(envelope gap.Envelope, exp harness.Experiment, version uint64) gap.Envelope {
+func normalizeEnvelope(envelope gap.Envelope, exp harness.Script, version uint64) gap.Envelope {
 	envelope.Protocol = gap.ProtocolVersion
 	envelope.ID = exp.ID
 	if envelope.Version < version {
