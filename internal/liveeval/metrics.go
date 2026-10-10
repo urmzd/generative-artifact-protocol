@@ -88,7 +88,7 @@ type Validity struct {
 
 // assembleMetrics maps the per-flow harness results into the GAP Metrics
 // document, then fills the derived analytics.
-func assembleMetrics(model string, exp harness.Experiment, results map[string]harness.FlowResult) Metrics {
+func assembleMetrics(model string, exp harness.Script, results map[string]harness.FlowResult) Metrics {
 	metrics := Metrics{
 		ExperimentID: exp.ID,
 		Model:        model,

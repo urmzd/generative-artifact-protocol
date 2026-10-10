@@ -22,7 +22,7 @@ const (
 )
 
 // System prompt keys used when mapping evalset experiments onto
-// harness.Experiment.Systems.
+// harness.Script.Systems.
 const (
 	baseSystemKey        = baseFlowName
 	gapInitSystemKey     = "gap.init"
@@ -49,17 +49,20 @@ func Run(ctx context.Context, cfg Config) error {
 	if err != nil {
 		return err
 	}
-	experiments := harness.FilterExperiments(toHarnessExperiments(inputs), cfg.IDFilter, cfg.Count)
+	experiments := harness.FilterScripts(toHarnessExperiments(inputs), cfg.IDFilter, cfg.Count)
 	// NewClient omits temperature for models whose catalog row rejects it
 	// at the default reasoning effort, including the gpt-6 family.
 	client := harness.NewClient(cfg.APIBase, cfg.APIKey, cfg.Model)
-	runner := &harness.Runner{
+	runner, err := harness.New(harness.Config{
 		Client: client,
 		Flows:  flows,
 		Force:  cfg.Force,
-		Assemble: func(exp harness.Experiment, results map[string]harness.FlowResult) (any, error) {
+		Assemble: func(exp harness.Script, results map[string]harness.FlowResult) (any, error) {
 			return assembleMetrics(client.Model, exp, results), nil
 		},
+	})
+	if err != nil {
+		return err
 	}
 	return runner.Run(ctx, experiments)
 }
@@ -81,14 +84,14 @@ func flowsFor(flow string) ([]harness.Flow, error) {
 	}
 }
 
-func toHarnessExperiments(inputs []evalset.ExperimentInput) []harness.Experiment {
-	experiments := make([]harness.Experiment, 0, len(inputs))
+func toHarnessExperiments(inputs []evalset.ExperimentInput) []harness.Script {
+	experiments := make([]harness.Script, 0, len(inputs))
 	for _, input := range inputs {
 		turns := make([]harness.Turn, 0, len(input.Turns))
 		for _, turn := range input.Turns {
 			turns = append(turns, harness.Turn{Index: turn.Turn, Prompt: turn.Prompt})
 		}
-		experiments = append(experiments, harness.Experiment{
+		experiments = append(experiments, harness.Script{
 			ID:     input.ExperimentID,
 			Format: input.Format,
 			Dir:    input.Paths.ExperimentDir,
